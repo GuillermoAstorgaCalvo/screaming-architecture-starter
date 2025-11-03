@@ -1,0 +1,34 @@
+---
+description: 'ADR template and governance for decisions'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## ADR Template
+
+Title: ADR-XXX: <Decision Title>
+
+### Status
+
+- Proposed | Accepted | Deprecated | Superseded by ADR-YYY
+
+### Authors & Deciders
+
+- Author: Guillermo Astorga Calvo (CTO, BrightHub S.L. - guillermo@brighthub.es)
+- Decider(s): Guillermo Astorga Calvo (CTO) and relevant stakeholders as needed
+
+### Context
+
+- What problem are we solving? Constraints? Alternatives considered?
+
+### Decision
+
+- The decision taken and why it’s the best fit now
+
+### Consequences
+
+- Positive outcomes, trade-offs, risks, follow-ups
+
+### References
+
+- Links to discussions, PRs, benchmarks, prior ADRs

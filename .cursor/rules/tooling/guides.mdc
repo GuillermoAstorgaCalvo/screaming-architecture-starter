@@ -1,0 +1,73 @@
+---
+description: 'Getting started guide: prerequisites, setup, and commands'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 22.21.1 (LTS)
+- pnpm (via Corepack)
+
+### Setup
+
+0. Enable pnpm (recommended): `corepack enable && corepack prepare pnpm@10.20.0 --activate`
+1. Install deps: `pnpm install`
+2. Start dev server: `pnpm dev`
+3. Run tests: `pnpm test`
+4. Lint/format: `pnpm lint` / `pnpm format`
+
+### Configure Aliases & Boundaries
+
+1. Create `tsconfig.base.json` at the repo root with path aliases for `@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@app-styles`, `@tests`.
+2. Ensure the project `tsconfig.json` extends `tsconfig.base.json` and references the same paths.
+3. Configure ESLint to:
+   - Prefer alias imports over long relative paths.
+   - Enforce module boundaries (e.g., `eslint-plugin-boundaries` or `import/no-restricted-paths`).
+4. Do not use `index.ts` barrels for re-exports; import concrete modules explicitly.
+
+### Tech Stack
+
+- TypeScript, React, Vite, TailwindCSS
+- React Router, React Query (optional), Zustand (stores per domain)
+
+### Project Conventions
+
+- Domains-first directory structure
+- Co-locate pages/components/services/stores in each domain
+- Keep `core` free of domain specifics
+- Use adapters under `infrastructure` for external services
+
+### Commands (suggested)
+
+- `dev`: Vite dev server
+- `build`: Vite build
+- `preview`: Vite preview
+- `test`: unit tests
+- `test:e2e`: e2e tests (Playwright)
+- `lint`: ESLint
+- `format`: Prettier
+
+### Next Steps
+
+- Duplicate `landing` to create your first real domain
+- Register its routes in `src/app/router.tsx`
+- Use alias imports (e.g., `@domains/<domain>/pages/...`) instead of deep relatives
+- Add translations under `src/domains/<domain>/i18n/*`
+- Expose services via domain-level `services/*` and keep HTTP in `core/lib/httpClient`
+- Add critical E2E flows under `e2e/*` and configure `playwright.config.ts`
+
+### New Repository Checklist
+
+1. Define aliases in `tsconfig.base.json` and configure project references in `tsconfig.json` (which references `tsconfig.app.json` and `tsconfig.node.json`).
+2. Configure Tailwind tokens in `core/constants/designTokens.ts` and mirror in `tailwind.config.ts`.
+3. Create initial domain `src/domains/<domain>` (use `scripts/generate.ts` if present).
+4. Validate env in `core/config/env.client.ts`; add `public/runtime-config.json` if needed.
+5. Enable providers in `app/providers` (Theme, Query, Auth, Analytics) as required.
+6. Set up tests in `tests/setupTests.ts` with MSW and RTL; add first test.
+7. Configure ESLint boundaries and Prettier (with Tailwind plugin).
+8. Add lazy routes in `app/router.tsx` and `<domain>/routes.ts`.
+9. Add error pages and mount a global error boundary.
+10. Wire analytics/logging adapters only if needed for the project.

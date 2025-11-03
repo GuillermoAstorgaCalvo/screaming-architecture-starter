@@ -1,0 +1,57 @@
+# CODEOWNERS file
+# This file defines code ownership for GitHub's CODEOWNERS feature.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+# Co-founders: Guillermo Astorga Calvo (CTO) and Masa Jebril (CEO)
+* @GuillermoAstorgaCalvo @MasaJebril
+
+# Core architecture and configuration files
+/.github/ @GuillermoAstorgaCalvo @MasaJebril
+/.cursor/ @GuillermoAstorgaCalvo @MasaJebril
+*.config.* @GuillermoAstorgaCalvo @MasaJebril
+*.json @GuillermoAstorgaCalvo @MasaJebril
+*.md @GuillermoAstorgaCalvo @MasaJebril
+
+# Root configuration
+package.json @GuillermoAstorgaCalvo @MasaJebril
+pnpm-*.yaml @GuillermoAstorgaCalvo @MasaJebril
+.nvmrc @GuillermoAstorgaCalvo @MasaJebril
+.npmrc @GuillermoAstorgaCalvo @MasaJebril
+
+# Application entry point and routing
+/src/app/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Core utilities and framework-agnostic code
+/src/core/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Infrastructure adapters
+/src/infrastructure/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Shared components and utilities
+/src/shared/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Global styles
+/src/styles/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Type definitions
+/src/types/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Testing infrastructure
+/tests/ @GuillermoAstorgaCalvo @MasaJebril
+/e2e/ @GuillermoAstorgaCalvo @MasaJebril
+*.test.* @GuillermoAstorgaCalvo @MasaJebril
+*.spec.* @GuillermoAstorgaCalvo @MasaJebril
+
+# Documentation
+/docs/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Build and deployment
+/.github/workflows/ @GuillermoAstorgaCalvo @MasaJebril
+
+# Domain-specific code
+# Add domain owners here as your project grows
+# Example:
+# /src/domains/landing/ @landing-team
+# /src/domains/auth/ @auth-team
+

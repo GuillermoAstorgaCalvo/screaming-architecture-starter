@@ -1,0 +1,18 @@
+---
+description: 'SEO & metadata helpers, per-route guidance, and best practices'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## SEO & Metadata
+
+### Structure
+
+- Central helpers in `seo/` (e.g., meta builders and defaults).
+- Pages import meta builders; avoid inline tags.
+
+### Guidelines
+
+- Per-route titles and descriptions.
+- Open Graph and Twitter tags for shareable pages.
+- Consider sitemap generation in CI for content-heavy sites.

@@ -1,0 +1,155 @@
+---
+description: 'Module boundaries and linting policy summary'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Module Boundaries & Linting Guide
+
+> Canonical source for boundaries is `boundaries.mdc`. This file summarizes policy; when in doubt, defer to `boundaries.mdc`.
+
+### Goals
+
+- Enforce Allowed Imports (`app` → `domains` → `core`; `infrastructure` as adapters)
+- Prefer path aliases over deep relative paths
+- Forbid re-export barrels (no `index.ts` that re-exports a directory)
+
+### Allowed Imports Matrix (summary)
+
+- **app**: may import `core`, `domains`, `shared`, `infrastructure`
+- **domains**: may import `core`, `shared`
+- **core**: may import standard libs only (no `app`, `domains`, `infrastructure`, `shared`)
+- **infrastructure**: may import `core` types/interfaces; avoid importing `domains`
+- **shared**: may import `core`; never `app` or `infrastructure`
+
+### Path Aliases (summary)
+
+Define in `tsconfig.base.json` and extend in project `tsconfig.json`:
+
+```json
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@app/*": ["src/app/*"],
+			"@core/*": ["src/core/*"],
+			"@domains/*": ["src/domains/*"],
+			"@infra/*": ["src/infrastructure/*"],
+			"@shared/*": ["src/shared/*"],
+			"@styles/*": ["src/styles/*"],
+			"@tests/*": ["tests/*"]
+		}
+	}
+}
+```
+
+### ESLint Configuration (summary)
+
+- Prefer `eslint-plugin-boundaries` or `import/no-restricted-paths` to enforce the matrix
+- Encourage alias usage via `import/no-relative-packages` and custom rules
+
+```js
+// .eslintrc.cjs (excerpt)
+module.exports = {
+	plugins: ['boundaries', 'import'],
+	settings: {
+		'boundaries/elements': [
+			{ type: 'app', pattern: 'src/app/*' },
+			{ type: 'core', pattern: 'src/core/*' },
+			{ type: 'domains', pattern: 'src/domains/*' },
+			{ type: 'infra', pattern: 'src/infrastructure/*' },
+			{ type: 'shared', pattern: 'src/shared/*' },
+		],
+	},
+	rules: {
+		// Enforce Allowed Imports
+		'boundaries/element-types': [
+			2,
+			{
+				default: 'allow',
+				rules: [
+					{
+						from: 'domains',
+						disallow: ['infra', 'app', 'domains'],
+						message: 'Domains may import core/shared only',
+					},
+					{
+						from: 'core',
+						disallow: ['app', 'domains', 'infra', 'shared'],
+						message: 'Core must be framework-agnostic',
+					},
+					{
+						from: 'shared',
+						disallow: ['app', 'infra'],
+						message: 'Shared cannot depend on app or infra',
+					},
+					{
+						from: 'infra',
+						disallow: ['app', 'domains', 'shared'],
+						message: 'Infrastructure should not import domains/shared',
+					},
+				],
+			},
+		],
+		// Discourage deep relative paths when an alias exists
+		'no-restricted-imports': [
+			'error',
+			{
+				patterns: [
+					{
+						group: ['../../*', '../../../*', '../../../../*'],
+						message:
+							'Use path aliases (@app, @core, @domains, @infra, @shared) instead of deep relatives',
+					},
+				],
+			},
+		],
+	},
+};
+```
+
+### No Re-export Barrels Policy
+
+- Do NOT create `index.ts` files that re-export entire folders
+- Import concrete modules explicitly (improves tree-shaking clarity and lint boundary tracing)
+- Exception: a curated `domains/<domain>/index.ts` that exports only the domain’s public API
+  surface (pages, services, hooks) is acceptable. Do not blanket-export folders.
+
+Recommended lint to catch barrels:
+
+```js
+// .eslintrc.cjs (excerpt)
+module.exports = {
+	rules: {
+		'no-restricted-exports': ['error', { restrictedNamedExports: ['default'] }],
+		// Optional: custom lint rule or codeowners review to block index.ts re-exports
+	},
+};
+```
+
+Note: This rule is complementary; it does not by itself detect folder-wide re-export “barrels”. Keep the no-barrels policy enforced via boundaries and code review.
+
+### Examples: Do / Don’t
+
+- Do (domain importing core):
+
+```ts
+import { httpClient } from '@core/lib/httpClient';
+```
+
+- Don’t (domain importing infrastructure):
+
+```ts
+// 🚫 Not allowed (domain → infrastructure)
+import { axiosInstance } from '@infra/api/axiosInstance';
+```
+
+### CI Enforcement
+
+- Run ESLint with boundary rules in CI
+- Block merges if violations exist
+
+### Adoption Notes
+
+- For small sites, keep rules on but be pragmatic; don’t introduce barrels while the codebase is small
+- For larger apps, add module-boundary lint autofixes and PR templates that call out boundary checks

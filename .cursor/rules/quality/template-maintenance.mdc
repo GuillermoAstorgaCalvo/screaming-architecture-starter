@@ -1,0 +1,93 @@
+---
+description: 'Template maintenance and multi-repo upgrade guidance'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Template Maintenance & Multi-Repo Upgrade Guide
+
+This template is intended to seed many repositories. Use this guide to keep new and existing repos healthy and consistent over time.
+
+### Goals
+
+- Keep core tooling, docs, and policies aligned across repos.
+- Minimize breaking changes; document migrations when necessary.
+- Standardize CI gates and boundaries.
+
+### Source of Truth
+
+- This repo’s `.cursor/*` docs and config templates (`repo-templates.mdc`) are the single source for policies and baseline configs.
+- When updating policies/tooling, update this template first, then roll changes out.
+
+### Update Cadence
+
+- Monthly: dependency refresh (minor/patch), CI actions, lint rules.
+- Quarterly: major upgrades (TS, Vite, React, ESLint), review performance/accessibility policies.
+
+### Recommended Automation
+
+- Renovate/Dependabot for dependency updates with grouping (lint/test/build in CI).
+- GitHub Actions caching for pnpm.
+- Optional: a script to diff local repo configs against template baselines (preflight checks in CI).
+
+### Rolling Out Changes
+
+1. Prepare: update this template (docs + sample configs). Add an ADR if the change is architectural or cross-cutting.
+2. Validate: create a sandbox repo from the template; run `pnpm typecheck && pnpm lint && pnpm test && pnpm build`.
+3. Communicate: summarize changes and risks. Include migration notes and code mods if available.
+4. Rollout: apply to target repos (PRs). Keep PR scope focused: config updates, dependency bumps, and minimal code fixes.
+
+### Compatibility Strategy
+
+- Target modern browsers per `browser-support.mdc`.
+- Keep TS `target/lib` consistently at ES2023 (adjust per project only when justified).
+- Avoid global polyfills; prefer ponyfills in feature code paths.
+
+### Version Pins & Ranges
+
+- Follow ranges in `repo-templates.mdc`. Use lockfiles to pin exact versions per repo.
+- For majors, prefer explicit, isolated upgrade PRs with clear ADR linkage.
+
+### Boundary & Alias Enforcement
+
+- Always maintain ESLint boundaries and alias rules (see `boundaries.mdc`, `repo-templates.mdc`).
+- No re-export barrels policy remains enforced across repos.
+
+### CI Gates (Baseline)
+
+- Typecheck, lint, unit tests, and build on PRs to protected branches (see `ci-cd.mdc`).
+- Optional: E2E on `main`/nightly; Lighthouse periodic audits.
+
+### Accessibility & Performance Baselines
+
+- Keep `accessibility.mdc` and `performance-budgets.mdc` aligned with org policy.
+- Add/refresh axe checks for critical components/pages where feasible.
+
+### Security & Compliance
+
+- Follow `security-privacy.mdc` and `threat-model.mdc` in changes. No secrets in client bundles; env access via `core/config/env.client.ts` only.
+
+### Migration Notes Template
+
+- Summary: what changed and why (link ADR).
+- Impacted areas: code, tooling, CI.
+- How to upgrade: steps, commands, any codemods.
+- Rollback plan: how to revert safely.
+
+### New Repo Bootstrap Checklist (Recap)
+
+- Define aliases (`tsconfig.base.json`) and extend in project `tsconfig.json`.
+- Add ESLint boundaries and import rules. Enable Prettier.
+- Configure Vite and Tailwind with tokens.
+- Scaffold initial domain and wire routes.
+- Set up CI (typecheck, lint, test, build) and branch protections.
+
+### Maintenance Anti-Patterns
+
+- Diverging from alias/boundary rules or introducing barrels.
+- Silent policy changes without ADRs/migration notes.
+- Mixing dependency majors with unrelated code changes.
+
+### Appendix: Suggested PR Labels
+
+- `chore(deps)`, `chore(config)`, `docs`, `feat`, `fix`, `refactor`, `ci`, `test`.

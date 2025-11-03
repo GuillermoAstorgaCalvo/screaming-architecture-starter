@@ -1,0 +1,45 @@
+---
+description: 'Folder structure index and pointers to focused rule files'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Folder Structure: Index
+
+This rule is an index that links to focused, composable rules under 500 lines each. Use these for precise guidance and reuse.
+
+### What you likely want
+
+- Root repo and `src/app` composition: `architecture/folder-structure-root-app.mdc`
+- `src/core` (config, ports, utils, UI primitives, tokens, animation): `architecture/folder-structure-core-ui.mdc`
+- `src/domains` and `src/shared` (anatomy, state, i18n): `architecture/folder-structure-domains-shared.mdc`
+- Infrastructure, workers, assets, styles: `architecture/folder-structure-infra-platform.mdc`
+- Types, tests, e2e, scripts, storybook, public, SEO, CI/CD: `architecture/folder-structure-ops-testing.mdc`
+
+### Allowed Imports and Boundaries
+
+See `boundaries.mdc` for the authoritative Allowed Imports matrix, path aliases, ESLint enforcement, and no-barrels policy.
+
+### Runtime Configuration
+
+See `config/config.mdc` for env strategy (`core/config/env.client.ts`), precedence, and runtime overrides.
+
+### State and Routing
+
+See `architecture/state.mdc` for React Query + Zustand per-domain guidance, and `config/routing.mdc` for routing structure.
+
+### UI, Tokens, and A11y
+
+See `ux/ui-design.mdc`, `ux/theming-tokens.mdc`, and `ux/accessibility.mdc` for design system usage and accessibility requirements.
+
+### Performance and Budgets
+
+See `ux/performance.mdc` and `ux/performance-budgets.mdc` for bundling, code splitting, and asset policies.
+
+### Testing and Release
+
+See `testing/testing.mdc`, `quality/checklists.mdc`, and `quality/release-hygiene.mdc`.
+
+### ADRs and Governance
+
+See `architecture/overview.mdc`, `architecture/adr-process.mdc`, `architecture/decisions.mdc`, and `architecture/governance.mdc`.

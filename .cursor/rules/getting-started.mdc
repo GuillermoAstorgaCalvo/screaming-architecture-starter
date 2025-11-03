@@ -1,0 +1,13 @@
+---
+description: 'Getting started with setup, scripts, and key references'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Getting Started
+
+Start here for setup and day-to-day commands.
+
+- Prerequisites, install, scripts, and first steps: see `tooling/guides.mdc`
+- Baseline configuration templates: see `repo-templates.mdc`
+- Module boundaries and import rules: see `boundaries.mdc`

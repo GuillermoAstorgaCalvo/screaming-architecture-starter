@@ -1,0 +1,27 @@
+---
+description: 'Architectural Decisions (ADR) registry for the template'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Architectural Decisions (ADR)
+
+### ADR-000: Adopt Screaming Architecture
+
+- Context: We need a scalable, domain-oriented frontend architecture.
+- Decision: Organize code by domain first (`src/domains/*`), separate `core`, `infrastructure`, and `shared`.
+- Consequences: Clear ownership, easier scaling/testing, stricter boundaries.
+
+### ADR-001: Use Vite + React + TypeScript + Tailwind
+
+- Context: Fast DX, strong typing, modern styling.
+- Decision: Vite for build/dev, React with hooks, TypeScript strict, Tailwind for utilities.
+- Consequences: Rapid iteration, consistent styling, type safety.
+
+### ADR-002: Enforce Path Aliases and Module Boundaries; No Barrels
+
+- Context: Maintain scalable, explicit dependencies across domains and layers.
+- Decision: Define aliases in `tsconfig.base.json` (`@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@tests`) and enforce Allowed Imports via ESLint boundaries rules. Avoid re-export barrels (`index.ts` re-exports).
+- Consequences: Clear imports, easier refactors, better lint enforcement, reduced accidental cross-boundary coupling.
+- Clarification: A curated `domains/<domain>/index.ts` is allowed to export only the domain’s
+  public API surface (pages, services, hooks). Blanket folder re-exports remain disallowed.

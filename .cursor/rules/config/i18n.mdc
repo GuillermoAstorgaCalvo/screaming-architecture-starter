@@ -1,0 +1,21 @@
+---
+description: 'Internationalization structure and guidelines for type-safe translations'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Internationalization (i18n)
+
+### Structure
+
+- Core i18n instance in `core/i18n/i18n.ts` with lazy-loaded namespaces, fallbacks, and language detection (optional).
+- Domain translations under `domains/<domain>/i18n/*` (e.g., `en.json`, `es.json`).
+- Types for translation keys in `core/i18n/types.ts` for type-safe access.
+  - Optionally generate these types via a script (e.g., i18next TypeScript generator)
+    to keep keys in sync at scale.
+
+### Guidelines
+
+- Prefer keys over raw strings in UI.
+- Co-locate domain copy with the domain.
+- Keep messages short and composable; avoid embedding HTML in translations.

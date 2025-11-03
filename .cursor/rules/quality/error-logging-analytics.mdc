@@ -1,0 +1,25 @@
+---
+description: 'Error handling, logging, and analytics guidance'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Error Handling, Logging, and Analytics
+
+### Errors
+
+- Global `ErrorBoundary` in `core/lib/errorBoundary.tsx` wraps app/pages.
+- Fail fast in domain services; map API errors to domain error shapes.
+- For granular capture and user-friendly fallbacks, consider additional error boundaries
+  at domain or page container level in larger apps.
+
+### Logging
+
+- Use `core/lib/logger.ts` for structured logs (info, warn, error).
+- Adapter in `infrastructure/logging/loggerAdapter.ts` to connect Sentry/console/etc.
+
+### Analytics
+
+- Use `domains/shared/analytics` for types and hooks.
+- Adapter pattern in `infrastructure/analytics/analyticsAdapter.ts` with provider-specific adapters.
+- Fire events from domain boundaries (pages/interactions), not low-level components.

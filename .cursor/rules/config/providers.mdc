@@ -1,0 +1,36 @@
+---
+description: 'App providers composition: Auth, Query, Theme, Analytics'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## App Providers
+
+**Core Providers** (in `core/providers/`):
+
+- `LoggerProvider.tsx`: Provides `LoggerPort` instance via React context. Requires `logger` prop (injected at app level with `loggerAdapter`). Used by `ErrorBoundary` and throughout the app. Provides `useLogger()` hook via `useLogger.ts`.
+- `LoggerContext.tsx`: React context definition for logger (exports `LoggerContext` and `LoggerContextValue` type).
+- `StorageProvider.tsx`: Provides `StoragePort` instance via React context. Requires `storage` prop (injected at app level with `localStorageAdapter` or `cookieStorageAdapter`). Required by `ThemeProvider` for persistence. Provides `useStorage()` hook via `useStorage.ts`.
+- `StorageContext.tsx`: React context definition for storage (exports `StorageContext` and `StorageContextValue` type).
+- `HttpProvider.tsx`: Provides `HttpPort` instance via React context. Requires `http` prop (injected at app level with `httpClient` from `@core/lib/httpClient`). Used by hooks like `useFetch` and domain services for HTTP operations. Provides `useHttp()` hook via `useHttp.ts`.
+- `HttpContext.tsx`: React context definition for HTTP client (exports `HttpContext` and `HttpContextValue` type).
+
+**App Providers** (in `app/providers/`):
+
+- `ThemeProvider.tsx`: Manages theme state (light/dark/system) and applies dark mode via class on html element. Persists user preference using `StoragePort` via `useStorage()` hook. Supports system theme detection via `prefers-color-scheme` media query. Provides `ThemeContext` and `useTheme()` hook via `useTheme.ts`. Located in `app/providers/` because it's app-specific (not core functionality).
+- `ThemeContext.tsx`: React context definition for theme (exports `ThemeContext` and `ThemeContextValue` type).
+- `QueryProvider.tsx`: React Query client with optimized defaults (stale time: 30s, gcTime: 5min, retry: 3 with exponential backoff, max retry delay: 30s). Uses `env.PROD` for `refetchOnWindowFocus` behavior (true in production, false in development). Mutation retries: 1 with 1s delay. Creates new `QueryClient` instance on mount via `useMemo` for performance optimization. Also enables `refetchOnReconnect: true` and `refetchOnMount: true` for query defaults. Uses `@tanstack/react-query` v5 API (gcTime instead of cacheTime).
+
+### Optional/Planned Providers
+
+- `AuthProvider.tsx`: (Optional) Manages auth session and user.
+- `AnalyticsProvider.tsx`: (Optional) Event tracking abstraction.
+
+Composition: `app/App.tsx` wraps router with providers in order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `StorageProvider` → `ThemeProvider` → `QueryProvider` → `BrowserRouter` → `Router`.
+
+### Provider Hooks
+
+- `useLogger()` (from `core/providers/useLogger.ts`): Access `LoggerPort` from `LoggerProvider` context. Throws if used outside provider.
+- `useStorage()` (from `core/providers/useStorage.ts`): Access `StoragePort` from `StorageProvider` context. Throws if used outside provider.
+- `useHttp()` (from `core/providers/useHttp.ts`): Access `HttpPort` from `HttpProvider` context. Throws if used outside provider.
+- `useTheme()` (from `app/providers/useTheme.ts`): Access theme state and controls from `ThemeProvider` context. Returns object with `theme`, `resolvedTheme`, and `setTheme` function.

@@ -1,0 +1,70 @@
+---
+description: 'Configuration strategy: env, runtime config, routes, and HTTP client'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Configuration and Environment
+
+### Env
+
+- Access env via `core/config/env.client.ts` (Zod-validated, client-safe surface) with sensible defaults.
+- Current implementation exports `env` object with `DEV`, `PROD`, and `MODE` properties (validated via Zod schema).
+- Forbid direct `import.meta.env` access elsewhere; import from `core/config/env.client.ts` only (can be enforced via ESLint).
+- The env parser uses safe defaults if values are missing or invalid (handles parse errors gracefully).
+- Environment-derived constants available via `core/constants/env.ts` wrapper that reads from the safe env surface. Exports `IS_DEV`, `IS_PROD`, `ENV_MODE` constants and helper functions `isDevelopment()`, `isProduction()`, `getMode()`. Avoids re-parsing env elsewhere by providing pre-computed constants.
+- Additional constants in `core/constants/`: `designTokens.ts` (design system values), `theme.ts` (theme type definitions), `ui.ts` (UI component constants), `endpoints.ts` (API endpoint constants with `buildApiUrl()` helper).
+
+### Runtime Configuration Pattern
+
+- Use `core/config/env.client.ts` to expose a Zod-validated, client-safe env surface.
+- For values that change without rebuilds, read `public/runtime-config.json` on app startup and merge with the safe env surface.
+- Never read `import.meta.env` directly outside `core/config` modules.
+
+#### Loading Order Example
+
+1. Parse build-time env in `core/config/env.client.ts` (Zod-validated, client-safe)
+2. On app startup, call `initConfig()` from `core/config/init.ts` which:
+   - Loads `public/runtime-config.json` via `getRuntimeConfig()` from `core/config/runtime.ts`
+   - Validates runtime config with Zod schema
+   - Configures `httpClient` baseURL from `API_BASE_URL` if provided
+3. Consumers can access:
+   - Build-time env: `import { env } from '@core/config/env.client'`
+   - Runtime config: `import { getRuntimeConfig, getAppConfig } from '@core/config/runtime'`
+   - Merged config: `getAppConfig()` combines env + runtime config
+
+Example keys in `public/runtime-config.json`:
+
+```json
+{
+	"API_BASE_URL": "https://api.example.com",
+	"ANALYTICS_WRITE_KEY": "..."
+}
+```
+
+### Routes & Endpoints
+
+- Global route path constants in `core/config/routes.ts` (exports `ROUTES` object with path constants like `ROUTES.HOME`).
+- API endpoints in `core/constants/endpoints.ts` (exports `API_ENDPOINTS` object and `buildApiUrl()` helper function that combines endpoint paths with baseURL from runtime config).
+- Use path aliases (`@core`, `@app`, `@domains`, `@infra`, `@shared`) in imports.
+
+### API Layer & Validation
+
+- Wrap HTTP in `core/lib/httpClient.ts`; interceptors are defined in `core/lib/httpClientInterceptors.ts` (not in infrastructure).
+- Validate request/response at the boundary with Zod (schemas colocated in domain `models/*`).
+- Map transport DTOs to domain models to avoid leaking API shapes into UI.
+
+### HTTP Client
+
+- `core/lib/httpClient.ts` exports a `HttpClient` class that implements `HttpPort` interface. The default instance is exported as `httpClient`.
+- Interceptors are defined in `core/lib/httpClientInterceptors.ts` with types `RequestInterceptor`, `ResponseInterceptor`, and `ErrorInterceptor`, along with execution utilities.
+- Helper utilities are in `core/lib/httpClientHelpers.ts` (URL building, header merging, body serialization, response parsing, timeout control, error creation).
+- The httpClient class supports:
+  - Default configuration via `setDefaultConfig()`
+  - Interceptor registration via `addRequestInterceptor()`, `addResponseInterceptor()`, `addErrorInterceptor()`
+  - All HTTP methods: `request()`, `get()`, `post()`, `put()`, `patch()`, `delete()`
+  - Automatic body serialization (JSON for objects, preserves FormData/Blob/etc.)
+  - Timeout support via AbortController
+  - Error handling with typed `HttpClientError`
+- Domain services consume `core/lib/httpClient.ts` and must validate IO at boundaries; avoid re-export barrels.
+- The httpClient implements `HttpPort` interface from `core/ports/HttpPort.ts`.

@@ -1,0 +1,32 @@
+---
+description: 'PR checklist and release readiness checks'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Checklists
+
+### Pull Request Checklist
+
+- [ ] Domain code added under correct `src/domains/<domain>`
+- [ ] No forbidden imports across boundaries
+- [ ] Imports use path aliases where available (no deep relative paths)
+- [ ] No re-export barrels (`index.ts` re-exports) introduced
+- [ ] Routes added to `app/router.tsx` (if applicable)
+- [ ] i18n keys added and referenced
+- [ ] Tests added/updated (unit/E2E as needed)
+- [ ] Accessibility reviewed (labels, focus, contrast)
+- [ ] Performance reviewed (lazy loading, memoization where needed)
+- [ ] Security reviewed (no secrets, safe HTTP usage)
+- [ ] Docs updated (.mdc if structure/flows changed)
+- [ ] `tsconfig` variants present and aligned: base, app, node, vitest, build
+
+### Release Readiness
+
+- [ ] Feature flags defaulted safely
+- [ ] Analytics events tracked
+- [ ] Error boundaries cover new pages
+- [ ] Env variables documented in `core/config/env.ts`
+- [ ] ESLint boundaries rules configured and passing
+- [ ] `tsconfig.base.json` with aliases is present and referenced
+- [ ] `tsconfig` variants exist as needed (node/vitest/build) and CI uses them appropriately

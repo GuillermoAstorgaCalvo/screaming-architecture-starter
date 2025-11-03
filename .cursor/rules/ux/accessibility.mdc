@@ -1,0 +1,56 @@
+---
+description: 'Accessibility guidelines, requirements, components, and testing'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Accessibility (a11y)
+
+### Guidelines
+
+- Keyboard accessible interactive elements; visible focus states.
+- Prefer semantic HTML; ensure color contrast; respect reduced-motion.
+- Provide aria-labels/roles only when semantics are insufficient.
+
+### Requirements
+
+- Meet WCAG 2.2 Level AA for new work; AAA where low effort and high value.
+- Preserve focus order and logical heading structure (`h1` → `h2` → ...).
+- Provide text alternatives for non-text content (alt text; avoid redundant alt).
+- Use landmark regions (`header`, `nav`, `main`, `aside`, `footer`) for structure.
+- Ensure interactive targets are large enough (44x44 CSS px target guidance).
+- Respect user preferences: `prefers-reduced-motion`, `prefers-color-scheme`.
+
+### Components
+
+- Core UI should expose keyboard interactions and ARIA as needed (atoms first).
+- Avoid role/pattern re-implementation when native semantics exist (e.g., `<button>` over clickable `<div>`).
+- Manage focus on open/close of overlays and modals; trap focus when appropriate.
+
+### Testing
+
+- Include axe checks in unit tests for critical components/pages.
+- Consider E2E axe checks for key flows where feasible.
+
+#### Tooling & Process
+
+- Unit: `jest-axe`/`vitest-axe` on rendered components (happy-path + variants).
+- E2E: Playwright with `axe-core` on critical pages and flows.
+- Manual: keyboard-only traversal; screen reader smoke (NVDA/VoiceOver) for forms and navigation.
+
+#### Common Assertions
+
+- No axe violations of serious/critical severity in PRs.
+- All interactive elements reachable and operable via keyboard.
+- Visible focus ring and non-color-only states (hover/active/selected) where relevant.
+- Color contrast AA (use design tokens and verify via tooling).
+
+### Content & i18n
+
+- Use concise, descriptive labels and headings; avoid placeholder-only labels.
+- Ensure language attributes and i18n messages are meaningful and localized.
+
+### Documentation
+
+- Document known exceptions with rationale and compensating controls.
+- Track a11y issues with priority labels; include repro steps and screenshots.

@@ -1,0 +1,94 @@
+---
+description: 'Overview of the Screaming Architecture Starter'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Screaming Architecture Starter — Overview
+
+**Purpose**: Provide a frontend template where the architecture screams the domain. The directory names reflect business/domain concepts first, frameworks second. Built with TypeScript, React, Vite, and TailwindCSS.
+
+- **Domains-first**: `src/domains/*` encapsulates business logic, pages, components, services, and store per domain.
+- **Framework-agnostic core**: `src/core/*` holds generic utilities, hooks, config, i18n types, and UI atoms not tied to any domain.
+- **Infrastructure adapters**: `src/infrastructure/*` integrates frameworks and external services (API clients, storage, logging, analytics adapters).
+- **Shared composites**: `src/shared/*` contains reusable composite components and helpers shared across domains.
+- **App composition**: `src/app/*` wires providers, routing, and error boundaries.
+
+### Architectural Goals
+
+- **Separation of concerns**: Domain code does not depend on UI framework details or infrastructure specifics.
+- **Explicit boundaries**: Clear ownership and import rules between `domains`, `core`, `infrastructure`, and `shared`.
+- **Feature scalability**: New features are added by creating or extending domains, not scattering code.
+- **Testability**: Domain logic is testable without rendering or network.
+- **Performance & Observability**: Lazy-loaded pages/routes and atomic UI components; optional Web Vitals + error tracking adapters.
+
+### Scalability Guidance (small → large)
+
+- Start with `app`, a single domain, and `core/ui` for simple landings.
+- Add domains per business area; extract cross-domain features to `domains/shared/*`.
+- Keep third-party specifics in `infrastructure/*` adapters; depend on `core` interfaces.
+- Prefer route-based code splitting and lazy heavy widgets as apps grow.
+
+### Trimming for Small Sites
+
+- Omit `domains/shared`, `infrastructure/observability`, `core/forms`, `storybook`, and `e2e` when unnecessary.
+
+### High-level Dependency Direction
+
+`core` ← `domains` ← `app`
+
+`infrastructure` provides adapters consumed by `core` and `domains` via interfaces, not direct vendor SDK usage.
+
+### Routing and Providers
+
+- Centralized routes in `src/app/router.tsx` aggregating domain routes.
+- Global providers (Query, Auth, Theme, Analytics) live in `src/app/providers/*`.
+- Optional route guards (`src/app/routes.guards.ts`) enforce auth/feature flags as pure functions.
+
+### Styling and Design System
+
+- TailwindCSS + design tokens in `src/core/constants/designTokens.ts` and `tailwind.config.ts`.
+- UI atoms in `src/core/ui/*`; domain-specific UI in `src/domains/<domain>/components/*`.
+- Optional `scripts/sync-design-tokens.ts` keeps tokens and Tailwind config aligned.
+
+### Testing Strategy
+
+- Unit tests under `tests/*` for utilities, hooks, stores, and pages.
+- E2E under `e2e/*` for critical flows.
+- Accessibility and performance checks are encouraged (axe in unit/e2e; Web Vitals reporting optional).
+
+### Optional Capabilities (Opt-in, library-agnostic)
+
+- Forms abstraction under `src/core/forms/*` to decouple domain code from form libraries; Zod as the default validator.
+- Observability adapters under `src/infrastructure/observability/*` for error tracking and Web Vitals.
+- Security helpers in `src/core/security/*` and adapters in `src/infrastructure/security/*` (sanitization, CSP hints, crypto).
+- PWA shell under `src/app/pwa/*` disabled by default; enable per project needs.
+
+### Governance & DX
+
+- Path aliases centralized in `tsconfig.base.json` and enforced by ESLint import rules.
+- Preconfigured lint recommendations: boundaries, jsx-a11y, tailwindcss, testing-library, jest-dom.
+- Optional generators under `scripts/generate.ts` to scaffold new domains consistently.
+
+### Ownership
+
+- **Company**: BrightHub S.L. (https://brighthub.es)
+- **CTO**: Guillermo Astorga Calvo (guillermo@brighthub.es)
+- **CEO**: Masa Jebril (masaj@brighthub.es)
+
+### When to Create a New Domain
+
+- A distinct business area with its own pages, services, store, and components.
+- Reused across the app? Consider `src/domains/shared/*`.
+
+### Non-Goals
+
+- Not a kitchen sink. It’s intentionally minimal but extensible.
+- No tight coupling to a particular backend; adapters make swaps trivial.
+
+### Enforcement and Consistency
+
+- Path aliases: Use a top-level `tsconfig.base.json` to define `@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@app-styles`, `@tests`. Project `tsconfig.json` uses project references (references `tsconfig.app.json` and `tsconfig.node.json`). ESLint import rules should prefer these aliases over long relative paths.
+- TypeScript configs: Use multiple configs for clarity — `tsconfig.base.json` (shared), `tsconfig.json` (project references orchestrator), `tsconfig.app.json` (application source code), `tsconfig.node.json` (Node/Vite configs & scripts), `tsconfig.vitest.json` (unit tests), `tsconfig.build.json` (CI/build-only, emits declarations).
+- Module boundary linting: Enforce the "Allowed Imports" rules via ESLint (e.g., `eslint-plugin-boundaries` or `import/no-restricted-paths`) so `domains` cannot import `infrastructure`, etc.
+- No re-export barrels: Avoid `index.ts` re-export barrels. They hide dependencies, hinder tree-shaking clarity, and complicate boundary enforcement. Import concrete files explicitly.

@@ -1,0 +1,84 @@
+---
+description: 'Security & privacy principles, configuration, and handling guidance'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Security & Privacy Guide
+
+### Principles
+
+- Least privilege, fail fast, no secrets in client bundles
+- Centralize environment access; validate with Zod; expose only client-safe values
+- Sanitize all untrusted HTML; avoid `dangerouslySetInnerHTML` unless sanitized
+
+### Secrets & Configuration
+
+- Never commit secrets; `.env` files ignored by Git
+- Client-safe env surface via `core/config/env.client.ts` only
+- For values that change at runtime, use `public/runtime-config.json` and merge on app startup
+
+### CSP (Content Security Policy)
+
+- Recommend adopting a strict CSP in production (document/report-only first)
+- Centralize helpers in `core/security/csp.ts` (nonce/hash generation guidance)
+- Avoid inline scripts/styles; rely on hashed/nonce-based policies when needed
+
+#### Minimal CSP (report-only first)
+
+```
+Content-Security-Policy-Report-Only:
+  default-src 'self';
+  script-src 'self' 'nonce-<RUNTIME_NONCE>' 'strict-dynamic';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  connect-src 'self' https://api.example.com;
+  frame-ancestors 'none';
+  base-uri 'self';
+  report-to csp-endpoint;
+```
+
+Notes:
+
+- Generate a unique nonce per response and attach it to allowed scripts.
+- Prefer hashes for static inline content; avoid inline scripts where possible.
+- Start with Report-Only; fix violations; then enforce.
+
+### HTML Sanitization
+
+- Provide `core/security/sanitizeHtml.ts` for sanitizing user-provided content
+- Disallow raw HTML rendering in domains/components without sanitization
+
+### Authentication & Tokens
+
+- Keep auth adapter under `infrastructure/auth/*` (e.g., JWT adapter)
+- Store tokens via storage adapters (localStorage/cookies) behind SSR-safe guards
+- Attach tokens via HTTP interceptors in `infrastructure/api/interceptors.ts`
+- Handle refresh/rotation and clock skew in adapters; surface domain-friendly errors
+
+### Network & Transport
+
+- Use `core/lib/httpClient.ts` as the sole HTTP boundary
+- Validate request/response with Zod schemas in domain `models/*`
+- Normalize errors; map to domain error types; avoid leaking transport details into UI
+
+### Dependency Hygiene
+
+- Prefer lightweight, audited dependencies; regularly update via Dependabot/Renovate
+- Run security audits in CI (`pnpm audit` optional) and pin via lockfile
+
+### Privacy & Data Handling
+
+- Avoid collecting PII by default; add analytics via explicit adapters under `infrastructure/analytics/*`
+- Document events in `domains/shared/analytics/*`; opt-in per app; provide a noop adapter by default
+- Respect user consent and regional regulations (GDPR/CCPA) as applicable per project
+
+### Build & Supply Chain
+
+- Lock Node and package manager versions; use reproducible builds
+- Consider integrity checks for third-party assets (SRI) when applicable
+
+### Testing Security Concerns
+
+- Unit tests for sanitization and auth flows
+- E2E smoke tests for auth/session behavior; ensure tokens aren’t leaked via logs/URLs

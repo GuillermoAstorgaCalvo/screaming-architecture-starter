@@ -1,0 +1,23 @@
+---
+description: 'UI guidance, design tokens usage, and component patterns'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## UI, Design Tokens, and TailwindCSS
+
+### Tokens
+
+- Define tokens in `core/constants/designTokens.ts` (colors, spacing, radius, shadows).
+- Mirror in `tailwind.config.ts` for class usage.
+
+### Components
+
+- Atomic UI in `core/ui/*` (Button, Input, Modal, Text, Heading, Icon).
+- Domain-specific UI in `domains/<domain>/components/*`.
+
+### Patterns
+
+- Prefer composition over variants explosion.
+- Extract repeated class patterns into components or utilities.
+- Use responsive and dark mode classes consistently.

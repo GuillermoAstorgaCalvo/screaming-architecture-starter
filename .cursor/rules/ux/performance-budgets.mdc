@@ -1,0 +1,69 @@
+---
+description: 'Performance budgets, code splitting, and asset policies'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Performance Budgets & Asset Policy
+
+### Budgets (Targets, adjustable per repo)
+
+- JS main bundle (initial route): ≤ 200KB gzip (small sites) / ≤ 350KB (larger apps)
+- LCP: < 2.5s (mid-tier devices) on Fast 3G sim
+- CLS: < 0.1; INP: < 200ms
+
+Track via Lighthouse in CI (periodic or nightly) and bundle analyzer locally.
+
+### How to Enforce (examples)
+
+- Local: `npx lighthouse http://localhost:5173 --view --only-categories=performance`
+- CI (excerpt):
+
+```yaml
+# .github/workflows/lighthouse.yml (periodic)
+name: Lighthouse
+on:
+  schedule:
+    - cron: '0 3 * * 1-5'
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build && pnpm preview &
+      - uses: treosh/lighthouse-ci-action@v10
+        with:
+          configPath: ./.lighthouserc.json
+          uploadArtifacts: true
+```
+
+### Code Splitting
+
+- Route-based splitting by default; lazy-load heavy pages and widgets
+- Prefer dynamic `import()` for rarely-used features
+
+### Dependencies
+
+- Avoid heavy, non-tree-shakeable libs in core UI
+- Prefer native APIs and small utilities; review bundle impact before adding deps
+
+### Images & Media
+
+- Use modern formats (WebP/AVIF) with responsive sizes (`srcset`, sizes)
+- Lazy-load below-the-fold media; prefetch critical images if beneficial
+
+### Fonts
+
+- Use `font-display: swap`; subset fonts; prefer system fonts when acceptable
+- Host fonts or use trusted CDNs; consider SRI
+
+### CSS
+
+- Tailwind utilities only; purge unused classes via Tailwind config content globs
+- Avoid large global CSS; rely on component-level utility composition
+
+### Monitoring
+
+- Optional `core/perf/reportWebVitals.ts` with adapter in `infrastructure/observability/*`
+- Track Web Vitals and regressions; set team alerts if adopting observability

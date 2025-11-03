@@ -1,0 +1,389 @@
+---
+description: 'Baseline repository templates and recommended versions'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Repository Templates (Baseline Configs)
+
+Use these baselines to bootstrap new repos consistently. Prefer keeping these up to date here and referencing them across new projects.
+
+### package.json (scripts & engines)
+
+```json
+{
+	"name": "app-name",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.20.0",
+	"engines": { "node": ">=22.21.1" },
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"preview": "vite preview",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"clean": "pnpm dlx rimraf dist node_modules && pnpm store prune",
+		"typecheck": "tsc -b",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	}
+}
+```
+
+### Dependency versions (from this starter)
+
+```json
+{
+	"dependencies": {
+		"@hookform/resolvers": "^5.2.2",
+		"@radix-ui/react-slot": "^1.2.3",
+		"@tanstack/react-query": "^5.90.5",
+		"lucide-react": "^0.548.0",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"react-hook-form": "^7.65.0",
+		"react-router-dom": "^7.9.5",
+		"sonner": "^2.0.7",
+		"tailwind-merge": "^3.3.1",
+		"zod": "^4.1.12"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.38.0",
+		"@tailwindcss/postcss": "^4.1.16",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.0",
+		"@types/node": "^24.9.2",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
+		"@typescript-eslint/eslint-plugin": "^8.46.2",
+		"@typescript-eslint/parser": "^8.46.2",
+		"@vitejs/plugin-react-swc": "^4.2.0",
+		"@vitest/coverage-v8": "^4.0.5",
+		"autoprefixer": "^10.4.21",
+		"eslint": "^9.38.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-import-resolver-typescript": "^4.4.4",
+		"eslint-plugin-boundaries": "^5.1.0",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^7.0.1",
+		"eslint-plugin-react-refresh": "^0.4.24",
+		"eslint-plugin-security": "^3.0.1",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"eslint-plugin-sonarjs": "^3.0.5",
+		"eslint-plugin-testing-library": "^7.13.3",
+		"eslint-plugin-unicorn": "^62.0.0",
+		"eslint-plugin-unused-imports": "^4.3.0",
+		"globals": "^16.4.0",
+		"postcss": "^8.5.6",
+		"prettier": "^3.6.2",
+		"prettier-plugin-tailwindcss": "^0.7.1",
+		"tailwindcss": "^4.1.16",
+		"typescript": "^5.9.3",
+		"vite": "^7.1.12",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^4.0.5"
+	}
+}
+```
+
+### tsconfig.base.json (aliases + compiler options)
+
+```json
+{
+	"compilerOptions": {
+		"target": "ES2023",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"moduleDetection": "force",
+		"verbatimModuleSyntax": true,
+		"strict": true,
+		"exactOptionalPropertyTypes": true,
+		"noUncheckedIndexedAccess": true,
+		"useDefineForClassFields": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"jsx": "react-jsx",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowJs": false,
+		"checkJs": false,
+		"noEmit": true,
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"baseUrl": ".",
+		"paths": {
+			"@app/*": ["src/app/*"],
+			"@core/*": ["src/core/*"],
+			"@domains/*": ["src/domains/*"],
+			"@infra/*": ["src/infrastructure/*"],
+			"@shared/*": ["src/shared/*"],
+			"@styles/*": ["styles/*"],
+			"@app-styles/*": ["src/styles/*"],
+			"@tests/*": ["tests/*"]
+		}
+	}
+}
+```
+
+### tsconfig.json (project references)
+
+```json
+{
+	"files": [],
+	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+}
+```
+
+### tsconfig variants (overview)
+
+| File                   | Purpose                                                           | Extends                |
+| ---------------------- | ----------------------------------------------------------------- | ---------------------- |
+| `tsconfig.base.json`   | Core compiler settings shared across all configs                  | —                      |
+| `tsconfig.json`        | Project references orchestrator                                   | —                      |
+| `tsconfig.app.json`    | Main app config (used by Vite & IDE)                              | `./tsconfig.base.json` |
+| `tsconfig.node.json`   | TypeScript for Node/Vite config files (`vite.config.ts`, scripts) | `./tsconfig.base.json` |
+| `tsconfig.vitest.json` | Unit test environment config (Vitest + jsdom)                     | `./tsconfig.base.json` |
+| `tsconfig.build.json`  | Used only for production builds / CI (emits declarations)         | `./tsconfig.base.json` |
+
+### tsconfig.app.json (application)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+		"types": ["vite/client", "node"],
+		"allowImportingTsExtensions": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"erasableSyntaxOnly": true,
+		"noUncheckedSideEffectImports": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false,
+		"sourceMap": true
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "dist", "build", "src/test", "**/*.test.*", "**/*.spec.*"]
+}
+```
+
+### tsconfig.node.json (Node/Vite config & scripts)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+		"lib": ["ES2023"],
+		"types": ["node"],
+		"allowImportingTsExtensions": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"erasableSyntaxOnly": true,
+		"noUncheckedSideEffectImports": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false
+	},
+	"include": [
+		"vite.config.ts",
+		"vitest.config.ts",
+		"eslint.config.js",
+		"tailwind.config.ts",
+		"postcss.config.cjs",
+		"scripts/**/*.{ts,tsx}"
+	],
+	"exclude": ["node_modules", "dist", "build"]
+}
+```
+
+### tsconfig.vitest.json (unit tests)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"types": ["vitest/globals"],
+		"noUnusedLocals": false,
+		"noUnusedParameters": false
+	},
+	"include": ["tests", "src", "vite.config.ts", "vitest.config.ts"]
+}
+```
+
+### tsconfig.build.json (CI/build-only)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": false,
+		"declaration": true,
+		"declarationMap": false,
+		"emitDeclarationOnly": true,
+		"declarationDir": "dist/types",
+		"sourceMap": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true
+	},
+	"include": ["src"],
+	"exclude": ["**/*.test.ts", "**/*.test.tsx", "tests", "e2e"]
+}
+```
+
+### ESLint Flat Config (baseline + boundaries)
+
+See `tooling/references.mdc` for the full baseline `eslint.config.js` and Tailwind/Testing overrides.
+
+### Vite Config (environment-aware)
+
+The Vite configuration uses environment-aware functions for server, build, optimization, and ESBuild settings. Key aspects:
+
+**Structure:**
+
+- Uses `@vitejs/plugin-react-swc` and `vite-tsconfig-paths` plugins
+- `getServerConfig(env)`: Server settings (port default: 3000, host, CORS, auto-open)
+- `getBuildConfig(env, mode)`: Build settings with minification, sourcemaps, manual chunks
+- `getOptimizeDepsConfig()`: Pre-bundling configuration
+- `getEsbuildConfig()`: ESBuild transpilation settings
+
+**Environment Variables:** See `tooling/references.mdc` for complete list of `VITE_*` variables supported.
+
+See `tooling/references.mdc` for full environment-aware configuration details.
+
+### vitest.config.ts (unit tests)
+
+```ts
+import react from '@vitejs/plugin-react-swc';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+	test: {
+		environment: 'jsdom',
+		globals: true,
+		setupFiles: ['tests/setupTests.ts'],
+		include: ['tests/**/*.{test,spec}.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
+		exclude: ['node_modules', 'dist', 'e2e'],
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'lcov', 'html'],
+			exclude: [
+				'node_modules/',
+				'tests/',
+				'e2e/',
+				'**/*.test.{ts,tsx}',
+				'**/*.spec.{ts,tsx}',
+				'**/*.config.{ts,js}',
+				'**/dist/**',
+				'**/build/**',
+				'**/coverage/**',
+				'**/*.d.ts',
+				'**/vite-env.d.ts',
+			],
+			reportsDirectory: './coverage',
+		},
+		testTimeout: 10000,
+		hookTimeout: 10000,
+	},
+	plugins: [react(), tsconfigPaths()],
+});
+```
+
+### Tailwind + PostCSS
+
+```cjs
+// postcss.config.cjs
+module.exports = {
+	plugins: {
+		'@tailwindcss/postcss': {},
+		autoprefixer: {},
+	},
+};
+```
+
+```ts
+// tailwind.config.ts (example)
+import type { Config } from 'tailwindcss';
+
+export default {
+	content: [
+		'./index.html',
+		'./src/**/*.{ts,tsx}',
+		// Include test files if they use Tailwind classes
+		'./tests/**/*.{ts,tsx}',
+	],
+	theme: { extend: {} },
+	darkMode: 'class',
+	plugins: [],
+} satisfies Config;
+```
+
+### playwright.config.ts (E2E tests)
+
+```ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+	testDir: './e2e',
+	timeout: 30_000,
+	fullyParallel: true,
+	reporter: [['list'], ['html', { open: 'never' }]],
+	use: {
+		baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:5173',
+		trace: 'on-first-retry',
+		video: 'retain-on-failure',
+		screenshot: 'only-on-failure',
+	},
+	projects: [
+		{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+		{ name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+		{ name: 'webkit', use: { ...devices['Desktop Safari'] } },
+	],
+	webServer: {
+		command: 'pnpm dev',
+		url: 'http://localhost:5173',
+		reuseExistingServer: !process.env.CI,
+	},
+});
+```
+
+### CI (baseline)
+
+```yaml
+name: CI
+on:
+  pull_request:
+    branches: [main, develop]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.21.1
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test -- --reporter=verbose
+      - run: pnpm build
+```
+
+### Notes
+
+- Keep versions and rules aligned with organization policy
+- Use this file as the source of truth when bootstrapping repos
+- Align with `boundaries.mdc` for module boundaries and with `tooling/references.mdc` for deeper examples

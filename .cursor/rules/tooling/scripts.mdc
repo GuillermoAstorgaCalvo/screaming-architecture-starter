@@ -1,0 +1,23 @@
+---
+description: 'Suggested package scripts and custom tooling'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Scripts
+
+Suggested package scripts (pnpm):
+
+- `dev`: Vite dev server
+- `build`: TypeScript typecheck and Vite build (`tsc -b && vite build`)
+- `preview`: Vite preview
+- `lint`: ESLint
+- `lint:fix`: ESLint with auto-fix
+- `format`: Prettier write
+- `typecheck`: TypeScript type checking (`tsc -b`)
+- `clean`: Remove dist, node_modules and prune pnpm store (`pnpm dlx rimraf dist node_modules pnpm store prune`)
+- `test`: Run unit tests (`vitest run`)
+- `test:watch`: Run unit tests in watch mode (`vitest`)
+- `test:e2e`: Run e2e tests (Playwright)
+
+Place custom generators in `scripts/codegen.ts` and mock server in `scripts/mockServer.ts`.

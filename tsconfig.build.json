@@ -1,0 +1,23 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.build.tsbuildinfo",
+		"noEmit": false,
+		"declaration": true,
+		"declarationMap": false,
+		"emitDeclarationOnly": true,
+		"declarationDir": "dist/types",
+		"sourceMap": false,
+		"allowImportingTsExtensions": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"erasableSyntaxOnly": true,
+		"noUncheckedSideEffectImports": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false
+	},
+	"include": ["src"],
+	"exclude": ["**/*.test.*", "**/*.spec.*", "tests", "e2e"]
+}

@@ -1,0 +1,592 @@
+---
+description: 'Repository config templates and references (ESLint, tsconfig, Vite)'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Repository Config Templates (TypeScript + React + Vite + Tailwind)
+
+> Canonical baselines live in `repo-templates.mdc`. This file contains excerpts and examples; prefer `repo-templates.mdc` when bootstrapping a repo.
+
+Use these as references when bootstrapping a new repo from this template.
+
+### package.json (scripts & engines)
+
+```json
+{
+	"name": "app-name",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.20.0",
+	"engines": { "node": ">=22.21.1" },
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"preview": "vite preview",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"clean": "pnpm dlx rimraf dist node_modules && pnpm store prune",
+		"typecheck": "tsc -b",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	}
+}
+```
+
+### Dependency versions (from this starter)
+
+```json
+{
+	"dependencies": {
+		"@hookform/resolvers": "^5.2.2",
+		"@radix-ui/react-slot": "^1.2.3",
+		"@tanstack/react-query": "^5.90.5",
+		"lucide-react": "^0.548.0",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"react-hook-form": "^7.65.0",
+		"react-router-dom": "^7.9.5",
+		"sonner": "^2.0.7",
+		"tailwind-merge": "^3.3.1",
+		"zod": "^4.1.12"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.38.0",
+		"@tailwindcss/postcss": "^4.1.16",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.0",
+		"@types/node": "^24.9.2",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
+		"@typescript-eslint/eslint-plugin": "^8.46.2",
+		"@typescript-eslint/parser": "^8.46.2",
+		"@vitejs/plugin-react-swc": "^4.2.0",
+		"@vitest/coverage-v8": "^4.0.6",
+		"autoprefixer": "^10.4.21",
+		"dotenv": "^17.2.3",
+		"eslint": "^9.38.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-import-resolver-typescript": "^4.4.4",
+		"eslint-plugin-boundaries": "^5.1.0",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^7.0.1",
+		"eslint-plugin-react-refresh": "^0.4.24",
+		"eslint-plugin-security": "^3.0.1",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"eslint-plugin-sonarjs": "^3.0.5",
+		"eslint-plugin-testing-library": "^7.13.3",
+		"eslint-plugin-unicorn": "^62.0.0",
+		"eslint-plugin-unused-imports": "^4.3.0",
+		"globals": "^16.4.0",
+		"postcss": "^8.5.6",
+		"prettier": "^3.6.2",
+		"prettier-plugin-tailwindcss": "^0.7.1",
+		"tailwindcss": "^4.1.16",
+		"typescript": "^5.9.3",
+		"vite": "^7.1.12",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^4.0.6"
+	}
+}
+```
+
+### tsconfig.base.json (aliases + 2025 compilerOptions)
+
+```json
+{
+	"compilerOptions": {
+		"target": "ES2023",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"moduleDetection": "force",
+		"verbatimModuleSyntax": true,
+		"strict": true,
+		"exactOptionalPropertyTypes": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"useDefineForClassFields": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"jsx": "react-jsx",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowJs": false,
+		"checkJs": false,
+		"noEmit": true,
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"baseUrl": ".",
+		"paths": {
+			"@app/*": ["src/app/*"],
+			"@core/*": ["src/core/*"],
+			"@domains/*": ["src/domains/*"],
+			"@infra/*": ["src/infrastructure/*"],
+			"@shared/*": ["src/shared/*"],
+			"@styles/*": ["src/styles/*"],
+			"@tests/*": ["tests/*"]
+		}
+	}
+}
+```
+
+### tsconfig.json (project references)
+
+```json
+{
+	"files": [],
+	"references": [
+		{ "path": "./tsconfig.app.json" },
+		{ "path": "./tsconfig.node.json" },
+		{ "path": "./tsconfig.vitest.json" }
+	]
+}
+```
+
+### tsconfig variants (overview)
+
+| File                   | Purpose                                                           | Extends                |
+| ---------------------- | ----------------------------------------------------------------- | ---------------------- |
+| `tsconfig.base.json`   | Core compiler settings shared across all configs                  | —                      |
+| `tsconfig.json`        | Project references orchestrator                                   | —                      |
+| `tsconfig.app.json`    | Main app config (used by Vite & IDE)                              | `./tsconfig.base.json` |
+| `tsconfig.node.json`   | TypeScript for Node/Vite config files (`vite.config.ts`, scripts) | `./tsconfig.base.json` |
+| `tsconfig.vitest.json` | Unit test environment config (Vitest + jsdom)                     | `./tsconfig.base.json` |
+| `tsconfig.build.json`  | Used only for production builds / CI (emits declarations)         | `./tsconfig.base.json` |
+
+### Notes:
+
+- `moduleResolution: "bundler"` (TS 5) aligns with Vite's resolver and ESM.
+- `verbatimModuleSyntax` preserves `import type` and side-effect semantics.
+- `target/lib: ES2023` across TS and Vite build target keeps the template modern and consistent.
+- `noEmit: true` delegates emitting to Vite; turn off only for library builds.
+- `skipLibCheck: true` for faster type checking; libraries are assumed correct (can toggle to `false` for comprehensive dependency type checking if issues arise).
+
+### tsconfig.node.json (Node/Vite config & scripts)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+		"lib": ["ES2023"],
+		"types": ["node"],
+		"allowImportingTsExtensions": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"erasableSyntaxOnly": true,
+		"noUncheckedSideEffectImports": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false
+	},
+	"include": [
+		"vite.config.ts",
+		"vitest.config.ts",
+		"playwright.config.ts",
+		"eslint.config.js",
+		"tailwind.config.ts",
+		"postcss.config.cjs",
+		"scripts/**/*.{ts,tsx}",
+		// Included because tailwind.config.ts imports from app source
+		"src/core/constants/designTokens.ts"
+	],
+	"exclude": ["node_modules", "dist", "build"]
+}
+```
+
+### tsconfig.vitest.json (unit tests)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"types": ["vitest/globals", "@testing-library/jest-dom"],
+		"noUnusedLocals": false,
+		"noUnusedParameters": false
+	},
+	"include": ["tests", "src"],
+	"exclude": ["node_modules", "dist", "build", "e2e"]
+}
+```
+
+### tsconfig.build.json (CI/build-only)
+
+```json
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.build.tsbuildinfo",
+		"noEmit": false,
+		"declaration": true,
+		"declarationMap": false,
+		"emitDeclarationOnly": true,
+		"declarationDir": "dist/types",
+		"sourceMap": false,
+		"allowImportingTsExtensions": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"erasableSyntaxOnly": true,
+		"noUncheckedSideEffectImports": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false
+	},
+	"include": ["src"],
+	"exclude": ["**/*.test.*", "**/*.spec.*", "tests", "e2e"]
+}
+```
+
+### eslint.config.js (flat config, baseline + boundaries)
+
+See the actual `eslint.config.js` in the repository for the full ESLint v9 flat config implementation. Key features:
+
+- ESLint v9 flat config format
+- Comprehensive rules for TypeScript, React, React Hooks, JSX A11y
+- Module boundary enforcement via `eslint-plugin-boundaries`
+- Import validation, sorting, and unused imports cleanup
+- Code quality rules: SonarJS, Unicorn, complexity limits
+- File-specific overrides for tests, config files, components, hooks, services, handlers, types, stories
+- Testing Library rules for test files
+
+**Config Files Overrides:**
+
+- **TypeScript config files** (`vite.config.ts`, `vitest.config.ts`, `tailwind.config.ts`, `playwright.config.ts`, `**/*.config.ts`):
+  - All complexity rules off (max-lines, max-lines-per-function, max-params, complexity, max-depth, max-statements, max-nested-callbacks)
+  - Uses `tsconfig.node.json` project reference with `projectService: false`
+  - Includes Node globals
+  - Relaxed rules: `no-console` off, `no-magic-numbers` off, security rules disabled for dynamic requires/imports
+- **JavaScript config files** (`eslint.config.js`, `postcss.config.*`, `**/*.config.{js,mjs,cjs}`):
+  - All complexity rules off
+  - Uses `@typescript-eslint/parser` with `projectService.allowDefaultProject: ['*.js', '*.mjs', '*.cjs']` (no TypeScript project reference required, avoiding parser errors)
+  - Includes Node globals
+  - Relaxed rules: `no-console` off, `no-magic-numbers` off, security rules disabled for dynamic requires/imports
+  - TypeScript-specific rules disabled: `@typescript-eslint/no-var-requires` off, `@typescript-eslint/no-require-imports` off
+
+The configuration enforces:
+
+- Module boundaries (see `boundaries.mdc` for allowed imports matrix)
+- Path alias usage over deep relative imports
+- Import sorting and organization
+- Complexity limits per file type
+
+### .prettierrc
+
+```json
+{
+	"singleQuote": true,
+	"semi": true,
+	"trailingComma": "es5",
+	"printWidth": 100,
+	"plugins": ["prettier-plugin-tailwindcss"]
+}
+```
+
+### vite.config.ts (environment-aware)
+
+See the actual `vite.config.ts` in the repository for the full environment-aware configuration. Key features:
+
+**Plugins:**
+
+- `@vitejs/plugin-react-swc`: React with SWC for fast compilation
+- `vite-tsconfig-paths`: Automatically resolves TypeScript path aliases via `tsconfig.app.json` (projects: `['./tsconfig.app.json']`)
+
+**Server Configuration:**
+
+- Environment-aware server settings via `getServerConfig(env)` function (uses `loadEnv(mode, process.cwd(), '')`)
+- Default port: 3000 (configurable via `VITE_PORT`, default: `'3000'`, parsed as integer)
+- Default host: `::` (all interfaces, configurable via `VITE_HOST`)
+- Auto-open browser (configurable via `VITE_OPEN`, default: `true` - set to `'false'` to disable)
+- CORS enabled
+- `strictPort: false` - Allows port fallback if port is in use
+
+**Build Configuration:**
+
+- Environment-aware via `getBuildConfig(env, mode)` function
+- Target: ES2023 (configurable via `VITE_BUILD_TARGET`)
+- Minification:
+  - Production: `'esbuild'` (default)
+  - Development: `false` (default)
+  - Configurable via `VITE_MINIFY`: `'esbuild'`, `'terser'`, or `'false'`
+- Sourcemaps:
+  - Development: `'inline'` (default)
+  - Production: `false` (default)
+  - Configurable via `VITE_SOURCEMAP`: `'true'`, `'false'`, or `'inline'`
+- Manual chunk optimization via `getManualChunks()`:
+  - `vendor`: `react`, `react-dom`, `react-router-dom`
+  - `ui`: `@radix-ui/react-slot` (only includes actually installed packages)
+  - `query`: `@tanstack/react-query`
+- Optimized chunk file naming: `assets/[name]-[hash].js` for chunks and entries, `assets/[name]-[hash].[ext]` for assets
+- CSS code splitting: enabled (configurable via `VITE_CSS_CODE_SPLIT`, default: `true` - set to `'false'` to disable)
+- Chunk size warning limit: 1000 KB (configurable via `VITE_CHUNK_SIZE_WARNING_LIMIT`, default: `'1000'`, parsed as integer)
+- Compressed size reporting: disabled (configurable via `VITE_REPORT_COMPRESSED_SIZE`, default: `'false'` - set to `'true'` to enable)
+
+**Environment Variables:**
+
+- Uses `loadEnv(mode, process.cwd(), '')` to load environment variables (Vite automatically sets `NODE_ENV` based on mode)
+- Supported variables: `VITE_PORT`, `VITE_HOST`, `VITE_OPEN`, `VITE_BUILD_TARGET`, `VITE_MINIFY`, `VITE_SOURCEMAP`, `VITE_CHUNK_SIZE_WARNING_LIMIT`, `VITE_REPORT_COMPRESSED_SIZE`, `VITE_CSS_CODE_SPLIT`
+- Note: All client-exposed variables must be prefixed with `VITE_`
+
+**Dependency Optimization:**
+
+- Environment-aware via `getOptimizeDepsConfig()` function
+- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query`, `lucide-react`
+- `force: true` for consistent pre-bundling across restarts
+
+**ESBuild Configuration:**
+
+- Environment-aware via `getEsbuildConfig()` function
+- Target: `'es2023'`
+- Format: `'esm'` (ES modules)
+
+### Tailwind + PostCSS
+
+```cjs
+// postcss.config.cjs
+module.exports = {
+	plugins: {
+		'@tailwindcss/postcss': {},
+		autoprefixer: {},
+	},
+};
+```
+
+Note: Uses Tailwind CSS v4 PostCSS plugin (`@tailwindcss/postcss`) instead of the legacy `tailwindcss` plugin.
+
+```ts
+// tailwind.config.ts (example shape)
+import type { Config } from 'tailwindcss';
+
+export default {
+	content: [
+		'./index.html',
+		'./src/**/*.{ts,tsx}',
+		// Include test files if they use Tailwind classes
+		'./tests/**/*.{ts,tsx}',
+	],
+	theme: {
+		extend: {
+			colors: {
+				// mirror from @core/constants/designTokens.ts
+			},
+		},
+	},
+	darkMode: 'class',
+	plugins: [],
+} satisfies Config;
+```
+
+### vitest.config.ts (unit tests)
+
+```ts
+import react from '@vitejs/plugin-react-swc';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+	test: {
+		environment: 'jsdom',
+		globals: true,
+		setupFiles: ['tests/setupTests.ts'],
+		include: ['tests/**/*.{test,spec}.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
+		exclude: ['node_modules', 'dist', 'e2e'],
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'lcov', 'html'],
+			exclude: [
+				'node_modules/',
+				'tests/',
+				'e2e/',
+				'**/*.test.{ts,tsx}',
+				'**/*.spec.{ts,tsx}',
+				'**/*.config.{ts,js}',
+				'**/dist/**',
+				'**/build/**',
+				'**/coverage/**',
+				'**/*.d.ts',
+				'**/vite-env.d.ts',
+			],
+			reportsDirectory: './coverage',
+		},
+		testTimeout: 10000,
+		hookTimeout: 10000,
+	},
+	plugins: [
+		react(),
+		tsconfigPaths({
+			projects: ['./tsconfig.vitest.json'],
+		}),
+	],
+});
+```
+
+**Note**: Path aliases are automatically resolved via `vite-tsconfig-paths` plugin using `tsconfig.vitest.json` configuration.
+
+### playwright.config.ts (E2E tests)
+
+```ts
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+import { defineConfig, devices } from '@playwright/test';
+import { config } from 'dotenv';
+
+/**
+ * Load environment variables from .env files
+ * Load .env first, then .env.local (which overrides .env values)
+ * This ensures getBaseUrl() has access to env vars when Playwright config is loaded
+ * Note: dotenv's config() doesn't override existing env vars by default,
+ * so we load .env.local with override: true to ensure proper precedence
+ */
+config(); // Loads .env by default
+const envLocalPath = resolve(process.cwd(), '.env.local');
+if (existsSync(envLocalPath)) {
+	config({ path: envLocalPath, override: true }); // .env.local overrides .env
+}
+
+/**
+ * Get the base URL for E2E tests
+ * Uses E2E_BASE_URL if provided, otherwise derives from VITE_PORT and VITE_HOST
+ * Defaults to localhost:3000 to match Vite's default port
+ */
+function getBaseUrl(): string {
+	if (process.env['E2E_BASE_URL']) {
+		return process.env['E2E_BASE_URL'];
+	}
+	const port = process.env['VITE_PORT'] ?? '3000';
+	const host = process.env['VITE_HOST'] ?? '::';
+	// Convert network interface bindings to localhost for URL usage
+	const hostname = host === '::' || host === '0.0.0.0' ? 'localhost' : host;
+	return `http://${hostname}:${port}`;
+}
+
+const baseUrl = getBaseUrl();
+
+export default defineConfig({
+	testDir: './e2e',
+	timeout: 30_000,
+	fullyParallel: true,
+	reporter: [['list'], ['html', { open: 'never' }]],
+	use: {
+		baseURL: baseUrl,
+		trace: 'on-first-retry',
+		video: 'retain-on-failure',
+		screenshot: 'only-on-failure',
+	},
+	projects: [
+		{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+		{ name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+		{ name: 'webkit', use: { ...devices['Desktop Safari'] } },
+	],
+	webServer: {
+		command: 'pnpm dev',
+		url: baseUrl,
+		reuseExistingServer: !process.env['CI'],
+	},
+});
+```
+
+### Git & Editors
+
+```gitattributes
+* text=auto eol=lf
+```
+
+```editorconfig
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = tab
+indent_size = 2
+trim_trailing_whitespace = true
+```
+
+Note: Teams preferring spaces can switch `indent_style = space` and set `indent_size` consistently across the repo.
+
+### CI (baseline)
+
+```yaml
+# .github/workflows/ci.yml (minimal)
+name: CI
+on:
+  pull_request:
+    branches: [main, develop]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.21.1
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test -- --reporter=verbose
+      - run: pnpm build
+```
+
+### Notes
+
+- Keep configs minimal and opinionated; expand per repository needs
+- Always align Tailwind tokens with `@core/constants/designTokens.ts`
+- Enforce boundaries and alias usage in CI for long-term scalability
+
+### README.md Template
+
+```md
+# <Project Name>
+
+Short description of the app.
+
+## Tech Stack
+
+- TypeScript, React, Vite, TailwindCSS
+- Domains-first architecture; strict module boundaries
+
+## Getting Started
+
+1. corepack enable && corepack prepare pnpm@10.20.0 --activate
+2. pnpm install
+3. pnpm dev
+
+## Scripts
+
+- dev, build, preview, test, lint, format
+
+## Architecture
+
+- Domains under `src/domains/*`
+- Core utilities and config under `src/core/*`
+- Infrastructure adapters under `src/infrastructure/*`
+- Shared composites under `src/shared/*`
+
+See `.cursor/docs-index.mdc` for full documentation.
+
+## Browser Support
+
+Evergreen browsers (latest 2). See `.cursor/browser-support.mdc`.
+
+## Security
+
+No secrets in client bundles. See `.cursor/security-privacy.mdc` and `.cursor/threat-model.mdc`.
+
+## Contributing
+
+Follow `.cursor/contributing.mdc` and PR checklist in `.cursor/checklists.mdc`.
+```

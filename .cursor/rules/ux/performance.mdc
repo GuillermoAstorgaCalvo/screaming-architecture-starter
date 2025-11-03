@@ -1,0 +1,17 @@
+---
+description: 'Performance and bundling recommendations with observability options'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Performance & Bundling
+
+### Recommendations
+
+- Route-based code splitting; lazy load heavy pages and widgets.
+- Avoid heavy libs in core UI; prefer lightweight, tree-shakeable dependencies.
+- Use modern image formats (WebP/AVIF); serve responsive sizes.
+
+### Observability
+
+- Optional Web Vitals via `core/perf/reportWebVitals.ts` with an adapter under `infrastructure/observability/*`.

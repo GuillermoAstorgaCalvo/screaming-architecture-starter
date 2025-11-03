@@ -1,0 +1,131 @@
+---
+description: 'Root repo layout and src/app composition (providers, routing, PWA)'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Root Repository Layout
+
+See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
+
+```
+.
+├── package.json                      # Scripts, engines, packageManager (pnpm), workspace-ready
+├── pnpm-lock.yaml                    # Locked deps for reproducible installs (pnpm preferred)
+├── tsconfig.base.json                # Path aliases: @app, @core, @domains, @infra, @shared, @styles, @src-types, @tests
+├── tsconfig.json                     # Project references orchestrator (references app and node configs)
+├── tsconfig.app.json                 # Application TypeScript config (extends base)
+├── tsconfig.node.json                # Node/Vite configs & scripts (extends base)
+├── tsconfig.vitest.json              # Unit tests (Vitest + jsdom, extends base)
+├── tsconfig.build.json               # Build/CI only (emits/declarations, extends base)
+├── vite.config.ts                    # Vite config; environment-aware server/build/optimizeDeps
+├── vitest.config.ts                  # Vitest config (jsdom env, setupFiles, coverage)
+├── tailwind.config.ts                # Tailwind CSS config (mirrors design tokens)
+├── postcss.config.cjs                 # PostCSS + Tailwind pipeline with @tailwindcss/postcss
+├── eslint.config.js                  # ESLint flat config (ESLint v9); boundaries, jsx-a11y, TypeScript
+├── .prettierrc                       # Prettier config (singleQuote, semi, trailingComma es5, Tailwind plugin)
+├── .editorconfig                     # Consistent editor defaults (tab, indent 2, lf, utf-8)
+├── .gitattributes                    # Line endings normalization (text=auto eol=lf)
+├── .gitignore                        # Node, build artifacts, env files, coverage
+├── .env.example                      # Environment variable template with Vite server/build config
+├── .cursorignore                     # Cursor AI ignore patterns for dependencies/build/coverage
+├── pnpm-workspace.yaml               # PNPM workspace config (onlyBuiltDependencies)
+├── .nvmrc                            # Node.js version pin (22.21.1) for nvm/nodenv compatibility
+├── .npmrc                            # NPM/PNPM config (engine-strict, auto-install-peers, prefer-workspace-packages)
+├── LICENSE                           # Project license
+├── CODEOWNERS                        # Ownership for critical paths/domains
+├── SECURITY.md                       # Responsible disclosure and support policy
+├── .github/                          # CI workflows and templates
+│   ├── workflows/
+│   │   ├── ci.yml                   # typecheck, lint, unit tests, build
+│   │   └── nightly.yml (optional)   # e2e + Lighthouse on main/nightly
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
+└── README.md                         # High-level overview + quickstart
+```
+
+## src/app: Application Shell
+
+- `App.tsx`: Root component. Composition-only: `LoggerProvider` (outermost with `loggerAdapter`), `ErrorBoundaryWrapper`, `HttpProvider` (with `httpClient`), `StorageProvider` (with `localStorageAdapter`), `ThemeProvider`, `QueryProvider`, `BrowserRouter`, and `Router`. No domain logic.
+- `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Creates React root, renders `<App />` wrapped in `StrictMode`, imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization.
+- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Includes `LoadingFallback` component for Suspense with accessible loading state (`aria-live="polite"`, `aria-label="Loading"`). Paths derive from `core/config/routes.ts` (`ROUTES` constants). Includes catch-all route (`path="*"`) for `Error404`.
+- `pages/*`: App-level system pages:
+  - `Error404.tsx`: Not Found page (404 error)
+  - `Error500.tsx`: Internal Server Error page (500 error)
+- `components/*`: App-level components:
+  - `AppLayout.tsx`: Layout wrapper for routes
+  - `PageWrapper.tsx`: Exports `withTheme` HOC that injects theme props into page components
+- `routes.guards.ts`: Pure guard functions for auth/feature flags; reuse domain permission predicates (optional, not yet implemented).
+- `providers/*`: App-scoped providers:
+  - `ThemeProvider.tsx`: Theme management (light/dark/system) with persistence via StoragePort, system theme detection, HTML class management
+  - `ThemeContext.tsx`: React context definition for theme (exports `ThemeContext` and `ThemeContextValue`)
+  - `useTheme.ts`: Hook to access theme context (throws if used outside provider)
+  - `QueryProvider.tsx`: React Query client provider with optimized defaults
+  - Note: `LoggerProvider`, `StorageProvider` are in `core/providers/` (not `app/providers/`)
+
+### PWA (optional)
+
+- `app/pwa/registerSW.ts`, `app/pwa/serviceWorker.ts`: Opt-in. Disabled by default.
+
+### Example App Composition
+
+```tsx
+// app/App.tsx (actual implementation)
+import { QueryProvider } from '@app/providers/QueryProvider';
+import { ThemeProvider } from '@app/providers/ThemeProvider';
+import Router from '@app/router';
+import { ErrorBoundaryWrapper } from '@core/lib/ErrorBoundaryWrapper';
+import { httpClient } from '@core/lib/httpClient';
+import { HttpProvider } from '@core/providers/HttpProvider';
+import { LoggerProvider } from '@core/providers/LoggerProvider';
+import { StorageProvider } from '@core/providers/StorageProvider';
+import { loggerAdapter } from '@infra/logging/loggerAdapter';
+import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
+import { BrowserRouter } from 'react-router-dom';
+
+export default function App() {
+	return (
+		<LoggerProvider logger={loggerAdapter}>
+			<ErrorBoundaryWrapper>
+				<HttpProvider http={httpClient}>
+					<StorageProvider storage={localStorageAdapter}>
+						<ThemeProvider>
+							<QueryProvider>
+								<BrowserRouter>
+									<Router />
+								</BrowserRouter>
+							</QueryProvider>
+						</ThemeProvider>
+					</StorageProvider>
+				</HttpProvider>
+			</ErrorBoundaryWrapper>
+		</LoggerProvider>
+	);
+}
+```
+
+### Provider Composition Order
+
+The composition order matters:
+
+1. `LoggerProvider` must be outermost to provide logger to all components including `ErrorBoundary`
+2. `ErrorBoundaryWrapper` uses logger from context and wraps the rest of the app
+3. `HttpProvider` provides HTTP client for domain services and hooks (e.g., `useFetch`)
+4. `StorageProvider` must be before `ThemeProvider` since `ThemeProvider` uses storage via `useStorage` hook
+5. `ThemeProvider` manages theme state and persistence
+6. `QueryProvider` provides React Query client
+7. `BrowserRouter` enables routing
+8. `Router` renders routes
+
+### Routing Principles
+
+- Route objects live in each domain and are aggregated in `app/router.tsx`.
+- Prefer route-level code-splitting via `React.lazy` and `Suspense`.
+- Define path segments in `core/config/routes.ts`; avoid string literals in pages.
+
+### Cross-References
+
+- Folder overview and boundaries: `architecture/folder-structure.mdc`, `boundaries.mdc`
+- Providers guidance: `config/providers.mdc`
+- Routing specifics: `config/routing.mdc`
+- State management: `architecture/state.mdc`

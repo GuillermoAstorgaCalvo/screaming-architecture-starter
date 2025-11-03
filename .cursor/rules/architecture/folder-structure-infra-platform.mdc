@@ -1,0 +1,59 @@
+---
+description: 'Infrastructure adapters, workers, assets, and styles organization'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## src/infrastructure: Adapters and Platform Code
+
+See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
+
+Technical adapters and framework-specific code that implement `core` ports.
+
+### logging
+
+- `loggerAdapter.ts`: Console-based logging implementation of `LoggerPort`. Exports `LoggerAdapter` class and singleton instance `loggerAdapter`. SSR-safe with availability checks (`typeof console !== 'undefined'`). Supports log levels (debug, info, warn, error) with optional context. Configurable minimum log level via constructor (defaults to `'debug'`). Level filtering ensures only logs at or above minimum level are output. Formats context as JSON for structured logging. Can be extended/replaced with external services (e.g., Sentry) without changing domain code. All log methods (`debug`, `info`, `warn`) currently use `console.warn`; `error` uses `console.error` with optional error object.
+
+### storage
+
+- `localStorageAdapter.ts`: `localStorage` implementation of `StoragePort`. Exports `LocalStorageAdapter` class and singleton instance `localStorageAdapter`. SSR-safe with availability checks (`globalThis.window !== undefined`). Includes runtime availability test (tries to set/remove a test key) to detect private browsing mode and quota issues. Handles quota errors, security errors gracefully with console.warn fallback (to avoid circular dependency with logger). Returns boolean for all write operations (`setItem`, `removeItem`, `clear`) to indicate success. All operations are guarded with try/catch and return safe defaults on failure.
+- `cookieStorageAdapter.ts`: Cookie-based storage implementation of `StoragePort`. Exports `CookieStorageAdapter` class, singleton instance `cookieStorageAdapter`, and `CookieOptions` type. SSR-safe with availability checks (`typeof document !== 'undefined'`). Implements `setItemWithOptions(key, value, options)` method for advanced cookie configuration (beyond base `StoragePort` interface). Supports expiration via `expiresDays` (default: 365 days, set to -1 to delete, 0 for session cookie), path (default: '/'), sameSite (default: 'Lax'), secure (default: true in HTTPS environments), and domain (optional). Standard `setItem()` uses default options (365 days expiration). Cookie parsing handles values containing '=' correctly. All operations return boolean to indicate success.
+
+**Guidelines:**
+
+- Domains/services should NOT access storage or providers directly. Always go through ports or domain services.
+- Gate browser APIs for SSR/test environments.
+- All adapters implement port interfaces defined in `core/ports/`.
+
+### Optional/Planned Infrastructure Adapters
+
+- `api/`: (Optional) Axios instance, request/response interceptors (auth headers, trace IDs, error normalization).
+- `auth/`: (Optional) JWT handling (parse/refresh tokens; clock skew; storage via adapters).
+- `analytics/`: (Optional) Provider adapter (batch/flush, offline queue optional).
+- `observability/`: (Optional) Error tracking adapter, Web Vitals adapter.
+- `security/`: (Optional) Crypto helpers (hashing, uuid).
+
+## src/workers (optional)
+
+- `*.worker.ts`: Vite worker entries (e.g., image optimizer, data processor).
+- `messaging.ts`: Type-safe postMessage helpers (zod-validated).
+- Keep code framework-agnostic; communicate via typed messages only.
+
+## src/assets
+
+- `images/`, `icons/svg/`, `fonts/`, `animations/`, `media/`.
+- Prefer importing assets for bundling vs public URLs unless necessary.
+- Register SVGs via `core/ui/icons/registry.ts`.
+- For large apps, optionally organize by domain: `assets/<domain>/{images,icons,media}/*`.
+
+## src/styles
+
+- `globals.css`, `base/`, `utilities/`, `theme/`, `lib/{animations,mixins}`.
+- Tailwind config is at `tailwind.config.ts` (root level, alongside other config files). It mirrors design tokens; favor utilities over custom CSS.
+- Keep resets in `base/`; component-level styles colocated via Tailwind classes.
+
+### Cross-References
+
+- Allowed imports and rules: `boundaries.mdc`
+- Performance and budgets: `ux/performance.mdc`, `ux/performance-budgets.mdc`
+- Theming/tokens: `ux/theming-tokens.mdc`

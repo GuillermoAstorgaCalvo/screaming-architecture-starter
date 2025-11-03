@@ -1,0 +1,18 @@
+---
+description: 'CI/CD readiness: required and optional pipelines'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## CI/CD Readiness
+
+### Required (recommended)
+
+- Typecheck, lint, unit tests, build on PRs to protected branches.
+- Enforce ESLint boundaries and alias usage.
+
+### Optional
+
+- E2E on main/nightly; Lighthouse audits periodically.
+- Pre-commit hooks (lint-staged + Prettier) and conventional commits.
+- Visual regression testing (e.g., Chromatic) for UI scalability.

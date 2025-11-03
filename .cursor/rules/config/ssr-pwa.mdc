@@ -1,0 +1,39 @@
+---
+description: 'Optional SSR/SSG strategy and PWA enablement guidance'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## SSR/SSG & PWA Strategy (Optional)
+
+This template targets SPA by default. You can extend it for SSR/SSG or enable PWA as needed.
+
+### SSR/SSG (Optional Direction)
+
+- Keep `core/` framework-agnostic to ease SSR adoption later
+- Introduce a separate SSR entry (e.g., `server.ts`) without changing domain boundaries
+- Data fetching: keep domain services pure and IO behind `core/lib/httpClient.ts`
+- Routing: ensure routes are serializable (no implicit globals)
+
+Considerations:
+
+- Avoid direct browser APIs at module top-level; guard with `typeof window !== 'undefined'`
+- Split server-only vs client-only logic into adapters under `infrastructure/*`
+
+### PWA (Opt-in)
+
+- PWA shell lives under `src/app/pwa/*` (disabled by default)
+- Register service worker from an opt-in entry (e.g., `registerSW.ts`)
+- Cache strategy: start with network-first for HTML, stale-while-revalidate for assets
+
+Checklist:
+
+- Manifest in `public/manifest.json`
+- Icons and maskable icons in `public/`
+- Respect updates: prompt users and allow reload when a new SW is available
+
+### When to Choose What
+
+- Small landing: SPA only; no PWA unless offline is required
+- Content-heavy or SEO-critical: consider SSG/SSR; keep domain boundaries intact
+- Offline or installable experience: enable PWA with conservative caching

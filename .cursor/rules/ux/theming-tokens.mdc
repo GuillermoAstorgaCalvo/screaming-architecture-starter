@@ -1,0 +1,65 @@
+---
+description: 'Theming and design tokens governance, strategy, and examples'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Theming & Design Tokens Governance
+
+### Goals
+
+- Single source of truth for tokens in `@core/constants/designTokens.ts`
+- Tailwind config mirrors tokens; dark mode via `class`
+- Predictable token change workflow and versioning
+
+### Token Categories
+
+- Colors (semantic-first where possible: `primary`, `surface`, `textMuted`)
+- Spacing, radius, shadows, typography scale
+- Breakpoints and Z-index layers
+
+### Source of Truth
+
+- Edit tokens only in `src/core/constants/designTokens.ts`
+- Reflect changes into `tailwind.config.ts` (optionally via `scripts/sync-design-tokens.ts`)
+
+### Dark Mode Strategy
+
+- `darkMode: 'class'` in Tailwind config
+- App-level `ThemeProvider` toggles `class` on the `html` element
+- Persist preference via storage adapter; respect system preference by default
+
+### Component Styling Guidance
+
+- Prefer Tailwind utility classes; extract patterns into `@core/ui/*` atoms
+- Keep domain-specific styles in domain components; avoid global CSS
+- Use semantic tokens over raw hex values in class compositions
+
+### Example Token Shape
+
+```ts
+export const designTokens = {
+	color: {
+		primary: {
+			DEFAULT: '#2563eb',
+			foreground: '#ffffff',
+		},
+		surface: {
+			DEFAULT: '#ffffff',
+			dark: '#0b0f19',
+		},
+	},
+	radius: { sm: '0.25rem', md: '0.375rem', lg: '0.5rem' },
+	spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+};
+```
+
+### Accessibility Considerations
+
+- Ensure contrast ratios meet WCAG AA at minimum
+- Provide focus ring tokens; visible focus states by default
+
+### Governance & Change Management
+
+- Token changes are breaking when they alter semantics; bump with care
+- Provide migration notes in PRs touching tokens and Tailwind config

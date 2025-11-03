@@ -1,0 +1,45 @@
+---
+description: 'Scaffolding and generators for domains, pages, and components'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Scaffolding & Generators (scripts/generate.ts)
+
+### Purpose
+
+Create consistent domains, pages, components, and tests following the screaming-architecture boundaries.
+
+### Suggested Generators
+
+- `domain`: scaffolds `src/domains/<name>/` with pages, components, hooks, models, services, store, i18n
+- `page`: adds a new page inside a domain and wires route into `<domain>/routes.ts`
+- `component`: adds a domain component (optionally with story and test)
+
+### Domain Structure Output
+
+```
+src/domains/<name>/
+  routes.ts
+  i18n/en.json
+  pages/<Name>Page.tsx
+  components/sections/
+  components/widgets/
+  hooks/use<Name>.ts
+  models/<name>.ts
+  services/<name>Service.ts
+  store/<name>Store.ts
+  constants.ts
+```
+
+### Rules
+
+- Respect boundaries: no imports from `infrastructure` in domain templates
+- Use alias imports in templates (`@domains/<name>/...`)
+- Include minimal tests and story (optional) with placeholders
+
+### Post-Generation Tasks
+
+- Register domain routes in `src/app/router.tsx`
+- Add translations and i18n keys
+- Update tests where applicable

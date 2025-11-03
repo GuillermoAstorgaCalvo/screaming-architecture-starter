@@ -1,0 +1,23 @@
+---
+description: 'State management guidelines: React Query and Zustand per domain'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## State Management
+
+### Guidelines
+
+- Keep state as close to where it is used as possible.
+- Use Zustand per domain for cross-component state.
+- Use React Query for server state (caching, retries, syncing).
+
+### Stores
+
+- Domain store in `domains/<domain>/store/*`.
+- Avoid global mega-stores; keep concerns localized.
+
+### Server State
+
+- Query client provided via `app/providers/QueryProvider.tsx`.
+- Domain services define queries/mutations wrapping `core/lib/httpClient`.

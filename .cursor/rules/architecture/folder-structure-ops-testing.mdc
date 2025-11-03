@@ -1,0 +1,98 @@
+---
+description: 'Types, tests, e2e, scripts, storybook, public, SEO, CI/CD, scalability'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## src/types
+
+See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
+
+**Current Implementation:**
+
+- `ui.ts`: ✅ UI component type definitions. Exports `StandardSize`, `ModalSize`, `ButtonVariant`, `IconButtonVariant`, `BaseIconProps`, `ButtonProps`, `IconButtonProps`, `InputProps`, `LabelProps`, `BaseTextMessageProps`, `ErrorTextProps`, `HelperTextProps`, `SpinnerProps`, `ModalProps`. All UI components reference types from this file via `@src-types/ui`.
+
+**Optional/Planned:**
+
+- `api/*`, `domains/*`, `generated/*` (codegen), `zod/*` (cross-cutting schemas), `result.ts` (Result/Either), `branding.ts`, `pagination.ts`, `hooks.ts`, `enums.ts`, `events.ts`, `forms.ts`, `layout.ts`, `common.ts`.
+- Domain-specific types remain under `domains/<domain>/models/*`.
+- Avoid barrels that re-export entire directories; import only what you use.
+
+## tests
+
+- `setupTests.ts`: Vitest setup file that imports `@testing-library/jest-dom/vitest` for DOM matchers.
+- `vitest-env.d.ts`: TypeScript environment declarations for Vitest.
+- `domains/<domain>/*`: Domain tests (pages, hooks, store). Currently includes `domains/landing/pages/` directory (placeholder for landing page tests).
+
+**Test Utilities:**
+
+- `utils/testUtils.tsx`: ✅ Custom render function (`renderWithProviders`) that wraps components with all app providers (LoggerProvider, StorageProvider, HttpProvider, ThemeProvider, QueryProvider). Accepts optional provider overrides for custom test scenarios. Exports Testing Library utilities for convenience. Re-exports mock adapters for direct use.
+- `utils/TestProviders.tsx`: ✅ React component that composes all providers (LoggerProvider, StorageProvider, HttpProvider, ThemeProvider, QueryProvider) for testing. Used internally by `renderWithProviders`.
+- `utils/mocks/MockStorageAdapter.ts`: ✅ Mock implementation of `StoragePort` using in-memory Map. Includes `reset()` helper method for test cleanup.
+- `utils/mocks/MockLoggerAdapter.ts`: ✅ Mock implementation of `LoggerPort` that collects logs for assertions. Includes `reset()` helper method and suppresses console output during tests.
+- `utils/mocks/MockHttpAdapter.ts`: ✅ Mock implementation of `HttpPort` for testing. Records requests for assertions and allows configuring responses via `mockResponse()`. Supports URL pattern matching (string, RegExp, or function). Includes `reset()` helper method for test cleanup.
+
+**Additional Test Utilities:**
+
+- `factories/apiFactories.ts`: ✅ API response factories for test data builders. Exports `ApiResponse` interface, `ApiResponseOverrides` type, and `buildApiResponse()` function for creating test API response objects with optional overrides. Provides example structure matching ApiDemoSection usage.
+- `factories/userFactories.ts`: ✅ User factories for test data builders. Exports `User` interface, `buildUser()` function for creating test user objects with optional overrides, and `buildUserList()` function for creating arrays of test users.
+- `mocks/handlers.ts`: ✅ MSW request handlers placeholder. Provides structure and examples for mocking API endpoints. Currently empty handlers array - ready for implementation when MSW is installed.
+- `mocks/payloads.ts`: ✅ MSW payload helpers. Provides pre-defined response payloads for common API endpoints using factory functions. Exports `defaultSlideshowResponse`, `emptySlideshowResponse`, and other payload constants. Uses factories from `@tests/factories/apiFactories` for consistency. Ready for use with MSW handlers.
+- `mocks/server.ts`: ✅ MSW server setup helper. Provides `setupMSWServer()` function placeholder and `getMSWSetupInstructions()` helper with setup documentation. Ready for implementation when MSW is installed.
+
+**Note**: MSW (Mock Service Worker) is not yet installed, so handlers/server files are placeholders with setup instructions.
+
+- `shared/*`: Shared composites tests (optional, not yet implemented).
+
+Principles:
+
+- Deterministic tests; no real network; fake adapters; avoid real timers.
+- Prefer role/label queries; use `data-testid` sparingly with names like `domain.component.part`.
+
+## e2e (Playwright)
+
+- `example.spec.ts`: ✅ Example E2E test file with basic home page loading and navigation tests.
+- Organized by domain (e.g., `e2e/landing/landingPage.spec.ts`). Include axe checks for critical flows (to be added).
+
+## scripts
+
+- `codegen.ts`, `generate.ts` (scaffold), `sync-design-tokens.ts`, `mockServer.ts`.
+
+## storybook
+
+- `main.ts`, `stories/*`. Co-locate stories or keep here. Provide controls for primitives and composites.
+
+## public
+
+- `manifest.json`, `favicon.ico`. Prefer importing assets over public URLs.
+
+## seo
+
+- `seo.ts`, `meta.tsx`, `jsonld/*` (e.g., `product.ts`, `article.ts`, `event.ts`). Centralized helpers for consistent SEO.
+
+## CI/CD and Governance
+
+- CI on PRs: typecheck, lint, unit tests, build; block merges on failures.
+- Optional: E2E on `main`/nightly; Lighthouse audits periodically.
+- Enforce ESLint boundaries and alias usage in CI.
+- Conventional Commits; pre-commit hooks (Husky + lint-staged); Dependabot/Renovate (optional).
+- `CODEOWNERS` for `src/domains/*` and critical infra.
+
+## Scalability & Variants
+
+- Start small; add domains and `shared` when reuse emerges.
+- SSR/SSG: keep `core/*` framework-agnostic; add `entry-client.tsx`/`entry-server.tsx` later if needed.
+- PWA: opt-in under `src/app/pwa/*`.
+- Storybook: recommend for `core/ui` primitives and `shared` composites.
+
+## Monorepo & Workspaces (optional)
+
+- Works standalone; for larger orgs, place the app under `apps/<app-name>/` with shared libs in `packages/*`.
+- Keep aliases stable across workspaces. Do not violate the Allowed Imports matrix between packages.
+- Use pnpm workspaces and `use-workspace-protocol`. Document package boundaries and ownership.
+
+### Cross-References
+
+- Boundaries and imports: `boundaries.mdc`
+- Performance and budgets: `ux/performance.mdc`, `ux/performance-budgets.mdc`
+- Release/PR checklists: `quality/checklists.mdc`, `quality/release-hygiene.mdc`

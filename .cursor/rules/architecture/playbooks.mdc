@@ -1,0 +1,46 @@
+---
+description: 'Domain playbook for creating and evolving domains'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Domain Playbook (Create / Evolve a Domain)
+
+### When to Create a Domain
+
+- Distinct business area with its own pages, services, state, and UI.
+- Reused across the app? Move to `domains/shared/*`.
+
+### Steps to Create
+
+1. Scaffold `src/domains/<name>/` with pages, components, hooks, models, services, store, i18n.
+2. Define routes in `<domain>/routes.ts`; import into `app/router.tsx`.
+3. Define Zod schemas in `<domain>/models/*`; infer types for services/UI.
+4. Implement services over `@core/lib/httpClient`; validate IO at boundaries.
+5. Keep state minimal in `<domain>/store/*`; derive as needed.
+
+### New Domain Checklist
+
+- [ ] Routes declared in `<domain>/routes.ts` and aggregated in `app/router.tsx`
+- [ ] i18n JSON added under `<domain>/i18n/*` with namespaced keys
+- [ ] Services use `@core/lib/httpClient` and validate IO with Zod
+- [ ] Zustand store scoped under `<domain>/store/*`; no cross-domain coupling
+- [ ] Unit tests added (services/hooks/pages) with MSW where applicable
+- [ ] Imports respect boundaries; no `@infra/*` or `@app/*` inside domains
+
+### Evolving a Domain
+
+- Promote cross-domain features into `domains/shared/*` when used 2+ times.
+- Keep UI presentational; compose behaviors in hooks/services.
+- Maintain clear imports: `domains` → `core`/`shared`, not `infrastructure`.
+
+### Testing
+
+- Unit test services and hooks with MSW; no real network.
+- Page-level tests assert behavior; include axe checks for critical pages.
+
+### Pitfalls to Avoid
+
+- Cross-boundary imports (infra/util leakage into domains).
+- Re-export barrels hiding dependencies.
+- Overgrown pages; extract widgets/sections to components.

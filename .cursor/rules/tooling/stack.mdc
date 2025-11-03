@@ -1,0 +1,62 @@
+---
+description: 'Stack overview: build, UI, state, routing, testing, boundaries'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Stack and Tooling
+
+### Runtime & Build
+
+- **Vite**: fast dev server and build
+- **TypeScript**: strict typing
+- **Zod**: runtime validation and schema inference
+
+### UI & Styling
+
+- **React** (function components, hooks)
+- **TailwindCSS** for utility-first styling
+- Design tokens in `core/constants/designTokens.ts` → referenced by Tailwind config
+
+### State & Data
+
+- **React Query** for server state management (via `@tanstack/react-query`)
+- **Zustand** per domain stores (optional, not yet implemented - add when needed)
+
+### Routing & i18n
+
+- **React Router** central routes in `app/router.tsx`
+- i18n in `core/i18n/*` and per-domain `i18n/*`
+
+### Testing
+
+- **Vitest**: unit tests in `tests/*`
+- **Playwright**: E2E tests in `e2e/*`
+- **Lighthouse**: CI/CD performance and best-practice audits
+- **Axe**: accessibility checks (unit via jest-axe / E2E via axe-core + Playwright)
+
+### Linting & Formatting
+
+- ESLint, Prettier
+
+### Aliases & Boundaries
+
+- Path aliases defined in top-level `tsconfig.base.json`: `@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@tests`. Project `tsconfig.json` uses project references (references `tsconfig.app.json`, `tsconfig.node.json`, and `tsconfig.vitest.json`).
+- Enforce module boundaries via ESLint (e.g., `eslint-plugin-boundaries` or `import/no-restricted-paths`) according to the Allowed Imports matrix.
+- No re-export barrels: avoid `index.ts` barrels; import concrete modules explicitly for clarity and enforcement.
+
+### TypeScript Configs
+
+- Multi-config setup:
+  - `tsconfig.base.json`: shared compiler options + aliases (ES2023, Bundler resolution, strict)
+  - `tsconfig.json`: project references orchestrator (references app and node configs)
+  - `tsconfig.app.json`: application source code (Vite & IDE)
+  - `tsconfig.node.json`: Node/Vite configs & scripts
+  - `tsconfig.vitest.json`: unit tests (Vitest + jsdom globals)
+  - `tsconfig.build.json`: CI/build-only (emits TypeScript declarations)
+
+### Storybook
+
+- `storybook/*` for isolated UI development
+- Optionally co-locate domain widget stories under `domains/<domain>/stories/` to showcase
+  domain UI (keep stories free of business logic; focus on UI contracts).

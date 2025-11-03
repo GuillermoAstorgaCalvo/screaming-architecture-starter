@@ -1,0 +1,68 @@
+---
+description: 'Routing principles, structure, and composition across domains'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Routing
+
+### Principles
+
+- Centralized route definitions in `app/router.tsx`.
+- Prefer `React.lazy` + `Suspense` for page-level lazy loading. For very large domains,
+  consider additional submodule-level splitting (e.g., widgets/sections) to keep bundles small.
+- Keep route params typed via shared `types/*` when needed.
+- Use path aliases for imports; avoid re-export barrels when composing routes.
+- Pages wrapped with `AppLayout` for consistent layout structure.
+- Use `withTheme` HOC to inject theme props into pages when needed.
+
+### Structure
+
+- Global route constants in `core/config/routes.ts` (e.g., `ROUTES.HOME`).
+- Route-level layouts in `shared/components/layout/*` (e.g., `Layout`, `Navbar`).
+- App-level layout wrapper in `app/components/AppLayout.tsx`.
+- Error boundaries wrap the router in `app/App.tsx`.
+
+### Current Implementation Pattern
+
+```tsx
+// app/router.tsx (actual implementation)
+import AppLayout from '@app/components/AppLayout';
+import { withTheme } from '@app/components/PageWrapper';
+import Error404 from '@app/pages/Error404';
+import { ROUTES } from '@core/config/routes';
+import { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+const LandingPageBase = lazy(() => import('@domains/landing/pages/LandingPage'));
+const LandingPage = withTheme(LandingPageBase);
+
+function LoadingFallback() {
+	return (
+		<div className="flex items-center justify-center p-6" aria-live="polite" aria-label="Loading">
+			<p className="text-gray-600 dark:text-gray-400">Loading...</p>
+		</div>
+	);
+}
+
+export default function Router() {
+	return (
+		<AppLayout>
+			<Suspense fallback={<LoadingFallback />}>
+				<Routes>
+					<Route path={ROUTES.HOME} element={<LandingPage />} />
+					<Route path="*" element={<Error404 />} />
+				</Routes>
+			</Suspense>
+		</AppLayout>
+	);
+}
+```
+
+### Future Pattern (Domain Route Aggregation)
+
+For larger applications, domains can expose route arrays:
+
+1. Domain exposes `routes` array with lazy pages in `domains/<domain>/routes.ts`.
+2. App router imports domain `routes` and composes.
+3. Nested routes allowed per domain.

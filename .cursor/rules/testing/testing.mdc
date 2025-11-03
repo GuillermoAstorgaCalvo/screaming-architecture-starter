@@ -1,0 +1,32 @@
+---
+description: 'Testing strategy for unit, E2E, and audits'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Testing Strategy
+
+### Unit Tests
+
+- Runner: **Vitest**
+- Location: `tests/*`
+- Test utilities: `tests/utils/testUtils.ts`
+- Factories/mocks under `tests/factories` and `tests/mocks`
+- Accessibility: **Axe** via `jest-axe`/`vitest-axe`
+
+### E2E Tests
+
+- Runner: **Playwright**
+- Location: `e2e/*`
+- Critical flows only (smoke tests and key journeys)
+- Accessibility: **axe-core** integration with Playwright where feasible
+
+### Patterns
+
+- Prefer testing domain logic in isolation from UI
+- Mock API in services; do not hit real network in unit tests
+- Keep tests fast and deterministic
+
+### Audits in CI/CD
+
+- **Lighthouse**: run periodically in CI for performance, accessibility, SEO, and best practices

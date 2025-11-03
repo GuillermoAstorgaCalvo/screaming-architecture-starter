@@ -1,0 +1,180 @@
+---
+description: 'src/domains and cross-domain shared features: anatomy, state, i18n'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## src/domains: Business Domains
+
+See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
+
+Self-contained areas of business capability. Domain code stays isolated and imports only from `core` and `shared`.
+
+### Domain Anatomy (example: `landing`)
+
+**Current implementation:**
+
+- `pages/*`: Route-level components; orchestrate domain hooks/services; minimal logic. Pages receive app-level context via props (e.g., `theme` via `withTheme` HOC).
+- `components/*`: Domain UI (sections/widgets); presentational when possible.
+- `hooks/*`: Domain-specific hooks that compose `core` services (e.g., `useLandingStorage` uses `useStorage` and `useLogger`).
+
+**Optional/Planned:**
+
+- `routes.ts`: Domain routes aggregation (lazy-loaded pages; no side effects) - for larger apps.
+- `i18n/*`: Domain translations (e.g., `en.json`, `es.json`).
+- `models/*`: Zod schemas + inferred TS types for runtime-safe domain models.
+- `services/*`: Domain APIs/services; use `core/lib/httpClient`; validate IO with Zod.
+- `store/*`: Zustand store(s); minimal state; derive when possible.
+- `constants.ts`: Domain-specific constants/enums.
+
+**Example Domain Structure (landing):**
+
+```
+src/domains/landing/
+├── pages/
+│   └── LandingPage.tsx        # Receives theme via props from withTheme HOC
+├── components/
+│   ├── ApiDemoSection.tsx     # Demonstrates httpClient usage
+│   ├── ButtonSection.tsx      # Demonstrates Button component
+│   ├── CloseIconSection.tsx   # Demonstrates CloseIcon component
+│   ├── FormsSection.tsx        # Demonstrates form adapter and Controller/useController usage
+│   ├── HooksDemoSection/      # HooksDemoSection subdirectory
+│   │   ├── HooksDemoSection.tsx # Main section component
+│   │   ├── UseAsyncDemo.tsx     # Demonstrates useAsync hook
+│   │   ├── UseFetchDemo.tsx     # Demonstrates useFetch hook
+│   │   ├── UseLocalStorageDemo.tsx # Demonstrates useLocalStorage hook
+│   │   ├── UseMediaQueryDemo.tsx   # Demonstrates useMediaQuery hook
+│   │   ├── UsePreviousDemo.tsx     # Demonstrates usePrevious hook
+│   │   ├── UseThrottleDemo.tsx     # Demonstrates useThrottle hook
+│   │   └── UseWindowSizeDemo.tsx   # Demonstrates useWindowSize hook
+│   ├── IconButtonSection.tsx  # Demonstrates IconButton component
+│   ├── InputSection/          # InputSection subdirectory
+│   │   └── InputSectionParts.tsx # InputSection sub-components
+│   ├── InputSection.tsx       # Demonstrates Input component
+│   ├── LabelSection.tsx       # Demonstrates Label component
+│   ├── ModalSection/          # ModalSection subdirectory
+│   │   └── ModalSectionModals.tsx # ModalSection sub-components
+│   ├── ModalSection.tsx       # Demonstrates Modal component
+│   ├── SearchSection.tsx      # Demonstrates useDebounce hook
+│   ├── SpinnerSection.tsx     # Demonstrates Spinner component
+│   ├── StorageSection.tsx     # Demonstrates storage integration
+│   ├── TextComponentsSection.tsx # Demonstrates ErrorText, HelperText components
+│   ├── ThemeSection.tsx       # Demonstrates theme integration
+│   ├── ToggleSection.tsx      # Demonstrates useToggle and classNames
+│   └── UserNameForm.tsx       # Form component
+└── hooks/
+    └── useLandingStorage.ts   # Domain hook using StoragePort and LoggerPort
+```
+
+<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
+read_file
+
+### Shared Domains (cross-domain features)
+
+`src/domains/shared/*` hosts reusable domains (auth, notifications, analytics) consumed by multiple domains.
+
+Example structure:
+
+```
+src/domains/shared/
+├── auth/
+│   ├── pages/ (optional)
+│   ├── components/
+│   ├── hooks/
+│   ├── services/
+│   └── store/
+├── notifications/
+│   ├── components/ (Alert, Banner, Toast)
+│   ├── hooks/ (useNotifications, useToastQueue)
+│   ├── models/ (notification.ts)
+│   ├── store/ (notificationStore.ts)
+│   └── services/ (notificationService.ts)
+└── analytics/
+    ├── hooks/ (useAnalytics)
+    ├── models/ (analytics.ts)
+    ├── services/ (analyticsService.ts)
+    └── adapters/ (googleAnalyticsAdapter.ts, customAdapter.ts)
+```
+
+Guidance:
+
+- Adapter-driven flows (e.g., Auth) via ports; avoid infra imports in domains.
+- Shared features remain domain-agnostic and configurable via props/adapters.
+
+## src/shared: Cross-cutting Composites and Helpers
+
+Purpose: Reusable composites and helpers assembled from `core/ui` primitives. Domain-agnostic.
+
+Structure:
+
+```
+src/shared/
+├── components/
+│   ├── layout/
+│   │   ├── Layout.tsx          # Main layout wrapper with Navbar
+│   │   └── Navbar.tsx          # Navigation bar with optional theme toggle
+│   └── ui/
+│       └── ThemeToggle.tsx    # Theme toggle component (cycles light → dark → system)
+├── hooks/ (optional: useMediaQuery, useEventListener, useClickOutside, ...)
+└── utils/ (optional: formatCurrency, formatBytes, math, ...)
+```
+
+**Current Implementation:**
+
+- `components/layout/Layout.tsx`: Main layout wrapper that accepts optional theme config and renders `Navbar` + children. Accepts `theme` prop that gets passed to Navbar.
+- `components/layout/Navbar.tsx`: Navigation bar with home link and optional `ThemeToggle` when theme prop provided. Accepts theme configuration via props (not via context to maintain domain-agnostic design).
+- `components/ui/ThemeToggle.tsx`: Accessible theme toggle button that cycles through light → dark → system → light themes. Presentational component; receives theme state via props.
+
+Conventions:
+
+- Naming: PascalCase for components, camelCase for hooks.
+- Props: Export explicit `Props` types; prefer headless/composition patterns.
+- Styling: Tailwind-first; pull from `core/constants/designTokens.ts`.
+- A11y: Keyboard-navigable; provide aria escape hatches.
+- i18n: Accept copy via props/children; no hard-coded strings.
+- Testing: Integration-style tests under `tests/shared/*`.
+- Imports: `shared` may import `core` and `core/ui`; must not import `app` or `infrastructure`.
+
+Example `EmptyState` composite:
+
+```tsx
+// shared/components/data-display/EmptyState.tsx
+import { Heading } from '@core/ui/Heading';
+import { Text } from '@core/ui/Text';
+import { Button } from '@core/ui/Button';
+
+export type EmptyStateProps = {
+	title: string;
+	description?: string;
+	actionLabel?: string;
+	onAction?: () => void;
+};
+
+export default function EmptyState({ title, description, actionLabel, onAction }: EmptyStateProps) {
+	return (
+		<div className="flex flex-col items-center gap-3 py-10 text-center">
+			<Heading level={3}>{title}</Heading>
+			{description ? <Text className="text-muted-foreground">{description}</Text> : null}
+			{actionLabel && onAction ? <Button onClick={onAction}>{actionLabel}</Button> : null}
+		</div>
+	);
+}
+```
+
+## State Management per Domain
+
+- Use Zustand per domain under `domains/<domain>/store/*`. Keep state minimal; derive when possible.
+- Server-state via React Query in `app/providers/QueryProvider.tsx`.
+- Avoid global singletons; if composing across domains is needed, add selector-only bridges.
+
+## i18n per Domain
+
+- Co-locate JSON per domain under `domains/<domain>/i18n/*`.
+- Keep keys namespaced (e.g., `landing.hero.title`).
+- Types remain in `core/i18n/types.ts`.
+
+### Cross-References
+
+- Boundaries: `boundaries.mdc`
+- State specifics: `architecture/state.mdc`
+- i18n specifics: `config/i18n.mdc`

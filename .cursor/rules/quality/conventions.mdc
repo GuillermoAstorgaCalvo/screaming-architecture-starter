@@ -1,0 +1,98 @@
+---
+description: 'Conventions for naming, TypeScript, React, state, and imports'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Conventions
+
+### Naming
+
+Folders scream domain names: `landing`, `auth`, `notifications`.
+Files use PascalCase for React components, camelCase for utilities, and kebab or camel for non-code assets.
+Hooks start with `use*`, stores end with `Store`.
+Routes/URLs use kebab-case.
+One responsibility per file; avoid overly large modules.
+
+### TypeScript
+
+Prefer explicit types for public APIs; avoid `any`.
+Keep domain types in `domains/<domain>/models/*` or `types/domains/*`.
+
+### React
+
+Function components with hooks only; avoid legacy patterns.
+Co-locate component styles (Tailwind classes) with the component.
+Use Suspense + lazy for pages.
+
+### State
+
+UI-local: `useState`/`useReducer`.
+Cross-component domain state: Zustand store per domain.
+Server state: React Query.
+
+### HTTP
+
+Centralize HTTP in `core/lib/httpClient.ts`; domain services wrap it.
+Avoid direct `fetch`/axios from components.
+
+### Errors & Logging
+
+Use `core/lib/errorBoundary.tsx` for boundaries.
+Log via `core/lib/logger.ts` (adapters in `infrastructure/logging`).
+
+### Observability
+
+- Web Vitals reporting via `core/perf/reportWebVitals.ts` with an adapter in `infrastructure/observability/webVitalsAdapter.ts`.
+- Error tracking via `infrastructure/observability/errorTrackingAdapter.ts`; default to noop in small apps.
+
+### Styling
+
+Tailwind first; extract patterns into `core/ui/*` or tokens.
+Keep Tailwind config in sync with tokens; if using `scripts/sync-design-tokens.ts`, treat `core/constants/designTokens.ts` as source of truth.
+
+### Testing
+
+Unit tests in `tests/*`; test data in `tests/factories`.
+E2E critical flows under `e2e/*`.
+Include axe checks in unit/e2e for critical pages and components.
+
+### Imports & Aliases
+
+- Prefer path aliases over deep relative paths. Aliases: `@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@tests` (declared in top-level `tsconfig.base.json`; extend in project `tsconfig.json`).
+- ESLint should flag long relative imports where an alias exists.
+
+### TypeScript Configs
+
+- Keep a multi-config setup for clarity and tooling:
+  - `tsconfig.base.json` (shared compiler options + aliases)
+  - `tsconfig.json` (project references orchestrator)
+  - `tsconfig.app.json` (application source code)
+  - `tsconfig.node.json` (Node/Vite configs & scripts)
+  - `tsconfig.vitest.json` (unit tests)
+  - `tsconfig.build.json` (CI/build-only, emits declarations)
+
+### Module Boundaries
+
+- Enforce the "Allowed Imports" matrix via ESLint (e.g., `eslint-plugin-boundaries` or `import/no-restricted-paths`).
+- `domains` may not import `infrastructure`. `core` is framework-agnostic. `shared` never imports `infrastructure` or `app`.
+
+### No Re-export Barrels
+
+- Enforce with ESLint plugins:
+  - boundaries/import restrictions for layer rules
+  - jsx-a11y for accessibility
+  - tailwindcss for class correctness
+  - testing-library and jest-dom for tests
+
+### Forms
+
+- Prefer a form adapter (`core/forms/formAdapter.ts`) to avoid coupling domains to a specific form library.
+- Use Zod schemas for validation; colocate domain-specific schemas under `domains/<domain>/models` when they reflect domain rules.
+
+### Security
+
+- Sanitize any HTML input via `core/security/sanitizeHtml.ts`; avoid `dangerouslySetInnerHTML` unless sanitized.
+- Keep environment access centralized in `core/config/env.client.ts`; do not access `import.meta.env` elsewhere.
+
+- Do not use `index.ts` files that re-export entire folders/modules. Prefer explicit imports from the concrete module files to maintain clear dependency graphs and boundary enforcement.

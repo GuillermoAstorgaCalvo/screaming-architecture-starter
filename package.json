@@ -1,0 +1,97 @@
+{
+	"name": "screaming-architecture-starter",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.20.0",
+	"author": {
+		"name": "BrightHub S.L.",
+		"url": "https://brighthub.es"
+	},
+	"contributors": [
+		{
+			"name": "Guillermo Astorga Calvo",
+			"email": "guillermo@brighthub.es",
+			"role": "Co-founder & CTO"
+		},
+		{
+			"name": "Masa Jebril",
+			"email": "masaj@brighthub.es",
+			"role": "Co-founder & CEO"
+		}
+	],
+	"engines": {
+		"node": ">=22.21.1"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"preview": "vite preview",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"clean": "pnpm dlx rimraf dist node_modules pnpm store prune",
+		"typecheck": "tsc -b",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:e2e": "playwright test"
+	},
+	"dependencies": {
+		"@hookform/resolvers": "^5.2.2",
+		"@radix-ui/react-slot": "^1.2.3",
+		"@tanstack/react-query": "^5.90.5",
+		"class-variance-authority": "^0.7.1",
+		"lucide-react": "^0.548.0",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"react-hook-form": "^7.65.0",
+		"react-router-dom": "^7.9.5",
+		"sonner": "^2.0.7",
+		"tailwind-merge": "^3.3.1",
+		"zod": "^4.1.12"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.38.0",
+		"@playwright/test": "^1.56.1",
+		"@tailwindcss/postcss": "^4.1.16",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.0",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^24.9.2",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
+		"@typescript-eslint/eslint-plugin": "^8.46.2",
+		"@typescript-eslint/parser": "^8.46.2",
+		"@vitejs/plugin-react-swc": "^4.2.0",
+		"@vitest/coverage-v8": "^4.0.6",
+		"autoprefixer": "^10.4.21",
+		"dotenv": "^17.2.3",
+		"eslint": "^9.38.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-import-resolver-typescript": "^4.4.4",
+		"eslint-plugin-boundaries": "^5.1.0",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^7.0.1",
+		"eslint-plugin-react-naming-convention": "^2.2.4",
+		"eslint-plugin-react-refresh": "^0.4.24",
+		"eslint-plugin-security": "^3.0.1",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"eslint-plugin-sonarjs": "^3.0.5",
+		"eslint-plugin-testing-library": "^7.13.3",
+		"eslint-plugin-unicorn": "^62.0.0",
+		"eslint-plugin-unused-imports": "^4.3.0",
+		"globals": "^16.4.0",
+		"jsdom": "^27.1.0",
+		"msw": "^2.11.6",
+		"postcss": "^8.5.6",
+		"prettier": "^3.6.2",
+		"prettier-plugin-tailwindcss": "^0.7.1",
+		"tailwindcss": "^4.1.16",
+		"typescript": "^5.9.3",
+		"vite": "^7.1.12",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^4.0.6"
+	},
+	"optionalDevDependencies": {}
+}

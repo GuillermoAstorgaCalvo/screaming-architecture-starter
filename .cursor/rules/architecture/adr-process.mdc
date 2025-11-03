@@ -1,0 +1,56 @@
+---
+description: 'Architecture Decision Records process and guidelines'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## ADR Process (Architecture Decision Records)
+
+### Purpose
+
+- Capture significant technical and architectural decisions with context, options, and consequences.
+- Keep decisions durable across repos started from this template.
+
+### When to Write an ADR
+
+- New dependency or core tooling change (build, lint, testing, routing, state, styling).
+- Cross-cutting concerns (security model, observability, error handling, analytics).
+- Architecture changes (domain boundaries, SSR/SSG adoption, PWA enablement, monorepo move).
+- Performance or accessibility policy changes (budgets, requirements, testing gates).
+
+### Lifecycle & Status
+
+- Status: Proposed → Accepted → Deprecated → Superseded by ADR-XXX.
+- Keep all ADRs; never delete—use status to reflect evolution.
+
+### Authors & Deciders
+
+- Author: the engineer proposing the decision.
+- Decider(s): responsible engineer(s) or tech lead(s) for the affected area.
+
+### Template
+
+- Use `adr-template.mdc` in this folder. One file per ADR (e.g., `ADR-003-swap-http-client.mdc`).
+
+### Process
+
+1. Draft ADR using the template with a concise title and clear context/constraints.
+2. List alternatives (including “do nothing”) and trade-offs.
+3. Propose the decision and immediate consequences/risks.
+4. Circulate for review (PR or doc review). Capture feedback in the ADR.
+5. Upon acceptance, link related PRs/issues. Update status if superseded later.
+
+### Repository Placement
+
+- Keep ADRs under `.cursor/` for template-level awareness; repo-specific ADRs can live in `/docs/adr` or keep them consolidated here for small apps.
+
+### Cross-Repo Reuse
+
+- If a decision should become template-wide policy, backport an ADR to this template and reference it in dependent repos.
+- Prefer additive ADRs over retroactive edits to history. Deprecate or supersede instead.
+
+### Good ADR Hygiene
+
+- Make decisions reversible when possible; document migration steps.
+- Include measurable success criteria (e.g., bundle size delta, error-rate targets).
+- Keep language concise; focus on justification and impact.

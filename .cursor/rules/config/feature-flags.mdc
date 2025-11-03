@@ -1,0 +1,16 @@
+---
+description: 'Feature flags: definitions, usage guidelines, and defaults'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Feature Flags
+
+### Location
+
+- Definitions in `core/config/featureFlags.ts` and toggles in `core/config/features.ts`.
+
+### Usage
+
+- Avoid sprinkling flag checks across components; centralize behavior in domain services/hooks.
+- Keep flags typed and documented; default safe values.

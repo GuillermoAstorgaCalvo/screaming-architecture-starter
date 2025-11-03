@@ -1,0 +1,131 @@
+---
+description: 'Module boundaries, allowed imports, aliases, and no-barrels policy'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Module Boundaries & Import Rules
+
+### Goals
+
+- Enforce clear dependency direction and prevent cross-layer leakage
+- Prefer path aliases over deep relative imports
+- Avoid re-export barrels to keep dependencies explicit
+
+### Allowed Imports Matrix
+
+- **app**: may import `core`, `domains`, `shared`, `infrastructure`
+- **domains**: may import `core`, `shared`
+- **core**: may import standard libs only (no `app`, `domains`, `infrastructure`, `shared`)
+- **infrastructure**: may import `core` types/interfaces; avoid importing `domains`
+- **shared**: may import `core`; never `app` or `infrastructure`
+
+### Path Aliases (tsconfig.base.json)
+
+```json
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@app/*": ["src/app/*"],
+			"@core/*": ["src/core/*"],
+			"@domains/*": ["src/domains/*"],
+			"@infra/*": ["src/infrastructure/*"],
+			"@shared/*": ["src/shared/*"],
+			"@styles/*": ["src/styles/*"],
+			"@src-types/*": ["src/types/*"],
+			"@tests/*": ["tests/*"]
+		}
+	}
+}
+```
+
+### ESLint (recommended rules)
+
+Use `eslint-plugin-boundaries` (or `import/no-restricted-paths`) and prefer aliases over deep relatives.
+
+```js
+// eslint.config.js (excerpt)
+export default [
+	{
+		files: ['**/*.{ts,tsx}'],
+		settings: {
+			'boundaries/elements': [
+				{ type: 'app', pattern: 'src/app/*' },
+				{ type: 'core', pattern: 'src/core/*' },
+				{ type: 'domains', pattern: 'src/domains/*' },
+				{ type: 'infra', pattern: 'src/infrastructure/*' },
+				{ type: 'shared', pattern: 'src/shared/*' },
+			],
+		},
+		rules: {
+			'boundaries/element-types': [
+				2,
+				{
+					default: 'allow',
+					rules: [
+						{ from: 'domains', disallow: ['infra', 'app', 'domains'] },
+						{ from: 'core', disallow: ['app', 'domains', 'infra', 'shared'] },
+						{ from: 'shared', disallow: ['app', 'infra'] },
+						{ from: 'infra', disallow: ['app', 'domains', 'shared'] },
+					],
+				},
+			],
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['../../*', '../../../*', '../../../../*'],
+							message: 'Use path aliases (@app, @core, @domains, @infra, @shared, @styles, @tests)',
+						},
+					],
+				},
+			],
+		},
+	},
+];
+```
+
+### No Re-export Barrels
+
+- Do not add `index.ts` files that re-export many modules
+- Import concrete modules explicitly to keep dependencies visible and enforceable
+- Exception: a curated `domains/<domain>/index.ts` that exports only the domain’s public API
+  surface (pages, services, hooks) is acceptable. Do not blanket-export folders.
+  Clarification: Do not re-export entire subfolders; only hand-pick explicit symbols in the curated file.
+
+### Examples: Do / Don’t
+
+- Do (domain → core):
+
+```ts
+import { httpClient } from '@core/lib/httpClient';
+```
+
+- Don’t (domain → infrastructure):
+
+```ts
+// 🚫 Not allowed
+import { axiosInstance } from '@infra/api/axiosInstance';
+```
+
+### Example ESLint Boundary Violation (what you might see)
+
+```
+error  boundaries/element-types: "domains" is not allowed to import from "infra"
+  at src/domains/billing/services/invoices.ts:3:1
+  > import { axiosInstance } from '@infra/api/axiosInstance';
+    ^^^^^^
+Hint: Use `@core/lib/httpClient` in domains; keep provider specifics in `@infra/api`.
+```
+
+### CI Enforcement
+
+- Run ESLint with boundaries rules on every PR
+- Block merges on violations
+
+### Adoption Notes
+
+- Keep rules ON even for small sites; be pragmatic but do not introduce barrels
+- For larger apps, keep boundaries strict and add PR templates that call out boundary checks

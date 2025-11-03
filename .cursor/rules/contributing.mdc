@@ -1,0 +1,68 @@
+---
+description: 'Contributing workflow, branching model, and coding standards'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Contributing Guide
+
+> For module boundaries defer to `boundaries.mdc`. For baseline configs defer to `repo-templates.mdc`.
+
+### Workflow
+
+1. Create a branch from `develop`.
+2. Implement changes following folder boundaries and conventions.
+3. Add tests and update docs.
+4. Open a PR to `develop` with clear description and checklist.
+5. Maintainers will periodically create `release/*` branches from `develop` and PR them to `main`.
+6. Urgent fixes go via `hotfix/*` from `main`, then back-merge to `develop`.
+
+### Branching Model
+
+- `main`: production-ready, tagged releases only. Protected.
+- `develop`: integration branch for next release. Protected.
+- `feature/<scope>`: new features; branch from `develop`; PR → `develop`.
+- `fix/<scope>`: non-urgent bug fixes; branch from `develop`; PR → `develop`.
+- `chore/<scope>`: tooling, deps, maintenance; PR → `develop`.
+- `release/<version>`: stabilization; branch from `develop`; PR → `main` and back to `develop`.
+- `hotfix/<version>`: critical production fix; branch from `main`; PR → `main` and back to `develop`.
+
+### PR Targets
+
+- Feature/fix/chore → `develop`
+- Release → `main` (and then merge back to `develop`)
+- Hotfix → `main` (and then merge back to `develop`)
+
+### Merge Strategy
+
+- Prefer squash merge for feature/fix/chore PRs.
+- Keep `release/*` and `hotfix/*` history explicit (no squash) if changelog relies on it.
+- Keep branches up to date by rebasing on `develop` before merge to avoid noisy merges.
+
+### Protections & CI
+
+- See `ci-cd.mdc` and `release-hygiene.mdc` for authoritative CI gates, branch protections, and release expectations.
+
+### Coding Standards
+
+- Follow `conventions.mdc` for naming, React/TypeScript patterns, and testing guidance.
+- Follow `boundaries.mdc` for allowed imports, alias usage, and the no-barrels policy.
+- Use baseline configs and versions from `repo-templates.mdc`.
+
+### Commits
+
+- Conventional commits recommended (feat, fix, docs, chore, refactor, test).
+  - Example: `feat(auth): add refresh token rotation`
+  - Example: `fix(landing): correct hero image alt text`
+
+### Versioning & Releases
+
+- Semantic Versioning (SemVer): MAJOR.MINOR.PATCH
+- Tag releases on `main` via `release/*` merges.
+- Changelog generated from conventional commits when available.
+
+### Maintainers & Contacts
+
+- **Company**: BrightHub S.L. (https://brighthub.es)
+- **CTO**: Guillermo Astorga Calvo (guillermo@brighthub.es)
+- **CEO**: Masa Jebril (masaj@brighthub.es)

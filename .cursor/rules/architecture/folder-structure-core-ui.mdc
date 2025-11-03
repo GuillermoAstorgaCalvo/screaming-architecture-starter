@@ -1,0 +1,266 @@
+---
+description: 'src/core structure: config, ports, utils, ui primitives, tokens, and animation'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## src/core Overview
+
+See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
+
+Framework-agnostic, reusable, domain-independent code. Domains and `app` depend on `core`. `core` depends on standard libs only.
+
+### config
+
+- `env.client.ts`: Client-safe `import.meta.env` surface (Zod-validated); forbid raw usage elsewhere.
+- `routes.ts`: Global route constants (e.g., `ROUTES.HOME`).
+- `runtime.ts`: Runtime configuration loader from `public/runtime-config.json`. Provides `getRuntimeConfig()`, `getAppConfig()` (merged env + runtime), and `getCachedRuntimeConfig()`. Validates with Zod schema (supports `API_BASE_URL` and `ANALYTICS_WRITE_KEY`). SSR-safe with caching.
+- `init.ts`: Configuration initialization that sets up runtime configuration and configures `httpClient` baseURL. Should be called early in app lifecycle (main.tsx).
+
+### lib (Framework-Specific Libraries)
+
+**Purpose**: React/framework-specific implementations and components that integrate with the framework ecosystem.
+
+- `httpClient.ts`: Exports `HttpClient` class implementing `HttpPort` interface and default `httpClient` instance. Supports default config, interceptors (request/response/error), all HTTP methods, automatic body serialization, timeout via AbortController. Includes helper modules:
+  - `httpClientHelpers.ts`: URL building (`buildURL`), header merging (`mergeHeaders`, `addHeadersFromSource`), body serialization (`serializeBody`, `prepareRequestBody`), response parsing (`parseResponse`, `parseJsonResponse`), timeout control (`createTimeoutController`), error creation (`createHttpError`), header conversion (`headersToRecord`).
+  - `httpClientInterceptors.ts`: Type definitions (`RequestInterceptor`, `ResponseInterceptor`, `ErrorInterceptor`) and execution utilities (`executeRequestInterceptors`, `executeResponseInterceptors`, `executeErrorInterceptors`).
+- `ErrorBoundary.tsx`: Production-ready React ErrorBoundary (class component). Catches React errors and displays fallback UI with dev error details, reset button, and home link. Requires logger via props (cannot use hooks). Uses `env.DEV` for development error display.
+- `ErrorBoundaryWrapper.tsx`: Wrapper component that injects logger from `LoggerProvider` context into `ErrorBoundary` using `useLogger()` hook (bridges hooks to class component).
+
+**Note**: `lib/` may depend on React, React Router, and other framework libraries but must respect hexagonal architecture boundaries.
+
+### utils (Framework-Agnostic Utilities)
+
+**Purpose**: Pure, framework-agnostic utility functions that can be used in any JavaScript/TypeScript context.
+
+- `classNames.ts`: Conditionally join class names together (strings, arrays, objects). Supports strings, numbers, arrays, objects (truthy keys included), nested arrays. Falsy values are ignored. Zero-dependency utility similar to `clsx`.
+- `debounce.ts`: Debounce function implementation. Returns a debounced function with `cancel()` and `flush()` methods. Supports `leading` and `trailing` options (defaults: leading=false, trailing=true). Also supports `maxWait` option for maximum delay. Type-safe with generic function type support. Uses `setTimeout`/`clearTimeout` internally with state management for tracking call times and arguments. The returned function has attached `cancel` and `flush` methods via closure.
+- `throttle.ts`: Throttle function implementation. Returns a throttled function with `cancel()` and `flush()` methods. Supports `leading` and `trailing` options (defaults: leading=true, trailing=true). Type-safe with generic function type support. Uses `Date.now()` for timing calculations. The returned function has attached `cancel` and `flush` methods via closure.
+
+**Note**: `utils/` must be framework-agnostic - no React, DOM, or framework-specific dependencies.
+
+### ports (Hexagonal Architecture Ports)
+
+**Purpose**: Defines interfaces/contracts for external dependencies following hexagonal architecture.
+
+- `LoggerPort.ts`: Interface for application-wide logging. Exports `LoggerPort` interface with `debug()`, `info()`, `warn()`, `error()` methods. Also exports `LogLevel` type (`'debug' | 'info' | 'warn' | 'error'`) and `LogContext` type (`Record<string, unknown>`). Error method accepts optional error object and context.
+- `StoragePort.ts`: Interface for key/value storage access. Exports `StoragePort` interface with `getItem()` (returns `string | null`), `setItem()` (returns `boolean`), `removeItem()` (returns `boolean`), `clear()` (returns `boolean`), `getLength()` (returns `number`), `key()` (returns `string | null`). All write operations return boolean to indicate success.
+- `HttpPort.ts`: Interface for HTTP operations. Exports `HttpPort` interface with `request()`, `get()`, `post()`, `put()`, `patch()`, `delete()` methods. Also exports `HttpClientConfig` (extends `RequestInit` with `body`, `baseURL`, `timeout`, `headers`), `HttpClientResponse<T>` (data, status, statusText, headers, response), and `HttpClientError` (extends Error with status, data, response).
+
+**Guidelines**: Pure TypeScript interfaces only. No implementations. Infrastructure adapters implement these; domains depend on ports only.
+
+### hooks (React Hooks)
+
+**Purpose**: React hooks that provide reusable logic across components.
+
+- `useDebounce.ts`: Exports two hooks: `useDebounce<T>(value, delay)` - Hook to debounce a value. Returns debounced version that updates after delay. Uses `useState` and `useEffect` with debounced function, canceling previous debounce on unmount. `useDebouncedCallback<T>(callback, delay)` - Hook to debounce a callback function. Returns memoized debounced version that will only execute after delay has passed since the last call. Both hooks use `core/utils/debounce` internally.
+- `useThrottle.ts`: Exports two hooks: `useThrottle<T>(value, delay)` - Hook to throttle a value. Returns throttled version that updates at most once per delay period. `useThrottledCallback<T>(callback, delay)` - Hook to throttle a callback function. Returns memoized throttled version that executes at most once per delay period. Both hooks use `core/utils/throttle` internally and provide `cancel()` and `flush()` methods.
+- `useToggle.ts`: Hook for managing boolean toggle state. Takes `initialValue` (default `false`). Returns tuple: `[value, toggle, setTrue, setFalse]`. Uses `useCallback` for memoized functions. All three setters are provided: `toggle()` (flips value), `setTrue()`, `setFalse()`.
+- `useLocalStorage.ts`: Hook for reading/writing to localStorage via `StoragePort`. Takes `key` (string) and `initialValue` (generic `T`). Handles JSON serialization/deserialization, cross-tab sync via storage events (listens to `storage` events), SSR safety (guards for window). Returns tuple: `[value, setValue, removeValue]`. Uses `useStorage()` and `useLogger()` hooks. `setValue(null)` removes the item. Automatically syncs on mount and cross-tab changes.
+- `useFetch.ts`: ✅ Hook for fetching data using `httpClient`. Provides state management for loading, data, and error states. Supports automatic fetching on mount with dependency array, manual fetch triggering, request cancellation via AbortController, and automatic cleanup. Returns `{ data, error, loading, fetch, reset }`. Uses `useLogger()` for logging fetch operations. Configurable via `UseFetchOptions` (extends `HttpClientConfig` without body/method).
+- `useAsync.ts`: ✅ Generic async execution hook (more flexible than `useFetch`, accepts any async function). Provides state management for async operations. Supports immediate execution, dependency-triggered re-execution, callbacks (`onSuccess`, `onError`, `onComplete`). Returns `{ data, error, loading, execute, reset }`. Handles component unmount safety and error normalization.
+- `useMediaQuery.ts`: ✅ Hook to track media query matches. Monitors CSS media queries and returns whether they currently match. SSR-safe with configurable initial state via `defaultMatches` option. Updates when media query matches change.
+- `useWindowSize.ts`: ✅ Hook to track window dimensions. Provides responsive window dimensions (`width`, `height`) that update on window resize events. SSR-safe with initial fallback values (defaults to 0 for SSR). Returns `{ width, height }` object.
+- `usePrevious.ts`: ✅ Hook that returns the previous value of a state or prop. Useful for comparing current vs previous values or implementing undo/redo functionality. Takes a value of generic type `T` and returns `T | undefined` (undefined on first render).
+
+**Guidelines**: React-specific. Should use ports/providers for dependencies (not direct infrastructure imports). May use `utils/` for pure logic.
+
+### providers (React Context Providers)
+
+**Purpose**: React context providers that inject port implementations into the component tree.
+
+- `LoggerProvider.tsx`: Provides `LoggerPort` instance via React context. Requires `logger` prop (injected at app level). Uses `useMemo` for context value. Exports `LoggerProviderProps` interface.
+- `LoggerContext.tsx`: Context definition for logger. Exports `LoggerContext` and `LoggerContextValue` type.
+- `useLogger.ts`: Hook to access `LoggerPort` from context using `useContext`. Throws error if used outside provider (checks for `undefined` context).
+- `StorageProvider.tsx`: Provides `StoragePort` instance via React context. Requires `storage` prop (injected at app level). Uses `useMemo` for context value. Exports `StorageProviderProps` interface.
+- `StorageContext.tsx`: Context definition for storage. Exports `StorageContext` and `StorageContextValue` type.
+- `useStorage.ts`: Hook to access `StoragePort` from context using `useContext`. Throws error if used outside provider (checks for `undefined` context).
+- `HttpProvider.tsx`: Provides `HttpPort` instance via React context. Requires `http` prop (injected at app level with `httpClient`). Used by hooks like `useFetch` and domain services. Provides `useHttp()` hook via `useHttp.ts`. Uses `useMemo` for context value. Exports `HttpProviderProps` interface.
+- `HttpContext.tsx`: Context definition for HTTP client. Exports `HttpContext` and `HttpContextValue` type.
+- `useHttp.ts`: Hook to access `HttpPort` from context using `useContext`. Throws error if used outside provider (checks for `undefined` context).
+
+### a11y (Accessibility Utilities)
+
+**Purpose**: Framework-agnostic accessibility utilities for focus management and keyboard navigation.
+
+- `focus.ts`: ✅ Focus management utilities for accessible components. Exports `FOCUSABLE_SELECTOR` constant, `getFocusableElements(container)` - Get all focusable elements within a container, `focusFirstElement(container)` - Focus the first focusable element, `focusLastElement(container)` - Focus the last focusable element, `isFocusable(element)` - Check if an element can receive focus, `handleTabNavigation(container, event)` - Handle Tab key navigation with focus trapping (call from keydown handler), `saveActiveElement()` - Save currently focused element for later restoration. Framework-agnostic, works with any DOM elements.
+- `skipToContent.tsx`: ✅ Skip link component for keyboard navigation. Allows users to bypass repetitive navigation and jump directly to main content. Accessible component with visible-on-focus behavior, proper ARIA attributes, and keyboard navigation support. Exports `SkipToContent` component with configurable `targetId` (default: 'main-content') and `label` (default: 'Skip to main content').
+
+### forms (Form Abstraction)
+
+**Purpose**: Library-agnostic form handling to avoid coupling domain code to specific form implementations.
+
+- `formAdapter.ts`: ✅ Form abstraction layer over react-hook-form. Exports `useFormAdapter<T>()` hook that wraps `useForm` and provides consistent `FormControls<T>` interface. Exposes `register`, `handleSubmit`, `reset`, `watch`, `setValue`, `getValues`, `errors`, `isValid`, `isSubmitting`, `isDirty`, `control`, `getFieldState`, `setError`, `clearErrors`, `trigger`. Enables easy swapping of form libraries without changing domain code.
+- `zodResolver.ts`: ✅ Zod validation resolver integration. Re-exports `zodResolver` from `@hookform/resolvers/zod` to provide consistent API through form adapter layer. Allows domains to use Zod validation without directly depending on @hookform/resolvers.
+- `controller.tsx`: ✅ Controller component for controlled components. Re-exports `Controller` from react-hook-form through the adapter layer for components that don't work with the `register` API (e.g., third-party UI libraries, custom components).
+- `useController.ts`: ✅ `useController` hook and related types for controlled components. Re-exports `useController` and types (`ControllerProps`, `ControllerRenderProps`, `FieldPath`, `UseControllerProps`, `UseControllerReturn`) from react-hook-form through the adapter layer.
+
+### security (Security Utilities)
+
+**Purpose**: Framework-agnostic security utilities for HTML sanitization, CSP, and permission management.
+
+- `sanitizeHtml.ts`: ✅ HTML sanitization utilities to prevent XSS attacks. Exports `escapeHtml(text)` - Escape HTML entities (safest option for untrusted content), `sanitizeHtml(html, options?)` - Sanitize HTML content with configurable allowed tags/attributes. Provides security-critical sanitization functions for rendering user-provided HTML safely.
+- `csp.ts`: ✅ Content Security Policy (CSP) helpers. Exports `generateNonce()` - Generate unique nonces per request/response, `generateHash(content, algorithm?)` - Generate SHA-256/384/512 hashes for inline content, `buildCSPPolicy(directives)` - Build CSP policy string. Provides CSP-related security utilities for server-side rendering or client-side contexts.
+- `permissions.ts`: ✅ Permission model helpers for managing and evaluating permissions. Exports `hasPermission(permissions, permission)` - Check if permission exists and is true, `hasAnyPermission(permissions, permissionList)` - Check if any permission in list is granted, `hasAllPermissions(permissions, permissionList)` - Check if all permissions in list are granted, `checkPermissions(permissions, requiredPermissions, requireAll?)` - Check permissions with detailed result including missing permissions, `mergePermissions(...permissionSets)` - Merge multiple permission sets. Provides generic permission evaluation logic following least privilege and fail-secure principles.
+
+### Optional/Planned Core Modules
+
+- `i18n/`: (Optional) Core i18n instance, lazy namespaces, fallbacks, type-safe translation keys.
+- `perf/`: (Optional) Web Vitals reporting.
+- `analytics/`: (Optional) Feature flags, metrics adapter interfaces.
+- `router/`: (Optional) Generated route types.
+
+### ui: Atomic UI Components
+
+**Current Implementation:**
+
+Each UI component is organized in its own folder with related helper files, types, and sub-components:
+
+- `button/`: Button component with variants (`primary`, `secondary`, `ghost`), sizes (`sm`, `md`, `lg`), loading state, full width support, and accessibility features.
+  - `Button.tsx`: Main button component (uses `getButtonVariantClasses` from `@core/ui/variants`)
+- `input/`: Text input component with label, error, helper text, icon support (left/right), sizes, and full width support.
+  - `Input.tsx`: Main input component (exports types from `@src-types/ui`)
+  - `InputHelpers.ts`: Helper functions for input handling (uses `getInputVariantClasses` from `@core/ui/variants`)
+  - `InputParts.tsx`: Input sub-components (uses Label, ErrorText, HelperText from other folders) and type interfaces
+  - `useInput.ts`: React hook for managing input state
+- `modal/`: Modal dialog component with overlay, close functionality, customizable sizes, optional footer, and keyboard navigation (ESC to close).
+  - `Modal.tsx`: Main modal component (exports types from `@src-types/ui`)
+  - `ModalBody.tsx`: Modal body content component
+  - `ModalDialog.tsx`: Modal dialog wrapper component
+  - `ModalHelpers.ts`: Helper functions for modal operations
+  - `ModalParts.tsx`: Modal sub-components (CloseButton, ModalHeader, ModalContent, ModalFooter)
+  - `useModal.ts`: Modal-related React hooks (focus management, escape key handling)
+  - `useModalSetup.ts`: Modal setup hook for configuration (includes type interfaces)
+- `spinner/`: Loading indicator component with customizable size (`sm`, `md`, `lg` or custom numeric size) and color.
+  - `Spinner.tsx`: Main spinner component (accessible with proper ARIA labels)
+  - `SpinnerHelpers.ts`: Helper functions for spinner styling (`getSpinnerSvgProps()`)
+  - `SpinnerParts.tsx`: Spinner sub-components (`SpinnerContent` - renders spinner SVG content)
+- `error-text/`: Error text display component used in forms.
+  - `ErrorText.tsx`: Error text component
+- `helper-text/`: Helper text display component used in forms.
+  - `HelperText.tsx`: Helper text component
+- `icon-button/`: Icon button component used in modals and other UI elements.
+  - `IconButton.tsx`: Icon button component (uses `getIconButtonVariantClasses` from `@core/ui/variants`)
+- `label/`: Form label component.
+  - `Label.tsx`: Label component
+- `icons/`: Icon SVG components folder.
+  - `clear-icon/ClearIcon.tsx`: Clear icon SVG component
+  - `close-icon/CloseIcon.tsx`: Close icon SVG component used in modals and other UI elements
+  - `heart-icon/HeartIcon.tsx`: Heart/like icon SVG component
+  - `search-icon/SearchIcon.tsx`: Search icon SVG component
+  - `settings-icon/SettingsIcon.tsx`: Settings icon SVG component
+
+**Component Structure Patterns:**
+
+Each component follows a scalable structure based on complexity:
+
+**Simple Component:**
+
+- `Component.tsx` - Main component
+- `ComponentHelpers.ts` - Helper functions and constants
+- `ComponentTypes.ts` - TypeScript type definitions
+
+**Medium Component (with sub-components):**
+
+- `Component.tsx` - Main component
+- `ComponentParts.tsx` - Sub-components (wrapper, field, messages, etc.)
+- `ComponentHelpers.ts` - Helper functions and constants
+- `ComponentTypes.ts` - TypeScript type definitions
+
+**Complex Component (with hooks and/or multiple files):**
+
+- `Component.tsx` - Main component
+- `ComponentParts.tsx` - (optional) Sub-components
+- `ComponentHelpers.ts` - Helper functions and constants
+- `ComponentTypes.ts` - TypeScript type definitions
+- `useComponent.ts` - (optional) Complex state/behavior hooks
+- `useComponentSetup.ts` - (optional) Setup/configuration hooks
+- `ComponentBody.tsx`, `ComponentDialog.tsx` - (optional) Separate wrapper components for complex layouts
+
+**Parts Files (`ComponentParts.tsx`) Guidelines:**
+
+Create `ComponentParts.tsx` when you have **multiple sub-components** that compose the main component:
+
+- Extract when you have **3+ sub-components** (wrapper, field, header, footer, messages, etc.)
+- Extract when sub-components have **distinct responsibilities** and are reused in composition
+- Keep single small sub-components inline unless planning to expand
+
+**Examples:**
+
+- `input/InputParts.tsx`: Exports `InputWrapper`, `InputField`, `InputMessages`, `InputLabel`, `InputContent` (5 sub-components) plus interfaces for state management
+- `modal/ModalParts.tsx`: Exports `CloseButton`, `ModalHeader`, `ModalContent`, `ModalFooter` (4 sub-components)
+
+**Multiple Component Files Guidelines:**
+
+Split into separate component files (e.g., `ComponentBody.tsx`, `ComponentDialog.tsx`) when:
+
+- **Wrapper components** have distinct responsibilities and complex prop structures
+- **Layout structure** is complex enough to benefit from separation (dialog wrapper, body wrapper, etc.)
+- **Reusability** - Components can be used independently or in different contexts
+
+**Examples:**
+
+- `modal/ModalBody.tsx`: Wrapper component managing body structure and layout
+- `modal/ModalDialog.tsx`: Dialog element wrapper with event handlers and attributes
+
+**Hook Extraction Guidelines:**
+
+Extract hooks (`use*.ts` files) from components when:
+
+- **Logic exceeds ~50 lines** or has multiple responsibilities
+- **Logic is reusable** across multiple components
+- **State management is complex** with multiple related state variables and effects
+- **Behavior requires multiple effects** (e.g., event listeners, focus management, cleanup)
+
+**Examples:**
+
+- `input/useInput.ts`: Manages input state logic including ID generation, error handling, ARIA attributes, and field props building (~100 lines, multiple responsibilities)
+- `modal/useModal.ts` + `useModalSetup.ts`: Complex modal behavior including focus management, keyboard navigation, escape key handling, and focus trapping (~150 lines, multiple hooks)
+
+**Keep simple logic inline** - Only extract hooks when the complexity justifies the separation.
+
+- `theme/`: ✅ Component token bridge module (derives component tokens from design tokens).
+  - `tokens.ts`: Component-specific token definitions derived from `@core/constants/designTokens`. Exports `componentColors`, `componentFocusRing`, `componentRadius`, `componentShadows`, `componentSpacing`, `componentTransitions`, `componentZIndex`. Provides abstraction layer for component styling without directly referencing design tokens.
+- `variants/`: ✅ Component variant definitions using class-variance-authority (cva).
+  - `button.ts`: Button variant definition using `cva`. Exports `buttonVariants`, `ButtonVariants` type, and `getButtonVariantClasses` helper function. Combines base classes, variant classes (primary, secondary, ghost), and size classes (sm, md, lg). Uses `twMerge` for proper class merging.
+  - `iconButton.ts`: IconButton variant definition using `cva`. Exports `iconButtonVariants`, `IconButtonVariants` type, and `getIconButtonVariantClasses` helper function. Supports variant (default, ghost) and size (sm, md, lg) variants.
+  - `input.ts`: Input variant definition using `cva`. Exports `inputVariants`, `InputVariants` type, and `getInputVariantClasses` helper function. Supports size (sm, md, lg) and state (normal, error) variants. Includes icon spacing adjustments (left/right icon padding).
+  - `errorText.ts`: ErrorText variant definition using `cva`. Exports `errorTextVariants`, `ErrorTextVariants` type, and `getErrorTextVariantClasses` helper function. Supports size variants (sm, md, lg).
+  - `helperText.ts`: HelperText variant definition using `cva`. Exports `helperTextVariants`, `HelperTextVariants` type, and `getHelperTextVariantClasses` helper function. Supports size variants (sm, md, lg).
+  - `label.ts`: Label variant definition using `cva`. Exports `labelVariants`, `LabelVariants` type, and `getLabelVariantClasses` helper function. Supports size variants (sm, md, lg).
+  - `modal.ts`: Modal variant definitions using `cva`. Exports `modalDialogVariants` (dialog overlay), `modalBodyVariants` (modal content with size variants: sm, md, lg, xl, full), `ModalDialogVariants` and `ModalBodyVariants` types, and helper functions `getModalDialogVariantClasses` and `getModalBodyVariantClasses`.
+  - `spinner.ts`: Spinner variant definition using `cva`. Exports `spinnerVariants`, `SpinnerVariants` type, and `getSpinnerVariantClasses` helper function. Supports size variants (sm, md, lg).
+  - `icon.ts`: Icon variant definition using `cva`. Exports `iconVariants`, `IconVariants` type, and `getIconVariantClasses` helper function. Supports size variants (sm, md, lg). Used by all icon components (CloseIcon, ClearIcon, HeartIcon, etc.).
+
+**Optional/Planned:**
+
+- `loadable.ts`: Thin React.lazy/Suspense helper.
+- `animation/`: Centralized Framer Motion exports and shared variants.
+- `atoms/`, `molecules/`, `organisms/`: Atomic Design structure (optional when scaling).
+- `icons/registry.ts`: Logical name → SVG mapping.
+- Additional components: `Textarea.tsx`, `Select.tsx`, `Checkbox.tsx`, `Radio.tsx`, `Switch.tsx`, `Tooltip.tsx`, `Popover.tsx`, `Drawer.tsx`, `Tabs.tsx`, `Accordion.tsx`, `Table.tsx`, `Pagination.tsx`, `Skeleton.tsx`, `Badge.tsx`, `Avatar.tsx`, `Text.tsx`, `Heading.tsx`, `Icon.tsx`.
+
+UI dependency rules:
+
+- `core/ui` depends only on `core` (tokens, utils). Never import `shared`, `domains`, `app`, or `infrastructure`.
+- `shared/components` may depend on `core/ui`. Arrows flow: primitives → composites → domains.
+
+#### Do / Don't
+
+- Do: import from `@core/utils/classNames` and `@core/ui/*` in shared composites.
+- Don't: import from `@infra/*`, `@app/*`, or `@domains/*` inside `core/ui`.
+
+### constants
+
+- `designTokens.ts`: Single source for design tokens (color, radius, spacing). Exported as `designTokens` const object with structure: `{ color: { primary: { DEFAULT, foreground }, surface: { DEFAULT, dark } }, radius: { sm, md, lg }, spacing: { xs, sm, md, lg, xl } }`. Also exports `DesignTokens` type.
+- `theme.ts`: Theme type definitions. Exports `Theme` type (`'light' | 'dark' | 'system'`) and `THEMES` const array (`['light', 'dark', 'system']`).
+- `ui.ts`: UI component constants. Exports size classes for icons (`ICON_SIZE_CLASSES`), text (`TEXT_SIZE_CLASSES`), buttons (`BUTTON_SIZE_CLASSES`, `BUTTON_BASE_CLASSES`, `BUTTON_VARIANT_CLASSES`), icon buttons (`ICON_BUTTON_SIZE_CLASSES`, `ICON_BUTTON_VARIANT_CLASSES`), inputs (`INPUT_SIZE_CLASSES`, `INPUT_BASE_CLASSES`, `INPUT_ERROR_CLASSES`, `INPUT_NORMAL_CLASSES`), spinners (`SPINNER_SIZE_CLASSES`), and modals (`MODAL_SIZE_CLASSES`). Uses types from `@src-types/ui`.
+- `endpoints.ts`: ✅ API endpoint constants. Central source of truth for API endpoint paths (`API_ENDPOINTS` object). Provides `buildApiUrl()` helper function to combine endpoint paths with baseURL from runtime config. Supports both static paths and function-based paths (e.g., `(id: string) => '/users/${id}'`).
+- `env.ts`: ✅ Environment-derived constants. Thin wrapper around validated env surface providing convenience accessors. Exports `IS_DEV`, `IS_PROD`, `ENV_MODE` constants and helper functions `isDevelopment()`, `isProduction()`, `getMode()`. Avoids re-parsing env elsewhere by providing pre-computed constants.
+
+### Cross-References
+
+- Import rules: `boundaries.mdc`
+- Token governance: `ux/theming-tokens.mdc`
+- UI design patterns: `ux/ui-design.mdc`
+- A11y: `ux/accessibility.mdc`

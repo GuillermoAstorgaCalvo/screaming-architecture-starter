@@ -1,0 +1,34 @@
+---
+description: 'Browser support policy, build targets, and polyfills guidance'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Browser Support & Polyfills
+
+### Policy
+
+- Target modern evergreen browsers: latest 2 versions of Chrome, Edge, Firefox, Safari.
+- Mobile: iOS Safari latest 2, Chrome for Android latest 2.
+- IE/legacy not supported.
+
+### Build Targets
+
+- TypeScript: `target: ES2023`, libs `DOM`, `DOM.Iterable` (see `repo-templates.mdc`).
+- Vite build target `es2023`; adjust per project if stricter compatibility is needed.
+
+### Polyfills
+
+- Prefer no global polyfills. If needed, use modular ponyfills within feature code paths.
+- Example libs: `unfetch` alternative not needed (use `fetch`); `core-js` only as last resort.
+- Gate browser APIs with guards for SSR/SSG or tests: `typeof window !== 'undefined'`.
+
+### CSS & Fonts
+
+- Use Tailwind utilities; avoid vendor-prefixed custom CSS (Autoprefixer handles prefixes).
+- Use `font-display: swap`; subset fonts; prefer system fonts if acceptable.
+
+### Testing Matrix
+
+- Run CI tests on latest stable Chrome (headless). Manual smoke on Safari/Firefox for critical flows.
+- Use Playwright to cover cross-browser quirks in large apps.

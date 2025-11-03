@@ -1,0 +1,40 @@
+---
+description: 'Template variants for scaling from small to large apps'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Template Variants (Small → Medium → Large)
+
+Scale the same architecture by choosing the minimal viable set of capabilities.
+
+### Small (Landing / Marketing)
+
+- Domains: one domain (e.g., `landing`)
+- Providers: Theme only
+- Testing: unit tests for critical components
+- Performance: strict budgets, route-level splitting minimal
+- Optional: E2E smoke, analytics noop
+
+### Medium (Authenticated SPA)
+
+- Multiple domains; `domains/shared/*` for cross-domain features
+- Providers: Theme, Query, Auth; Analytics optional
+- Forms abstraction with Zod
+- Testing: unit + selective E2E for key flows
+- Observability: optional error tracking adapter
+
+### Large (Complex, Multi-domain)
+
+- Strong domain boundaries; avoid coupling to infra
+- Providers: Theme, Query, Auth, Analytics
+- Observability: error tracking + Web Vitals adapters
+- Storybook for shared/core UI
+- E2E for critical journeys; Lighthouse in CI periodically
+- PWA only if offline/install needed
+
+### Migration Notes
+
+- Promote shared features to `domains/shared/*` when reused 2+ times
+- Keep `core` framework-agnostic to allow future SSR/SSG adoption
+- Avoid barrels to preserve traceability across growth stages

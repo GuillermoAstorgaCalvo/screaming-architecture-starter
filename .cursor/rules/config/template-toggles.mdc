@@ -1,0 +1,43 @@
+---
+description: 'Template toggles for optional capabilities and enforcement'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Template Toggles (Opt-in Capabilities)
+
+Use these toggles when bootstrapping a new repo to scale from a simple landing to a complex app. Keep the template lean by enabling only what you need.
+
+### Core (default ON)
+
+- Routing (`src/app/router.tsx`)
+- Error Boundary (`@core/lib/errorBoundary.tsx`)
+- Aliases + Boundaries (ESLint + tsconfig)
+- Tokens + Tailwind (`@core/constants/designTokens.ts`, `tailwind.config.ts`)
+
+### Optional Providers
+
+- Query Provider (React Query)
+- Auth Provider (session/user)
+- Analytics Provider (adapter-driven)
+- Theme Provider (dark mode via `class`)
+
+### Optional Features
+
+- Forms abstraction (`@core/forms/*`) with Zod resolver
+- Observability (`infrastructure/observability/*`)
+- PWA Shell (`src/app/pwa/*`)
+- Storybook (`storybook/*`)
+- E2E (`e2e/*` with Playwright)
+- Mock Server (`scripts/mockServer.ts` + MSW)
+
+### How to Decide
+
+- Small landing: providers OFF (except Theme), forms OFF, observability OFF, PWA OFF, E2E optional.
+- App with auth/server state: Query + Auth ON, forms ON, analytics optionally ON.
+- Large/complex: enable observability, E2E, Storybook; consider PWA if offline required.
+
+### Enforcement
+
+- Keep boundaries and alias rules ON regardless of toggles.
+- Avoid introducing barrels even when features are OFF; import concrete modules explicitly.

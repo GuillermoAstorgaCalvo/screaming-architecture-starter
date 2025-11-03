@@ -1,0 +1,44 @@
+---
+description: 'Lightweight security threat modeling checklist'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Security Threat Modeling (Lightweight Checklist)
+
+Use this checklist during design and major changes. Keep client bundles free of secrets.
+
+### Assets & Data
+
+- Identify sensitive data handled client-side (tokens, PII). Minimize storage and exposure.
+- Use adapters for storage (`infrastructure/storage/*`) and auth (`infrastructure/auth/*`).
+
+### Trust Boundaries
+
+- All network IO through `@core/lib/httpClient.ts` with interceptors.
+- Validate request/response with Zod at boundaries; normalize errors.
+
+### Authentication & Sessions
+
+- Token handling via adapters; rotate/refresh; handle clock skew.
+- Attach tokens via HTTP interceptors; never in URLs.
+
+### XSS & Content
+
+- Sanitize any HTML via `@core/security/sanitizeHtml.ts`.
+- Avoid `dangerouslySetInnerHTML` unless sanitized; escape dynamic content by default.
+
+### Configuration & Secrets
+
+- Never read `import.meta.env` outside `core/config/*`.
+- Expose only client-safe env via `env.client.ts`; consider `public/runtime-config.json` for runtime overrides.
+
+### Supply Chain
+
+- Prefer small, audited deps; lock versions; update regularly.
+- Consider `pnpm audit` in CI for larger apps.
+
+### Observability & Privacy
+
+- Use adapters for error tracking/analytics; default to noop.
+- Document events; respect consent and regional regulations.

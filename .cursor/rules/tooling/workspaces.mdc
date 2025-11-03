@@ -1,0 +1,36 @@
+---
+description: 'Workspaces & monorepo guidance with enforcement principles'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Workspaces & Monorepo Guidance (Optional)
+
+This template runs standalone. For larger orgs, place it in a workspace.
+
+### Structure (pnpm workspaces)
+
+```
+.
+├── apps/
+│   └── web/                  # this template
+└── packages/
+    ├── ui/                   # shared UI lib (no app/infra deps)
+    └── utils/                # shared utils (core-like)
+```
+
+### Principles
+
+- Preserve the same Allowed Imports matrix inside each package.
+- Keep shared packages framework-agnostic; avoid importing `app` or `infrastructure`.
+- Define root `tsconfig.base.json` aliases; keep per-package `tsconfig.json` extending base. Mirror additional variants per package as needed: `tsconfig.node.json` (scripts/configs), `tsconfig.vitest.json` (tests), `tsconfig.build.json` (build-only libs).
+
+### Tooling
+
+- Use workspace-aware `packageManager` and CI caching (pnpm preferred).
+- Consider changeset-based versioning for packages.
+
+### Enforcement
+
+- ESLint boundaries across packages; no re-export barrels.
+- CI must typecheck/lint/test all affected packages.

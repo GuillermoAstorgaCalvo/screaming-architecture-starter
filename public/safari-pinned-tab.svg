@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	<!-- Monochrome mask for Safari pinned tabs -->
+	<!-- Simple "SAS" monogram: stylized S shape in a circle frame -->
+	<path fill="currentColor" d="M256 64C150 64 64 150 64 256s86 192 192 192 192-86 192-192S362 64 256 64zm-48 112h112c35 0 64 29 64 64s-29 64-64 64h-80v32h80c35 0 64 29 64 64s-29 64-64 64H208c-18 0-32-14-32-32V208c0-18 14-32 32-32zm48 144h80c18 0 32-14 32-32s-14-32-32-32h-80v64zm0 96h112c18 0 32-14 32-32s-14-32-32-32H256v64z"/>
+</svg>
+

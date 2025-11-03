@@ -1,0 +1,58 @@
+---
+description: 'Release, versioning, CI gates, and repository hygiene'
+globs: ['**/*']
+alwaysApply: false
+---
+
+## Release, Versioning & Repository Hygiene (Deep-dive)
+
+### Branching Model (Recap)
+
+- main: production-ready, protected
+- develop: integration branch
+- feature/_, fix/_, chore/\* → PR to develop
+- release/\* → PR to main and back-merge to develop
+- hotfix/\* from main → PR to main and back-merge
+
+### Versioning
+
+- SemVer (MAJOR.MINOR.PATCH)
+- Tag releases on `main`
+- Generate changelog from conventional commits where possible
+
+### Conventional Commits
+
+- `feat(scope): message`
+- `fix(scope): message`
+- `chore(scope): message`
+- `docs(scope): message`
+- `refactor(scope): message`
+- `test(scope): message`
+
+### CI Gates
+
+- Required: typecheck, lint, unit tests, build
+- Optional: E2E on `main` or nightly; Lighthouse audits periodically
+- Enforce ESLint boundaries and alias usage
+
+### Pre-commit Hooks (Optional, Recommended)
+
+- Husky + lint-staged to run ESLint and Prettier on changed files
+
+### CODEOWNERS
+
+- Assign owners for `src/domains/*` and critical infra
+- Owners must review PRs touching their areas
+
+### Dependency Policy
+
+- Prefer small, tree-shakeable packages
+- Audit regularly; pin via lockfile; avoid transitive surprises
+
+### Release Checklist
+
+- [ ] Feature flags default safe
+- [ ] Env variables documented in `core/config/env.ts`
+- [ ] Error boundaries cover new pages
+- [ ] Analytics events documented
+- [ ] Migration notes (if tokens or routes changed)
