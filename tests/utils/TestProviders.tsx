@@ -1,12 +1,17 @@
+import { I18nProvider } from '@app/providers/I18nProvider';
 import { QueryProvider } from '@app/providers/QueryProvider';
 import { ThemeProvider } from '@app/providers/ThemeProvider';
+import type { AnalyticsInitOptions, AnalyticsPort } from '@core/ports/AnalyticsPort';
 import type { HttpPort } from '@core/ports/HttpPort';
 import type { LoggerPort } from '@core/ports/LoggerPort';
 import type { StoragePort } from '@core/ports/StoragePort';
+import { AnalyticsProvider } from '@core/providers/AnalyticsProvider';
 import { HttpProvider } from '@core/providers/HttpProvider';
 import { LoggerProvider } from '@core/providers/LoggerProvider';
 import { StorageProvider } from '@core/providers/StorageProvider';
+import { ToastProvider } from '@core/providers/ToastProvider';
 import type { ReactElement, ReactNode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 /**
  * Provider wrapper component for tests
@@ -21,20 +26,32 @@ export function TestProviders({
 	logger,
 	http,
 	defaultTheme,
+	analytics,
+	analyticsConfig = null,
 }: {
 	readonly children: ReactNode;
 	readonly storage: StoragePort;
 	readonly logger: LoggerPort;
 	readonly http: HttpPort;
 	readonly defaultTheme: 'light' | 'dark' | 'system';
+	readonly analytics: AnalyticsPort;
+	readonly analyticsConfig?: AnalyticsInitOptions | null;
 }): ReactElement {
 	return (
 		<LoggerProvider logger={logger}>
 			<HttpProvider http={http}>
 				<StorageProvider storage={storage}>
-					<ThemeProvider defaultTheme={defaultTheme}>
-						<QueryProvider>{children}</QueryProvider>
-					</ThemeProvider>
+					<I18nProvider>
+						<ThemeProvider defaultTheme={defaultTheme}>
+							<QueryProvider>
+								<AnalyticsProvider analytics={analytics} config={analyticsConfig}>
+									<ToastProvider>
+										<BrowserRouter>{children}</BrowserRouter>
+									</ToastProvider>
+								</AnalyticsProvider>
+							</QueryProvider>
+						</ThemeProvider>
+					</I18nProvider>
 				</StorageProvider>
 			</HttpProvider>
 		</LoggerProvider>

@@ -7,6 +7,9 @@ This module provides centralized configuration management for the application.
 - **`env.client.ts`**: Build-time environment variables (Vite `import.meta.env`) with Zod validation
 - **`routes.ts`**: Global route path constants (`ROUTES`)
 - **`runtime.ts`**: Runtime configuration loader from `public/runtime-config.json`
+- **`featureFlags.ts`**: Feature flag definitions with metadata and default values
+- **`features.ts`**: Runtime feature flag toggles and access functions
+- **`seo.ts`**: SEO defaults and helper functions for dynamic metadata management
 - **`init.ts`**: Configuration initialization that sets up global services
 
 ## Usage
@@ -24,6 +27,13 @@ import { ROUTES } from '@core/config/routes';
 
 // Runtime configuration
 import { getRuntimeConfig, getAppConfig, getCachedRuntimeConfig } from '@core/config/runtime';
+
+// Feature flags
+import { isFeatureEnabled, isFeatureEnabledAsync } from '@core/config/features';
+
+// SEO helpers
+import { DEFAULT_SEO, mergeSEOConfig, buildPageTitle } from '@core/config/seo';
+import { useSEO } from '@core/hooks/useSEO';
 
 // Initialization
 import { initConfig } from '@core/config/init';
@@ -124,6 +134,126 @@ Or to leave values unset:
 	"ANALYTICS_WRITE_KEY": null
 }
 ```
+
+### Feature Flags
+
+Feature flags enable gradual rollout, A/B testing, and safe feature toggling without code deployments.
+
+**Define feature flags** in `featureFlags.ts`:
+
+```ts
+export const FEATURE_FLAGS = {
+	NEW_CHECKOUT_FLOW: {
+		key: 'NEW_CHECKOUT_FLOW',
+		description: 'Enable new checkout experience',
+		enabled: false,
+	},
+} as const satisfies Record<string, FeatureFlag>;
+```
+
+**Check feature flags** in your code:
+
+```ts
+import { isFeatureEnabled } from '@core/config/features';
+
+// Synchronous (uses cached runtime config if available)
+if (isFeatureEnabled('NEW_CHECKOUT_FLOW')) {
+	// Feature is enabled
+}
+
+// Async (loads runtime config if needed)
+const enabled = await isFeatureEnabledAsync('NEW_CHECKOUT_FLOW');
+```
+
+**Override at runtime** via `runtime-config.json`:
+
+```json
+{
+	"FEATURE_FLAGS": {
+		"NEW_CHECKOUT_FLOW": true
+	}
+}
+```
+
+Or use full feature flag objects:
+
+```json
+{
+	"FEATURE_FLAGS": {
+		"NEW_CHECKOUT_FLOW": {
+			"key": "NEW_CHECKOUT_FLOW",
+			"enabled": true,
+			"description": "Enable new checkout experience"
+		}
+	}
+}
+```
+
+**Best practices:**
+
+- Default values should be safe (typically `false`)
+- Avoid sprinkling flag checks across components; centralize behavior in domain services/hooks
+- Keep flags typed and documented
+- Runtime config overrides take precedence over definition defaults
+
+### SEO & Metadata
+
+SEO helpers enable per-route metadata updates and improve sharing/discoverability.
+
+**Use the `useSEO` hook** in your page components:
+
+```tsx
+import { useSEO } from '@core/hooks/useSEO';
+
+function MyPage() {
+	useSEO({
+		title: 'My Page',
+		description: 'This is my awesome page',
+		ogImage: '/my-page-image.png',
+		indexable: true,
+	});
+
+	return <div>My Page Content</div>;
+}
+```
+
+**Use helper functions** for building SEO values:
+
+```ts
+import { buildPageTitle, mergeSEOConfig, buildAbsoluteUrl } from '@core/config/seo';
+
+// Build a full page title
+const title = buildPageTitle('My Page'); // "My Page | Screaming Architecture Starter"
+
+// Merge custom config with defaults
+const seo = mergeSEOConfig({
+	title: 'My Page',
+	description: 'Custom description',
+});
+
+// Build absolute URLs for sharing
+const ogImageUrl = buildAbsoluteUrl('/og-image.png');
+```
+
+**Available options:**
+
+- `title` - Page title (appended to site name)
+- `description` - Meta description
+- `indexable` - Whether page should be indexed (default: `true`)
+- `canonicalUrl` - Canonical URL (auto-detected from current path if not provided)
+- `ogType` - Open Graph type (default: `'website'`)
+- `ogImage` - Open Graph image URL
+- `ogImageWidth`, `ogImageHeight` - Image dimensions
+- `ogImageAlt` - Image alt text
+- `twitterCard` - Twitter card type (default: `'summary_large_image'`)
+- `twitterImage` - Twitter image URL
+- `keywords` - Comma-separated keywords
+- `author` - Author name
+- `customMeta` - Custom meta tags array
+
+**Default values** are defined in `DEFAULT_SEO` and can be imported for reference.
+
+See `.cursor/rules/ux/seo.mdc` for SEO best practices.
 
 ## Architecture
 

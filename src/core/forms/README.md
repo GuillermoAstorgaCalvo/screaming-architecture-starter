@@ -5,9 +5,8 @@ This module provides a library-agnostic form handling abstraction to avoid coupl
 ## Structure
 
 - **`formAdapter.ts`**: Form abstraction layer over react-hook-form. Provides `useFormAdapter<T>()` hook that wraps `useForm` and exposes a consistent `FormControls<T>` interface.
-- **`zodResolver.ts`**: Zod validation resolver integration. Re-exports `zodResolver` from `@hookform/resolvers/zod` to provide consistent API through the form adapter layer.
-- **`controller.tsx`**: Controller component for controlled components. Re-exports from react-hook-form through the adapter layer for components that don't work with the `register` API.
-- **`useController.ts`**: `useController` hook and related types for controlled components. Re-exports from react-hook-form through the adapter layer.
+- **`controller.tsx`**: Controller component for controlled components. Exports Controller from react-hook-form through the adapter layer for components that don't work with the `register` API.
+- **`useController.ts`**: `useController` hook and related types for controlled components. Exports useController from react-hook-form through the adapter layer.
 
 ## Usage
 
@@ -18,7 +17,7 @@ Import directly from the specific modules:
 ```ts
 // ✅ Preferred - direct imports from specific modules
 import { useFormAdapter, type FormControls, type FieldValues } from '@core/forms/formAdapter';
-import { zodResolver } from '@core/forms/zodResolver';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller } from '@core/forms/controller'; // When using Controller component
 import { useController } from '@core/forms/useController'; // When using useController hook
 ```
@@ -29,7 +28,7 @@ Create a form with Zod validation:
 
 ```tsx
 import { useFormAdapter } from '@core/forms/formAdapter';
-import { zodResolver } from '@core/forms/zodResolver';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -83,6 +82,8 @@ The `useFormAdapter` hook returns a `FormControls<T>` object with the following 
 - **`watch`**: Watch field values
 - **`setError`**: Set field error manually
 - **`clearErrors`**: Clear field error
+- **`unregister`**: Unregister a field from the form (useful for dynamic forms)
+- **`setFocus`**: Programmatically focus a field (useful for accessibility and UX)
 - **`getFieldState`**: Get the state of a specific field (error, invalid, isDirty, isTouched, etc.)
 - **`control`**: Form control object for use with Controller component
 
@@ -100,7 +101,7 @@ The form adapter works seamlessly with core UI components:
 
 ```tsx
 import { useFormAdapter } from '@core/forms/formAdapter';
-import { zodResolver } from '@core/forms/zodResolver';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Input from '@core/ui/input/Input';
 import Button from '@core/ui/button/Button';
 import { z } from 'zod';
@@ -198,6 +199,37 @@ if (fieldState.isTouched && fieldState.invalid) {
 }
 ```
 
+#### Unregistering Fields (Dynamic Forms)
+
+```tsx
+const { register, unregister } = useFormAdapter();
+
+// Unregister a field when it's removed from the form
+const handleRemoveField = (fieldName: string) => {
+	unregister(fieldName);
+};
+```
+
+#### Programmatically Focusing Fields
+
+```tsx
+import type { Path } from '@core/forms/formAdapter';
+
+const { setFocus, errors, trigger } = useFormAdapter<FormData>();
+
+// Focus the first field with an error after validation
+const handleSubmit = async () => {
+	const isValid = await trigger();
+	if (!isValid) {
+		// Find first error field and focus it
+		const firstErrorField = Object.keys(errors)[0];
+		if (firstErrorField) {
+			setFocus(firstErrorField as Path<FormData>);
+		}
+	}
+};
+```
+
 #### Using Controller for Controlled Components
 
 For third-party UI libraries or custom components that don't work with `register`:
@@ -205,7 +237,7 @@ For third-party UI libraries or custom components that don't work with `register
 ```tsx
 import { useFormAdapter } from '@core/forms/formAdapter';
 import { Controller } from '@core/forms/controller';
-import { zodResolver } from '@core/forms/zodResolver';
+import { zodResolver } from '@hookform/resolvers/zod';
 import CustomSelect from './CustomSelect';
 import { z } from 'zod';
 
@@ -244,7 +276,7 @@ For programmatic control when you need more control than the Controller componen
 ```tsx
 import { useFormAdapter } from '@core/forms/formAdapter';
 import { useController } from '@core/forms/useController';
-import { zodResolver } from '@core/forms/zodResolver';
+import { zodResolver } from '@hookform/resolvers/zod';
 import CustomInput from './CustomInput';
 import { z } from 'zod';
 
@@ -320,7 +352,7 @@ errors.invalidField; // Property 'invalidField' does not exist
 
 #### Available Type Exports
 
-The adapter re-exports commonly used types from react-hook-form:
+The adapter exports commonly used types from react-hook-form (import directly from the adapter):
 
 - **`FieldValues`**: Base type for form data
 - **`FieldErrors`**: Type for form field errors
@@ -330,12 +362,19 @@ The adapter re-exports commonly used types from react-hook-form:
 - **`SubmitHandler<T>`**: Type-safe submit handler function
 - **`UseFormAdapterOptions<T>`**: Configuration options for form initialization
 
-Additional types and hook available from `@core/forms/useController` for controlled components:
+Additional types and hook available from `@core/forms/controller` for Controller component:
 
-- **`useController`**: Hook for programmatic control of form fields
+- **`Controller`**: Controller component for controlled form fields
 - **`ControllerProps<T>`**: Props for the Controller component
 - **`ControllerRenderProps<T>`**: Props passed to the render function
 - **`FieldPath<T>`**: Type-safe field path for Controller (similar to `Path<T>`)
+
+Additional types and hook available from `@core/forms/useController` for useController hook:
+
+- **`useController`**: Hook for programmatic control of form fields
+- **`ControllerProps<T>`**: Props for the Controller component (also available from `@core/forms/controller`)
+- **`ControllerRenderProps<T>`**: Props passed to the render function (also available from `@core/forms/controller`)
+- **`FieldPath<T>`**: Type-safe field path for Controller (also available from `@core/forms/controller`)
 - **`UseControllerProps<T>`**: Props for the `useController` hook
 - **`UseControllerReturn<T>`**: Return type of the `useController` hook
 
@@ -357,7 +396,7 @@ Domains should **only** depend on the adapter interface (`FormControls<T>`, `use
 
 ```ts
 import { useFormAdapter } from '@core/forms/formAdapter';
-import { zodResolver } from '@core/forms/zodResolver';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller } from '@core/forms/controller';
 ```
 
@@ -365,7 +404,6 @@ import { Controller } from '@core/forms/controller';
 
 ```ts
 import { useForm } from 'react-hook-form'; // Direct dependency - breaks abstraction
-import { zodResolver } from '@hookform/resolvers/zod'; // Direct dependency - breaks abstraction
 import { Controller } from 'react-hook-form'; // Direct dependency - breaks abstraction
 ```
 

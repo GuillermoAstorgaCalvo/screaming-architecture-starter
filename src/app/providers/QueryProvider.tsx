@@ -1,10 +1,7 @@
 import { env } from '@core/config/env.client';
+import type { QueryProviderProps } from '@src-types/layout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { type ReactNode, useMemo } from 'react';
-
-interface QueryProviderProps {
-	readonly children: ReactNode;
-}
+import { useMemo } from 'react';
 
 // React Query configuration constants
 const STALE_TIME_SECONDS = 30;
@@ -20,7 +17,7 @@ const MUTATION_RETRY_DELAY_MS = SECONDS_TO_MS;
  * Provides React Query client with sensible defaults for data fetching
  * Creates a new QueryClient instance on mount with optimized settings
  */
-export function QueryProvider({ children }: QueryProviderProps) {
+export function QueryProvider({ children }: Readonly<QueryProviderProps>) {
 	const queryClient = useMemo(
 		() =>
 			new QueryClient({
@@ -33,7 +30,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
 						gcTime: CACHE_TIME_MINUTES * MINUTES_TO_MS,
 						// Retry failed requests with exponential backoff
 						retry: 3,
-						retryDelay: attemptIndex =>
+						retryDelay: (attemptIndex: number) =>
 							Math.min(SECONDS_TO_MS * 2 ** attemptIndex, MAX_RETRY_DELAY_MS),
 						// Refetch on window focus in production (helps keep data fresh)
 						refetchOnWindowFocus: env.PROD,
@@ -54,3 +51,5 @@ export function QueryProvider({ children }: QueryProviderProps) {
 
 	return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
+
+QueryProvider.displayName = 'QueryProvider';

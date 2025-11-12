@@ -8,5 +8,8 @@ coverage/
 *.log
 *.tsbuildinfo
 .vite/
+.vitest/
 .idea/
 .vscode/
+playwright-report/
+test-results/

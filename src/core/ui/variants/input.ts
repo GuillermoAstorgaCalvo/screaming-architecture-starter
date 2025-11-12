@@ -1,10 +1,6 @@
-import {
-	INPUT_BASE_CLASSES,
-	INPUT_ERROR_CLASSES,
-	INPUT_NORMAL_CLASSES,
-	INPUT_SIZE_CLASSES,
-} from '@core/constants/ui';
-import type { StandardSize } from '@src-types/ui';
+import { INPUT_BASE_CLASSES, INPUT_SIZE_CLASSES } from '@core/constants/ui/forms';
+import { FORM_ERROR_CLASSES, FORM_NORMAL_CLASSES } from '@core/constants/ui/shared';
+import type { StandardSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
@@ -22,8 +18,8 @@ export const inputVariants = cva(INPUT_BASE_CLASSES, {
 			lg: INPUT_SIZE_CLASSES.lg,
 		} satisfies Record<StandardSize, string>,
 		state: {
-			normal: INPUT_NORMAL_CLASSES,
-			error: INPUT_ERROR_CLASSES,
+			normal: FORM_NORMAL_CLASSES,
+			error: FORM_ERROR_CLASSES,
 		},
 	},
 	defaultVariants: {

@@ -8,14 +8,90 @@ alwaysApply: false
 
 ### Structure
 
-- Core i18n instance in `core/i18n/i18n.ts` with lazy-loaded namespaces, fallbacks, and language detection (optional).
-- Domain translations under `domains/<domain>/i18n/*` (e.g., `en.json`, `es.json`).
-- Types for translation keys in `core/i18n/types.ts` for type-safe access.
-  - Optionally generate these types via a script (e.g., i18next TypeScript generator)
-    to keep keys in sync at scale.
+**Core i18n System** (`core/i18n/`):
+
+- `i18n.ts`: Core i18next instance configuration with lazy-loaded namespaces, fallbacks, and language detection. Registers common translations, sets up RTL support, and exports initialization promise.
+- `types.ts`: TypeScript types for translation keys (type-safe access). Defines translation interfaces for each namespace (`common`, `landing`, etc.).
+- `useTranslation.ts`: Custom hook wrapper with automatic resource loading. Provides type-safe translation function with autocomplete.
+- `useRtl.ts`: Hook to check if current language is RTL. Automatically updates when language changes.
+- `resourceLoader.ts`: Dynamic resource loading system (main export, re-exports from sub-modules) with caching.
+- `resourceLoader.cache.ts`: Resource caching utilities (`clearResourceCacheFor`, `isResourceCached`, `isResourceLoading`)
+- `resourceLoader.i18n.ts`: i18next integration functions (`addResourceToI18n`, `loadAndAddResource`)
+- `resourceLoader.load.ts`: Resource loading functions (`loadResource`)
+- `resourceLoader.registry.ts`: Resource loader registry (`registerResourceLoader`, `getRegisteredNamespaces`, `clearResourceLoaders`)
+- `resourceLoader.types.ts`: Type definitions for resource loading (`ResourceLoader`, `TranslationResource`, `AddResourceOptions`, etc.)
+- `resourceLoader.validation.ts`: Resource validation utilities
+- `registry.ts`: Domain translation registration system. Exports `registerDomainTranslations()` and `registerCommonTranslations()`.
+- `constants.ts`: Centralized i18n constants (supported languages, RTL languages, default namespace, etc.) and helper functions.
+- `errors.ts`: Custom error classes for i18n resource loading (`ResourceLoaderNotFoundError`, `InvalidResourceFormatError`).
+- `useTranslationHelpers.ts`: Internal helper functions for resource loading state management (`isResourceLoadedInI18n`, `ensureResourceLoaded`, `handleInitialLoad`, `handleExistingLoad`, `updateLoadingState`).
+- `useTranslationLoader.ts`: Internal hook for managing resource loading effects (`useResourceLoader`, `useResourceLoadingEffects` - handles loading effects and language changes).
+- `useTranslationState.ts`: Internal hook for managing translation loading state (`useResourceLoadingState`, `useLoadingStateUpdater` - manages loading state per namespace/language).
+- `locales/`: Common/shared translations (`en.json`, `es.json`, `ar.json`).
+
+**Domain Translations**:
+
+- Domain translations co-located under `domains/<domain>/i18n/` (e.g., `domains/landing/i18n/en.json`, `domains/landing/i18n/index.ts`).
+- Each domain registers its translations via `registerDomainTranslations()` in its `i18n/index.ts` file using async IIFE pattern:
+
+  ```ts
+  import { registerDomainTranslations } from '@core/i18n/registry';
+
+  (async () => {
+  	await registerDomainTranslations('domain-name', async language => {
+  		switch (language) {
+  			case 'en':
+  				return await import('./en.json');
+  			case 'es':
+  				return await import('./es.json');
+  			case 'ar':
+  				return await import('./ar.json');
+  			default:
+  				return await import('./en.json');
+  		}
+  	});
+  })().catch(error => {
+  	console.error('Failed to register domain translations:', error);
+  });
+  ```
+
+- Import registration in `app/main.tsx`: `import '@domains/<domain>/i18n';`
+
+### Architecture
+
+- **Dynamic Resource Loading**: Translations are loaded on-demand as needed
+- **Domain Registration**: Domains register their translations independently
+- **No Core Dependencies**: Core doesn't need to know about domain translations
+- **Type Safety**: Full TypeScript support for translation keys with autocomplete
+- **Lazy Loading**: Translations are loaded only when needed
+- **Resource Caching**: Loaded resources are cached to prevent re-loading
+- **RTL Support**: Automatically handles RTL languages by setting HTML `dir` and `lang` attributes
+
+### Supported Languages
+
+Currently supported languages (defined in `core/i18n/constants.ts`):
+
+- `en` (English) - default/fallback, LTR
+- `es` (Spanish) - LTR
+- `ar` (Arabic) - RTL
+
+### Usage
+
+```tsx
+import { useTranslation } from '@core/i18n/useTranslation';
+
+function MyComponent() {
+	const { t } = useTranslation('landing');
+	return <h1>{t('hero.title')}</h1>;
+}
+```
 
 ### Guidelines
 
 - Prefer keys over raw strings in UI.
 - Co-locate domain copy with the domain.
 - Keep messages short and composable; avoid embedding HTML in translations.
+- Use `useTranslation` hook for automatic resource loading.
+- Use `useRtl` hook for component-level RTL styling when needed.
+- Register domain translations in `domains/<domain>/i18n/index.ts`.
+- Add TypeScript types in `core/i18n/types.ts` for new namespaces.

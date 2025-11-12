@@ -1,10 +1,10 @@
-import type React from 'react';
+import type { KeyboardEvent, MouseEvent, SyntheticEvent } from 'react';
 
 export function createOverlayClickHandler(
 	closeOnOverlayClick: boolean,
 	onClose: () => void
-): (event: React.MouseEvent<HTMLDialogElement>) => void {
-	return (event: React.MouseEvent<HTMLDialogElement>): void => {
+): (event: MouseEvent<HTMLDialogElement>) => void {
+	return (event: MouseEvent<HTMLDialogElement>): void => {
 		if (!closeOnOverlayClick || event.target !== event.currentTarget) {
 			return;
 		}
@@ -15,8 +15,8 @@ export function createOverlayClickHandler(
 export function createOverlayKeyDownHandler(
 	closeOnOverlayClick: boolean,
 	onClose: () => void
-): (event: React.KeyboardEvent<HTMLDialogElement>) => void {
-	return (event: React.KeyboardEvent<HTMLDialogElement>): void => {
+): (event: KeyboardEvent<HTMLDialogElement>) => void {
+	return (event: KeyboardEvent<HTMLDialogElement>): void => {
 		if (event.key === 'Escape') {
 			return;
 		}
@@ -34,8 +34,8 @@ export function createModalEventHandlers(
 	closeOnOverlayClick: boolean,
 	onClose: () => void
 ): {
-	handleOverlayClick: (event: React.MouseEvent<HTMLDialogElement>) => void;
-	handleOverlayKeyDown: (event: React.KeyboardEvent<HTMLDialogElement>) => void;
+	handleOverlayClick: (event: MouseEvent<HTMLDialogElement>) => void;
+	handleOverlayKeyDown: (event: KeyboardEvent<HTMLDialogElement>) => void;
 } {
 	return {
 		handleOverlayClick: createOverlayClickHandler(closeOnOverlayClick, onClose),
@@ -44,7 +44,7 @@ export function createModalEventHandlers(
 }
 
 export function createDialogCancelHandler(closeOnEscape: boolean, onClose: () => void) {
-	return (e: React.SyntheticEvent<HTMLDialogElement>): void => {
+	return (e: SyntheticEvent<HTMLDialogElement>): void => {
 		if (closeOnEscape) {
 			e.preventDefault();
 			onClose();

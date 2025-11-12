@@ -1,7 +1,6 @@
+import { ARIA_ROLES } from '@core/constants/aria';
 import { getErrorTextVariantClasses } from '@core/ui/variants/errorText';
-import type { ErrorTextProps } from '@src-types/ui';
-
-export type { ErrorTextProps, StandardSize as ErrorTextSize } from '@src-types/ui';
+import type { ErrorTextProps } from '@src-types/ui/forms';
 
 /**
  * ErrorText - Reusable error message component
@@ -26,7 +25,12 @@ export default function ErrorText({
 	...props
 }: Readonly<ErrorTextProps>) {
 	return (
-		<p id={id} role="alert" className={getErrorTextVariantClasses({ size, className })} {...props}>
+		<p
+			id={id}
+			role={ARIA_ROLES.ALERT}
+			className={getErrorTextVariantClasses({ size, className })}
+			{...props}
+		>
 			{children}
 		</p>
 	);

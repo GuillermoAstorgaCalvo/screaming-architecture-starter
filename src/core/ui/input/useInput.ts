@@ -1,8 +1,8 @@
-import type { InputProps } from '@src-types/ui';
+import type { InputProps } from '@src-types/ui/forms';
 import { type InputHTMLAttributes, type ReactNode, useId } from 'react';
 
 import { generateInputId, getAriaDescribedBy, getInputClasses } from './InputHelpers';
-import type { InputFieldProps, UseInputStateOptions, UseInputStateReturn } from './InputParts';
+import type { InputFieldProps, UseInputStateOptions, UseInputStateReturn } from './InputTypes';
 
 export interface UseInputPropsOptions {
 	readonly props: Readonly<InputProps>;
@@ -18,6 +18,16 @@ export interface UseInputPropsReturn {
 	readonly fullWidth: boolean;
 }
 
+/**
+ * Hook to compute input state (ID, error state, ARIA attributes, and classes)
+ *
+ * Generates a unique ID for the input if not provided, determines error state,
+ * builds ARIA described-by attributes, and computes CSS classes based on
+ * size, error state, and icon presence.
+ *
+ * @param options - Configuration options for input state
+ * @returns Computed input state including ID, error flag, ARIA attributes, and classes
+ */
 export function useInputState({
 	inputId,
 	label,
@@ -42,7 +52,7 @@ export function useInputState({
 	return { finalId, hasError, ariaDescribedBy, inputClasses };
 }
 
-interface BuildFieldPropsOptions {
+interface BuildInputFieldPropsOptions {
 	readonly state: UseInputStateReturn;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
@@ -56,7 +66,20 @@ interface BuildFieldPropsOptions {
 	>;
 }
 
-function buildFieldProps(options: Readonly<BuildFieldPropsOptions>): Readonly<InputFieldProps> {
+/**
+ * Builds field props object for the InputField component
+ *
+ * Combines computed state with additional props to create the final
+ * field props object that will be passed to the InputField component.
+ *
+ * @param options - Options containing state and field-specific props
+ * @returns Complete field props object
+ *
+ * @internal
+ */
+function buildInputFieldProps(
+	options: Readonly<BuildInputFieldPropsOptions>
+): Readonly<InputFieldProps> {
 	return {
 		id: options.state.finalId,
 		className: options.state.inputClasses,
@@ -70,6 +93,32 @@ function buildFieldProps(options: Readonly<BuildFieldPropsOptions>): Readonly<In
 	};
 }
 
+/**
+ * Hook to process Input component props and return state and field props
+ *
+ * Extracts and processes Input component props, computes state using
+ * useInputState, and builds field props. Returns all necessary data
+ * for rendering the Input component including label, error, helper text,
+ * and layout options.
+ *
+ * @example
+ * ```tsx
+ * function MyInput() {
+ *   const { state, fieldProps, label, error, helperText, required, fullWidth } =
+ *     useInputProps({
+ *       props: {
+ *         label: 'Email',
+ *         type: 'email',
+ *         error: 'Invalid email',
+ *       },
+ *     });
+ *   // Use returned values to render Input component
+ * }
+ * ```
+ *
+ * @param options - Options containing Input component props
+ * @returns Processed state, field props, and extracted props
+ */
 export function useInputProps({ props }: Readonly<UseInputPropsOptions>): UseInputPropsReturn {
 	const {
 		label,
@@ -95,6 +144,6 @@ export function useInputProps({ props }: Readonly<UseInputPropsOptions>): UseInp
 		rightIcon,
 		className,
 	});
-	const fieldProps = buildFieldProps({ state, disabled, required, leftIcon, rightIcon, rest });
+	const fieldProps = buildInputFieldProps({ state, disabled, required, leftIcon, rightIcon, rest });
 	return { state, fieldProps, label, error, helperText, required, fullWidth };
 }

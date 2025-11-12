@@ -153,4 +153,26 @@ export interface HttpPort {
 		url: string,
 		config?: Omit<HttpClientConfig, 'body' | 'method'>
 	): Promise<HttpClientResponse<T>>;
+
+	/**
+	 * Make a HEAD request
+	 * @param url - The request URL
+	 * @param config - Request configuration (body and method are omitted)
+	 * @returns Promise resolving to the HTTP response
+	 */
+	head<T = unknown>(
+		url: string,
+		config?: Omit<HttpClientConfig, 'body' | 'method'>
+	): Promise<HttpClientResponse<T>>;
+
+	/**
+	 * Make an OPTIONS request
+	 * @param url - The request URL
+	 * @param config - Request configuration (body and method are omitted)
+	 * @returns Promise resolving to the HTTP response
+	 */
+	options<T = unknown>(
+		url: string,
+		config?: Omit<HttpClientConfig, 'body' | 'method'>
+	): Promise<HttpClientResponse<T>>;
 }

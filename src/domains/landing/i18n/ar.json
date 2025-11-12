@@ -1,0 +1,33 @@
+{
+	"hero": {
+		"title": "Screaming Architecture Starter",
+		"subtitle": "تطبيقك يعمل الآن. جميع مكونات واجهة المستخدم الأساسية والميزات موضحة أدناه."
+	},
+	"buttons": {
+		"title": "الأزرار",
+		"variants": "الأنواع",
+		"sizes": "الأحجام",
+		"states": "الحالات",
+		"sizeVariantCombinations": "مجموعات الحجم + النوع",
+		"primary": "أساسي",
+		"secondary": "ثانوي",
+		"ghost": "شبح",
+		"small": "صغير",
+		"medium": "متوسط",
+		"large": "كبير",
+		"default": "افتراضي",
+		"disabled": "معطل",
+		"loading": "جارٍ التحميل...",
+		"clickToLoad": "انقر للتحميل",
+		"fullWidth": "عرض كامل",
+		"primarySmall": "أساسي صغير",
+		"secondarySmall": "ثانوي صغير",
+		"ghostSmall": "شبح صغير",
+		"primaryMedium": "أساسي متوسط",
+		"secondaryMedium": "ثانوي متوسط",
+		"ghostMedium": "شبح متوسط",
+		"primaryLarge": "أساسي كبير",
+		"secondaryLarge": "ثانوي كبير",
+		"ghostLarge": "شبح كبير"
+	}
+}

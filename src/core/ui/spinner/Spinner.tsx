@@ -1,10 +1,33 @@
+import { ARIA_LABELS, ARIA_LIVE, ARIA_ROLES } from '@core/constants/aria';
 import { getSpinnerVariantClasses } from '@core/ui/variants/spinner';
-import type { SpinnerProps } from '@src-types/ui';
+import type { SpinnerProps } from '@src-types/ui/feedback';
 
 import { filterSpinnerSvgProps, getSpinnerSvgProps } from './SpinnerHelpers';
 import { SpinnerContent } from './SpinnerParts';
 
-export type { SpinnerProps, StandardSize as SpinnerSize } from '@src-types/ui';
+/**
+ * Render spinner SVG element
+ */
+function renderSpinnerSvg(
+	size: SpinnerProps['size'],
+	color: SpinnerProps['color'],
+	props: Record<string, unknown>
+) {
+	const svgProps = getSpinnerSvgProps(size ?? 'md');
+	const svgRestProps = filterSpinnerSvgProps(props);
+	return (
+		<svg
+			{...svgProps}
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			aria-hidden="true"
+			{...svgRestProps}
+		>
+			<SpinnerContent color={color ?? 'currentColor'} />
+		</svg>
+	);
+}
 
 /**
  * Spinner - Loading indicator component
@@ -19,27 +42,21 @@ export default function Spinner({
 	size = 'md',
 	color = 'currentColor',
 	className,
-	'aria-label': ariaLabel = 'Loading',
+	'aria-label': ariaLabel = ARIA_LABELS.LOADING,
 	...props
 }: Readonly<SpinnerProps>) {
-	const svgProps = getSpinnerSvgProps(size);
 	const spinnerClassName = getSpinnerVariantClasses({
 		size: typeof size === 'string' ? size : 'md',
 		className,
 	});
-	const svgRestProps = filterSpinnerSvgProps(props);
 	return (
-		<div aria-label={ariaLabel} aria-live="polite" className={spinnerClassName} role="status">
-			<svg
-				{...svgProps}
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				aria-hidden="true"
-				{...svgRestProps}
-			>
-				<SpinnerContent color={color} />
-			</svg>
+		<div
+			aria-label={ariaLabel}
+			aria-live={ARIA_LIVE.POLITE}
+			className={spinnerClassName}
+			role={ARIA_ROLES.STATUS}
+		>
+			{renderSpinnerSvg(size, color, props)}
 		</div>
 	);
 }

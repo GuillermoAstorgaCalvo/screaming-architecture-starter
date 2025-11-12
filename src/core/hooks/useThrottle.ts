@@ -24,26 +24,47 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 export function useThrottle<T>(value: T, delay: number): T {
 	const [throttledValue, setThrottledValue] = useState<T>(value);
 	const throttledRef = useRef<ThrottledFunction<(newValue: unknown) => void> | null>(null);
+	const previousValueRef = useRef<T>(value);
+	const isInitialMountRef = useRef<boolean>(true);
 
+	// Create throttled function only when delay changes
 	useEffect(() => {
 		// Cancel previous throttled function if it exists
 		if (throttledRef.current) {
 			throttledRef.current.cancel();
 		}
 
-		// Create new throttled function
+		// Create new throttled function with leading edge enabled (default)
+		// Leading edge ensures first call executes immediately
 		const throttled = throttle((newValue: unknown) => {
 			setThrottledValue(newValue as T);
 		}, delay);
 
 		throttledRef.current = throttled;
-		throttled(value);
+		isInitialMountRef.current = true;
 
 		return () => {
 			throttled.cancel();
 			throttledRef.current = null;
 		};
-	}, [value, delay]);
+	}, [delay]);
+
+	// Call throttled function when value changes
+	useEffect(() => {
+		if (!throttledRef.current || value === previousValueRef.current) {
+			return;
+		}
+
+		// Mark that we've processed the first value change
+		if (isInitialMountRef.current) {
+			isInitialMountRef.current = false;
+		}
+
+		// Throttle's leading edge (enabled by default) will execute immediately
+		// on first call since lastCallTime is undefined, triggering setState via callback
+		throttledRef.current(value);
+		previousValueRef.current = value;
+	}, [value]);
 
 	return throttledValue;
 }

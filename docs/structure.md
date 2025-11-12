@@ -39,13 +39,8 @@ alwaysApply: false
 ├── LICENSE                           # Project license
 ├── CODEOWNERS                        # Ownership for critical paths/domains
 ├── SECURITY.md                       # Responsible disclosure and support policy
-├── .github/                          # CI workflows and templates (optional but recommended)
-│   ├── workflows/
-│   │   ├── ci.yml                   # typecheck, lint, unit tests, build (PRs to protected branches)
-│   │   └── nightly.yml (optional)   # e2e + Lighthouse on main/nightly
-│   ├── ISSUE_TEMPLATE/              # Bug/feature templates
-│   └── PULL_REQUEST_TEMPLATE.md
 └── README.md                         # High-level overview + quickstart
+# Note: .github/ directory for CI workflows and templates is optional and not yet implemented
 
 src/
 │
@@ -58,13 +53,18 @@ src/
 │   │   #   - HttpProvider (core port dependency injection for HTTP)
 │   │   #   - StorageProvider (core port dependency injection)
 │   │   #   - ThemeProvider (app-level theme context)
+│   │   #   - I18nProvider (i18next instance for translations)
 │   │   #   - QueryProvider (React Query context)
 │   │   #   - BrowserRouter
-│   │   # Composition order: LoggerProvider > ErrorBoundary > HttpProvider > StorageProvider > ThemeProvider > QueryProvider > BrowserRouter > Router
+│   │   # Composition order: LoggerProvider > ErrorBoundary > HttpProvider > StorageProvider > ThemeProvider > I18nProvider > QueryProvider > BrowserRouter > Router
 │   │
 │   ├── main.tsx                          # ✅ Application bootstrap
-│   │   # Creates React root and renders <App /> into DOM wrapped in StrictMode
+│   │   # Initializes config (await initConfig()) - loads runtime config and sets up httpClient
+│   │   # Initializes i18n (await i18nInitPromise) - ensures translations are loaded
+│   │   # Initializes Web Vitals tracking (reportWebVitals) - only runs in production
+│   │   # Imports domain i18n registrations (@domains/landing/i18n)
 │   │   # Imports global CSS (@styles/globals.css)
+│   │   # Creates React root and renders <App /> into DOM wrapped in StrictMode
 │   │   # Throws error if root element #root not found
 │   │
 │   ├── router.tsx                        # ✅ Centralized route definitions
@@ -94,7 +94,10 @@ src/
 │       │   # Syncs with system preference; persists user choice via storage adapter
 │       │   # Theme accessed by domains via props injection (PageWrapper.withTheme)
 │       ├── ThemeContext.tsx              # ✅ Theme context definition
-│       └── useTheme.ts                   # ✅ Hook to access theme context
+│       ├── useTheme.ts                   # ✅ Hook to access theme context
+│       └── I18nProvider.tsx              # ✅ Provides i18next instance for translations
+│           # Wraps application with I18nextProvider from react-i18next
+│           # Uses configured i18n instance from @core/i18n/i18n
 │       # Note: Core port providers (StorageProvider, LoggerProvider, HttpProvider) live in @core/providers/
 │       # AuthProvider, AnimationProvider, AnalyticsProvider - Optional, not yet implemented
 │
@@ -112,7 +115,15 @@ src/
 │   │   └── init.ts                       # ✅ Configuration initialization
 │   │       # Sets up runtime configuration and configures httpClient
 │   │       # Should be called early in app lifecycle (main.tsx)
-│   │   # features.ts, seo.ts, featureFlags.ts - Optional, not yet implemented
+│   │   ├── featureFlags.ts               # ✅ Feature flag definitions with metadata and default values
+│   │   │   # Central registry of all feature flags (FEATURE_FLAGS)
+│   │   │   # Provides getFeatureFlagDefinition(), getAllFeatureFlagDefinitions(), validateFeatureFlags()
+│   │   ├── features.ts                   # ✅ Feature flags runtime toggles
+│   │   │   # Provides isFeatureEnabled(), isFeatureEnabledAsync(), getAllFeatureFlags(), getAllFeatureFlagsAsync()
+│   │   │   # Supports runtime config overrides via runtime-config.json
+│   │   └── seo.ts                        # ✅ SEO & Metadata configuration
+│   │       # Centralized SEO defaults and helper functions (DEFAULT_SEO, mergeSEOConfig, buildPageTitle, buildAbsoluteUrl, etc.)
+│   │       # Enables per-route metadata updates and improves sharing/discoverability
 │   │
 │   ├── lib/                              # ✅ Framework-specific utilities
 │   │   ├── httpClient.ts                 # ✅ Generic HTTP client (fetch-based wrapper)
@@ -120,31 +131,88 @@ src/
 │   │   │   # Supports interceptors (request, response, error)
 │   │   │   # Returns typed responses
 │   │   │   # Do not call fetch directly in domains/components
-│   │   ├── httpClientHelpers.ts          # ✅ Helper functions for httpClient
-│   │   │   # URL building, header merging, body serialization, response parsing
+│   │   ├── httpClientUrl.ts               # ✅ URL building utilities
+│   │   ├── httpClientHeaders.ts          # ✅ Header manipulation and merging utilities
+│   │   ├── httpClientBody.ts             # ✅ Request body serialization and preparation utilities
+│   │   ├── httpClientResponseParsing.ts  # ✅ Response body parsing utilities
+│   │   ├── httpClientResponse.ts         # ✅ Response processing utilities
+│   │   ├── httpClientTimeout.ts          # ✅ Request timeout management utilities
+│   │   ├── httpClientErrorCreation.ts    # ✅ HTTP error creation utilities
+│   │   ├── httpClientErrorHandler.ts     # ✅ HTTP error handling utilities
 │   │   ├── httpClientInterceptors.ts     # ✅ Interceptor utilities
 │   │   │   # Request, response, and error interceptor execution
+│   │   ├── httpClientConfig.ts           # ✅ HTTP client configuration management
+│   │   ├── httpClientMethods.ts          # ✅ HTTP method factories (get, post, put, patch, delete, head, options)
+│   │   ├── httpClientRequest.ts          # ✅ Request preparation and configuration utilities
 │   │   ├── ErrorBoundary.tsx             # ✅ Global ErrorBoundary React component
 │   │   │   # Production-ready error handling with user-friendly fallback
 │   │   │   # Captures/reports errors via logger adapter
 │   │   │   # Uses react-router-dom for navigation links
-│   │   └── ErrorBoundaryWrapper.tsx      # ✅ Wrapper that injects logger from context
-│   │       # Bridges class component (ErrorBoundary) with React hooks (useLogger)
-│   │   # formatDate.ts, date.ts - Optional, not yet implemented
+│   │   ├── ErrorBoundaryWrapper.tsx     # ✅ Wrapper that injects logger from context
+│   │   │   # Bridges class component (ErrorBoundary) with React hooks (useLogger)
+│   │   ├── date.ts                       # ✅ Date manipulation utilities
+│   │   │   # Framework-agnostic date operations (isValidDate, toDate, addDays, addHours, etc.)
+│   │   │   # SSR-safe with proper Date object validation
+│   │   ├── formatDate.ts                 # ✅ Date formatting utilities (main export)
+│   │   │   # Provides formatDate, formatRelativeTime, formatISO, formatTime, formatDateTime
+│   │   │   # SSR-safe with Intl.DateTimeFormat fallbacks
+│   │   ├── formatDate.types.ts            # ✅ Date formatting type definitions
+│   │   ├── formatISO.ts                  # ✅ ISO date formatting utilities
+│   │   ├── formatRelativeTime.ts         # ✅ Relative time formatting utilities
+│   │   ├── formatTime.ts                 # ✅ Time formatting utilities
+│   │   └── storeUtils.ts                 # ✅ Zustand store utilities and type helpers
+│   │
+│   ├── http/                             # ✅ HTTP error handling
+│   │   └── errorAdapter.ts               # ✅ HTTP error adapter for normalizing HTTP errors
+│   │       # Maps HTTP status codes to domain error types (network, timeout, validation, etc.)
+│   │       # Provides adapt() method via HttpErrorAdapter class
+│   │       # Exports DomainErrorType, DomainError, adaptError() function, errorAdapter singleton
+│   │       # Includes helper methods: isType(), isClientError(), isServerError(), isRetryable()
+│   │       # Supports field-level validation error extraction
+│   │       # Related files:
+│   │       #   - errorAdapter.constants.ts: Error adapter constants
+│   │       #   - errorAdapter.handlers.ts: Error handling functions
+│   │       #   - errorAdapter.helpers.ts: Helper functions (isType, isClientError, isServerError, isRetryable)
+│   │       #   - errorAdapter.types.ts: Type definitions (DomainErrorType, DomainError, etc.)
 │   │
 │   ├── utils/                            # ✅ Framework-agnostic utilities
 │   │   ├── debounce.ts                   # ✅ Debounce utility (non-React)
 │   │   │   # Supports leading, trailing, maxWait options
 │   │   │   # Returns debounced function with cancel and flush methods
+│   │   │   # Imports helpers from debounceHelpers.ts
+│   │   ├── debounceHelpers.ts           # ✅ Internal helper functions for debounce
+│   │   │   # Exports DebounceState, clearTimers, createCancelHandler, createFlushHandler,
+│   │   │   # createInvokeFunc, createLeadingEdge, createTrailingEdge, scheduleMaxWait, shouldInvoke
 │   │   ├── throttle.ts                   # ✅ Throttle utility (non-React)
 │   │   │   # Supports leading, trailing options
 │   │   │   # Returns throttled function with cancel and flush methods
-│   │   └── classNames.ts                 # ✅ Class names helper
-│   │       # Conditionally join class names (strings, arrays, objects)
+│   │   │   # Imports helpers from throttleHelpers.ts
+│   │   ├── throttleHelpers.ts            # ✅ Internal helper functions for throttle
+│   │   │   # Exports ThrottleState, clearTimer, invokeFunc, handleLeadingEdge, handleTrailingEdge,
+│   │   │   # shouldInvoke, scheduleTrailingEdge, createCancelHandler, createFlushHandler, validateWait, validateThrottleOptions
+│   │   ├── hookUtils.ts                  # ✅ Utility functions for React hooks
+│   │   │   # Exports getDependenciesKey() for serializing dependencies arrays
+│   │   │   # Used by hooks for dependency comparison (handles non-serializable values)
+│   │   ├── classNames.ts                 # ✅ Class names helper
+│   │   │   # Conditionally join class names (strings, arrays, objects)
+│   │   ├── seoDomUtils.ts                # ✅ SEO DOM utilities (main orchestrator)
+│   │   │   # Applies SEO metadata to document head (applySEOToDocument)
+│   │   ├── seoDomUtils.basic.ts          # ✅ Basic SEO meta tags utilities
+│   │   │   # Updates basic meta tags and canonical URL
+│   │   ├── seoDomUtils.custom.ts         # ✅ Custom meta tags utilities
+│   │   │   # Updates custom meta tags
+│   │   ├── seoDomUtils.openGraph.ts      # ✅ Open Graph meta tags utilities
+│   │   │   # Updates Open Graph meta tags
+│   │   ├── seoDomUtils.twitter.ts        # ✅ Twitter Card meta tags utilities
+│   │   │   # Updates Twitter Card meta tags
+│   │   └── seoDomUtils.helpers.ts        # ✅ SEO DOM utilities helper functions
+│   │       # Internal helper functions for SEO operations
 │   │
+│   ├── router/                        # ✅ Routing helpers and generated utilities
+│   │   ├── routes.gen.ts              # ✅ Type-safe route builder helpers (buildRoute, ROUTE_KEYS, getRouteTemplate, isRouteKey)
+│   │   │   # Generates strongly-typed utilities from @core/config/routes
+│   │   └── index.ts                   # ✅ Placeholder file (kept empty to enforce direct imports)
 │   # Optional directories not yet implemented:
-│   # - router/ (routing helpers, generated constants)
-│   # - http/ (HTTP error adapters)
 │   # - analytics/ (analytics primitives, feature flags, metrics adapters)
 │   #
 │   ├── ports/                            # ✅ Hexagonal ports (framework-agnostic interfaces)
@@ -152,10 +220,14 @@ src/
 │   │   │   # Defines debug, info, warn, error methods with context support
 │   │   ├── StoragePort.ts                # ✅ Interface for key/value storage access
 │   │   │   # Defines getItem, setItem, removeItem, clear, getLength, key methods
-│   │   └── HttpPort.ts                   # ✅ Interface for making HTTP requests
-│   │       # Defines request, get, post, put, patch, delete methods
-│   │       # Infrastructure implements these ports via adapters; domains depend on ports only
-│   │   # AnalyticsPort, WorkersPort - Optional, not yet implemented
+│   │   ├── HttpPort.ts                    # ✅ Interface for making HTTP requests
+│   │   │   # Defines request, get, post, put, patch, delete, head, options methods
+│   │   │   # Infrastructure implements these ports via adapters; domains depend on ports only
+│   │   └── AnalyticsPort.ts              # ✅ Interface for analytics tracking operations
+│   │       # Defines initialize, trackPageView, trackEvent, identify, setUserProperties, reset methods
+│   │       # Supports Google Analytics, Segment, and other analytics providers
+│   │       # Infrastructure adapters implement this port; domains depend on port only
+│   │   # WorkersPort - Optional, not yet implemented
 │   │
 │   ├── providers/                        # ✅ Core port providers (dependency injection)
 │   │   ├── LoggerProvider.tsx            # ✅ Provides LoggerPort instance via React Context
@@ -184,12 +256,14 @@ src/
 │   │   │   # React hook wrapping debounce utility
 │   │   │   # Supports debouncing values and callback functions
 │   │   ├── useThrottle.ts                # ✅ Throttle a value or callback
-│   │   │   # React hook wrapping throttle utility
-│   │   │   # Supports throttling values and callback functions
-│   │   │   # Returns throttled value or throttled callback with cancel and flush methods
+│   │   │   # Exports two hooks: useThrottle<T>(value, delay) and useThrottledCallback<T>(callback, delay)
+│   │   │   # useThrottle returns throttled value that updates at most once per delay period
+│   │   │   # useThrottledCallback returns ThrottledFunction with cancel() and flush() methods
+│   │   │   # Both hooks use core/utils/throttle internally
 │   │   ├── useToggle.ts                  # ✅ Boolean toggle hook
 │   │   │   # Returns [value, toggle, setTrue, setFalse]
 │   │   ├── useLocalStorage.ts            # ✅ Reads/writes to localStorage via StoragePort
+│   │   ├── useSessionStorage.ts          # ✅ Reads/writes to sessionStorage via StoragePort
 │   │   │   # React-friendly interface with JSON serialization
 │   │   │   # Syncs with storage events for cross-tab synchronization
 │   │   │   # Uses useStorage() hook internally (dependency injection pattern)
@@ -211,8 +285,12 @@ src/
 │   │   │   # Provides responsive window dimensions (width, height)
 │   │   │   # Updates on window resize events
 │   │   │   # SSR-safe with initial fallback values
-│   │   └── usePrevious.ts                # ✅ Hook that returns previous value of state/prop
-│   │       # Useful for comparing current vs previous values or undo/redo functionality
+│   │   ├── usePrevious.ts                # ✅ Hook that returns previous value of state/prop
+│   │   │   # Useful for comparing current vs previous values or undo/redo functionality
+│   │   └── useSEO.ts                     # ✅ Hook to update document head metadata (SEO)
+│   │       # Updates title, meta tags, Open Graph, and Twitter Card tags
+│   │       # Uses mergeSEOConfig from @core/config/seo
+│   │       # Supports per-route metadata updates
 │   │
 │   ├── a11y/                             # ✅ Accessibility utilities
 │   │   ├── focus.ts                      # ✅ Focus management utilities
@@ -226,9 +304,12 @@ src/
 │   │   ├── formAdapter.ts                # ✅ Form abstraction over react-hook-form
 │   │   │   # Library-agnostic form handling interface
 │   │   │   # useFormAdapter hook wraps useForm with consistent FormControls interface
-│   │   └── zodResolver.ts                # ✅ Zod validation resolver integration
-│   │       # Re-exports zodResolver from @hookform/resolvers/zod
-│   │       # Consistent API through form adapter layer
+│   │   ├── controller.tsx                 # ✅ Controller component for controlled components
+│   │   │   # Exports Controller from react-hook-form through adapter layer
+│   │   │   # For components that don't work with the register API
+│   │   └── useController.ts              # ✅ useController hook for controlled components
+│   │       # Exports useController from react-hook-form through adapter layer
+│   │       # Provides programmatic control of form fields
 │   │
 │   ├── security/                         # ✅ Security utilities
 │   │   ├── sanitizeHtml.ts               # ✅ HTML sanitization utilities (XSS prevention)
@@ -242,9 +323,49 @@ src/
 │   │       # hasPermission, hasAnyPermission, hasAllPermissions, checkPermissions, mergePermissions
 │   │       # Generic permission evaluation logic with least privilege and fail-secure principles
 │   │
-│   # Optional directories not yet implemented:
-│   # - i18n/ (Internationalization: i18n.ts, types.ts)
-│   # - perf/ (Performance utilities: reportWebVitals.ts)
+│   ├── i18n/                             # ✅ Internationalization system
+│   │   ├── i18n.ts                        # ✅ Core i18next instance configuration
+│   │   │   # Registers common translations, initializes i18next, sets up RTL support
+│   │   │   # Exports configured i18n instance and initialization promise
+│   │   ├── types.ts                       # ✅ TypeScript types for translation keys (type-safe access)
+│   │   │   # Defines translation interfaces for each namespace (common, landing, etc.)
+│   │   │   # Provides type-safe translation key access
+│   │   ├── useTranslation.ts              # ✅ Custom hook wrapper with automatic resource loading
+│   │   │   # Provides useTranslation hook that automatically loads resources on-demand
+│   │   │   # Type-safe translation function with autocomplete
+│   │   ├── useRtl.ts                      # ✅ Hook to check if current language is RTL
+│   │   │   # Returns boolean indicating if current language requires RTL layout
+│   │   │   # Automatically updates when language changes
+│   │   ├── resourceLoader.ts              # ✅ Dynamic resource loading system
+│   │   │   # Handles lazy loading of translation resources
+│   │   │   # Caches loaded resources to prevent re-loading
+│   │   ├── registry.ts                    # ✅ Domain translation registration system
+│   │   │   # registerDomainTranslations() - Register domain translations
+│   │   │   # registerCommonTranslations() - Register common translations
+│   │   ├── constants.ts                   # ✅ Centralized i18n constants
+│   │   │   # SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, RTL_LANGUAGES
+│   │   │   # LANGUAGE_STORAGE_KEY, LANGUAGE_DETECTION_ORDER
+│   │   │   # Helper functions: isSupportedLanguage, isRtlLanguage, normalizeLanguage
+│   │   ├── errors.ts                      # ✅ Custom error classes for i18n resource loading
+│   │   │   # ResourceLoaderNotFoundError, InvalidResourceFormatError
+│   │   ├── useTranslationHelpers.ts       # ✅ Internal helper functions for resource loading state management
+│   │   │   # isResourceLoadedInI18n, ensureResourceLoaded, handleInitialLoad, handleExistingLoad, updateLoadingState
+│   │   ├── useTranslationLoader.ts        # ✅ Internal hook for managing resource loading effects
+│   │   │   # useResourceLoader, useResourceLoadingEffects - handles loading effects and language changes
+│   │   ├── useTranslationState.ts         # ✅ Internal hook for managing translation loading state
+│   │   │   # useResourceLoadingState, useLoadingStateUpdater - manages loading state per namespace/language
+│   │   └── locales/                       # ✅ Common/shared translations
+│   │       ├── en.json                    # ✅ English translations
+│   │       ├── es.json                    # ✅ Spanish translations
+│   │       └── ar.json                    # ✅ Arabic translations (RTL)
+│   │   # Domain translations are co-located with domains: domains/<domain>/i18n/
+│   │
+│   ├── perf/                               # ✅ Performance utilities
+│   │   └── reportWebVitals.ts              # ✅ Core Web Vitals performance monitoring
+│   │       # Tracks and reports Core Web Vitals metrics (LCP, INP, CLS, FCP, TTFB)
+│   │       # Only runs in production mode
+│   │       # Uses logger adapter for reporting (can be extended to analytics services)
+│   │
 │   #
 │   ├── ui/                               # ✅ Atomic UI components
 │   │   # Components are domain-agnostic and accessible
@@ -254,8 +375,14 @@ src/
 │   │   │       # Features: accessible, loading state support, dark mode support
 │   │   ├── input/                         # ✅ Input component folder
 │   │   │   ├── Input.tsx                 # ✅ Text input with label, error, helper text, and icon support (exports types from @src-types/ui)
+│   │   │   ├── InputContent.tsx          # ✅ Input content component
+│   │   │   ├── InputField.tsx            # ✅ Input field component
 │   │   │   ├── InputHelpers.ts           # ✅ Helper functions for input handling (uses getInputVariantClasses from @core/ui/variants)
-│   │   │   ├── InputParts.tsx            # ✅ Input sub-components (Label, ErrorText, HelperText) and type interfaces
+│   │   │   ├── InputIcon.tsx             # ✅ Input icon component
+│   │   │   ├── InputLabel.tsx            # ✅ Input label component
+│   │   │   ├── InputMessages.tsx         # ✅ Input error/helper text messages component
+│   │   │   ├── InputTypes.ts             # ✅ Input type definitions
+│   │   │   ├── InputWrapper.tsx          # ✅ Input wrapper component
 │   │   │   └── useInput.ts               # ✅ Input hook for managing input state
 │   │   ├── modal/                         # ✅ Modal component folder
 │   │   │   ├── Modal.tsx                 # ✅ Main Modal dialog component with overlay and close functionality (exports types from @src-types/ui)
@@ -280,17 +407,113 @@ src/
 │   │   │   └── IconButton.tsx            # ✅ Icon button component (uses getIconButtonVariantClasses from @core/ui/variants)
 │   │   ├── label/                         # ✅ Label component folder
 │   │   │   └── Label.tsx                  # ✅ Form label component
-│   │   └── icons/                         # ✅ Icon components folder
-│   │       ├── clear-icon/                # ✅ ClearIcon component
-│   │       │   └── ClearIcon.tsx          # ✅ Clear icon SVG component
-│   │       ├── close-icon/                # ✅ CloseIcon component
-│   │       │   └── CloseIcon.tsx          # ✅ Close icon SVG component
-│   │       ├── heart-icon/                 # ✅ HeartIcon component
-│   │       │   └── HeartIcon.tsx          # ✅ Heart/like icon SVG component
-│   │       ├── search-icon/                # ✅ SearchIcon component
-│   │       │   └── SearchIcon.tsx        # ✅ Search icon SVG component
-│   │       └── settings-icon/              # ✅ SettingsIcon component
-│   │           └── SettingsIcon.tsx        # ✅ Settings icon SVG component
+│   │   ├── textarea/                      # ✅ Textarea component folder
+│   │   │   ├── Textarea.tsx               # ✅ Textarea component with label, error, helper text support
+│   │   │   ├── TextareaContent.tsx        # ✅ Textarea content component
+│   │   │   ├── TextareaField.tsx          # ✅ Textarea field component
+│   │   │   ├── TextareaHelpers.ts         # ✅ Helper functions for textarea handling
+│   │   │   ├── TextareaLabel.tsx          # ✅ Textarea label component
+│   │   │   ├── TextareaMessages.tsx       # ✅ Textarea error/helper text messages component
+│   │   │   ├── TextareaTypes.ts           # ✅ Textarea type definitions
+│   │   │   ├── TextareaWrapper.tsx        # ✅ Textarea wrapper component
+│   │   │   └── useTextarea.ts            # ✅ React hook for managing textarea state
+│   │   ├── checkbox/                       # ✅ Checkbox component folder
+│   │   │   ├── Checkbox.tsx               # ✅ Checkbox component with label, error, helper text support
+│   │   │   │   # Features: accessible, size variants (sm, md, lg), controlled/uncontrolled modes, dark mode support
+│   │   │   ├── CheckboxContent.tsx        # ✅ Checkbox content component
+│   │   │   ├── CheckboxField.tsx          # ✅ Checkbox field component
+│   │   │   ├── CheckboxHandlers.ts        # ✅ Checkbox event handlers
+│   │   │   ├── CheckboxHelpers.ts         # ✅ Helper functions for checkbox handling
+│   │   │   ├── CheckboxLabel.tsx          # ✅ Checkbox label component
+│   │   │   ├── CheckboxMessages.tsx       # ✅ Checkbox error/helper text messages component
+│   │   │   ├── CheckboxTypes.ts           # ✅ Checkbox type definitions
+│   │   │   ├── CheckboxWrapper.tsx        # ✅ Checkbox wrapper component
+│   │   │   └── useCheckbox.ts            # ✅ React hook for managing checkbox state
+│   │   ├── switch/                         # ✅ Switch component folder
+│   │   │   ├── Switch.tsx                 # ✅ Toggle switch component with label, error, helper text support
+│   │   │   │   # Features: accessible, size variants (sm, md, lg), animated toggle transition, controlled/uncontrolled modes, dark mode support
+│   │   │   ├── SwitchContainer.tsx      # ✅ Switch container component
+│   │   │   ├── SwitchContent.tsx        # ✅ Switch content component
+│   │   │   ├── SwitchField.tsx          # ✅ Switch field component
+│   │   │   ├── SwitchInput.tsx          # ✅ Switch input component
+│   │   │   ├── SwitchLabel.tsx          # ✅ Switch label component
+│   │   │   ├── SwitchMessages.tsx      # ✅ Switch error/helper text messages component
+│   │   │   ├── SwitchWrapper.tsx       # ✅ Switch wrapper component
+│   │   │   ├── SwitchHelpers.ts        # ✅ Helper functions for switch handling
+│   │   │   ├── SwitchHandlers.ts        # ✅ Switch event handlers
+│   │   │   ├── SwitchTypes.ts          # ✅ Switch type definitions
+│   │   │   ├── useSwitch.ts            # ✅ React hook for managing switch state
+│   │   │   ├── useSwitchField.ts       # ✅ React hook for switch field management
+│   │   │   └── useSwitchFieldState.ts  # ✅ React hook for switch field state management
+│   │   ├── select/                         # ✅ Select component folder
+│   │   │   ├── Select.tsx                # ✅ Select/dropdown component with label, error, helper text support
+│   │   │   │   # Features: accessible, size variants (sm, md, lg), custom dropdown arrow icon, dark mode support
+│   │   │   ├── SelectContent.tsx         # ✅ Select content component
+│   │   │   ├── SelectField.tsx           # ✅ Select field component
+│   │   │   ├── SelectHelpers.ts          # ✅ Helper functions for select handling
+│   │   │   ├── SelectLabel.tsx           # ✅ Select label component
+│   │   │   ├── SelectMessages.tsx        # ✅ Select error/helper text messages component
+│   │   │   ├── SelectTypes.ts            # ✅ Select type definitions
+│   │   │   ├── SelectWrapper.tsx         # ✅ Select wrapper component
+│   │   │   └── useSelect.ts              # ✅ React hook for managing select state
+│   │   ├── radio/                          # ✅ Radio component folder
+│   │   │   ├── Radio.tsx                  # ✅ Radio button component with label, error, helper text support
+│   │   │   │   # Features: accessible, size variants (sm, md, lg), controlled/uncontrolled modes, dark mode support
+│   │   │   ├── RadioA11yHelpers.ts       # ✅ Accessibility helpers (ARIA, ID generation)
+│   │   │   ├── RadioClassHelpers.ts      # ✅ Styling/class utilities
+│   │   │   ├── RadioFieldPropsHelpers.ts # ✅ Field and content props building helpers
+│   │   │   ├── RadioInputPropsHelpers.ts # ✅ Input props building helpers
+│   │   │   ├── RadioHandlers.ts          # ✅ Radio event handlers
+│   │   │   ├── RadioParts.tsx            # ✅ Radio sub-components and type interfaces
+│   │   │   ├── RadioTypes.ts             # ✅ Radio type definitions
+│   │   │   ├── useRadio.ts               # ✅ React hook for managing radio state
+│   │   │   └── useRadioField.ts           # ✅ React hook for radio field management
+│   │   ├── badge/                          # ✅ Badge component folder
+│   │   │   └── Badge.tsx                 # ✅ Status/label display component
+│   │   │       # Features: multiple variants (default, primary, success, warning, error, info), size variants (sm, md, lg), dark mode support
+│   │   ├── chip/                           # ✅ Chip component folder
+│   │   │   └── Chip.tsx                    # ✅ Removable tag/filter component
+│   │   │       # Features: similar to Badge but with remove functionality, multiple variants (default, primary, success, warning, error, info), size variants (sm, md, lg), optional remove button with customizable aria-label, dark mode support, accessible focus states
+│   │   ├── heading/                        # ✅ Heading component folder
+│   │   │   └── Heading.tsx               # ✅ Reusable typography heading component (h1-h6)
+│   │   │       # Features: accessible semantic heading elements, size variants, dark mode support
+│   │   ├── text/                            # ✅ Text component folder
+│   │   │   └── Text.tsx                  # ✅ Reusable typography paragraph component
+│   │   │       # Features: accessible semantic paragraph element, size variants (sm, md, lg), dark mode support
+│   │   ├── skeleton/                        # ✅ Skeleton component folder
+│   │   │   └── Skeleton.tsx              # ✅ Loading state component with animated pulse effect
+│   │   │       # Features: animated pulse effect, multiple variants (text, circular, rectangular), customizable width/height, dark mode support
+│   │   ├── tooltip/                         # ✅ Tooltip component folder
+│   │   │   ├── Tooltip.tsx                # ✅ Accessible tooltip component with positioning
+│   │   │   │   # Features: multiple positions (top, bottom, left, right), configurable delay, keyboard accessible, screen reader support, dark mode support
+│   │   │   ├── TooltipContent.tsx          # ✅ Tooltip content component
+│   │   │   ├── TooltipWrapper.tsx          # ✅ Tooltip wrapper component
+│   │   │   ├── tooltipUtils.ts            # ✅ Tooltip utility functions
+│   │   │   └── useTooltip.ts             # ✅ React hook for managing tooltip state
+│   │   ├── hover-card/                      # ✅ HoverCard component folder
+│   │   │   ├── HoverCard.tsx               # ✅ Accessible hover card component that shows card content on hover
+│   │   │   │   # Features: multiple positions (top, bottom, left, right), configurable show/hide delays, keyboard accessible, screen reader support, dark mode support, optional arrow pointing to trigger, rich card-style content
+│   │   │   ├── HoverCardContent.tsx        # ✅ Hover card content component
+│   │   │   ├── HoverCardWrapper.tsx        # ✅ Hover card wrapper component
+│   │   │   ├── hoverCardUtils.ts          # ✅ Hover card utility functions
+│   │   │   └── useHoverCard.ts            # ✅ React hook for managing hover card state
+│   │   ├── popover/                         # ✅ Popover component folder
+│   │   │   ├── Popover.tsx                # ✅ Flexible overlay component
+│   │   │   │   # Features: accessible with proper ARIA attributes, flexible positioning (top, bottom, left, right with alignment), click outside to close, escape key to close, automatic positioning with viewport boundary detection, portal rendering, dark mode support
+│   │   │   ├── PopoverContentSetup.tsx    # ✅ Popover content setup component
+│   │   │   ├── PopoverHelpers.tsx         # ✅ Popover helper components
+│   │   │   ├── PopoverParts.tsx           # ✅ Popover sub-components
+│   │   │   ├── PopoverSetup.tsx           # ✅ Popover setup component
+│   │   │   ├── PopoverHooks.ts            # ✅ Popover hook utilities
+│   │   │   ├── popoverPosition.ts         # ✅ Popover position utilities
+│   │   │   ├── usePopover.ts              # ✅ React hook for managing popover state
+│   │   │   ├── usePopoverHelpers.ts       # ✅ Popover helper hooks
+│   │   │   └── usePopoverPosition.ts      # ✅ Hook for popover positioning logic
+│   │   ├── theme-toggle/                    # ✅ ThemeToggle component folder
+│   │   │   └── ThemeToggle.tsx            # ✅ Theme toggle component
+│   │   │       # Cycles through: light → dark → system → light
+│   │   │       # Accessible: keyboard navigable, proper ARIA labels
+│   │   │       # Presentational component (receives theme via props)
 │   │   ├── theme/                           # ✅ Component token bridge
 │   │   │   └── tokens.ts                    # ✅ Component token definitions derived from design tokens
 │   │   │       # Bridges design tokens to component-specific values
@@ -314,16 +537,162 @@ src/
 │   │   │   │   # ModalDialogVariants, ModalBodyVariants types (size variants: sm, md, lg, xl, full)
 │   │   │   ├── spinner.ts                   # ✅ Spinner variants
 │   │   │   │   # Exports spinnerVariants, getSpinnerVariantClasses, SpinnerVariants type (size variants: sm, md, lg)
-│   │   │   └── icon.ts                      # ✅ Icon variants
-│   │   │       # Exports iconVariants, getIconVariantClasses, IconVariants type (size variants: sm, md, lg)
-│   │   │       # Used by all icon components (CloseIcon, ClearIcon, HeartIcon, etc.)
+│   │   │   ├── icon.ts                      # ✅ Icon variants
+│   │   │   │   # Exports iconVariants, getIconVariantClasses, IconVariants type (size variants: sm, md, lg)
+│   │   │   │   # Used by all icon components (CloseIcon, ClearIcon, HeartIcon, etc.)
+│   │   │   ├── textarea.ts                  # ✅ Textarea variants
+│   │   │   │   # Exports textareaVariants, getTextareaVariantClasses, TextareaVariants type
+│   │   │   │   # Supports size variants (sm, md, lg) and state variants (normal, error)
+│   │   │   ├── checkbox.ts                  # ✅ Checkbox variants
+│   │   │   │   # Exports checkboxVariants, getCheckboxVariantClasses, CheckboxVariants type (size variants: sm, md, lg)
+│   │   │   ├── chip.ts                       # ✅ Chip variants
+│   │   │   │   # Exports chipVariants, getChipVariantClasses, ChipVariants type (size variants: sm, md, lg, variants: default, primary, success, warning, error, info)
+│   │   │   ├── switch.ts                    # ✅ Switch variants
+│   │   │   │   # Exports switchVariants, getSwitchVariantClasses, SwitchVariants type (size variants: sm, md, lg)
+│   │   │   ├── select.ts                    # ✅ Select variants
+│   │   │   │   # Exports selectVariants, getSelectVariantClasses, SelectVariants type (size variants: sm, md, lg)
+│   │   │   ├── radio.ts                     # ✅ Radio variants
+│   │   │   │   # Exports radioVariants, getRadioVariantClasses, RadioVariants type (size variants: sm, md, lg)
+│   │   │   ├── badge.ts                     # ✅ Badge variants
+│   │   │   │   # Exports badgeVariants, getBadgeVariantClasses, BadgeVariants type (size variants: sm, md, lg, variants: default, primary, success, warning, error, info)
+│   │   │   ├── card.ts                      # ✅ Card variants
+│   │   │   │   # Exports cardVariants, getCardVariantClasses, CardVariants type (variant: elevated, outlined, flat; padding: sm, md, lg)
+│   │   │   ├── heading.ts                   # ✅ Heading variants
+│   │   │   │   # Exports headingVariants, getHeadingVariantClasses, HeadingVariants type (size variants: sm, md, lg, xl, 2xl)
+│   │   │   ├── link.ts                      # ✅ Link variants
+│   │   │   │   # Exports linkVariants, getLinkVariantClasses, LinkVariants type (variant: default, subtle, muted; size: sm, md, lg)
+│   │   │   ├── list.ts                      # ✅ List variants
+│   │   │   │   # Exports listVariants, getListVariantClasses, getListItemSizeClasses, ListVariants type (variants: default, bordered, divided)
+│   │   │   ├── skeleton.ts                  # ✅ Skeleton variants
+│   │   │   │   # Exports skeletonVariants, getSkeletonVariantClasses, SkeletonVariants type (variants: text, circular, rectangular)
+│   │   │   ├── stepper.ts                    # ✅ Stepper variants
+│   │   │   │   # Exports stepperVariants, getStepperVariantClasses, getStepperStepSizeClasses, StepperVariants type (orientation: horizontal, vertical; size variants: sm, md, lg)
+│   │   │   └── text.ts                      # ✅ Text variants
+│   │   │       # Exports textVariants, getTextVariantClasses, TextVariants type (size variants: sm, md, lg)
+│   │   ├── loadable.tsx                     # ✅ Code splitting wrapper around React.lazy and Suspense
+│   │   │   # Provides Loadable function with customizable loading fallbacks (loading can be ReactNode or function)
+│   │   │   # Exports: Loadable, LoadableProps, LoadableOptions
+│   │   ├── loadableFallback.tsx             # ✅ Default loading fallback component
+│   │   │   # Exports: DefaultLoadingFallback (accessible loading state with aria-live and aria-label)
+│   │   └── loadableUtils.ts                # ✅ Utility functions for Loadable
+│   │       # Exports: createLoadable() helper with default loading fallback
+│   │   ├── accordion/                        # ✅ Accordion component folder
+│   │   │   ├── Accordion.tsx                # ✅ Main Accordion component
+│   │   │   ├── AccordionContent.tsx         # ✅ Accordion content component
+│   │   │   ├── AccordionHeader.tsx          # ✅ Accordion header component
+│   │   │   ├── AccordionIcon.tsx            # ✅ Accordion icon component
+│   │   │   ├── AccordionItem.tsx            # ✅ Accordion item component
+│   │   │   ├── AccordionHelpers.ts          # ✅ Helper functions for accordion
+│   │   │   └── useAccordion.ts              # ✅ React hook for managing accordion state
+│   │   ├── alert/                             # ✅ Alert component folder
+│   │   │   └── Alert.tsx                    # ✅ Alert notification component
+│   │   │       # Features: multiple intents (info, success, warning, error), dismissible, action button support, accessible with proper ARIA roles
+│   │   ├── avatar/                           # ✅ Avatar component folder
+│   │   │   └── Avatar.tsx                   # ✅ Avatar component for user profile images
+│   │   ├── breadcrumbs/                      # ✅ Breadcrumbs component folder
+│   │   │   ├── Breadcrumbs.tsx               # ✅ Main Breadcrumbs navigation component
+│   │   │   └── BreadcrumbItem.tsx            # ✅ Breadcrumb item component
+│   │   ├── card/                             # ✅ Card component folder
+│   │   │   └── Card.tsx                     # ✅ Card container component
+│   │   ├── drawer/                           # ✅ Drawer component folder
+│   │   │   ├── Drawer.tsx                     # ✅ Main Drawer component (side panel)
+│   │   │   ├── DrawerDialog.tsx              # ✅ Drawer dialog wrapper
+│   │   │   ├── DrawerParts.tsx               # ✅ Drawer sub-components
+│   │   │   ├── DrawerHelpers.ts              # ✅ Helper functions for drawer
+│   │   │   ├── useDrawer.ts                  # ✅ React hook for managing drawer state
+│   │   │   └── useDrawerSetup.ts             # ✅ Drawer setup hook for configuration
+│   │   ├── resizable/                        # ✅ Resizable component folder
+│   │   │   ├── Resizable.tsx                # ✅ Component for creating resizable panels/containers
+│   │   │   │   # Features: multiple directions (horizontal, vertical, both), min/max size constraints, controlled and uncontrolled modes, accessible resize handles, dark mode support, smooth resize interactions
+│   │   │   ├── ResizableContainer.tsx        # ✅ Resizable container component
+│   │   │   └── useResizable.ts             # ✅ React hook for managing resizable state
+│   │   ├── divider/                          # ✅ Divider component folder
+│   │   │   └── Divider.tsx                  # ✅ Divider/separator component
+│   │   ├── dropdown-menu/                     # ✅ DropdownMenu component folder
+│   │   │   ├── DropdownMenu.tsx             # ✅ Main DropdownMenu component
+│   │   │   │   # Features: accessible keyboard navigation, flexible positioning, menu items with icons/descriptions/shortcuts
+│   │   │   ├── DropdownMenuRenderers.tsx    # ✅ DropdownMenu rendering utilities
+│   │   │   ├── DropdownMenuHelpers.ts       # ✅ Helper functions for dropdown menu
+│   │   │   ├── MenuItemButton.tsx           # ✅ Menu item button component
+│   │   │   ├── useDropdownMenu.ts           # ✅ React hook for managing dropdown menu state
+│   │   │   └── useDropdownMenuHooks.ts       # ✅ Internal hooks for dropdown menu functionality
+│   │   ├── link/                             # ✅ Link component folder
+│   │   │   └── Link.tsx                     # ✅ Link component (navigation link)
+│   │   ├── list/                             # ✅ List component folder
+│   │   │   ├── List.tsx                      # ✅ Main List component
+│   │   │   │   # Features: multiple variants (default, bordered, divided), size variants (sm, md, lg), dark mode support, accessible semantic HTML
+│   │   │   ├── ListContext.tsx               # ✅ List context provider
+│   │   │   │   # Provides size context to ListItem components
+│   │   │   ├── ListGroup.tsx                 # ✅ List group wrapper component
+│   │   │   │   # Features: optional header and footer sections, dark mode support
+│   │   │   ├── ListItem.tsx                  # ✅ List item component
+│   │   │   │   # Features: optional leading and trailing elements, interactive button state, clickable items, selected state, size variants inherited from List context
+│   │   │   └── useListContext.ts             # ✅ Hook to access List context
+│   │   ├── pagination/                       # ✅ Pagination component folder
+│   │   │   ├── Pagination.tsx                # ✅ Main Pagination component
+│   │   │   ├── PaginationButton.tsx          # ✅ Pagination button component
+│   │   │   ├── PaginationButtons.tsx         # ✅ Pagination buttons container
+│   │   │   ├── FirstLastButtons.tsx          # ✅ First/Last page buttons
+│   │   │   ├── PrevNextButtons.tsx           # ✅ Previous/Next page buttons
+│   │   │   ├── PageNumberButtons.tsx         # ✅ Page number buttons
+│   │   │   ├── PaginationHelpers.ts          # ✅ Helper functions for pagination
+│   │   │   ├── PaginationHandlers.ts         # ✅ Pagination event handlers
+│   │   │   └── usePagination.ts             # ✅ React hook for managing pagination state
+│   │   ├── progress/                         # ✅ Progress component folder
+│   │   │   └── Progress.tsx                 # ✅ Progress bar component
+│   │   ├── table/                            # ✅ Table component folder
+│   │   │   ├── Table.tsx                     # ✅ Main Table component
+│   │   │   ├── TableElement.tsx              # ✅ Table element wrapper
+│   │   │   ├── TableHeader.tsx               # ✅ Table header component
+│   │   │   ├── TableBody.tsx                 # ✅ Table body component
+│   │   │   ├── TableRow.tsx                  # ✅ Table row component
+│   │   │   ├── TableCell.tsx                 # ✅ Table cell component
+│   │   │   ├── TableEmptyState.tsx           # ✅ Table empty state component
+│   │   │   └── TableHelpers.ts               # ✅ Helper functions for table
+│   │   ├── tabs/                             # ✅ Tabs component folder
+│   │   │   ├── Tabs.tsx                      # ✅ Main Tabs component
+│   │   │   ├── TabsList.tsx                  # ✅ Tabs list container
+│   │   │   ├── TabButton.tsx                 # ✅ Tab button component
+│   │   │   ├── TabButtonContent.tsx          # ✅ Tab button content
+│   │   │   ├── TabsPanel.tsx                 # ✅ Tabs panel component
+│   │   │   ├── TabsHelpers.ts                # ✅ Helper functions for tabs
+│   │   │   └── useTabs.ts                    # ✅ React hook for managing tabs state
+│   │   ├── stepper/                           # ✅ Stepper component folder
+│   │   │   └── Stepper.tsx                    # ✅ Step-by-step progress indicator component
+│   │   │       # Features: horizontal and vertical orientations, size variants (sm, md, lg), step status (completed, active, pending, error), optional step numbers, clickable steps, accessible navigation structure
+│   │   ├── toast/                             # ✅ Toast component folder
+│   │   │   ├── Toast.tsx                     # ✅ Main Toast notification component
+│   │   │   │   # Features: multiple intents (info, success, warning, error), auto-dismiss with pause on hover, dismissible, action button support, accessible with proper ARIA roles
+│   │   │   ├── ToastParts.tsx                # ✅ Toast sub-components (ToastIcon, ToastContent, ToastDismissButton, ToastContainer, ToastBody)
+│   │   │   ├── toast.helpers.ts              # ✅ Helper functions for toast configuration
+│   │   │   ├── toast.types.ts                # ✅ Toast type definitions
+│   │   │   ├── toast.utils.ts                # ✅ Toast utility functions
+│   │   │   ├── toast.constants.ts            # ✅ Toast constants
+│   │   │   └── useToastDismiss.ts            # ✅ React hook for toast dismiss functionality
+│   │   ├── icons/                            # ✅ Icon components folder
+│   │   │   ├── Icon.tsx                      # ✅ Generic Icon wrapper component (uses icon registry)
+│   │   │   ├── iconRegistry.ts               # ✅ Icon registry (centralized icon management)
+│   │   │   │   # Exports: iconRegistry, getIcon(), registerIcon(), hasIcon()
+│   │   │   ├── clear-icon/                   # ✅ ClearIcon component
+│   │   │   │   └── ClearIcon.tsx            # ✅ Clear icon SVG component
+│   │   │   ├── close-icon/                   # ✅ CloseIcon component
+│   │   │   │   └── CloseIcon.tsx            # ✅ Close icon SVG component
+│   │   │   ├── heart-icon/                    # ✅ HeartIcon component
+│   │   │   │   └── HeartIcon.tsx            # ✅ Heart/like icon SVG component
+│   │   │   ├── search-icon/                   # ✅ SearchIcon component
+│   │   │   │   └── SearchIcon.tsx           # ✅ Search icon SVG component
+│   │   │   └── settings-icon/                 # ✅ SettingsIcon component
+│   │   │       └── SettingsIcon.tsx           # ✅ Settings icon SVG component
+│   │   ├── image/                            # ✅ Image component folder
+│   │   │   ├── Image.tsx                     # ✅ Optimized image display component
+│   │   │   │   # Features: lazy loading, fallback handling, placeholders, accessible alt text, loading states with skeleton support, error handling with fallback images
+│   │   │   └── image.helpers.tsx              # ✅ Image helper functions
+│   │   │       # Exports: getImageConfig, renderImage, UseImageLifecycleParams, ImageLifecycleState, ImageConfig
 │   │   # Ensure a11y: focus states, aria labels, keyboard navigation
+│   │   ├── command-palette/                  # ⚠️ Command palette component folder (placeholder, not yet implemented)
+│   │   │   # Future: Command palette/search interface component
 │   │   # Optional components not yet implemented:
-│   │   # - loadable.ts, animation/, atoms/, molecules/, organisms/
-│   │   # - Textarea.tsx, Select.tsx, Checkbox.tsx, Radio.tsx, Switch.tsx
-│   │   # - Tooltip.tsx, Popover.tsx, Drawer.tsx, Tabs.tsx, Accordion.tsx
-│   │   # - Table.tsx, Pagination.tsx, Skeleton.tsx, Badge.tsx, Avatar.tsx
-│   │   # - Text.tsx, Heading.tsx, Icon.tsx, icons/registry.ts
+│   │   # - animation/, atoms/, molecules/, organisms/
 │   │
 │   ├── constants/                        # ✅ Core/global constants
 │   │   ├── designTokens.ts               # ✅ Design tokens (colors, radius, spacing)
@@ -336,66 +705,69 @@ src/
 │   │   ├── endpoints.ts                  # ✅ API endpoint constants
 │   │   │   # Central source of truth for API endpoint paths (API_ENDPOINTS)
 │   │   │   # Provides buildApiUrl() helper to combine with baseURL
-│   │   └── env.ts                        # ✅ Environment-derived constants
-│   │       # Thin wrapper around env providing convenience accessors
-│   │       # Exports IS_DEV, IS_PROD, ENV_MODE, isDevelopment(), isProduction(), getMode()
-│   │   # appConstants.ts, breakpoints.ts, timeouts.ts, regex.ts, aria.ts - Optional, not yet implemented
+│   │   ├── env.ts                        # ✅ Environment-derived constants
+│   │   │   # Thin wrapper around env providing convenience accessors
+│   │   │   # Exports IS_DEV, IS_PROD, ENV_MODE, isDevelopment(), isProduction(), getMode()
+│   │   ├── aria.ts                       # ✅ ARIA roles and attribute constants
+│   │   │   # Central source of truth for consistent ARIA usage
+│   │   │   # Exports ARIA_ROLES, ARIA_LIVE, ARIA_BUSY, ARIA_EXPANDED, ARIA_CHECKED, etc.
+│   │   │   # Provides createAriaLabel() helper function
+│   │   ├── breakpoints.ts                 # ✅ Breakpoint constants for responsive design
+│   │   │   # Defines standard responsive breakpoints (xs, sm, md, lg, xl, 2xl)
+│   │   │   # Provides getBreakpoint(), createMinWidthQuery(), createMaxWidthQuery(), createRangeQuery()
+│   │   ├── regex.ts                       # ✅ Regular expression patterns for validation
+│   │   │   # Central source of truth for validation patterns (EMAIL, URL, PHONE, UUID, etc.)
+│   │   │   # Provides testRegex() helper function
+│   │   └── timeouts.ts                    # ✅ Timeout constants for network and UI operations
+│   │       # Exports HTTP_TIMEOUTS, UI_TIMEOUTS, RETRY_TIMEOUTS
+│   │       # All values in milliseconds with type-safe exports
 │   │
 │   └── README.md                         # ✅ Documentation explaining lib/ vs utils/ distinction
 │
-│   # Optional directories not yet implemented:
-│   # - router/, http/, analytics/
+│   # All core directories are implemented
 │
 ├── domains/                              # Self-contained business domains
-│   └── landing/                          # ✅ Landing domain (demonstration domain)
+│   └── landing/                          # ✅ Landing domain (minimal demonstration domain)
 │       ├── pages/                         # ✅ Full-page components for routing
 │       │   └── LandingPage.tsx             # ✅ Landing page component
 │       │       # Receives theme via props (from PageWrapper.withTheme)
-│       │       # Uses domain hooks (useLandingStorage)
-│       │       # Orchestrates domain components
+│       │       # Uses useTranslation hook for i18n
+│       │       # Minimal implementation demonstrating domain structure
 │       │       # Never imports from @app or @infra - respects boundaries
 │       │
-│       ├── components/                    # ✅ Domain-specific UI components
-│       │   ├── ApiDemoSection.tsx         # ✅ Demonstrates httpClient usage
-│       │   ├── ButtonSection.tsx          # ✅ Demonstrates Button component
-│       │   ├── CloseIconSection.tsx       # ✅ Demonstrates CloseIcon component
-│       │   ├── FormsSection.tsx           # ✅ Demonstrates form adapter and Controller/useController usage
-│       │   ├── HooksDemoSection/          # ✅ HooksDemoSection subdirectory
-│       │   │   ├── HooksDemoSection.tsx   # ✅ Main section component that demonstrates core hooks
-│       │   │   ├── UseAsyncDemo.tsx       # ✅ Demonstrates useAsync hook
-│       │   │   ├── UseFetchDemo.tsx       # ✅ Demonstrates useFetch hook
-│       │   │   ├── UseLocalStorageDemo.tsx # ✅ Demonstrates useLocalStorage hook
-│       │   │   ├── UseMediaQueryDemo.tsx   # ✅ Demonstrates useMediaQuery hook
-│       │   │   ├── UsePreviousDemo.tsx     # ✅ Demonstrates usePrevious hook
-│       │   │   ├── UseThrottleDemo.tsx     # ✅ Demonstrates useThrottle hook
-│       │   │   └── UseWindowSizeDemo.tsx   # ✅ Demonstrates useWindowSize hook
-│       │   ├── IconButtonSection.tsx      # ✅ Demonstrates IconButton component
-│       │   ├── InputSection.tsx           # ✅ Demonstrates Input component
-│       │   ├── InputSection/              # ✅ InputSection subdirectory for parts
-│       │   │   └── InputSectionParts.tsx  # ✅ InputSection sub-components
-│       │   ├── LabelSection.tsx           # ✅ Demonstrates Label component
-│       │   ├── ModalSection.tsx           # ✅ Demonstrates Modal component
-│       │   ├── ModalSection/              # ✅ ModalSection subdirectory for parts
-│       │   │   └── ModalSectionModals.tsx # ✅ ModalSection sub-components
-│       │   ├── SearchSection.tsx          # ✅ Demonstrates useDebounce hook
-│       │   ├── SpinnerSection.tsx         # ✅ Demonstrates Spinner component
-│       │   ├── StorageSection.tsx         # ✅ Demonstrates storage integration
-│       │   ├── TextComponentsSection.tsx  # ✅ Demonstrates ErrorText, HelperText components
-│       │   ├── ThemeSection.tsx           # ✅ Demonstrates theme integration
-│       │   ├── ToggleSection.tsx          # ✅ Demonstrates useToggle and classNames
-│       │   └── UserNameForm.tsx           # ✅ Form component for user name
-│       │   # Components are presentational and accept data via props
-│       │
-│       └── hooks/                         # ✅ Domain-specific hooks
-│           └── useLandingStorage.ts       # ✅ Landing page storage operations
-│               # Composes core hooks (useStorage, useLogger) into domain API
-│               # Manages visit count and user name persistence
-│               # Uses StoragePort via dependency injection (useStorage hook)
-│               # Never imports infrastructure adapters directly
-│       # routes.ts, i18n/, models/, services/, store/, constants.ts - Optional, not yet implemented
+│       ├── store/                         # ✅ Domain state management (Zustand)
+│       │   ├── landingStore.ts            # ✅ Counter example store with typed actions, selectors, initial state
+│       │   │   # Demonstrates selectors (count, isLoading, error) and actions (increment, decrement, reset)
+│       │   └── README.md                  # ✅ Store usage guidelines and best practices
+│       └── i18n/                          # ✅ Domain translations
+│           ├── index.ts                    # ✅ Registration file using registerDomainTranslations() with async IIFE pattern
+│           ├── en.json                     # ✅ English translations
+│           ├── es.json                     # ✅ Spanish translations
+│           └── ar.json                     # ✅ Arabic translations (RTL)
+│       # components/, hooks/, routes.ts, models/, services/, constants.ts - Optional, not yet implemented
 │
-│   # domains/shared/ - Optional cross-domain shared features (auth, notifications, analytics)
-│   # Not yet implemented
+│   └── shared/                              # ✅ Cross-domain shared features
+│       └── forms/                            # ✅ Shared form components
+│           └── components/                    # ✅ Form component implementations
+│               ├── AutocompleteCombobox.tsx  # ✅ Autocomplete combobox component
+│               │   # Features: accessible ARIA combobox pattern, keyboard navigation, search/filter, loading states, custom options rendering
+│               ├── AutocompleteComboboxBody.tsx # ✅ Autocomplete combobox body component
+│               ├── AutocompleteComboboxField.tsx # ✅ Autocomplete combobox field component
+│               ├── AutocompleteComboboxHelpers.ts # ✅ Helper functions for autocomplete combobox
+│               ├── AutocompleteComboboxParts.tsx # ✅ Autocomplete combobox sub-components (listbox, options)
+│               ├── useAutocompleteCombobox.ts # ✅ React hook for managing autocomplete combobox state
+│               ├── useAutocompleteComboboxHandlers.ts # ✅ Event handlers for autocomplete combobox
+│               ├── useAutocompleteComboboxHandlers.helpers.ts # ✅ Helper functions for event handlers
+│               ├── useAutocompleteComboboxIds.ts # ✅ ID generation utilities for autocomplete combobox
+│               ├── useAutocompleteComboboxSetup.ts # ✅ Setup hook for autocomplete combobox configuration
+│               ├── DatePicker.tsx            # ✅ Date picker component
+│               │   # Features: date input with validation, ISO date format support, accessible date selection
+│               ├── Slider.tsx                # ✅ Slider/range input component
+│               │   # Features: accessible range input, customizable min/max/step, value display, marks support, helper text
+│               ├── SliderView.tsx            # ✅ Slider view component
+│               ├── slider.types.ts           # ✅ Slider type definitions
+│               └── sliderModel.ts            # ✅ Slider model/business logic
+│       # auth/, notifications/, analytics/ - Optional, not yet implemented
 │
 ├── infrastructure/                        # Technical adapters & framework-specific code
 │   ├── logging/                           # ✅ Logging adapter
@@ -412,13 +784,38 @@ src/
 │       │   # Handles private browsing mode and quota exceeded errors
 │       │   # Domains access via useStorage() hook (not direct import)
 │       │
+│       ├── sessionStorageAdapter.ts       # ✅ Encapsulates sessionStorage access
+│       │   # Implements StoragePort interface
+│       │   # SSR-safe with availability checks
+│       │   # Handles private browsing mode and quota exceeded errors
+│       │   # Tab-specific storage (doesn't persist across browser sessions)
+│       │   # Access via useSessionStorage() hook (direct adapter import)
+│       │
+│       ├── memoryStorageAdapter.ts        # ✅ In-memory storage implementation
+│       │   # Implements StoragePort interface
+│       │   # Useful for SSR environments and testing
+│       │   # Temporary storage that doesn't persist across page reloads
+│       │
 │       └── cookieStorageAdapter.ts         # ✅ Encapsulates cookie access
 │           # Implements StoragePort interface
 │           # SSR-safe cookie handling
 │           # Supports cookie options (expires, path, sameSite, secure, domain)
 │           # Uses setItemWithOptions() for advanced cookie configuration
 │           # Domains access via useStorage() hook (not direct import)
-│       # api/, auth/, analytics/, observability/, security/, storage/indexeddb/ - Optional, not yet implemented
+│           # Related files:
+│           #   - cookieStorageAdapter.constants.ts: Constants (DEFAULT_COOKIE_EXPIRATION_DAYS, isCookieStorageAvailable)
+│           #   - cookieStorageAdapter.logging.ts: Logging utilities (logCookieWarn)
+│           #   - cookieStorageAdapter.parsing.ts: Cookie parsing utilities (parseCookies)
+│           #   - cookieStorageAdapter.serialization.ts: Cookie serialization utilities (serializeCookieOptions)
+│       ├── analytics/                        # ✅ Analytics adapters
+│       │   └── googleAnalyticsAdapter.ts     # ✅ Google Analytics (GA4) adapter implementation
+│       │       # Implements AnalyticsPort interface
+│       │       # Uses gtag.js for Google Analytics 4 tracking
+│       │       # Supports page views, events, user identification, user properties, reset
+│       │       # SSR-safe with browser environment checks
+│       │       # Exports googleAnalyticsAdapter instance and noopAnalyticsAdapter for testing
+│       │       # Can be extended/replaced with other analytics providers (Segment, Mixpanel, etc.)
+│       # api/, auth/, observability/, security/, storage/indexeddb/ - Optional, not yet implemented
 │
 │   # Hexagonal Architecture: Adapters implement ports; domains depend on ports only
 │   # Adapters are injected at app level via providers
@@ -428,17 +825,14 @@ src/
 │       ├── layout/                        # ✅ Layout components
 │       │   ├── Layout.tsx                 # ✅ Main layout wrapper with Navbar
 │       │   │   # Accepts theme config and children
+│       │   │   # Includes SkipToContent component from @core/a11y/skipToContent
+│       │   │   # Wraps content in <main id="main-content"> for accessibility
 │       │   │   # Provides consistent page structure
 │       │   └── Navbar.tsx                 # ✅ Main navigation component
 │       │       # Includes navigation links
 │       │       # Optional theme toggle (if theme prop provided)
 │       │       # Domain-agnostic: uses routes from core/config/routes
-│       │
-│       └── ui/                            # ✅ UI components
-│           └── ThemeToggle.tsx            # ✅ Theme toggle component
-│               # Cycles through: light → dark → system → light
-│               # Accessible: keyboard navigable, proper ARIA labels
-│               # Presentational component (receives theme via props)
+│       │       # Note: ThemeToggle component is imported from @core/ui/theme-toggle/ThemeToggle
 │       # navigation/, data-display/, feedback/, animated/, hooks/, utils/ - Optional, not yet implemented
 │
 ├── styles/                                # ✅ Global styles
@@ -450,28 +844,104 @@ src/
 ├── vite-env.d.ts                          # ✅ Vite type definitions
 │
 ├── types/                                 # ✅ Cross-cutting type definitions
-│   └── ui.ts                              # ✅ UI component type definitions
-│       # Exports StandardSize, ModalSize, ButtonVariant, IconButtonVariant
-│       # BaseIconProps, ButtonProps, IconButtonProps, InputProps, LabelProps
-│       # BaseTextMessageProps, ErrorTextProps, HelperTextProps, SpinnerProps, ModalProps
-│       # All UI components reference types from this file via @src-types/ui
-│   # api/, domains/, generated/, zod/, result.ts, etc. - Optional, not yet implemented
+│   ├── ui/                                # ✅ UI component type definitions (organized by category)
+│   │   ├── base.ts                        # ✅ Base UI types
+│   │   ├── buttons.ts                     # ✅ Button and IconButton types
+│   │   ├── data.ts                        # ✅ Table, Pagination, and Avatar types
+│   │   ├── feedback.ts                    # ✅ Error, Helper, and feedback types
+│   │   ├── forms.ts                       # ✅ Input, Textarea, and Select types
+│   │   ├── icons.ts                        # ✅ Icon types
+│   │   ├── layout.ts                       # ✅ Layout and navigation types
+│   │   ├── navigation.ts                   # ✅ Navigation component types
+│   │   ├── overlays.ts                    # ✅ Modal, Popover, Tooltip types
+│   │   ├── theme.ts                       # ✅ Theme types
+│   │   └── typography.ts                  # ✅ Heading, Text types
+│   │   # All UI components reference types from this directory via @src-types/ui/*
+│   ├── common.ts                          # ✅ Common utility types
+│   │   # Exports Optional, Required, DeepPartial, DeepRequired, ValueOf, KeysOfType
+│   │   # VoidFunction, NoArgFunction, UnaryFunction, BinaryFunction, NonEmptyArray
+│   │   # Primitive, StringRecord, NumberRecord, Nullable, Maybe, MaybeNull
+│   │   # Brand, Timestamp, ID, UUID
+│   ├── callbacks.ts                       # ✅ Callback function types
+│   │   # Exports DebouncedFunction, ThrottledFunction, AsyncCallback, SyncCallback, etc.
+│   │   # Import callback types directly from core utils
+│   ├── config.ts                          # ✅ Configuration types
+│   │   # Import Env, AppConfig, RuntimeConfig directly from core config
+│   │   # Exports FeatureFlag, FeatureFlagsConfig types
+│   ├── datetime.ts                        # ✅ Date and time types
+│   │   # Exports DateLike, DateFormat, DateRange, TimeRange, Duration, RelativeTime, etc.
+│   ├── errors.ts                          # ✅ Error types
+│   │   # Exports AppError, ValidationError, ApiError, NetworkError, TimeoutError, etc.
+│   │   # Provides type-safe error handling structures
+│   ├── http.ts                            # ✅ HTTP-related types
+│   │   # Types for HttpClientResponse, HttpClientError, and HTTP client utilities
+│   │   # Import HTTP types directly from @core/ports/HttpPort
+│   ├── hooks.ts                           # ✅ Hook-related types
+│   │   # Types for custom hooks and hook utilities
+│   │   # Import hook return types directly from core hooks
+│   ├── forms.ts                           # ✅ Form-related types
+│   │   # Types for form handling and validation
+│   │   # Import form types directly from @core/forms/formAdapter
+│   ├── pagination.ts                      # ✅ Pagination types
+│   │   # Types for paginated data and pagination utilities
+│   ├── result.ts                          # ✅ Result/Either utilities
+│   │   # Result type for error handling patterns
+│   ├── enums.ts                           # ✅ Common enums
+│   │   # Shared enum definitions
+│   ├── layout.ts                          # ✅ Layout types
+│   │   # Types for layout components and structures (BreakpointSize, LayoutConfig, etc.)
+│   ├── ports.ts                           # ✅ Port type utilities
+│   │   # Type utilities related to hexagonal architecture ports
+│   │   # Import port types directly from @core/ports/
+│   ├── react.ts                           # ✅ React-related types
+│   │   # React event handler types (MouseEventHandler, KeyboardEventHandler, etc.)
+│   │   # Component utility types and common component prop interfaces
+│   ├── router.ts                          # ✅ Router and navigation types
+│   │   # Exports RouteParams, QueryParams, RouteMetadata, NavigationOptions, etc.
+│   ├── api/                               # ✅ API-related types
+│   │   ├── index.ts                       # ✅ API types index
+│   │   │   # Exports ApiResponse, ApiErrorResponse, ApiResponseWithMeta, ApiError
+│   │   │   # ApiEndpoint, ApiRequestOptions, ApiService
+│   │   │   # Import types directly from specific files, not from this index
+│   │   └── auth.ts                        # ✅ Auth API types
+│   │       # Authentication-related API types
+│   ├── domains/                           # ✅ Domain-related types
+│   │   └── index.ts                       # ✅ Domain types index
+│   │       # Exports BaseDomainEntity, SoftDeletableEntity, DomainService
+│   │       # Import types directly from specific files, not from this index
+│   ├── index.ts                           # ✅ Types index (deprecated - use direct imports)
+│   │   # Always import types directly from their specific files, never from this index
+│   └── README.md                          # ✅ Types module documentation
+│       # Describes type organization principles, usage patterns, and best practices
+│       # Documents all type categories (API, callbacks, common, config, datetime, errors, forms, hooks, http, layout, pagination, ports, react, result, router, ui)
+│   # generated/, zod/, branding.ts, events.ts - Optional, not yet implemented
 │
-├── tests/                                 # ✅ Test files
+├── tests/                                 # ✅ Unit testing infrastructure and example specs
 │   ├── setupTests.ts                      # ✅ Vitest setup file
 │   ├── vitest-env.d.ts                    # ✅ Vitest type definitions
-│   ├── utils/
-│   │   ├── testUtils.tsx                  # ✅ Custom render with providers (renderWithProviders)
-│   │   │   # Includes MockStorageAdapter, MockLoggerAdapter, and MockHttpAdapter re-exports
-│   │   ├── TestProviders.tsx             # ✅ React component composing all providers for testing
-│   │   └── mocks/
-│   │       ├── MockStorageAdapter.ts      # ✅ Mock StoragePort implementation
-│   │       ├── MockLoggerAdapter.ts       # ✅ Mock LoggerPort implementation
-│   │       └── MockHttpAdapter.ts         # ✅ Mock HttpPort implementation
-│   └── domains/
-│       └── landing/
-│           └── pages/                     # ✅ Domain tests directory structure
-│   # factories/, mocks/ - Optional, not yet implemented
+│   ├── core/                              # ✅ Core-specific tests
+│   │   └── router/
+│   │       └── routes.gen.test.ts         # ✅ buildRoute/getRouteTemplate/isRouteKey tests with mocked routes
+│   ├── shared/                            # ✅ Shared component tests
+│   │   └── components/
+│   │       └── layout/
+│   │           ├── Layout.test.tsx        # ✅ Layout component rendering and provider integration tests
+│   │           └── Navbar.test.tsx        # ✅ Navbar accessibility and routing behaviour tests
+│   ├── factories/                         # ✅ Test data factories
+│   │   ├── apiFactories.ts                # ✅ API response factories (buildApiResponse)
+│   │   └── userFactories.ts               # ✅ User factories (buildUser, buildUserList)
+│   ├── mocks/                             # ✅ MSW mocks
+│   │   ├── handlers.ts                    # ✅ MSW request handlers (includes /api/demo and /api/slideshow handlers)
+│   │   ├── payloads.ts                   # ✅ MSW payload helpers (defaultSlideshowResponse, etc.)
+│   │   └── server.ts                      # ✅ MSW server setup helper (setupMSWServer, getMSWSetupInstructions)
+│   └── utils/                              # ✅ Test utilities
+│       ├── testUtils.tsx                  # ✅ Custom render with providers (renderWithProviders)
+│       │   # Includes MockStorageAdapter, MockLoggerAdapter, and MockHttpAdapter exports
+│       ├── TestProviders.tsx             # ✅ React component composing all providers for testing
+│       └── mocks/
+│           ├── MockStorageAdapter.ts      # ✅ Mock StoragePort implementation
+│           ├── MockLoggerAdapter.ts       # ✅ Mock LoggerPort implementation
+│           └── MockHttpAdapter.ts         # ✅ Mock HttpPort implementation
 │
 ├── e2e/                                   # ✅ End-to-end tests
 │   └── example.spec.ts                    # ✅ Example Playwright spec
@@ -480,7 +950,7 @@ src/
 # Optional directories not yet implemented:
 # - scripts/, storybook/, seo/, workers/, assets/
 # These can be added when needed as the application grows
-# Note: types/ directory exists with ui.ts; additional type files can be added as needed
+# Note: types/ directory exists with ui/ subdirectory for organized UI types; additional type files can be added as needed
 │
 ├── public/
 │ ├── manifest.json                    # PWA manifest with app metadata, icons, display config
@@ -494,7 +964,9 @@ src/
 │ ├── icon-384-maskable.png            # 384x384 maskable icon
 │ ├── icon-512-maskable.png            # 512x512 maskable icon
 │ ├── safari-pinned-tab.svg            # Safari pinned tab icon
-│ └── og-image.png                     # Open Graph/Twitter Card image (1200x630)
+│ ├── og-image.png                     # Open Graph/Twitter Card image (1200x630)
+│ ├── robots.txt                       # Robots.txt for search engine crawler directives
+│ └── runtime-config.json               # Runtime configuration (API_BASE_URL, ANALYTICS_WRITE_KEY)
 │ # Static assets served by Vite; place large media under assets/ and import as needed
 │ # Icons: Provide multiple sizes (96-512px) for different contexts (favicon, PWA, install prompts)
 │ # Maskable icons: Essential for Android home screen; follow 80% safe zone guidelines

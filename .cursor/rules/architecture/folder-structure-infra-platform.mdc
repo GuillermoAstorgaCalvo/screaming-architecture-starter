@@ -18,6 +18,10 @@ Technical adapters and framework-specific code that implement `core` ports.
 
 - `localStorageAdapter.ts`: `localStorage` implementation of `StoragePort`. Exports `LocalStorageAdapter` class and singleton instance `localStorageAdapter`. SSR-safe with availability checks (`globalThis.window !== undefined`). Includes runtime availability test (tries to set/remove a test key) to detect private browsing mode and quota issues. Handles quota errors, security errors gracefully with console.warn fallback (to avoid circular dependency with logger). Returns boolean for all write operations (`setItem`, `removeItem`, `clear`) to indicate success. All operations are guarded with try/catch and return safe defaults on failure.
 - `cookieStorageAdapter.ts`: Cookie-based storage implementation of `StoragePort`. Exports `CookieStorageAdapter` class, singleton instance `cookieStorageAdapter`, and `CookieOptions` type. SSR-safe with availability checks (`typeof document !== 'undefined'`). Implements `setItemWithOptions(key, value, options)` method for advanced cookie configuration (beyond base `StoragePort` interface). Supports expiration via `expiresDays` (default: 365 days, set to -1 to delete, 0 for session cookie), path (default: '/'), sameSite (default: 'Lax'), secure (default: true in HTTPS environments), and domain (optional). Standard `setItem()` uses default options (365 days expiration). Cookie parsing handles values containing '=' correctly. All operations return boolean to indicate success.
+- `cookieStorageAdapter.constants.ts`: Cookie storage constants (`DEFAULT_COOKIE_EXPIRATION_DAYS`, `isCookieStorageAvailable`)
+- `cookieStorageAdapter.logging.ts`: Logging utilities (`logCookieWarn`)
+- `cookieStorageAdapter.parsing.ts`: Cookie parsing utilities (`parseCookies`)
+- `cookieStorageAdapter.serialization.ts`: Cookie serialization utilities (`serializeCookieOptions`)
 
 **Guidelines:**
 

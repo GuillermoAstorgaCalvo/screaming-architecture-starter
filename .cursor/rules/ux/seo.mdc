@@ -8,11 +8,62 @@ alwaysApply: false
 
 ### Structure
 
-- Central helpers in `seo/` (e.g., meta builders and defaults).
-- Pages import meta builders; avoid inline tags.
+- Central helpers in `core/config/seo.ts` (meta builders and defaults).
+- Hook for per-route updates: `core/hooks/useSEO.ts`.
+- Pages use `useSEO` hook; avoid inline meta tags.
+
+### Implementation
+
+**Configuration (`core/config/seo.ts`):**
+
+- `DEFAULT_SEO`: Default SEO configuration object with site name, description, locale, theme colors, OG image defaults.
+- `mergeSEOConfig(config)`: Merges custom SEO config with defaults, building required values (title, canonicalUrl, OG image URLs, etc.).
+- Helper functions: `buildPageTitle()`, `buildAbsoluteUrl()`, `buildCanonicalUrl()`, `buildOgImageUrl()`, `buildTwitterImageUrl()`, `buildRobotsContent()`, `getDefaultSEO()`.
+
+**Hook (`core/hooks/useSEO.ts`):**
+
+- `useSEO(config)`: Updates document head metadata (title, meta tags, Open Graph, Twitter Card tags).
+- Automatically applies SEO config on mount and when config changes.
+- Uses `mergeSEOConfig` internally to merge with defaults.
+
+### Usage
+
+```tsx
+import { useSEO } from '@core/hooks/useSEO';
+
+function MyPage() {
+	useSEO({
+		title: 'My Page',
+		description: 'This is my awesome page',
+		ogImage: '/my-page-image.png',
+		indexable: true,
+		canonicalUrl: '/my-page',
+		keywords: 'keyword1, keyword2',
+		author: 'Author Name',
+	});
+
+	return <div>My Page Content</div>;
+}
+```
+
+### Available Options
+
+- `title` - Page title (appended to site name)
+- `description` - Meta description
+- `indexable` - Whether page should be indexed (default: `true`)
+- `canonicalUrl` - Canonical URL (auto-detected from current path if not provided)
+- `ogType` - Open Graph type (default: `'website'`)
+- `ogImage`, `ogImageWidth`, `ogImageHeight`, `ogImageAlt` - Open Graph image
+- `ogLocale` - Open Graph locale (default: `'en_US'`)
+- `twitterCard`, `twitterImage`, `twitterImageAlt` - Twitter Card metadata
+- `keywords` - Comma-separated keywords
+- `author` - Author name
+- `customMeta` - Custom meta tags array
 
 ### Guidelines
 
-- Per-route titles and descriptions.
+- Use `useSEO` hook in page components for per-route metadata.
+- Default values are defined in `DEFAULT_SEO` and can be imported for reference.
 - Open Graph and Twitter tags for shareable pages.
 - Consider sitemap generation in CI for content-heavy sites.
+- Build absolute URLs for sharing using `buildAbsoluteUrl()` helper.

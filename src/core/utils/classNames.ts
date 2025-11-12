@@ -43,7 +43,10 @@
  * ```
  */
 
-type ClassValue =
+/**
+ * Type for class name values accepted by classNames function
+ */
+export type ClassValue =
 	| string
 	| number
 	| boolean

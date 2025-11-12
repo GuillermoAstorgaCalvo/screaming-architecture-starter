@@ -11,6 +11,7 @@ Start here to navigate the template documentation:
 - Architecture: `architecture/overview.mdc`, `architecture/folder-structure.mdc`, `architecture/decisions.mdc`, `architecture/adr-process.mdc`, `architecture/governance.mdc`, `architecture/playbooks.mdc`
 - Conventions & Quality: `quality/conventions.mdc`, `quality/checklists.mdc`, `quality/ci-cd.mdc`, `quality/release-hygiene.mdc`, `quality/template-maintenance.mdc`, `quality/policies.mdc`
 - Configuration & Env: `config/config.mdc`, `tooling/references.mdc`
+- Internationalization: `config/i18n.mdc`
 - Template Toggles & Variants: `config/template-toggles.mdc`, `config/template-variants.mdc`
 - State & Data: `architecture/state.mdc`
 - Routing: `config/routing.mdc`

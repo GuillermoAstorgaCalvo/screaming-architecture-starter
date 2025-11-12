@@ -8,9 +8,11 @@
  * See: .cursor/rules/config/config.mdc
  */
 
+import type { FeatureFlags } from '@src-types/config';
 import { z } from 'zod';
 
 import { type Env, env } from './env.client';
+import { validateFeatureFlags } from './featureFlags';
 
 /**
  * Runtime configuration schema (Zod)
@@ -53,6 +55,43 @@ const runtimeConfigSchema = z
 			if (val === null || val === '') return undefined;
 			return val;
 		}, z.string().optional()),
+
+		/**
+		 * Google Maps API key
+		 * Optional runtime override for Google Maps API key
+		 */
+		GOOGLE_MAPS_API_KEY: z.preprocess(val => {
+			// Transform null or empty string to undefined
+			if (val === null || val === '') return undefined;
+			return val;
+		}, z.string().optional()),
+
+		/**
+		 * Feature flags configuration
+		 * Overrides feature flag defaults defined in featureFlags.ts
+		 * Supports both boolean values and full FeatureFlag objects
+		 */
+		FEATURE_FLAGS: z
+			.preprocess(
+				val => {
+					// Transform null or empty object to undefined
+					if (val === null || (typeof val === 'object' && Object.keys(val).length === 0)) {
+						return undefined;
+					}
+					return val;
+				},
+				z
+					.custom<FeatureFlags>(
+						val => {
+							// Validate using the feature flags validation function
+							const result = validateFeatureFlags(val);
+							return result.success;
+						},
+						{ message: 'FEATURE_FLAGS must match feature flag schema' }
+					)
+					.optional()
+			)
+			.optional(),
 
 		/**
 		 * Additional runtime configuration keys
@@ -158,4 +197,14 @@ export async function getAppConfig(): Promise<AppConfig> {
  */
 export function getCachedRuntimeConfig(): RuntimeConfig | null {
 	return cachedRuntimeConfig;
+}
+
+/**
+ * Reset runtime config cache
+ * Only exported for testing purposes
+ * @internal
+ */
+export function __resetRuntimeConfigCache(): void {
+	runtimeConfigPromise = null;
+	cachedRuntimeConfig = null;
 }

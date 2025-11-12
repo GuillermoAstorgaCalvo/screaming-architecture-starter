@@ -19,6 +19,7 @@ alwaysApply: false
 
 - `ThemeProvider.tsx`: Manages theme state (light/dark/system) and applies dark mode via class on html element. Persists user preference using `StoragePort` via `useStorage()` hook. Supports system theme detection via `prefers-color-scheme` media query. Provides `ThemeContext` and `useTheme()` hook via `useTheme.ts`. Located in `app/providers/` because it's app-specific (not core functionality).
 - `ThemeContext.tsx`: React context definition for theme (exports `ThemeContext` and `ThemeContextValue` type).
+- `I18nProvider.tsx`: Provides i18next instance to the React component tree. Wraps application with `I18nextProvider` from `react-i18next` using the configured i18n instance from `@core/i18n/i18n`. Located in `app/providers/` because it's app-specific (i18n is initialized in `main.tsx` before app render).
 - `QueryProvider.tsx`: React Query client with optimized defaults (stale time: 30s, gcTime: 5min, retry: 3 with exponential backoff, max retry delay: 30s). Uses `env.PROD` for `refetchOnWindowFocus` behavior (true in production, false in development). Mutation retries: 1 with 1s delay. Creates new `QueryClient` instance on mount via `useMemo` for performance optimization. Also enables `refetchOnReconnect: true` and `refetchOnMount: true` for query defaults. Uses `@tanstack/react-query` v5 API (gcTime instead of cacheTime).
 
 ### Optional/Planned Providers
@@ -26,7 +27,7 @@ alwaysApply: false
 - `AuthProvider.tsx`: (Optional) Manages auth session and user.
 - `AnalyticsProvider.tsx`: (Optional) Event tracking abstraction.
 
-Composition: `app/App.tsx` wraps router with providers in order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `StorageProvider` → `ThemeProvider` → `QueryProvider` → `BrowserRouter` → `Router`.
+Composition: `app/App.tsx` wraps router with providers in order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `StorageProvider` → `ThemeProvider` → `I18nProvider` → `QueryProvider` → `BrowserRouter` → `Router`.
 
 ### Provider Hooks
 

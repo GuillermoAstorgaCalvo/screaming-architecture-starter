@@ -99,7 +99,7 @@ This repo follows a two-level `tsconfig` setup tuned for React + Vite, strict ty
 	"compilerOptions": {
 		"composite": true,
 		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-		"types": ["vite/client", "node"],
+		"types": ["node"],
 		"allowImportingTsExtensions": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
@@ -234,7 +234,7 @@ When scaling to workspaces, keep aliases in `tsconfig.base.json` at the repo roo
 
 - Mixing CJS and ESM config (keep ESM consistently; align Vite `build.target` with `tsconfig` `target/lib`).
 - Long relative imports (`../../..`): prefer aliases; enforce with ESLint.
-- Barrels that re-export entire folders: avoid to keep dependency graphs explicit.
+- Barrel exports that re-export entire folders: avoid to keep dependency graphs explicit. Always import directly from specific files.
 
 #### Status in this Repo
 

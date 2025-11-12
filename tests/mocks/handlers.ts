@@ -4,93 +4,124 @@
  * Defines handlers for mocking API endpoints.
  * Handlers are organized by domain/resource.
  *
- * Note: This file uses MSW's `http` API (v2.x+). If using MSW v1.x,
- * use `rest` instead of `http`.
+ * Note: This file uses MSW's `http` API (v2.x+).
  *
  * To use these handlers:
- * 1. Install MSW: `pnpm add -D msw`
- * 2. Set up server in tests/setupTests.ts
- * 3. Import and use handlers in your test files
+ * 1. Handlers are automatically set up in tests/setupTests.ts
+ * 2. Import and override handlers in your test files as needed
  */
+
+import { buildApiResponse } from '@tests/factories/apiFactories';
+import { http, HttpResponse } from 'msw';
 
 /**
  * MSW handlers array
- * Add handlers for your API endpoints here
- *
- * @example
- * ```ts
- * import { http, HttpResponse } from 'msw';
- * import { buildApiResponse } from '@tests/factories/apiFactories';
- *
- * export const handlers = [
- *   // GET /api/slideshow
- *   http.get('/api/slideshow', () => {
- *     return HttpResponse.json(buildApiResponse());
- *   }),
- *
- *   // POST /api/users
- *   http.post('/api/users', async ({ request }) => {
- *     const body = await request.json();
- *     return HttpResponse.json({ id: '1', ...body }, { status: 201 });
- *   }),
- * ];
- * ```
- *
- * Currently empty - add handlers as needed for your API endpoints.
+ * Handlers for mocking API endpoints used in the application
  */
-export const handlers: unknown[] = [];
+export const handlers = [
+	// GET /api/demo - Used by UseFetchDemo component
+	http.get('/api/demo', () => {
+		return HttpResponse.json({ message: 'Hello from MSW!' });
+	}),
+
+	// GET /api/slideshow - Example slideshow endpoint with query parameter support
+	http.get('/api/slideshow', ({ request }) => {
+		const url = new URL(request.url);
+		const empty = url.searchParams.get('empty');
+
+		if (empty === 'true') {
+			return HttpResponse.json({
+				slideshow: {
+					author: '',
+					date: new Date().toISOString(),
+					slides: [],
+					title: '',
+				},
+			});
+		}
+
+		return HttpResponse.json(buildApiResponse());
+	}),
+] as const;
 
 /**
  * Helper to create a handler that returns a 404 Not Found response
  *
- * @deprecated This is a placeholder function. When MSW is installed, implement this properly:
+ * @param path - API path pattern (string or RegExp)
+ * @param method - HTTP method (default: 'get')
+ * @returns MSW handler function
+ *
+ * @example
  * ```ts
- * import { http, HttpResponse } from 'msw';
- *
- * export function createNotFoundHandler(path: string | RegExp) {
- *   if (typeof path === 'string') {
- *     return http.get(path, () => {
- *       return HttpResponse.json(null, { status: 404 });
- *     });
- *   }
- *   return http.get(path, () => {
- *     return HttpResponse.json(null, { status: 404 });
- *   });
- * }
+ * // Override a handler in a test
+ * server.use(createNotFoundHandler('/api/users/123'));
  * ```
- *
- * @param _path - API path pattern (unused, kept for API compatibility)
- * @returns MSW handler function (returns never since MSW is not installed)
  */
-export function createNotFoundHandler(_path: string | RegExp): never {
-	throw new Error(
-		'createNotFoundHandler is not implemented. Install MSW and implement this function, or use MSW handlers directly.'
-	);
+export function createNotFoundHandler(
+	path: string | RegExp,
+	method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'all' = 'get'
+) {
+	const handlerMap = {
+		get: http.get,
+		post: http.post,
+		put: http.put,
+		patch: http.patch,
+		delete: http.delete,
+		all: http.all,
+	};
+
+	return handlerMap[method](path, () => {
+		return HttpResponse.json(
+			{ error: { message: 'Not Found', code: 'RESOURCE_NOT_FOUND' } },
+			{ status: 404 }
+		);
+	});
 }
 
 /**
- * Helper to create a handler that returns a 500 Internal Server Error
+ * Helper to create a handler that returns an error response
  *
- * @deprecated This is a placeholder function. When MSW is installed, implement this properly:
+ * @param path - API path pattern (string or RegExp)
+ * @param status - HTTP status code (default: 500)
+ * @param message - Error message (default: 'Internal Server Error')
+ * @param code - Error code (optional)
+ * @param method - HTTP method (default: 'all')
+ * @returns MSW handler function
+ *
+ * @example
  * ```ts
- * import { http, HttpResponse } from 'msw';
+ * // Override a handler to return a 500 error
+ * server.use(createErrorHandler('/api/users', 500, 'Server Error', 'INTERNAL_ERROR'));
  *
- * export function createErrorHandler(path: string | RegExp, message?: string) {
- *   return http.all(path, () => {
- *     return HttpResponse.json(
- *       { error: { message: message ?? 'Internal Server Error' } },
- *       { status: 500 }
- *     );
- *   });
- * }
+ * // Override to return a 401 unauthorized
+ * server.use(createErrorHandler('/api/protected', 401, 'Unauthorized', 'UNAUTHORIZED'));
  * ```
- *
- * @param _path - API path pattern (unused, kept for API compatibility)
- * @param _message - Optional error message (unused, kept for API compatibility)
- * @returns MSW handler function (returns never since MSW is not installed)
  */
-export function createErrorHandler(_path: string | RegExp, _message?: string): never {
-	throw new Error(
-		'createErrorHandler is not implemented. Install MSW and implement this function, or use MSW handlers directly.'
-	);
+export function createErrorHandler(
+	path: string | RegExp,
+	status = 500,
+	message = 'Internal Server Error',
+	code?: string,
+	method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'all' = 'all'
+) {
+	const handlerMap = {
+		get: http.get,
+		post: http.post,
+		put: http.put,
+		patch: http.patch,
+		delete: http.delete,
+		all: http.all,
+	};
+
+	return handlerMap[method](path, () => {
+		return HttpResponse.json(
+			{
+				error: {
+					message,
+					...(code && { code }),
+				},
+			},
+			{ status }
+		);
+	});
 }

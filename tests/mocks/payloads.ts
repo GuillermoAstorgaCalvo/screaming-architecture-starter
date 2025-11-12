@@ -19,6 +19,8 @@ import { type ApiResponse, buildApiResponse } from '@tests/factories/apiFactorie
 /**
  * Default successful slideshow API response
  * Uses the factory function to ensure consistency
+ *
+ * Note: This is computed lazily to avoid module loading order issues in test environments
  */
 export const defaultSlideshowResponse: ApiResponse = buildApiResponse();
 

@@ -1,0 +1,74 @@
+version: '3.8'
+
+# Production docker-compose configuration
+# Usage: docker-compose -f docker-compose.prod.yml up
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        # Build args can be set via environment variables or .env file
+        # Example: BUILD_DATE=2024-01-01T00:00:00Z VCS_REF=abc123 docker-compose -f docker-compose.prod.yml build
+        BUILD_DATE: ${BUILD_DATE}
+        VCS_REF: ${VCS_REF}
+        VERSION: ${VERSION:-latest}
+        NODE_VERSION: ${NODE_VERSION:-22.21.1}
+        PNPM_VERSION: ${PNPM_VERSION:-10.20.0}
+    container_name: screaming-architecture-starter-prod
+    image: screaming-architecture-starter:prod
+    restart: always
+    ports:
+      - '5173:5173'
+    environment:
+      - NODE_ENV=production
+    # Health check for production server
+    # Checks if the preview server is responding with a successful HTTP status
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5173/']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    # Resource limits (optimized for 32GB RAM system)
+    # Production serves static files, so lower memory needs
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    # Read-only root filesystem for security
+    read_only: true
+    # Temporary filesystem for writable directories
+    # Add any directories your app might need to write to
+    tmpfs:
+      - /tmp
+      - /var/tmp
+      - /app/.cache
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    # Capabilities drop (remove all unnecessary capabilities)
+    # Running as non-root user, so no need for CHOWN, SETGID, SETUID
+    cap_drop:
+      - ALL
+    # Graceful shutdown period (15 seconds for production)
+    stop_grace_period: 15s
+    # Network configuration
+    networks:
+      - app-network
+    # Logging configuration
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '5'
+        compress: 'true'
+
+networks:
+  app-network:
+    driver: bridge

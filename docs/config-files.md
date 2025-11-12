@@ -48,7 +48,7 @@ Vite configuration with environment-aware settings:
 - Manual chunk optimization via `getManualChunks()`:
   - `vendor`: `react`, `react-dom`, `react-router-dom`
   - `ui`: `@radix-ui/react-slot` (only includes actually installed packages)
-  - `query`: `@tanstack/react-query`
+  - `query`: `@tanstack/react-query` (v5.90.6)
 - Optimized chunk file naming: `assets/[name]-[hash].js` for chunks and entries, `assets/[name]-[hash].[ext]` for assets
 - CSS code splitting: enabled (configurable via `VITE_CSS_CODE_SPLIT`, default: `true` - set to `'false'` to disable)
 - Chunk size warning limit: 1000 KB (configurable via `VITE_CHUNK_SIZE_WARNING_LIMIT`, default: `'1000'`, parsed as integer)
@@ -57,7 +57,7 @@ Vite configuration with environment-aware settings:
 **Dependency Optimization:**
 
 - Environment-aware via `getOptimizeDepsConfig()` function
-- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query`, `lucide-react`
+- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query` (v5.90.6), `lucide-react`
 - `force: true` for consistent pre-bundling across restarts
 
 **ESBuild Configuration:**
@@ -76,14 +76,20 @@ Vite configuration with environment-aware settings:
 
 Vitest test configuration:
 
+**Note**: Example unit tests live under `tests/` (e.g., `tests/shared/components/layout/Layout.test.tsx`, `tests/shared/components/layout/Navbar.test.tsx`, `tests/core/router/routes.gen.test.ts`). The Vitest configuration powers those specs alongside the shared test infrastructure (`setupTests.ts`, factories, mocks, utilities).
+
 - **Plugins**:
   - `@vitejs/plugin-react-swc`: React with SWC for fast compilation
   - `vite-tsconfig-paths`: TypeScript path alias resolution via `tsconfig.vitest.json` (projects: `['./tsconfig.vitest.json']`)
 - **Environment**: jsdom for DOM testing
 - **Globals**: Vitest globals enabled (`describe`, `it`, `expect`, etc.) via `globals: true`
 - **Setup**: `tests/setupTests.ts` for test environment initialization
-- **Includes**: `tests/**/*.{test,spec}.{ts,tsx}`, `src/**/*.{test,spec}.{ts,tsx}`
+- **Includes**: `tests/**/*.{test,spec}.{ts,tsx}`, `src/**/*.{test,spec}.{ts,tsx}` (no test files currently exist)
 - **Excludes**: `node_modules`, `dist`, `e2e`
+- **Pool Configuration**:
+  - **Windows**: Uses `forks` pool with `maxConcurrency: 1` for better stability (avoids ERR_IPC_CHANNEL_CLOSED/EPIPE errors)
+  - **Other platforms**: Uses `threads` pool (default)
+  - This prevents worker communication errors that occur with threads pool on Windows
 - **Coverage**:
   - Provider: v8
   - Reporters: text, lcov, html
@@ -321,7 +327,7 @@ Project dependencies and scripts:
 
 - **Package Manager**: pnpm 10.20.0 (via Corepack)
 - **Node Version**: >=22.21.1
-- **Scripts**: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `clean`, `typecheck`, `test`, `test:watch`
+- **Scripts**: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `clean`, `typecheck`, `test`, `test:watch`, `test:ui`, `test:coverage`, `test:e2e`, `test:e2e:ui`
 
 **pnpm-workspace.yaml**
 
@@ -333,6 +339,8 @@ ignoredBuiltDependencies: null
 onlyBuiltDependencies:
   - '@swc/core'
   - esbuild
+  - msw
+  - sharp
   - unrs-resolver
 ```
 
@@ -357,6 +365,7 @@ NPM/PNPM configuration:
 
 ```
 # Enforce pnpm as package manager
+package-manager-strict=true
 engine-strict=true
 auto-install-peers=true
 
@@ -366,6 +375,7 @@ prefer-workspace-packages=true
 
 Configuration options:
 
+- **package-manager-strict=true**: Ensures `pnpm` (as declared in `package.json`) is used instead of other package managers
 - **engine-strict=true**: Enforces strict engine requirements from `package.json`, preventing installation if Node.js or pnpm versions don't match
 - **auto-install-peers=true**: Automatically installs peer dependencies, reducing manual dependency management
 - **prefer-workspace-packages=true**: When in a monorepo (pnpm-workspace.yaml exists), prefers local workspace packages over versions from npm registry, ensuring consistent local development
@@ -410,10 +420,10 @@ Cursor AI ignore patterns:
 - Dependencies: `node_modules/`, `.pnpm-store/`
 - Build outputs: `dist/`, `build/`, `.vite/`, `*.tsbuildinfo`
 - Coverage: `coverage/`, `.nyc_output/`
-- IDE: `.idea/`, `.vscode/`, swap files
-- Logs: `*.log`, debug logs
-- OS: `.DS_Store`, `Thumbs.db`
-- Environment: `.env*` (except `.env.example`)
+- IDE/editor: `.idea/`, `.vscode/`, `*.swp`, `*.swo`, `*~`
+- Logs: `*.log`, `npm-debug.log*`, `yarn-debug.log*`, `yarn-error.log*`, `pnpm-debug.log*`
+- OS artifacts: `.DS_Store`, `Thumbs.db`
+- Environment: `.env`, `.env.local`, `.env.*.local` (explicitly keeps `.env.example`)
 
 #### HTML & PWA
 

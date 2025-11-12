@@ -1,5 +1,5 @@
-import { TEXT_SIZE_CLASSES } from '@core/constants/ui';
-import type { StandardSize } from '@src-types/ui';
+import { TEXT_SIZE_CLASSES } from '@core/constants/ui/shared';
+import type { StandardSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
  *
  * Provides type-safe variant management for Label component.
  */
-export const labelVariants = cva('block font-medium text-gray-700 dark:text-gray-300 mb-1', {
+export const labelVariants = cva('block font-medium text-text-primary mb-1', {
 	variants: {
 		size: {
 			sm: TEXT_SIZE_CLASSES.sm,

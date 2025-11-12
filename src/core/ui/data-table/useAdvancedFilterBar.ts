@@ -1,0 +1,60 @@
+import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
+import { useCallback, useMemo, useState } from 'react';
+
+import { getActiveFilterValues } from './filterDisplay';
+import { getActiveFilters } from './filterValidation';
+import { resetFilter, updateFilterValue } from './filterValueOperations';
+
+export interface UseAdvancedFilterBarProps {
+	filters: AdvancedFilter[];
+	onFiltersChange?: ((filters: AdvancedFilter[]) => void) | undefined;
+}
+
+/**
+ * Hook for managing advanced filter bar state and handlers
+ */
+export function useAdvancedFilterBar({ filters, onFiltersChange }: UseAdvancedFilterBarProps) {
+	const [isBuilderOpen, setIsBuilderOpen] = useState(false);
+
+	const activeFilters = useMemo(() => getActiveFilters(filters), [filters]);
+
+	const activeFilterValues = useMemo(() => getActiveFilterValues(activeFilters), [activeFilters]);
+
+	const handleFilterChange = useCallback(
+		(filterId: string, newValue: unknown) => {
+			const updatedFilters = filters.map(filter =>
+				filter.id === filterId ? updateFilterValue(filter, newValue) : filter
+			);
+			onFiltersChange?.(updatedFilters);
+		},
+		[filters, onFiltersChange]
+	);
+
+	const handleRemoveFilter = useCallback(
+		(filterId: string) => {
+			const updatedFilters = filters.map(filter =>
+				filter.id === filterId ? resetFilter(filter) : filter
+			);
+			onFiltersChange?.(updatedFilters);
+		},
+		[filters, onFiltersChange]
+	);
+
+	const handleClearAllFilters = useCallback(() => {
+		const clearedFilters = filters.map(filter => resetFilter(filter));
+		onFiltersChange?.(clearedFilters);
+	}, [filters, onFiltersChange]);
+
+	const toggleBuilder = useCallback(() => {
+		setIsBuilderOpen(prev => !prev);
+	}, []);
+
+	return {
+		isBuilderOpen,
+		activeFilterValues,
+		handleFilterChange,
+		handleRemoveFilter,
+		handleClearAllFilters,
+		toggleBuilder,
+	};
+}

@@ -156,6 +156,20 @@ export class MockHttpAdapter implements HttpPort {
 		return this.request<T>(url, { ...config, method: 'DELETE' });
 	}
 
+	async head<T = unknown>(
+		url: string,
+		config?: Omit<HttpClientConfig, 'body' | 'method'>
+	): Promise<HttpClientResponse<T>> {
+		return this.request<T>(url, { ...config, method: 'HEAD' });
+	}
+
+	async options<T = unknown>(
+		url: string,
+		config?: Omit<HttpClientConfig, 'body' | 'method'>
+	): Promise<HttpClientResponse<T>> {
+		return this.request<T>(url, { ...config, method: 'OPTIONS' });
+	}
+
 	/**
 	 * Test helper: Clear all requests and handlers (useful for test cleanup)
 	 */

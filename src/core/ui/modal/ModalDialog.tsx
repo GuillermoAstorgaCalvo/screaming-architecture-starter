@@ -1,7 +1,6 @@
 import { getModalDialogVariantClasses } from '@core/ui/variants/modal';
-import type { ModalSize } from '@src-types/ui';
-import type React from 'react';
-import type { ReactNode, RefObject } from 'react';
+import type { ModalSize } from '@src-types/ui/base';
+import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from 'react';
 
 import { ModalBody } from './ModalBody';
 import { createDialogCancelHandler } from './ModalHelpers';
@@ -13,8 +12,8 @@ interface ModalDialogProps {
 	readonly className?: string;
 	readonly closeOnEscape: boolean;
 	readonly onClose: () => void;
-	readonly handleOverlayClick: (event: React.MouseEvent<HTMLDialogElement>) => void;
-	readonly handleOverlayKeyDown: (event: React.KeyboardEvent<HTMLDialogElement>) => void;
+	readonly handleOverlayClick: (event: MouseEvent<HTMLDialogElement>) => void;
+	readonly handleOverlayKeyDown: (event: KeyboardEvent<HTMLDialogElement>) => void;
 	readonly size: ModalSize;
 	readonly title: string;
 	readonly showCloseButton: boolean;

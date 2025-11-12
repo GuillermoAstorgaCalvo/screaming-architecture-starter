@@ -1,4 +1,5 @@
-import { ThemeContext, type ThemeContextValue } from '@app/providers/ThemeContext';
+import { ThemeContext } from '@app/providers/ThemeContext';
+import type { ThemeContextValue } from '@src-types/layout';
 import { useContext } from 'react';
 
 /**

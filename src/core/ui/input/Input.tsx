@@ -1,9 +1,7 @@
-import type { InputProps } from '@src-types/ui';
+import type { InputProps } from '@src-types/ui/forms';
 
-import { InputContent } from './InputParts';
+import { InputContent } from './InputContent';
 import { useInputProps } from './useInput';
-
-export type { InputProps, StandardSize as InputSize } from '@src-types/ui';
 
 /**
  * Input - Reusable input component with label, error, and helper text support

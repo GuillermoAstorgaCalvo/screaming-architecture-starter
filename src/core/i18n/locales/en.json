@@ -1,0 +1,9 @@
+{
+	"app": {
+		"title": "Screaming Architecture Starter",
+		"description": "Your app is running. All core UI components and features are demonstrated below."
+	},
+	"nav": {
+		"home": "Home"
+	}
+}

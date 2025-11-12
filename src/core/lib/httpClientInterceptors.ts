@@ -75,16 +75,21 @@ export async function executeErrorInterceptors(
 	interceptors: ErrorInterceptor[],
 	error: HttpClientError
 ): Promise<never> {
+	let lastError: Error | undefined;
+
+	// Execute all interceptors, even if one throws
 	for (const interceptor of interceptors) {
 		try {
 			await interceptor(error);
 		} catch (interceptorError) {
-			// If interceptor throws, use that error instead
+			// Only remember Error instances; ignore non-Error throws
 			if (interceptorError instanceof Error) {
-				throw interceptorError;
+				lastError = interceptorError;
 			}
-			throw error;
+			// Continue to next interceptor regardless of what was thrown
 		}
 	}
-	throw error;
+
+	// Throw the last Error thrown by an interceptor, or the original error
+	throw lastError ?? error;
 }

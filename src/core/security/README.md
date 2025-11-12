@@ -4,9 +4,25 @@ This module provides framework-agnostic security utilities for HTML sanitization
 
 ## Structure
 
-- **`csp.ts`**: Content Security Policy helpers for generating nonces, hashes, and building CSP policies
+- **`csp/`**: Content Security Policy helpers organized into focused modules:
+  - **`csp/types.ts`**: Type definitions (HashAlgorithm, CSPDirectives)
+  - **`csp/nonce.ts`**: Nonce generation and validation
+  - **`csp/hash.ts`**: Hash generation for inline content
+  - **`csp/policy.ts`**: Policy building, parsing, and recommended CSP (buildCSPPolicy, getRecommendedCSP, parseCSPPolicy)
+  - **`csp/helpers.ts`**: Internal helper functions for policy operations
+  - **`csp/cryptoUtils.ts`**: Shared crypto API utilities (internal)
 - **`sanitizeHtml.ts`**: HTML sanitization utilities to prevent XSS attacks
-- **`permissions.ts`**: Permission model helpers for managing and evaluating user permissions
+- **`sanitizeHtmlEscape.ts`**: HTML escaping utilities (escapeHtml function)
+- **`sanitizeHtmlDOMPurify.ts`**: DOMPurify integration (sanitizeHtmlWithDOMPurify function, isDOMPurifyAvailable, validateHtmlInput)
+- **`sanitizeHtmlConstants.ts`**: Constants and default configuration (MAX_HTML_LENGTH, MAX_ESCAPE_LENGTH, DEFAULT_CONFIG)
+- **`sanitizeHtmlTypes.ts`**: Type definitions (SanitizeConfig, DOMPurifyConfig, DOMPurifyAPI, WindowWithDOMPurify)
+- **`sanitizeHtmlHelpers.ts`**: Internal helper functions (mergeSanitizeConfig, removeDangerousElements, processElement)
+- **`permissionsTypes.ts`**: Type definitions for the permission system
+- **`permissionsCheck.ts`**: Basic permission checking functions (hasPermission, hasAllPermissions, hasAnyPermission)
+- **`permissionsValidate.ts`**: Detailed permission validation with results (checkPermissions)
+- **`permissionsRoles.ts`**: Role-based permission management (getPermissionsFromRoles)
+- **`permissionsManipulate.ts`**: Permission manipulation utilities (mergePermissions, filterPermissions)
+- **`permissionsPattern.ts`**: Pattern matching with wildcards (matchesPattern, findPermissionsByPattern)
 
 ## Usage
 
@@ -16,9 +32,13 @@ Import directly from the specific modules:
 
 ```ts
 // ✅ Preferred - direct imports from specific modules
-import { generateNonce } from '@core/security/csp';
-import { escapeHtml } from '@core/security/sanitizeHtml';
-import { hasPermission } from '@core/security/permissions';
+import { generateNonce } from '@core/security/csp/nonce';
+import { generateHash } from '@core/security/csp/hash';
+import { buildCSPPolicy, getRecommendedCSP } from '@core/security/csp/policy';
+import type { HashAlgorithm, CSPDirectives } from '@core/security/csp/types';
+import { escapeHtml } from '@core/security/sanitizeHtmlEscape';
+import { sanitizeHtml } from '@core/security/sanitizeHtml';
+import { hasPermission } from '@core/security/permissionsCheck';
 ```
 
 ### CSP (Content Security Policy)
@@ -26,10 +46,16 @@ import { hasPermission } from '@core/security/permissions';
 Generate nonces and build CSP policies:
 
 ```ts
-import { generateNonce, buildCSPPolicy, getRecommendedCSP } from '@core/security/csp';
+import { generateNonce } from '@core/security/csp/nonce';
+import { generateHash } from '@core/security/csp/hash';
+import { buildCSPPolicy, getRecommendedCSP, parseCSPPolicy } from '@core/security/csp/policy';
+import type { HashAlgorithm, CSPDirectives } from '@core/security/csp/types';
 
 // Generate a unique nonce per request
 const nonce = generateNonce();
+
+// Generate hash for inline content (async)
+const hash = await generateHash('console.log("hello");', 'sha256');
 
 // Build a custom CSP policy
 const policy = buildCSPPolicy(
@@ -48,6 +74,9 @@ const recommendedPolicy = getRecommendedCSP({
 	reportUri: '/api/csp-report',
 	nonce: generateNonce(),
 });
+
+// Parse existing CSP policy string
+const parsed = parseCSPPolicy("default-src 'self'; script-src 'self' 'nonce-abc'");
 ```
 
 ### HTML Sanitization
@@ -55,7 +84,9 @@ const recommendedPolicy = getRecommendedCSP({
 Sanitize user-provided HTML to prevent XSS attacks:
 
 ```ts
-import { escapeHtml, sanitizeHtml, sanitizeHtmlWithDOMPurify } from '@core/security/sanitizeHtml';
+import { escapeHtml } from '@core/security/sanitizeHtmlEscape';
+import { sanitizeHtml } from '@core/security/sanitizeHtml';
+import { sanitizeHtmlWithDOMPurify } from '@core/security/sanitizeHtmlDOMPurify';
 
 // Escaping HTML (safest option for plain text)
 // SSR-safe: falls back to basic entity escaping in non-browser environments
@@ -83,16 +114,24 @@ const sanitizedWithDOMPurify = sanitizeHtmlWithDOMPurify(userHtmlInput, {
 
 ### Permission Management
 
-Manage and evaluate user permissions:
+Manage and evaluate user permissions. Import directly from the specific modules:
 
 ```ts
+// ✅ Preferred - direct imports from specific modules
 import {
 	hasPermission,
 	hasAllPermissions,
 	hasAnyPermission,
-	checkPermissions,
-	getPermissionsFromRoles,
-} from '@core/security/permissions';
+} from '@core/security/permissionsCheck';
+import { checkPermissions } from '@core/security/permissionsValidate';
+import { getPermissionsFromRoles } from '@core/security/permissionsRoles';
+import { mergePermissions, filterPermissions } from '@core/security/permissionsManipulate';
+import { matchesPattern, findPermissionsByPattern } from '@core/security/permissionsPattern';
+import type {
+	Permissions,
+	PermissionCheckResult,
+	PermissionRoles,
+} from '@core/security/permissionsTypes';
 
 // Define permissions
 const permissions = {
@@ -130,6 +169,20 @@ const rolePermissions = {
 };
 
 const userPermissions = getPermissionsFromRoles(['editor', 'admin'], rolePermissions);
+
+// Merge permissions from multiple sources
+const mergedPermissions = mergePermissions([permissions1, permissions2]);
+
+// Filter permissions to only include those in the allowed list
+const filteredPermissions = filterPermissions(permissions, ['article:read', 'article:write']);
+
+// Check if permission matches pattern
+if (matchesPattern('article:read', 'article:*')) {
+	// Permission matches pattern
+}
+
+// Find permissions by pattern
+const matchingPermissions = findPermissionsByPattern(permissions, 'article:*');
 ```
 
 ## Security Principles

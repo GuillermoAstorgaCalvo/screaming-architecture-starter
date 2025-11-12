@@ -1,4 +1,13 @@
 import type { StoragePort } from '@core/ports/StoragePort';
+import type { CookieOptions } from '@src-types/ports';
+
+import {
+	DEFAULT_COOKIE_EXPIRATION_DAYS,
+	isCookieStorageAvailable,
+} from './cookieStorageAdapter.constants';
+import { logCookieWarn } from './cookieStorageAdapter.logging';
+import { parseCookies } from './cookieStorageAdapter.parsing';
+import { serializeCookieOptions } from './cookieStorageAdapter.serialization';
 
 /**
  * CookieStorageAdapter - Encapsulates cookie access
@@ -16,166 +25,34 @@ import type { StoragePort } from '@core/ports/StoragePort';
  * - Domains/services should NOT access cookies directly; use this adapter
  * - Uses console.warn for error logging (SSR-safe) to avoid circular dependencies with logger adapter
  */
-interface CookieOptions {
-	/**
-	 * Cookie expiration in days (default: 365)
-	 * Set to 0 for session cookie (expires when browser closes)
-	 * Set to negative number to delete the cookie
-	 */
-	expiresDays?: number;
-	/**
-	 * Cookie path (default: '/')
-	 */
-	path?: string;
-	/**
-	 * SameSite attribute (default: 'Lax')
-	 */
-	sameSite?: 'Strict' | 'Lax' | 'None';
-	/**
-	 * Secure flag (default: true in HTTPS environments)
-	 */
-	secure?: boolean;
-	/**
-	 * Domain attribute (optional)
-	 */
-	domain?: string;
-}
-
 class CookieStorageAdapter implements StoragePort {
 	private readonly isAvailable: boolean;
-	private readonly defaultOptions: Required<Pick<CookieOptions, 'path' | 'sameSite' | 'secure'>>;
 
 	constructor() {
 		// Check if document and cookies are available (browser environment, not in SSR)
-		this.isAvailable = typeof document !== 'undefined' && typeof document.cookie === 'string';
-
-		// Default options
-		const isSecure = globalThis.window?.location.protocol === 'https:';
-		this.defaultOptions = {
-			path: '/',
-			sameSite: 'Lax',
-			secure: isSecure || true,
-		};
-	}
-
-	/**
-	 * Log warning message (SSR-safe console fallback)
-	 * Uses console directly to avoid circular dependencies with logger adapter
-	 */
-	private logWarn(message: string, context?: Record<string, unknown>): void {
-		if (typeof console !== 'undefined') {
-			if (context) {
-				console.warn(message, context);
-			} else {
-				console.warn(message);
-			}
-		}
-	}
-
-	/**
-	 * Parse cookie string into key-value pairs
-	 */
-	private parseCookies(): Map<string, string> {
-		const cookies = new Map<string, string>();
-		if (!this.isAvailable || typeof document === 'undefined' || !document.cookie) {
-			return cookies;
-		}
-
-		const cookieStrings = document.cookie.split(';');
-		for (const cookieString of cookieStrings) {
-			const [key, ...valueParts] = cookieString.trim().split('=');
-			if (key) {
-				const value = valueParts.join('='); // Handle values that contain '='
-				cookies.set(key, decodeURIComponent(value || ''));
-			}
-		}
-
-		return cookies;
-	}
-
-	/**
-	 * Calculate expiration date from days
-	 */
-	private calculateExpirationDate(expiresDays: number): string {
-		const date = new Date();
-		const HOURS_PER_DAY = 24;
-		const MINUTES_PER_HOUR = 60;
-		const SECONDS_PER_MINUTE = 60;
-		const MILLISECONDS_PER_SECOND = 1000;
-		date.setTime(
-			date.getTime() +
-				expiresDays *
-					HOURS_PER_DAY *
-					MINUTES_PER_HOUR *
-					SECONDS_PER_MINUTE *
-					MILLISECONDS_PER_SECOND
-		);
-		return date.toUTCString();
-	}
-
-	/**
-	 * Serialize expiration option
-	 */
-	private serializeExpiration(expiresDays: number | undefined, parts: string[]): void {
-		if (expiresDays === undefined) {
-			return;
-		}
-
-		if (expiresDays <= 0) {
-			// Delete cookie by setting expiration in the past
-			parts.push('expires=Thu, 01 Jan 1970 00:00:00 GMT');
-		} else {
-			const expirationDate = this.calculateExpirationDate(expiresDays);
-			parts.push(`expires=${expirationDate}`);
-		}
-	}
-
-	/**
-	 * Serialize cookie options into cookie string format
-	 */
-	private serializeOptions(options: CookieOptions): string {
-		const parts: string[] = [];
-		const opts: CookieOptions = {
-			...this.defaultOptions,
-			...options,
-		};
-
-		this.serializeExpiration(opts.expiresDays, parts);
-
-		if (opts.path) {
-			parts.push(`path=${opts.path}`);
-		}
-
-		if (opts.domain) {
-			parts.push(`domain=${opts.domain}`);
-		}
-
-		if (opts.sameSite) {
-			parts.push(`sameSite=${opts.sameSite}`);
-		}
-
-		if (opts.secure) {
-			parts.push('secure');
-		}
-
-		return parts.length > 0 ? `; ${parts.join('; ')}` : '';
+		this.isAvailable = isCookieStorageAvailable();
 	}
 
 	/**
 	 * Set a cookie with optional configuration
+	 *
+	 * @param key - Cookie key
+	 * @param value - Cookie value (will be URL-encoded)
+	 * @param options - Cookie options (expiresDays, path, sameSite, secure, domain)
+	 * @returns true if successful, false otherwise
 	 */
 	setItemWithOptions(key: string, value: string, options: CookieOptions = {}): boolean {
-		if (!this.isAvailable || typeof document === 'undefined') {
+		if (!this.isAvailable) {
 			return false;
 		}
 
 		try {
 			const encodedValue = encodeURIComponent(value);
-			const optionsString = this.serializeOptions(options);
+			const optionsString = serializeCookieOptions(options);
 			document.cookie = `${key}=${encodedValue}${optionsString}`;
 			return true;
 		} catch (error) {
-			this.logWarn(`Failed to set cookie`, {
+			logCookieWarn(`Failed to set cookie`, {
 				error: error instanceof Error ? error.message : String(error),
 			});
 			return false;
@@ -188,10 +65,11 @@ class CookieStorageAdapter implements StoragePort {
 		}
 
 		try {
-			const cookies = this.parseCookies();
+			const cookieString = document.cookie;
+			const cookies = parseCookies(cookieString);
 			return cookies.get(key) ?? null;
 		} catch (error) {
-			this.logWarn(`Failed to get cookie`, {
+			logCookieWarn(`Failed to get cookie`, {
 				error: error instanceof Error ? error.message : String(error),
 			});
 			return null;
@@ -200,7 +78,7 @@ class CookieStorageAdapter implements StoragePort {
 
 	setItem(key: string, value: string): boolean {
 		// Use default options for standard setItem (expires in 365 days)
-		return this.setItemWithOptions(key, value, { expiresDays: 365 });
+		return this.setItemWithOptions(key, value, { expiresDays: DEFAULT_COOKIE_EXPIRATION_DAYS });
 	}
 
 	removeItem(key: string): boolean {
@@ -218,7 +96,8 @@ class CookieStorageAdapter implements StoragePort {
 		}
 
 		try {
-			const cookies = this.parseCookies();
+			const cookieString = document.cookie;
+			const cookies = parseCookies(cookieString);
 			let allRemoved = true;
 			for (const key of cookies.keys()) {
 				// Validate key to prevent object injection
@@ -228,7 +107,7 @@ class CookieStorageAdapter implements StoragePort {
 			}
 			return allRemoved;
 		} catch (error) {
-			this.logWarn(`Failed to clear cookies`, {
+			logCookieWarn(`Failed to clear cookies`, {
 				error: error instanceof Error ? error.message : String(error),
 			});
 			return false;
@@ -241,10 +120,11 @@ class CookieStorageAdapter implements StoragePort {
 		}
 
 		try {
-			const cookies = this.parseCookies();
+			const cookieString = document.cookie;
+			const cookies = parseCookies(cookieString);
 			return cookies.size;
 		} catch (error) {
-			this.logWarn(`Failed to get cookie count`, {
+			logCookieWarn(`Failed to get cookie count`, {
 				error: error instanceof Error ? error.message : String(error),
 			});
 			return 0;
@@ -257,13 +137,14 @@ class CookieStorageAdapter implements StoragePort {
 		}
 
 		try {
-			const cookies = this.parseCookies();
+			const cookieString = document.cookie;
+			const cookies = parseCookies(cookieString);
 			const keys = Array.from(cookies.keys());
 			// Map keys are always strings, but validate index access
 
 			return keys[index] ?? null;
 		} catch (error) {
-			this.logWarn(`Failed to get cookie key`, {
+			logCookieWarn(`Failed to get cookie key`, {
 				error: error instanceof Error ? error.message : String(error),
 			});
 			return null;
@@ -277,5 +158,5 @@ class CookieStorageAdapter implements StoragePort {
  */
 export const cookieStorageAdapter = new CookieStorageAdapter();
 
-// Re-export the CookieOptions type for convenience
-export type { CookieOptions };
+// Export class for testing
+export { CookieStorageAdapter };

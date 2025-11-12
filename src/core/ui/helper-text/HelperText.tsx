@@ -1,7 +1,5 @@
 import { getHelperTextVariantClasses } from '@core/ui/variants/helperText';
-import type { HelperTextProps } from '@src-types/ui';
-
-export type { HelperTextProps, StandardSize as HelperTextSize } from '@src-types/ui';
+import type { HelperTextProps } from '@src-types/ui/forms';
 
 /**
  * HelperText - Reusable helper text component

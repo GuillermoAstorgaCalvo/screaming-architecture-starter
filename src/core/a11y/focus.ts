@@ -23,20 +23,17 @@
  * ```
  */
 
-/**
- * CSS selector for focusable elements
- * Matches standard interactive elements that can receive keyboard focus
- *
- * Includes:
- * - Standard form elements (button, input, select, textarea)
- * - Links with href attributes
- * - Elements with explicit tabindex (excluding tabindex="-1")
- * - Details/summary elements (interactive disclosure widgets)
- * - Media elements with controls (audio, video)
- * - Contenteditable elements
- */
-export const FOCUSABLE_SELECTOR =
-	'button, [href], input, select, textarea, details > summary, [tabindex]:not([tabindex="-1"]), audio[controls], video[controls], [contenteditable="true"]';
+import { FOCUSABLE_SELECTOR } from './focusConstants';
+import {
+	getFocusBounds,
+	handleShiftTabWrap,
+	handleTabWrap,
+	isAriaHidden,
+	isDisabledFormElement,
+	isElementVisible,
+	isInsideClosedDetails,
+	shouldExcludeFromFocusable,
+} from './focusHelpers';
 
 /**
  * Gets all focusable elements within a container
@@ -46,17 +43,93 @@ export const FOCUSABLE_SELECTOR =
  * - Elements with tabindex="-1" (which are programmatically focusable but not in the tab order)
  * - Disabled form elements (button, input, select, textarea with disabled attribute)
  * - Elements with aria-disabled="true"
+ * - Elements with aria-hidden="true"
+ * - Elements inside closed <details> elements
+ *
+ * Note: This function does not check CSS visibility (display: none, visibility: hidden)
+ * as it's typically used when the container is already visible (e.g., opening a modal).
+ * For individual element checks that include visibility, use isFocusable().
+ *
+ * The returned elements are sorted by tabindex to ensure proper tab order:
+ * - Elements with tabindex > 0 are sorted numerically (1, 2, 3...)
+ * - Elements with tabindex = 0 or no tabindex maintain DOM order
  *
  * @param container - The container element to search within (HTMLElement or null)
- * @returns Array of focusable HTMLElements
+ * @returns Array of focusable HTMLElements, sorted by tabindex
  *
  * @example
  * ```ts
  * const modal = document.getElementById('modal');
  * const focusableElements = getFocusableElements(modal);
- * // Returns: [button, input, link, ...] (excludes disabled elements)
+ * // Returns: [button, input, link, ...] (excludes disabled and hidden elements)
  * ```
  */
+
+/**
+ * Gets the tabindex value for sorting purposes
+ *
+ * Returns the numeric tabindex value, or 0 for elements without explicit tabindex.
+ * Elements with tabindex="-1" are excluded before this function is called.
+ *
+ * @param element - The element to get tabindex from
+ * @returns Numeric tabindex value (0 if not set)
+ *
+ * @internal
+ */
+function getTabIndexValue(element: HTMLElement): number {
+	const tabIndex = element.getAttribute('tabindex');
+	if (tabIndex === null) {
+		return 0;
+	}
+	const parsed = Number.parseInt(tabIndex, 10);
+	// If tabindex is not a valid number, treat as 0 (natural tab order)
+	return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+/**
+ * Sorts focusable elements by tabindex to ensure proper tab order
+ *
+ * Per WCAG and HTML spec:
+ * - Elements with tabindex > 0 are sorted numerically (1, 2, 3...)
+ * - Elements with tabindex = 0 or no tabindex maintain DOM order
+ *
+ * @param elements - Array of focusable elements to sort
+ * @returns Sorted array of focusable elements
+ *
+ * @internal
+ */
+function sortByTabIndex(elements: HTMLElement[]): HTMLElement[] {
+	return elements.sort((a, b) => {
+		const tabIndexA = getTabIndexValue(a);
+		const tabIndexB = getTabIndexValue(b);
+
+		// If both have positive tabindex, sort numerically
+		if (tabIndexA > 0 && tabIndexB > 0) {
+			return tabIndexA - tabIndexB;
+		}
+
+		// If only one has positive tabindex, it comes first
+		if (tabIndexA > 0) {
+			return -1;
+		}
+		if (tabIndexB > 0) {
+			return 1;
+		}
+
+		// Both have tabindex 0 or no tabindex - maintain DOM order
+		// Compare document position to preserve DOM order
+		const position = a.compareDocumentPosition(b);
+		if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+			return -1;
+		}
+		if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+			return 1;
+		}
+
+		return 0;
+	});
+}
+
 export function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
 	if (!container) {
 		return [];
@@ -64,63 +137,13 @@ export function getFocusableElements(container: HTMLElement | null): HTMLElement
 
 	const elements = Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
 
-	// Filter out disabled elements - they should not be focusable per WCAG
-	// Disabled form elements and elements with aria-disabled="true" are excluded
-	return elements.filter(element => {
-		// Check if element is disabled (for form elements)
-		if (
-			(element instanceof HTMLButtonElement ||
-				element instanceof HTMLInputElement ||
-				element instanceof HTMLSelectElement ||
-				element instanceof HTMLTextAreaElement) &&
-			element.disabled
-		) {
-			return false;
-		}
+	// Filter out disabled and hidden elements - they should not be focusable per WCAG
+	// Disabled form elements, aria-disabled="true", aria-hidden="true", and elements
+	// inside closed details are excluded
+	const filtered = elements.filter(element => !shouldExcludeFromFocusable(element));
 
-		// Check aria-disabled attribute
-		const ariaDisabled = element.getAttribute('aria-disabled');
-		if (ariaDisabled === 'true') {
-			return false;
-		}
-
-		return true;
-	});
-}
-
-/**
- * Checks if an element is a disabled form element
- *
- * @param element - The element to check
- * @returns true if the element is a disabled form element
- *
- * @internal
- */
-function isDisabledFormElement(element: HTMLElement): boolean {
-	return (
-		(element instanceof HTMLButtonElement ||
-			element instanceof HTMLInputElement ||
-			element instanceof HTMLSelectElement ||
-			element instanceof HTMLTextAreaElement) &&
-		element.disabled
-	);
-}
-
-/**
- * Checks if an element is visible (not hidden via CSS)
- *
- * @param element - The element to check
- * @returns true if the element is visible
- *
- * @internal
- */
-function isElementVisible(element: HTMLElement): boolean {
-	return (
-		element.offsetWidth > 0 &&
-		element.offsetHeight > 0 &&
-		getComputedStyle(element).visibility !== 'hidden' &&
-		getComputedStyle(element).display !== 'none'
-	);
+	// Sort by tabindex to ensure proper tab order per WCAG
+	return sortByTabIndex(filtered);
 }
 
 /**
@@ -128,6 +151,13 @@ function isElementVisible(element: HTMLElement): boolean {
  *
  * Determines whether an element is part of the normal tab order and can
  * receive focus via keyboard navigation.
+ *
+ * This function performs comprehensive checks including:
+ * - Tab index validation
+ * - Disabled state (form elements and aria-disabled)
+ * - ARIA hidden state
+ * - CSS visibility (display: none, visibility: hidden)
+ * - Closed details elements
  *
  * Note: This function checks for visibility, which may exclude elements
  * that are temporarily hidden (e.g., in a closed details element or hidden modal).
@@ -150,6 +180,13 @@ export function isFocusable(element: HTMLElement | null): boolean {
 		return false;
 	}
 
+	// Check tabindex="-1" - elements with tabindex="-1" are programmatically focusable
+	// but not in the tab order, so they should be excluded
+	const tabIndex = element.getAttribute('tabindex');
+	if (tabIndex === '-1') {
+		return false;
+	}
+
 	// Check if element matches the focusable selector
 	if (!element.matches(FOCUSABLE_SELECTOR)) {
 		return false;
@@ -163,6 +200,16 @@ export function isFocusable(element: HTMLElement | null): boolean {
 	// Check aria-disabled attribute
 	const ariaDisabled = element.getAttribute('aria-disabled');
 	if (ariaDisabled === 'true') {
+		return false;
+	}
+
+	// Check aria-hidden attribute - elements hidden from assistive tech should not be focusable
+	if (isAriaHidden(element)) {
+		return false;
+	}
+
+	// Check if element is inside a closed details element
+	if (isInsideClosedDetails(element)) {
 		return false;
 	}
 
@@ -191,18 +238,19 @@ export function focusFirstElement(container: HTMLElement | null): HTMLElement | 
 		return null;
 	}
 
+	// First check if the container itself is focusable
+	// This handles the case where the container has tabindex="0" but no children
+	if (isFocusable(container)) {
+		container.focus();
+		return container;
+	}
+
 	const focusableElements = getFocusableElements(container);
 	const [firstElement] = focusableElements;
 
 	if (firstElement) {
 		firstElement.focus();
 		return firstElement;
-	}
-
-	// Fallback: try to focus the container itself if it's focusable
-	if (isFocusable(container)) {
-		container.focus();
-		return container;
 	}
 
 	return null;
@@ -240,92 +288,6 @@ export function focusLastElement(container: HTMLElement | null): HTMLElement | n
 }
 
 /**
- * Gets the first and last focusable elements from an array
- *
- * Used internally by handleTabNavigation to determine the bounds
- * for focus trapping (wrapping Tab/Shift+Tab navigation).
- *
- * @param focusableElements - Array of focusable elements
- * @returns Object with first and last elements, or null if array is empty
- *
- * @internal
- */
-function getFocusBounds(focusableElements: HTMLElement[]): {
-	first: HTMLElement;
-	last: HTMLElement;
-} | null {
-	if (focusableElements.length === 0) {
-		return null;
-	}
-
-	const [first, ...rest] = focusableElements;
-	const last = rest.length > 0 ? rest.at(-1) : first;
-
-	if (!first || !last) {
-		return null;
-	}
-
-	return { first, last };
-}
-
-interface TabNavigationParams {
-	readonly firstElement: HTMLElement;
-	readonly lastElement: HTMLElement;
-	readonly activeElement: HTMLElement;
-	readonly event: globalThis.KeyboardEvent;
-}
-
-/**
- * Handles wrapping focus for reverse tab (Shift+Tab) navigation
- *
- * When user presses Shift+Tab on the first focusable element,
- * focus wraps to the last element in the container.
- *
- * @param firstElement - The first focusable element in the container
- * @param lastElement - The last focusable element in the container
- * @param activeElement - The currently active/focused element
- * @param event - The keyboard event (must be Tab key with shiftKey)
- *
- * @internal
- */
-function handleShiftTabWrap({
-	firstElement,
-	lastElement,
-	activeElement,
-	event,
-}: TabNavigationParams): void {
-	if (activeElement === firstElement) {
-		event.preventDefault();
-		lastElement.focus();
-	}
-}
-
-/**
- * Handles wrapping focus for forward tab navigation
- *
- * When user presses Tab on the last focusable element,
- * focus wraps to the first element in the container.
- *
- * @param firstElement - The first focusable element in the container
- * @param lastElement - The last focusable element in the container
- * @param activeElement - The currently active/focused element
- * @param event - The keyboard event (must be Tab key)
- *
- * @internal
- */
-function handleTabWrap({
-	firstElement,
-	lastElement,
-	activeElement,
-	event,
-}: TabNavigationParams): void {
-	if (activeElement === lastElement) {
-		event.preventDefault();
-		firstElement.focus();
-	}
-}
-
-/**
  * Handles Tab key navigation within a container (focus trapping)
  *
  * Implements focus trapping logic for Tab and Shift+Tab navigation:
@@ -354,7 +316,20 @@ export function handleTabNavigation(
 		return;
 	}
 
+	// Get all focusable elements within the container (children only)
 	const focusableElements = getFocusableElements(container);
+
+	// Check if container itself is focusable and should be included
+	// For focus trapping, the container should be first in the tab order
+	// regardless of its tabindex value (this is intentional for modal/dialog behavior)
+	if (isFocusable(container)) {
+		// If container is focusable, it should be the first element in the trap
+		// Note: This intentionally places the container first, even if it has tabindex > 0
+		// and there are children with lower tabindex values, as this is the expected
+		// behavior for focus trapping in modals/dialogs
+		focusableElements.unshift(container);
+	}
+
 	const bounds = getFocusBounds(focusableElements);
 
 	if (!bounds) {
@@ -407,6 +382,13 @@ export function handleTabNavigation(
  * ```
  */
 export function saveActiveElement(): HTMLElement | null {
-	const { activeElement } = document;
+	const { activeElement, body, documentElement } = document;
+
+	// If no element has focus, activeElement is typically body or document.documentElement
+	// We should return null in these cases
+	if (!activeElement || activeElement === body || activeElement === documentElement) {
+		return null;
+	}
+
 	return (activeElement as HTMLElement | null) ?? null;
 }

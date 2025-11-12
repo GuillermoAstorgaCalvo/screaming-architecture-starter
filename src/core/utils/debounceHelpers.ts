@@ -14,6 +14,15 @@ export interface DebounceState<T extends (...args: unknown[]) => unknown> {
 }
 
 /**
+ * Validate wait parameter for debounce function
+ */
+export function validateWait(wait: number, functionName: string): void {
+	if (typeof wait !== 'number' || wait <= 0 || !Number.isFinite(wait)) {
+		throw new TypeError(`${functionName}: wait must be a positive finite number`);
+	}
+}
+
+/**
  * Clear all timers in debounce state
  */
 export function clearTimers(state: DebounceState<(...args: unknown[]) => unknown>): void {

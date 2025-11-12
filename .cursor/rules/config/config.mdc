@@ -15,6 +15,38 @@ alwaysApply: false
 - Environment-derived constants available via `core/constants/env.ts` wrapper that reads from the safe env surface. Exports `IS_DEV`, `IS_PROD`, `ENV_MODE` constants and helper functions `isDevelopment()`, `isProduction()`, `getMode()`. Avoids re-parsing env elsewhere by providing pre-computed constants.
 - Additional constants in `core/constants/`: `designTokens.ts` (design system values), `theme.ts` (theme type definitions), `ui.ts` (UI component constants), `endpoints.ts` (API endpoint constants with `buildApiUrl()` helper).
 
+### Feature Flags
+
+- `core/config/featureFlags.ts`: ✅ Feature flag definitions with metadata and default values. Central registry of all feature flags (`FEATURE_FLAGS`). Provides `getFeatureFlagDefinition()`, `getAllFeatureFlagDefinitions()`, `validateFeatureFlags()` functions. Feature flags enable gradual rollout, A/B testing, and safe feature toggling without code deployments.
+- `core/config/features.ts`: ✅ Feature flags runtime toggles. Provides `isFeatureEnabled()` (synchronous, uses cached runtime config), `isFeatureEnabledAsync()` (async, loads runtime config if needed), `getAllFeatureFlags()`, `getAllFeatureFlagsAsync()` functions. Supports runtime config overrides via `runtime-config.json`. Runtime config overrides take precedence over definition defaults.
+- Override feature flags at runtime via `public/runtime-config.json`:
+  ```json
+  {
+  	"FEATURE_FLAGS": {
+  		"EXAMPLE_FEATURE": true
+  	}
+  }
+  ```
+
+### SEO & Metadata
+
+- `core/config/seo.ts`: ✅ SEO & Metadata configuration. Centralized SEO defaults (`DEFAULT_SEO`) and helper functions (`mergeSEOConfig`, `buildPageTitle`, `buildAbsoluteUrl`, `buildCanonicalUrl`, `buildOgImageUrl`, `buildTwitterImageUrl`, `buildRobotsContent`, `getDefaultSEO`). Enables per-route metadata updates and improves sharing/discoverability.
+- `core/hooks/useSEO.ts`: ✅ Hook to update document head metadata (SEO). Updates title, meta tags, Open Graph, and Twitter Card tags. Uses `mergeSEOConfig` from `@core/config/seo` to merge custom config with defaults. Supports per-route metadata updates. Use in page components:
+
+  ```tsx
+  import { useSEO } from '@core/hooks/useSEO';
+
+  function MyPage() {
+  	useSEO({
+  		title: 'My Page',
+  		description: 'This is my awesome page',
+  		ogImage: '/my-page-image.png',
+  		indexable: true,
+  	});
+  	return <div>My Page Content</div>;
+  }
+  ```
+
 ### Runtime Configuration Pattern
 
 - Use `core/config/env.client.ts` to expose a Zod-validated, client-safe env surface.
@@ -58,11 +90,22 @@ Example keys in `public/runtime-config.json`:
 
 - `core/lib/httpClient.ts` exports a `HttpClient` class that implements `HttpPort` interface. The default instance is exported as `httpClient`.
 - Interceptors are defined in `core/lib/httpClientInterceptors.ts` with types `RequestInterceptor`, `ResponseInterceptor`, and `ErrorInterceptor`, along with execution utilities.
-- Helper utilities are in `core/lib/httpClientHelpers.ts` (URL building, header merging, body serialization, response parsing, timeout control, error creation).
+- Helper utilities are split across multiple modules:
+  - `httpClientUrl.ts` - URL building utilities
+  - `httpClientHeaders.ts` - Header manipulation and merging utilities
+  - `httpClientBody.ts` - Request body serialization and preparation utilities
+  - `httpClientResponseParsing.ts` - Response body parsing utilities
+  - `httpClientResponse.ts` - Response processing utilities
+  - `httpClientTimeout.ts` - Request timeout management utilities
+  - `httpClientErrorCreation.ts` - HTTP error creation utilities
+  - `httpClientErrorHandler.ts` - HTTP error handling utilities
+  - `httpClientConfig.ts` - HTTP client configuration management
+  - `httpClientMethods.ts` - HTTP method factories
+  - `httpClientRequest.ts` - Request preparation and configuration utilities
 - The httpClient class supports:
   - Default configuration via `setDefaultConfig()`
   - Interceptor registration via `addRequestInterceptor()`, `addResponseInterceptor()`, `addErrorInterceptor()`
-  - All HTTP methods: `request()`, `get()`, `post()`, `put()`, `patch()`, `delete()`
+  - All HTTP methods: `request()`, `get()`, `post()`, `put()`, `patch()`, `delete()`, `head()`, `options()`
   - Automatic body serialization (JSON for objects, preserves FormData/Blob/etc.)
   - Timeout support via AbortController
   - Error handling with typed `HttpClientError`

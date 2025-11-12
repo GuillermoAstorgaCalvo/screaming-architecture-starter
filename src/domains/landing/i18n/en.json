@@ -1,0 +1,33 @@
+{
+	"hero": {
+		"title": "Screaming Architecture Starter",
+		"subtitle": "Your app is running. All core UI components and features are demonstrated below."
+	},
+	"buttons": {
+		"title": "Buttons",
+		"variants": "Variants",
+		"sizes": "Sizes",
+		"states": "States",
+		"sizeVariantCombinations": "Size + Variant Combinations",
+		"primary": "Primary",
+		"secondary": "Secondary",
+		"ghost": "Ghost",
+		"small": "Small",
+		"medium": "Medium",
+		"large": "Large",
+		"default": "Default",
+		"disabled": "Disabled",
+		"loading": "Loading...",
+		"clickToLoad": "Click to Load",
+		"fullWidth": "Full Width",
+		"primarySmall": "Primary Small",
+		"secondarySmall": "Secondary Small",
+		"ghostSmall": "Ghost Small",
+		"primaryMedium": "Primary Medium",
+		"secondaryMedium": "Secondary Medium",
+		"ghostMedium": "Ghost Medium",
+		"primaryLarge": "Primary Large",
+		"secondaryLarge": "Secondary Large",
+		"ghostLarge": "Ghost Large"
+	}
+}

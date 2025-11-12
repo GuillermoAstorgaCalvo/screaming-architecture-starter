@@ -1,8 +1,44 @@
 /**
- * Throttle utility function - Limits function invocation rate
- * Framework agnostic utility for event handlers, rate limiting, and performance optimization
- * @example throttle((data) => processData(data), 100)
+ * Throttle utility function
+ *
+ * Creates a throttled function that limits the rate at which a function can be invoked.
+ * Ensures the function is called at most once per specified time period. Useful for
+ * optimizing performance by controlling the frequency of function calls.
+ *
+ * Framework Agnostic:
+ * This utility is in `core/utils/` (not `core/lib/`) because it:
+ * - Has no framework dependencies (works in any JavaScript context)
+ * - Uses standard JavaScript APIs (setTimeout, clearTimeout, Date.now)
+ * - Can be used in Node.js, browser, tests, or any JS runtime
+ *
+ * See: src/core/README.md for distinction between `lib/` and `utils/`
+ *
+ * Useful for:
+ * - Scroll/resize event handlers
+ * - Mouse move handlers
+ * - API rate limiting
+ * - Input validation throttling
+ *
+ * @example
+ * ```ts
+ * const throttledScroll = throttle(() => handleScroll(), 100);
+ * window.addEventListener('scroll', throttledScroll);
+ * // Function executes at most once every 100ms during scrolling
+ * ```
  */
+
+import {
+	clearTimer,
+	createCancelHandler,
+	createFlushHandler,
+	handleLeadingEdge,
+	handleTrailingEdge,
+	scheduleTrailingEdge,
+	shouldInvoke,
+	type ThrottleState,
+	validateThrottleOptions,
+	validateWait,
+} from './throttleHelpers';
 
 export interface ThrottleOptions {
 	/**
@@ -21,131 +57,100 @@ export interface ThrottledFunction<T extends (...args: unknown[]) => unknown> {
 	flush: () => ReturnType<T> | undefined;
 }
 
-interface ThrottleState<T extends (...args: unknown[]) => unknown> {
-	timeoutId?: ReturnType<typeof setTimeout>;
-	lastCallTime?: number;
-	lastArgs?: Parameters<T>;
-	result?: ReturnType<T>;
-}
-
-interface ThrottleOperationOptions<T extends (...args: unknown[]) => unknown> {
+interface CreateThrottledFunctionOptions<T extends (...args: unknown[]) => unknown> {
 	func: T;
 	state: ThrottleState<T>;
-	leading?: boolean;
-	trailing?: boolean;
-	wait?: number;
-	args?: Parameters<T>;
-}
-function clearTimer(state: ThrottleState<(...args: unknown[]) => unknown>): void {
-	if (state.timeoutId !== undefined) {
-		clearTimeout(state.timeoutId);
-		delete state.timeoutId;
-	}
+	wait: number;
+	leading: boolean;
+	trailing: boolean;
+	skipTrailingSchedule?: boolean;
 }
 
-function invokeFunc<T extends (...args: unknown[]) => unknown>(
-	func: T,
-	state: ThrottleState<T>,
+function startNewThrottleCycle<T extends (...args: unknown[]) => unknown>(
+	options: CreateThrottledFunctionOptions<T>,
 	args: Parameters<T>
-): ReturnType<T> {
-	const currentResult = func(...args) as ReturnType<T>;
-	state.lastCallTime = Date.now();
-	delete state.lastArgs;
-	return currentResult;
-}
-
-function handleLeadingEdge<T extends (...args: unknown[]) => unknown>(
-	options: ThrottleOperationOptions<T>
 ): ReturnType<T> | undefined {
-	const { func, state, args, leading } = options;
-	if (!args || !leading) {
-		return undefined;
+	const { func, state, wait, leading, trailing, skipTrailingSchedule } = options;
+	state.lastCallTime = Date.now();
+	const leadingResult = handleLeadingEdge({ func, state, args, leading });
+	if (leadingResult !== undefined) {
+		state.result = leadingResult;
 	}
-	state.result = invokeFunc(func, state, args);
+	if (trailing) {
+		state.lastArgs = args;
+	}
+	if (!skipTrailingSchedule) {
+		scheduleTrailingEdge({ func, state, wait, trailing });
+	}
 	return state.result;
 }
 
-function handleTrailingEdge<T extends (...args: unknown[]) => unknown>(
-	options: ThrottleOperationOptions<T>
-): void {
-	const { func, state, trailing } = options;
-	if (trailing && state.lastArgs !== undefined) {
-		state.result = invokeFunc(func, state, state.lastArgs);
-	}
-	delete state.timeoutId;
-}
-
-function shouldInvoke(lastCallTime: number | undefined, wait: number): boolean {
-	if (lastCallTime === undefined) {
-		return true;
-	}
-	const timeSinceLastCall = Date.now() - lastCallTime;
-	return timeSinceLastCall >= wait;
-}
-function scheduleTrailingEdge<T extends (...args: unknown[]) => unknown>(
-	options: ThrottleOperationOptions<T>
-): void {
-	const { func, state, wait, trailing } = options;
-	// wait is validated at entry, but check for undefined for type safety
-	if (wait === undefined || state.timeoutId !== undefined || !trailing) {
-		return;
+function shouldExecutePendingTrailing<T extends (...args: unknown[]) => unknown>(
+	state: ThrottleState<T>,
+	wait: number,
+	trailing: boolean
+): boolean {
+	if (!trailing || state.timeoutId === undefined || state.lastArgs === undefined) {
+		return false;
 	}
 	const now = Date.now();
 	const lastTime = state.lastCallTime ?? now;
 	const remainingWait = Math.max(0, wait - (now - lastTime));
-	state.timeoutId = setTimeout(() => {
-		handleTrailingEdge({ func, state, trailing });
-	}, remainingWait);
+	return remainingWait <= 0;
 }
-function createThrottledFunction<T extends (...args: unknown[]) => unknown>(
-	options: ThrottleOperationOptions<T> & { wait: number; leading: boolean; trailing: boolean }
-): (...args: Parameters<T>) => ReturnType<T> | undefined {
-	const { func, state, wait, leading, trailing } = options;
-	return (...args: Parameters<T>): ReturnType<T> | undefined => {
-		const now = Date.now();
-		const isInvoking = shouldInvoke(state.lastCallTime, wait);
-		if (isInvoking) {
-			state.lastCallTime ??= now;
-			return handleLeadingEdge({ func, state, args, leading });
-		}
-		scheduleTrailingEdge({ func, state, wait, trailing });
-		state.lastArgs = args;
-		return state.result;
-	};
-}
-function createCancelHandler<T extends (...args: unknown[]) => unknown>(
-	state: ThrottleState<T>
-): () => void {
-	return () => {
+
+function handleInvokingCase<T extends (...args: unknown[]) => unknown>(
+	options: CreateThrottledFunctionOptions<T>,
+	args: Parameters<T>
+): ReturnType<T> | undefined {
+	const { func, state, wait, trailing } = options;
+	const shouldExecute = shouldExecutePendingTrailing(state, wait, trailing);
+
+	if (shouldExecute) {
+		// If we can start a new cycle (shouldInvoke is true), execute the pending trailing edge
+		// and start a new cycle for the current call, but skip leading edge since we just executed trailing.
 		clearTimer(state);
-		delete state.lastCallTime;
-		delete state.lastArgs;
-	};
-}
-function createFlushHandler<T extends (...args: unknown[]) => unknown>(
-	func: T,
-	state: ThrottleState<T>
-): () => ReturnType<T> | undefined {
-	return (): ReturnType<T> | undefined => {
-		if (state.timeoutId !== undefined || state.lastArgs !== undefined) {
+		if (trailing && state.lastArgs !== undefined) {
+			// Execute the pending trailing edge with previous args
+			handleTrailingEdge({ func, state, trailing });
+			// Ensure timer is cleared after execution
 			clearTimer(state);
-			if (state.lastArgs !== undefined) {
-				return invokeFunc(func, state, state.lastArgs);
-			}
 		}
+		// Start a new cycle for the current call, but skip leading edge and trailing schedule
+		// since we just executed trailing. The trailing edge execution already cleared lastArgs.
+		// We update lastCallTime and set lastArgs for potential future calls, but don't schedule trailing.
+		state.lastCallTime = Date.now();
+		if (trailing) {
+			state.lastArgs = args;
+		}
+		// Don't schedule trailing edge since we just executed one
+		// Return the result from the trailing edge execution
 		return state.result;
+	}
+
+	return startNewThrottleCycle(options, args);
+}
+
+function handleThrottledCase<T extends (...args: unknown[]) => unknown>(
+	options: CreateThrottledFunctionOptions<T>,
+	args: Parameters<T>
+): ReturnType<T> | undefined {
+	const { func, state, wait, trailing } = options;
+	state.lastArgs = args;
+	scheduleTrailingEdge({ func, state, wait, trailing });
+	return state.result;
+}
+
+function createThrottledFunction<T extends (...args: unknown[]) => unknown>(
+	options: CreateThrottledFunctionOptions<T>
+): (...args: Parameters<T>) => ReturnType<T> | undefined {
+	const { state, wait } = options;
+	return (...args: Parameters<T>): ReturnType<T> | undefined => {
+		const isInvoking = shouldInvoke(state.lastCallTime, wait);
+		return isInvoking ? handleInvokingCase(options, args) : handleThrottledCase(options, args);
 	};
 }
-function validateWait(wait: number, functionName: string): void {
-	if (typeof wait !== 'number' || wait <= 0 || !Number.isFinite(wait)) {
-		throw new TypeError(`${functionName}: wait must be a positive finite number`);
-	}
-}
-function validateThrottleOptions(leading: boolean, trailing: boolean): void {
-	if (!leading && !trailing) {
-		throw new TypeError('throttle: at least one of leading or trailing must be true');
-	}
-}
+
 function attachThrottleMethods<T extends (...args: unknown[]) => unknown>(
 	throttled: (...args: Parameters<T>) => ReturnType<T> | undefined,
 	func: T,
@@ -159,12 +164,37 @@ function attachThrottleMethods<T extends (...args: unknown[]) => unknown>(
 
 /**
  * Throttle a function
+ *
+ * Creates a throttled version of the function that will only execute at most once
+ * per `wait` milliseconds. The throttled function has `cancel()` and `flush()` methods
+ * for additional control.
+ *
  * @template T - The function type to throttle
  * @param func - The function to throttle
  * @param wait - The number of milliseconds to throttle invocations to (must be > 0)
  * @param options - Additional options for throttle behavior
+ * @param options.leading - Whether to execute on the leading edge of the timeout (default: true)
+ * @param options.trailing - Whether to execute on the trailing edge of the timeout (default: true)
  * @returns A throttled version of the function with cancel and flush methods
  * @throws {TypeError} If wait is not a positive number, or if both leading and trailing are false
+ *
+ * @example
+ * ```ts
+ * // Basic throttling
+ * const throttled = throttle(() => console.log('throttled'), 100);
+ * throttled(); throttled(); throttled();
+ * // Executes immediately (leading), then after 100ms (trailing)
+ *
+ * // Cancel pending execution
+ * const throttled = throttle(() => console.log('throttled'), 100);
+ * throttled();
+ * throttled.cancel(); // Cancels pending trailing execution
+ *
+ * // Flush pending execution
+ * const throttled = throttle(() => console.log('throttled'), 100);
+ * throttled();
+ * throttled.flush(); // Immediately executes pending trailing execution
+ * ```
  */
 export function throttle<T extends (...args: unknown[]) => unknown>(
 	func: T,
@@ -176,5 +206,5 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 	validateThrottleOptions(leading, trailing);
 	const state: ThrottleState<T> = {};
 	const throttled = createThrottledFunction({ func, state, wait, leading, trailing });
-	return attachThrottleMethods(throttled, func, state);
+	return attachThrottleMethods<T>(throttled, func, state);
 }

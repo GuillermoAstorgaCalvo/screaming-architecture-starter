@@ -28,6 +28,7 @@
 			"@app/*": ["src/app/*"],
 			"@core/*": ["src/core/*"],
 			"@domains/*": ["src/domains/*"],
+			"@e2e/*": ["e2e/*"],
 			"@infra/*": ["src/infrastructure/*"],
 			"@shared/*": ["src/shared/*"],
 			"@styles/*": ["src/styles/*"],

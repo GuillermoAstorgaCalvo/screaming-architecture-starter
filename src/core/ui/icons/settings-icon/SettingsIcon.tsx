@@ -1,7 +1,5 @@
 import { getIconVariantClasses } from '@core/ui/variants/icon';
-import type { BaseIconProps } from '@src-types/ui';
-
-export type { StandardSize } from '@src-types/ui';
+import type { BaseIconProps } from '@src-types/ui/base';
 
 /**
  * SettingsIcon - Settings/gear icon SVG component

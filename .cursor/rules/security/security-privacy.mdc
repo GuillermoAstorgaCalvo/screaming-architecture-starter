@@ -46,7 +46,8 @@ Notes:
 
 ### HTML Sanitization
 
-- Provide `core/security/sanitizeHtml.ts` for sanitizing user-provided content
+- Provide `core/security/sanitizeHtml.ts` for sanitizing user-provided content (main export)
+- Additional modules: `sanitizeHtmlEscape.ts` (HTML escaping), `sanitizeHtmlDOMPurify.ts` (DOMPurify integration), `sanitizeHtmlConstants.ts` (constants), `sanitizeHtmlTypes.ts` (types), `sanitizeHtmlHelpers.ts` (helper functions)
 - Disallow raw HTML rendering in domains/components without sanitization
 
 ### Authentication & Tokens

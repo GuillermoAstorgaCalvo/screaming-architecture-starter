@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Build args can be set via environment variables or .env file
+        # Example: BUILD_DATE=2024-01-01T00:00:00Z docker-compose build
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        VCS_REF: ${VCS_REF:-unknown}
+        VERSION: ${VERSION:-dev}
+        NODE_VERSION: ${NODE_VERSION:-22.21.1}
+        PNPM_VERSION: ${PNPM_VERSION:-10.20.0}
+    container_name: screaming-architecture-starter
+    image: screaming-architecture-starter:latest
+    # Restart policy for development
+    restart: unless-stopped
+    volumes:
+      # Mount source code for hot reload (exclude node_modules for performance)
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+      - /app/coverage
+      - /app/.vitest
+      - /app/playwright-report
+      - /app/test-results
+    ports:
+      - '5173:5173' # Vite dev server
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - VITE_PORT=5173
+      - VITE_HOST=0.0.0.0
+      # Pass through any VITE_* variables from host
+      - VITE_OPEN=${VITE_OPEN:-true}
+    # Health check for dev server
+    # Checks if the Vite dev server is responding
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5173/']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Resource limits (optimized for 32GB RAM system)
+    # Development needs more memory for dev dependencies, hot reloading, and testing
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 6G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    stdin_open: true
+    tty: true
+    # Graceful shutdown period (10 seconds)
+    stop_grace_period: 10s
+    # Network configuration
+    networks:
+      - app-network
+    # Logging configuration
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+    # Override command for different use cases
+    # Default: dev server
+    # For tests: docker-compose run --rm app pnpm run test
+    # For e2e: docker-compose run --rm app pnpm run test:e2e
+
+networks:
+  app-network:
+    driver: bridge

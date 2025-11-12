@@ -1,0 +1,36 @@
+import { CommandPaletteItem } from './CommandPaletteItem';
+import type { CommandPaletteListProps } from './CommandPaletteParts.types';
+
+export function CommandPaletteList({
+	commands,
+	highlightedIndex,
+	commandsListRef,
+	onSelect,
+	emptyState,
+}: Readonly<CommandPaletteListProps>) {
+	return (
+		// ARIA listbox pattern: Using role="listbox" on div is correct for command palette per ARIA spec
+		// Native <select> cannot support command palette's custom styling, keyboard navigation, and filtering
+		// This warning is a false positive - the implementation follows ARIA Authoring Practices
+		<div
+			ref={commandsListRef}
+			className="max-h-96 overflow-y-auto"
+			role="listbox" // NOSONAR S6819 - ARIA listbox pattern required for custom command palette
+			aria-label="Commands"
+		>
+			{commands.length === 0 ? (
+				<div className="py-8 text-center text-sm text-text-muted">{emptyState}</div>
+			) : (
+				commands.map((command, index) => (
+					<CommandPaletteItem
+						key={command.id}
+						command={command}
+						index={index}
+						isHighlighted={index === highlightedIndex}
+						onSelect={onSelect}
+					/>
+				))
+			)}
+		</div>
+	);
+}

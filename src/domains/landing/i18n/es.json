@@ -1,0 +1,33 @@
+{
+	"hero": {
+		"title": "Screaming Architecture Starter",
+		"subtitle": "Tu aplicación está en ejecución. Todos los componentes UI principales y características se demuestran a continuación."
+	},
+	"buttons": {
+		"title": "Botones",
+		"variants": "Variantes",
+		"sizes": "Tamaños",
+		"states": "Estados",
+		"sizeVariantCombinations": "Combinaciones de Tamaño + Variante",
+		"primary": "Primario",
+		"secondary": "Secundario",
+		"ghost": "Fantasma",
+		"small": "Pequeño",
+		"medium": "Mediano",
+		"large": "Grande",
+		"default": "Por defecto",
+		"disabled": "Deshabilitado",
+		"loading": "Cargando...",
+		"clickToLoad": "Clic para Cargar",
+		"fullWidth": "Ancho Completo",
+		"primarySmall": "Primario Pequeño",
+		"secondarySmall": "Secundario Pequeño",
+		"ghostSmall": "Fantasma Pequeño",
+		"primaryMedium": "Primario Mediano",
+		"secondaryMedium": "Secundario Mediano",
+		"ghostMedium": "Fantasma Mediano",
+		"primaryLarge": "Primario Grande",
+		"secondaryLarge": "Secundario Grande",
+		"ghostLarge": "Fantasma Grande"
+	}
+}

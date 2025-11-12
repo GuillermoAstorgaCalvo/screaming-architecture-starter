@@ -1,5 +1,6 @@
+import { ARIA_LABELS } from '@core/constants/aria';
 import { getModalBodyVariantClasses } from '@core/ui/variants/modal';
-import type { ModalSize } from '@src-types/ui';
+import type { ModalSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
 
 import { ModalContent, ModalFooter, ModalHeader } from './ModalParts';
@@ -51,7 +52,7 @@ export function ModalBody(props: ModalBodyProps) {
 	const content = renderModalContent(props);
 
 	return (
-		<section className={bodyClassName} aria-label="Modal content">
+		<section className={bodyClassName} aria-label={ARIA_LABELS.MODAL_CONTENT}>
 			{content}
 		</section>
 	);

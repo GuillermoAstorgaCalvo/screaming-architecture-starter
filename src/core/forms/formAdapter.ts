@@ -92,6 +92,21 @@ export interface FormControls<T extends FieldValues> {
 	clearErrors: UseFormReturn<T>['clearErrors'];
 
 	/**
+	 * Unregister a field from the form
+	 * Useful for dynamic forms where fields are added/removed
+	 * @param _name - Field name/path to unregister
+	 */
+	unregister: UseFormReturn<T>['unregister'];
+
+	/**
+	 * Programmatically focus a field
+	 * Useful for accessibility and UX (e.g., focusing first error field)
+	 * @param _name - Field name/path to focus
+	 * @param _options - Optional focus options
+	 */
+	setFocus: UseFormReturn<T>['setFocus'];
+
+	/**
 	 * Whether the form is valid (no validation errors)
 	 */
 	isValid: boolean;
@@ -129,29 +144,6 @@ export interface FormControls<T extends FieldValues> {
 export interface UseFormAdapterOptions<T extends FieldValues> extends UseFormProps<T> {}
 
 /**
- * Re-export commonly needed types from react-hook-form for domain use
- *
- * These types are re-exported to allow domains to type their forms
- * without directly depending on react-hook-form. This maintains the
- * adapter abstraction while providing necessary type definitions.
- *
- * - `FieldValues`: Base type for form data
- * - `FieldErrors`: Type for form field errors
- * - `FormState`: Complete form state object
- * - `Path`: Type-safe field path (e.g., 'name' | 'address.street')
- * - `PathValue`: Type-safe field value based on path
- * - `SubmitHandler`: Type-safe submit handler function
- */
-export type {
-	FieldErrors,
-	FieldValues,
-	FormState,
-	Path,
-	PathValue,
-	SubmitHandler,
-} from 'react-hook-form';
-
-/**
  * Hook to initialize a form using the adapter
  *
  * @param _options - Form configuration options
@@ -174,6 +166,8 @@ export function useFormAdapter<T extends FieldValues>(
 		watch: form.watch,
 		setError: form.setError,
 		clearErrors: form.clearErrors,
+		unregister: form.unregister,
+		setFocus: form.setFocus,
 		getFieldState: form.getFieldState,
 		control: form.control,
 		isValid: form.formState.isValid,

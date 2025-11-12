@@ -36,6 +36,7 @@ import {
 	type DebounceState,
 	scheduleMaxWait,
 	shouldInvoke,
+	validateWait,
 } from './debounceHelpers';
 
 export interface DebounceOptions {
@@ -118,15 +119,6 @@ function validateDebounceOptions(
 ): void {
 	if (!leading && !trailing && maxWait === undefined) {
 		throw new TypeError('debounce: at least one of leading, trailing, or maxWait must be enabled');
-	}
-}
-
-/**
- * Validate wait parameter for throttle/debounce functions
- */
-function validateWait(wait: number, functionName: string): void {
-	if (typeof wait !== 'number' || wait <= 0 || !Number.isFinite(wait)) {
-		throw new TypeError(`${functionName}: wait must be a positive finite number`);
 	}
 }
 

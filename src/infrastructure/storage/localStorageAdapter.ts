@@ -166,3 +166,6 @@ class LocalStorageAdapter implements StoragePort {
  * Use this instance throughout the application to ensure consistent storage access
  */
 export const localStorageAdapter = new LocalStorageAdapter();
+
+// Export class for testing
+export { LocalStorageAdapter };

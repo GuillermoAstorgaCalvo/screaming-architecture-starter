@@ -9,9 +9,11 @@ interface ErrorBoundaryState {
 	error: Error | null;
 }
 
+type ErrorBoundaryFallback = ReactNode | ((error: Error | null, reset: () => void) => ReactNode);
+
 interface ErrorBoundaryProps {
 	readonly children: ReactNode;
-	readonly fallback?: ReactNode;
+	readonly fallback?: ErrorBoundaryFallback;
 	readonly logger: LoggerPort;
 }
 
@@ -104,6 +106,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
 	private renderErrorFallback(): ReactNode {
 		if (this.props.fallback) {
+			// Support both ReactNode and function fallback
+			if (typeof this.props.fallback === 'function') {
+				return this.props.fallback(this.state.error, this.handleReset);
+			}
 			return this.props.fallback;
 		}
 

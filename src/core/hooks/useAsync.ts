@@ -3,11 +3,6 @@ import { getDependenciesKey } from '@core/utils/hookUtils';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
- * Async function type
- */
-type AsyncFunction<T> = () => Promise<T>;
-
-/**
  * Options for useAsync hook
  */
 export interface UseAsyncOptions<T> {
@@ -33,6 +28,18 @@ export interface UseAsyncOptions<T> {
 	 * Callback invoked when the async function completes (success or error)
 	 */
 	onComplete?: () => void;
+	/**
+	 * AbortSignal for cancellation support
+	 * If provided, the async function should respect this signal for cancellation
+	 * @example
+	 * ```tsx
+	 * const { execute, cancel } = useAsync(async (signal) => {
+	 *   const response = await fetch('/api/data', { signal });
+	 *   return response.json();
+	 * });
+	 * ```
+	 */
+	signal?: AbortSignal;
 }
 
 /**
@@ -55,6 +62,10 @@ export interface UseAsyncReturn<T> {
 	 * Manually execute the async function
 	 */
 	execute: () => Promise<void>;
+	/**
+	 * Cancel the current execution (if abort controller is available)
+	 */
+	cancel: () => void;
 	/**
 	 * Reset the hook state (clear data and error)
 	 */
@@ -101,7 +112,8 @@ function useMountTracking(isMountedRef: { current: boolean }): void {
 		return () => {
 			isMountedRef.current = false;
 		};
-	}, [isMountedRef]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- ref object doesn't need to be in deps
+	}, []);
 }
 
 /**
@@ -112,20 +124,113 @@ interface ImmediateExecutionOptions {
 	execute: () => Promise<void>;
 	dependenciesKey: string;
 	logger: ReturnType<typeof useLogger>;
+	abortControllerRef: { current: AbortController | null };
 }
 
 /**
  * Setup immediate execution effect
  */
 function useImmediateExecution(options: ImmediateExecutionOptions): void {
-	const { immediate, execute, dependenciesKey, logger } = options;
+	const { immediate, execute, dependenciesKey, logger, abortControllerRef } = options;
 	useEffect(() => {
 		if (immediate) {
 			execute().catch(error_ =>
-				logger.error('useAsync: Unhandled error in immediate execution', { error: error_ })
+				logger.error('useAsync: Unhandled error in immediate execution', error_)
 			);
 		}
+		return (): void => {
+			// Cleanup: abort any pending requests on unmount or dependency change
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+				abortControllerRef.current = null;
+			}
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- abortControllerRef is a ref, doesn't need to be in deps
 	}, [immediate, execute, dependenciesKey, logger]);
+}
+
+/**
+ * Create and setup abort controller for async execution
+ */
+function setupAbortController(
+	ref: { current: AbortController | null },
+	providedSignal?: AbortSignal
+): AbortController | undefined {
+	// If signal provided in options, use it directly (no internal controller needed)
+	if (providedSignal) {
+		return undefined;
+	}
+
+	// Create internal abort controller for cancellation support
+	if (ref.current) {
+		ref.current.abort();
+	}
+	const controller = new AbortController();
+	ref.current = controller;
+	return controller;
+}
+
+/**
+ * Cleanup abort controller
+ */
+function cleanupAbortController(ref: { current: AbortController | null }): void {
+	ref.current?.abort();
+	ref.current = null;
+}
+
+/**
+ * Check if execution should be aborted
+ */
+function isAborted(signal?: AbortSignal): boolean {
+	return signal?.aborted ?? false;
+}
+
+/**
+ * Handler options
+ */
+interface HandlerOptions<T> {
+	isMountedRef: { current: boolean };
+	setData: (data: T | null) => void;
+	setError: (error: Error | null) => void;
+	setLoading: (loading: boolean) => void;
+	onSuccess: ((data: T) => void) | undefined;
+	onError: ((error: Error) => void) | undefined;
+	onComplete: (() => void) | undefined;
+}
+
+/**
+ * Handle successful execution result
+ */
+function handleSuccess<T>(opts: HandlerOptions<T>, result: T): void {
+	const { isMountedRef, setData, onSuccess } = opts;
+	ifMounted(isMountedRef, () => {
+		setData(result);
+		onSuccess?.(result);
+	});
+}
+
+/**
+ * Handle execution error
+ */
+function handleError<T>(opts: HandlerOptions<T>, error_: unknown): void {
+	const { isMountedRef, setError, setData, onError } = opts;
+	ifMounted(isMountedRef, () => {
+		const errorObj = normalizeError(error_);
+		setError(errorObj);
+		setData(null);
+		onError?.(errorObj);
+	});
+}
+
+/**
+ * Handle execution completion
+ */
+function handleComplete<T>(opts: HandlerOptions<T>): void {
+	const { isMountedRef, setLoading, onComplete } = opts;
+	ifMounted(isMountedRef, () => {
+		setLoading(false);
+		onComplete?.();
+	});
 }
 
 /**
@@ -134,52 +239,81 @@ function useImmediateExecution(options: ImmediateExecutionOptions): void {
  * Provides flexible async function execution with state management.
  * More flexible than useFetch as it accepts any async function.
  *
+ * Supports cancellation via AbortSignal. If you need cancellation, pass a signal
+ * or use the cancel function returned by the hook.
+ *
  * @example
  * ```tsx
+ * // Basic usage
  * const { data, loading, execute } = useAsync(async () => {
  *   return await http.get('/api/user').then(r => r.data);
  * }, { immediate: true });
  * ```
  *
+ * @example
+ * ```tsx
+ * // With cancellation support
+ * const { data, loading, execute, cancel } = useAsync(async (signal) => {
+ *   const response = await fetch('/api/data', { signal });
+ *   return response.json();
+ * });
+ *
+ * // Cancel execution
+ * cancel();
+ * ```
+ *
  * @template T - The return type of the async function
- * @param asyncFunction - The async function to execute
+ * @param asyncFunction - The async function to execute (optionally accepts AbortSignal)
  * @param options - Configuration options
- * @returns An object with data, error, loading, execute, and reset functions
+ * @returns An object with data, error, loading, execute, cancel, and reset functions
  */
 export function useAsync<T>(
-	asyncFunction: AsyncFunction<T>,
+	asyncFunction: (signal?: AbortSignal) => Promise<T>,
 	options: UseAsyncOptions<T> = {}
 ): UseAsyncReturn<T> {
 	const logger = useLogger();
-	const { immediate = false, dependencies = [], onSuccess, onError, onComplete } = options;
+	const { immediate = false, dependencies = [], onSuccess, onError, onComplete, signal } = options;
 	const { data, setData, error, setError, loading, setLoading, reset } = useAsyncState<T>();
 	const isMountedRef = useRef(true);
+	const abortControllerRef = useRef<AbortController | null>(null);
 	const dependenciesKey = useMemo(() => getDependenciesKey(dependencies), [dependencies]);
+
+	const handlerOpts = useMemo<HandlerOptions<T>>(
+		() => ({ isMountedRef, setData, setError, setLoading, onSuccess, onError, onComplete }),
+		[setData, setError, setLoading, onSuccess, onError, onComplete]
+	);
+
 	const execute = useCallback(async (): Promise<void> => {
 		if (!isMountedRef.current) return;
+		const internalController = setupAbortController(abortControllerRef, signal);
+		const executionSignal = signal ?? internalController?.signal;
+		if (isAborted(executionSignal)) return;
 		setLoading(true);
 		setError(null);
 		try {
-			const result = await asyncFunction();
-			ifMounted(isMountedRef, () => {
-				setData(result);
-				onSuccess?.(result);
-			});
+			const result = await asyncFunction(executionSignal);
+			if (isAborted(executionSignal)) return;
+			handleSuccess(handlerOpts, result);
 		} catch (error_) {
-			ifMounted(isMountedRef, () => {
-				const errorObj = normalizeError(error_);
-				setError(errorObj);
-				setData(null);
-				onError?.(errorObj);
-			});
+			if (isAborted(executionSignal)) return;
+			handleError(handlerOpts, error_);
 		} finally {
-			ifMounted(isMountedRef, () => {
-				setLoading(false);
-				onComplete?.();
-			});
+			if (!isAborted(executionSignal)) {
+				handleComplete(handlerOpts);
+			}
 		}
-	}, [asyncFunction, onSuccess, onError, onComplete, setData, setError, setLoading]);
+	}, [asyncFunction, handlerOpts, setLoading, setError, signal]);
+
+	const cancel = useCallback((): void => {
+		cleanupAbortController(abortControllerRef);
+	}, []);
+
+	const resetWithCleanup = useCallback((): void => {
+		cleanupAbortController(abortControllerRef);
+		reset();
+	}, [reset]);
+
 	useMountTracking(isMountedRef);
-	useImmediateExecution({ immediate, execute, dependenciesKey, logger });
-	return { data, error, loading, execute, reset };
+	useImmediateExecution({ immediate, execute, dependenciesKey, logger, abortControllerRef });
+	return { data, error, loading, execute, cancel, reset: resetWithCleanup };
 }

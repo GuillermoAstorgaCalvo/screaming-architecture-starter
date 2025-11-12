@@ -52,7 +52,13 @@ export function useMediaQuery(query: string, options: UseMediaQueryOptions = {})
 		}
 
 		try {
-			return globalThis.window.matchMedia(query).matches;
+			// If defaultMatches is explicitly provided (true), use it
+			// Otherwise, use the actual matchMedia result
+			if (defaultMatches) {
+				return true;
+			}
+			const mediaQuery = globalThis.window.matchMedia(query);
+			return mediaQuery.matches;
 		} catch {
 			return defaultMatches;
 		}

@@ -1,0 +1,126 @@
+# Production Dockerfile for Screaming Architecture Starter
+# Multi-stage build for optimized production image
+#
+# Usage:
+#   docker build -f Dockerfile.prod -t screaming-architecture-starter:prod .
+#   docker run -p 5173:5173 screaming-architecture-starter:prod
+
+# Build arguments for metadata and versioning
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION=latest
+ARG NODE_VERSION=22.21.1
+ARG PNPM_VERSION=10.20.0
+
+# ============================================================================
+# Stage 1: Dependencies
+# ============================================================================
+FROM node:${NODE_VERSION}-alpine AS deps
+
+# Install pnpm
+ARG PNPM_VERSION
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Install production dependencies + vite (needed for preview server)
+# Use BuildKit cache mount for pnpm store (faster rebuilds)
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile --prod && \
+    pnpm add --prod vite
+
+# ============================================================================
+# Stage 2: Build
+# ============================================================================
+FROM node:${NODE_VERSION}-alpine AS builder
+
+# Install pnpm
+ARG PNPM_VERSION
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Install all dependencies (including dev dependencies for build)
+# Use BuildKit cache mount for pnpm store (faster rebuilds)
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN pnpm run build
+
+# Clean up build artifacts and cache to reduce image size
+RUN rm -rf /app/node_modules/.cache /app/.vite /app/.vitest
+
+# ============================================================================
+# Stage 3: Production
+# ============================================================================
+FROM node:${NODE_VERSION}-alpine AS runner
+
+# Add image labels for maintainability and security scanning
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL org.opencontainers.image.title="Screaming Architecture Starter" \
+      org.opencontainers.image.description="Production container for Screaming Architecture Starter" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.vendor="BrightHub S.L." \
+      org.opencontainers.image.authors="guillermo@brighthub.es,masaj@brighthub.es" \
+      org.opencontainers.image.url="https://brighthub.es" \
+      org.opencontainers.image.documentation="https://github.com/brighthub/screaming-architecture-starter" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.source="https://github.com/brighthub/screaming-architecture-starter" \
+      maintainer="BrightHub S.L. <guillermo@brighthub.es>"
+
+# Install system dependencies for serving static files
+# curl is needed for health checks, dumb-init for proper signal handling
+RUN apk add --no-cache \
+        ca-certificates \
+        curl \
+        dumb-init \
+    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* \
+    && update-ca-certificates
+
+# Create non-root user and set working directory
+WORKDIR /app
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+# Copy production dependencies from deps stage (includes vite)
+COPY --from=deps --chown=nodejs:nodejs /app/node_modules ./node_modules
+
+# Copy built application from builder stage
+# Only copy what's needed for runtime (dist, public, package.json)
+COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/public ./public
+COPY --from=builder --chown=nodejs:nodejs /app/package.json ./package.json
+
+# Switch to non-root user
+USER nodejs
+
+# Expose port
+EXPOSE 5173
+
+# Health check (curl is installed in runner stage)
+# Checks if the server is responding with a successful HTTP status
+# Increased timeout for production to account for slower responses
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:5173/ || exit 1
+
+# Use dumb-init for proper signal handling
+ENTRYPOINT ["dumb-init", "--"]
+
+# Run preview server (serves built files)
+CMD ["pnpm", "run", "preview", "--host", "0.0.0.0", "--port", "5173"]
+

@@ -1,5 +1,5 @@
-import { MODAL_SIZE_CLASSES } from '@core/constants/ui';
-import type { ModalSize } from '@src-types/ui';
+import { MODAL_SIZE_CLASSES } from '@core/constants/ui/overlays';
+import type { ModalSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
@@ -18,7 +18,7 @@ export const modalDialogVariants = cva(
  * Provides type-safe variant management for Modal body (the actual modal content).
  */
 export const modalBodyVariants = cva(
-	'bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-h-[90vh] overflow-y-auto',
+	'bg-surface rounded-lg shadow-lg w-full max-h-[90vh] overflow-y-auto',
 	{
 		variants: {
 			size: {

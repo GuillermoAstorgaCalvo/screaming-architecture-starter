@@ -77,5 +77,17 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
 	callback: T,
 	delay: number
 ): DebouncedFunction<T> {
-	return useMemo(() => debounce(callback, delay), [callback, delay]);
+	const debouncedRef = useRef<DebouncedFunction<T> | null>(null);
+
+	const debounced = useMemo(() => debounce(callback, delay), [callback, delay]);
+
+	useEffect(() => {
+		debouncedRef.current = debounced;
+		return () => {
+			debounced.cancel();
+			debouncedRef.current = null;
+		};
+	}, [debounced]);
+
+	return debounced;
 }

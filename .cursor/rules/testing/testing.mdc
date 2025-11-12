@@ -8,11 +8,15 @@ alwaysApply: false
 
 ### Unit Tests
 
-- Runner: **Vitest**
+- Runner: **Vitest** (v4.0.6)
 - Location: `tests/*`
-- Test utilities: `tests/utils/testUtils.ts`
-- Factories/mocks under `tests/factories` and `tests/mocks`
-- Accessibility: **Axe** via `jest-axe`/`vitest-axe`
+- Test utilities: `tests/utils/testUtils.tsx` (includes `renderWithProviders` function)
+- Test providers: `tests/utils/TestProviders.tsx` (composes all providers for testing)
+- Mock adapters: `tests/utils/mocks/` (MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter)
+- Factories: `tests/factories/` (apiFactories.ts, userFactories.ts)
+- MSW mocks: `tests/mocks/` (handlers.ts, payloads.ts, server.ts)
+- Setup: `tests/setupTests.ts` (Vitest setup with MSW server, i18n initialization, DOM mocks)
+- Accessibility: **Axe** via `jest-axe`/`vitest-axe` (optional, to be added)
 
 ### E2E Tests
 

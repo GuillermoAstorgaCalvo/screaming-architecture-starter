@@ -2,8 +2,9 @@ import {
 	BUTTON_BASE_CLASSES,
 	BUTTON_SIZE_CLASSES,
 	BUTTON_VARIANT_CLASSES,
-} from '@core/constants/ui';
-import type { ButtonVariant, StandardSize } from '@src-types/ui';
+} from '@core/constants/ui/buttons';
+import type { StandardSize } from '@src-types/ui/base';
+import type { ButtonVariant } from '@src-types/ui/buttons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 

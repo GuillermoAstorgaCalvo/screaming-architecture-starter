@@ -1,10 +1,9 @@
-import type { ModalProps, ModalSize } from '@src-types/ui';
+import type { ModalSize } from '@src-types/ui/base';
+import type { ModalProps } from '@src-types/ui/overlays';
 import type { ReactNode } from 'react';
 
 import { ModalDialog } from './ModalDialog';
 import { useModalSetup } from './useModalSetup';
-
-export type { ModalProps, ModalSize } from '@src-types/ui';
 
 interface ModalSetupOptions {
 	readonly modalId?: string;

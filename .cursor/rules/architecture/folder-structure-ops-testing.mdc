@@ -10,24 +10,46 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 
 **Current Implementation:**
 
-- `ui.ts`: ✅ UI component type definitions. Exports `StandardSize`, `ModalSize`, `ButtonVariant`, `IconButtonVariant`, `BaseIconProps`, `ButtonProps`, `IconButtonProps`, `InputProps`, `LabelProps`, `BaseTextMessageProps`, `ErrorTextProps`, `HelperTextProps`, `SpinnerProps`, `ModalProps`. All UI components reference types from this file via `@src-types/ui`.
+- `ui.ts`: ✅ UI component type definitions. Exports `StandardSize`, `ModalSize`, `ButtonVariant`, `IconButtonVariant`, `BaseIconProps`, `ButtonProps`, `IconButtonProps`, `InputProps`, `TextareaProps`, `LabelProps`, `BaseTextMessageProps`, `ErrorTextProps`, `HelperTextProps`, `SpinnerProps`, `ModalProps`, `CheckboxProps`, `SwitchProps`, `SelectProps`, `RadioProps`, `BadgeProps`, `BadgeVariant`, `HeadingProps`, `HeadingLevel`, `TextProps`, `SkeletonProps`, `TooltipProps`, `TooltipPosition`, `PopoverProps`, `PopoverPosition`. All UI components reference types from this file via `@src-types/ui`.
+- `common.ts`: ✅ Common utility types. Exports `Optional`, `Required`, `DeepPartial`, `DeepRequired`, `ValueOf`, `KeysOfType`, `VoidFunction`, `NoArgFunction`, `UnaryFunction`, `BinaryFunction`, `NonEmptyArray`, `Primitive`, `StringRecord`, `NumberRecord`, `Nullable`, `Maybe`, `MaybeNull`, `Brand`, `Timestamp`, `ID`, `UUID`.
+- `callbacks.ts`: ✅ Callback function types. Exports `DebouncedFunction`, `ThrottledFunction`, `AsyncCallback`, `SyncCallback`, `SuccessCallback`, `ErrorCallback`, `CompleteCallback`, `TransformCallback`, `PredicateCallback`, `FilterCallback`, `MapCallback`. Re-exports debounced and throttled function types from core utils.
+- `config.ts`: ✅ Configuration types. Re-exports `Env`, `AppConfig`, `RuntimeConfig` from core config. Exports `FeatureFlag`, `FeatureFlagsConfig`, `FeatureFlagValue`, `FeatureFlagOptions` for feature flag management.
+- `datetime.ts`: ✅ Date and time types. Exports `DateLike`, `DateFormat`, `DateRange`, `TimeRange`, `Duration`, `RelativeTime`, `CalendarDate`, `TimeComponents`, `Timezone`, `DateInterval` types for date/time handling and formatting operations.
+- `errors.ts`: ✅ Error types. Exports `AppError`, `ValidationError`, `ApiError`, `NetworkError`, `TimeoutError`, `AuthorizationError`, `AuthenticationError`, `ErrorReporter`, `ErrorContext` types. Provides type-safe error handling structures with field-level validation error support.
+- `http.ts`: ✅ HTTP-related types for `HttpClientResponse`, `HttpClientError`, and HTTP client utilities. Re-exports types from `@core/ports/HttpPort`.
+- `hooks.ts`: ✅ Hook-related types for custom hooks and hook utilities. Re-exports hook return types from core hooks (e.g., `UseFetchReturn`, `UseAsyncReturn`, `UseLocalStorageReturn`).
+- `forms.ts`: ✅ Form-related types for form handling and validation. Re-exports form types from `@core/forms/formAdapter` including `FormControls`, `FieldValues`, `FieldErrors`, `FormState`, `Path`, `PathValue`, `SubmitHandler`.
+- `pagination.ts`: ✅ Pagination types for paginated data and pagination utilities. Exports `PaginatedResponse`, `PaginationParams`, `PaginationMetadata`, `CursorPaginationParams`, `CursorPaginatedResponse` types.
+- `result.ts`: ✅ Result/Either utilities for error handling patterns. Exports `Result<T, E>`, `Ok<T>`, `Err<E>`, `ok()`, `err()`, `unwrap()`, `unwrapOr()`, `unwrapOrElse()`, `isOk()`, `isErr()` utilities.
+- `enums.ts`: ✅ Common enum definitions shared across the application.
+- `layout.ts`: ✅ Layout types for layout components and structures. Exports `BreakpointSize`, `LayoutConfig`, `NavigationItem`, `PageWrapperProps` types.
+- `ports.ts`: ✅ Port type utilities related to hexagonal architecture ports. Re-exports port types from `@core/ports/`.
+- `react.ts`: ✅ React-related types. Exports React event handler types (`MouseEventHandler`, `KeyboardEventHandler`, `ChangeEventHandler`, `FocusEventHandler`, `FormEventHandler`), component utility types, and common component prop interfaces.
+- `router.ts`: ✅ Router and navigation types. Exports `RouteParams`, `QueryParams`, `RouteMetadata`, `NavigationOptions`, `NavigationResult`, `RouterContext` types for routing operations.
+- `api/index.ts`: ✅ API types barrel export. Exports `ApiResponse`, `ApiErrorResponse`, `ApiResponseWithMeta`, `ApiError`, `ApiEndpoint`, `ApiRequestOptions`, `ApiService`.
+- `api/auth.ts`: ✅ Authentication-related API types.
+- `domains/index.ts`: ✅ Domain types barrel export. Exports `BaseDomainEntity`, `SoftDeletableEntity`, `DomainService`.
+- `index.ts`: ✅ Main types barrel export. Centralized export for all types (use judiciously to avoid circular dependencies).
+- `README.md`: ✅ Types module documentation. Describes type organization principles, usage patterns, type categories (API, callbacks, common, config, datetime, errors, forms, hooks, http, layout, pagination, ports, react, result, router, ui), and best practices. Includes examples for using Result types, pagination types, and hook types.
 
 **Optional/Planned:**
 
-- `api/*`, `domains/*`, `generated/*` (codegen), `zod/*` (cross-cutting schemas), `result.ts` (Result/Either), `branding.ts`, `pagination.ts`, `hooks.ts`, `enums.ts`, `events.ts`, `forms.ts`, `layout.ts`, `common.ts`.
+- `generated/*` (codegen), `zod/*` (cross-cutting schemas), `branding.ts`, `events.ts`.
 - Domain-specific types remain under `domains/<domain>/models/*`.
 - Avoid barrels that re-export entire directories; import only what you use.
 
 ## tests
 
-- `setupTests.ts`: Vitest setup file that imports `@testing-library/jest-dom/vitest` for DOM matchers.
-- `vitest-env.d.ts`: TypeScript environment declarations for Vitest.
-- `domains/<domain>/*`: Domain tests (pages, hooks, store). Currently includes `domains/landing/pages/` directory (placeholder for landing page tests).
+- `setupTests.ts`: ✅ Vitest setup file that imports `@testing-library/jest-dom/vitest` for DOM matchers. Sets up MSW server for API mocking using handlers from `@tests/mocks/handlers`. Initializes i18n before all tests by awaiting `i18nInitPromise`. Includes console.warn suppression for i18next backend warning (expected in custom setup). Includes console.error suppression for React act() warnings from async effects (expected with async resource loading). Mocks `HTMLDialogElement.showModal()` and `close()` methods for Modal component tests (jsdom doesn't implement these by default). Mocks `window.matchMedia` for ThemeProvider tests (jsdom doesn't implement this by default). MSW server lifecycle: starts beforeAll, resets handlers afterEach, closes afterAll.
+- `vitest-env.d.ts`: ✅ TypeScript environment declarations for Vitest.
+- `core/router/routes.gen.test.ts`: ✅ Route helper tests covering `buildRoute`, `getRouteTemplate`, and `isRouteKey` with mocked `ROUTES`.
+- `shared/components/layout/Layout.test.tsx`: ✅ Layout component smoke tests with provider composition checks.
+- `shared/components/layout/Navbar.test.tsx`: ✅ Navbar accessibility, routing, and i18n behaviour tests.
 
 **Test Utilities:**
 
-- `utils/testUtils.tsx`: ✅ Custom render function (`renderWithProviders`) that wraps components with all app providers (LoggerProvider, StorageProvider, HttpProvider, ThemeProvider, QueryProvider). Accepts optional provider overrides for custom test scenarios. Exports Testing Library utilities for convenience. Re-exports mock adapters for direct use.
-- `utils/TestProviders.tsx`: ✅ React component that composes all providers (LoggerProvider, StorageProvider, HttpProvider, ThemeProvider, QueryProvider) for testing. Used internally by `renderWithProviders`.
+- `utils/testUtils.tsx`: ✅ Custom render function (`renderWithProviders`) that wraps components with all app providers (LoggerProvider, HttpProvider, StorageProvider, I18nProvider, ThemeProvider, QueryProvider). Accepts optional provider overrides for custom test scenarios (storage, logger, http, defaultTheme). Exports Testing Library utilities for convenience (act, cleanup, fireEvent, render, renderHook, screen, waitFor, within). Re-exports mock adapters (MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter) for direct use.
+- `utils/TestProviders.tsx`: ✅ React component that composes all providers in correct order (LoggerProvider, HttpProvider, StorageProvider, I18nProvider, ThemeProvider, QueryProvider) for testing. Used internally by `renderWithProviders`. Accepts storage, logger, http, and defaultTheme props for test customization.
 - `utils/mocks/MockStorageAdapter.ts`: ✅ Mock implementation of `StoragePort` using in-memory Map. Includes `reset()` helper method for test cleanup.
 - `utils/mocks/MockLoggerAdapter.ts`: ✅ Mock implementation of `LoggerPort` that collects logs for assertions. Includes `reset()` helper method and suppresses console output during tests.
 - `utils/mocks/MockHttpAdapter.ts`: ✅ Mock implementation of `HttpPort` for testing. Records requests for assertions and allows configuring responses via `mockResponse()`. Supports URL pattern matching (string, RegExp, or function). Includes `reset()` helper method for test cleanup.
@@ -36,13 +58,11 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 
 - `factories/apiFactories.ts`: ✅ API response factories for test data builders. Exports `ApiResponse` interface, `ApiResponseOverrides` type, and `buildApiResponse()` function for creating test API response objects with optional overrides. Provides example structure matching ApiDemoSection usage.
 - `factories/userFactories.ts`: ✅ User factories for test data builders. Exports `User` interface, `buildUser()` function for creating test user objects with optional overrides, and `buildUserList()` function for creating arrays of test users.
-- `mocks/handlers.ts`: ✅ MSW request handlers placeholder. Provides structure and examples for mocking API endpoints. Currently empty handlers array - ready for implementation when MSW is installed.
-- `mocks/payloads.ts`: ✅ MSW payload helpers. Provides pre-defined response payloads for common API endpoints using factory functions. Exports `defaultSlideshowResponse`, `emptySlideshowResponse`, and other payload constants. Uses factories from `@tests/factories/apiFactories` for consistency. Ready for use with MSW handlers.
-- `mocks/server.ts`: ✅ MSW server setup helper. Provides `setupMSWServer()` function placeholder and `getMSWSetupInstructions()` helper with setup documentation. Ready for implementation when MSW is installed.
+- `mocks/handlers.ts`: ✅ MSW request handlers. Provides handlers for mocking API endpoints. Currently includes handlers for `/api/demo` and `/api/slideshow` endpoints. Uses MSW's `http` API (v2.x+). Handlers are automatically set up in `setupTests.ts`. Can be imported and overridden in test files as needed.
+- `mocks/payloads.ts`: ✅ MSW payload helpers. Provides pre-defined response payloads for common API endpoints using factory functions. Exports `defaultSlideshowResponse`, `emptySlideshowResponse`, and other payload constants. Uses factories from `@tests/factories/apiFactories` for consistency.
+- `mocks/server.ts`: ✅ MSW server setup helper. Provides `setupMSWServer()` function placeholder and `getMSWSetupInstructions()` helper with setup documentation. Ready for implementation when MSW is fully configured.
 
-**Note**: MSW (Mock Service Worker) is not yet installed, so handlers/server files are placeholders with setup instructions.
-
-- `shared/*`: Shared composites tests (optional, not yet implemented).
+- `shared/components/layout/*`: ✅ Example component tests demonstrating render helpers and assertions.
 
 Principles:
 
@@ -64,7 +84,16 @@ Principles:
 
 ## public
 
-- `manifest.json`, `favicon.ico`. Prefer importing assets over public URLs.
+- `manifest.json`: PWA manifest with app metadata, icons, display config
+- `favicon.ico`: Default favicon (48x48 fallback)
+- `icon-*.png`: Multiple icon sizes (96, 180, 192, 384, 512px) for different contexts (favicon, PWA, install prompts)
+- `icon-*-maskable.png`: Maskable icons (192, 384, 512px) for Android adaptive icons
+- `safari-pinned-tab.svg`: Safari pinned tab icon
+- `og-image.png`: Open Graph/Twitter Card image (1200x630)
+- `robots.txt`: Robots.txt for search engine crawler directives
+- `runtime-config.json`: Runtime configuration (API_BASE_URL, ANALYTICS_WRITE_KEY) loaded on app startup
+
+Prefer importing assets over public URLs when possible. Place large media under `assets/` and import as needed.
 
 ## seo
 

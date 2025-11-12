@@ -1,21 +1,16 @@
-import { ThemeContext, type ThemeContextValue } from '@app/providers/ThemeContext';
+import { ThemeContext } from '@app/providers/ThemeContext';
 import { type Theme, THEMES } from '@core/constants/theme';
 import { useLogger } from '@core/providers/useLogger';
 import { useStorage } from '@core/providers/useStorage';
+import type { ThemeContextValue, ThemeProviderProps } from '@src-types/layout';
 import {
 	type Dispatch,
-	type ReactNode,
 	type SetStateAction,
 	useCallback,
 	useEffect,
 	useMemo,
 	useState,
 } from 'react';
-
-interface ThemeProviderProps {
-	readonly children: ReactNode;
-	readonly defaultTheme?: Theme;
-}
 
 /**
  * Theme Provider
@@ -94,7 +89,7 @@ function useSystemThemeListener(theme: Theme): void {
 	}, [theme, handleChange]);
 }
 
-export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProviderProps) {
+export function ThemeProvider({ children, defaultTheme = 'system' }: Readonly<ThemeProviderProps>) {
 	const storage = useStorage();
 	const logger = useLogger();
 	const [theme, setThemeState] = useThemeState(storage, defaultTheme);
@@ -132,3 +127,5 @@ export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProvid
 
 	return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
+
+ThemeProvider.displayName = 'ThemeProvider';

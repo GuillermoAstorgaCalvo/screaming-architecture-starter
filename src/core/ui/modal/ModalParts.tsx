@@ -1,9 +1,17 @@
+import { ARIA_LABELS } from '@core/constants/aria';
 import IconButton from '@core/ui/icon-button/IconButton';
 import CloseIcon from '@core/ui/icons/close-icon/CloseIcon';
 import type { ReactNode } from 'react';
 
 export function CloseButton({ onClose }: { readonly onClose: () => void }) {
-	return <IconButton icon={<CloseIcon />} aria-label="Close modal" onClick={onClose} size="md" />;
+	return (
+		<IconButton
+			icon={<CloseIcon />}
+			aria-label={ARIA_LABELS.CLOSE_MODAL}
+			onClick={onClose}
+			size="md"
+		/>
+	);
 }
 
 interface ModalHeaderProps {
@@ -31,7 +39,11 @@ interface ModalContentProps {
 
 export function ModalContent({ descriptionId, children }: ModalContentProps) {
 	return (
-		<div id={descriptionId} className="px-6 py-4 text-gray-700 dark:text-gray-300">
+		<div
+			id={descriptionId}
+			data-testid="modal-content"
+			className="px-6 py-4 text-gray-700 dark:text-gray-300"
+		>
 			{children}
 		</div>
 	);

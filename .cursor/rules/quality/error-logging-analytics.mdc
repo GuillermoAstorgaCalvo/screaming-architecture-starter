@@ -8,15 +8,16 @@ alwaysApply: false
 
 ### Errors
 
-- Global `ErrorBoundary` in `core/lib/errorBoundary.tsx` wraps app/pages.
-- Fail fast in domain services; map API errors to domain error shapes.
+- ✅ Global `ErrorBoundary` in `core/lib/ErrorBoundary.tsx` (class component) with `ErrorBoundaryWrapper.tsx` (wrapper that injects logger from context) wraps app/pages. Displays user-friendly fallback UI with dev error details, reset button, and home link. Uses logger from context for error reporting.
+- Fail fast in domain services; map API errors to domain error shapes using `core/http/errorAdapter.ts`.
 - For granular capture and user-friendly fallbacks, consider additional error boundaries
   at domain or page container level in larger apps.
 
 ### Logging
 
-- Use `core/lib/logger.ts` for structured logs (info, warn, error).
-- Adapter in `infrastructure/logging/loggerAdapter.ts` to connect Sentry/console/etc.
+- ✅ Use `LoggerPort` interface from `core/ports/LoggerPort.ts` for structured logs (debug, info, warn, error).
+- ✅ Adapter implementation in `infrastructure/logging/loggerAdapter.ts` (console-based, can be extended to Sentry/LogRocket/etc).
+- ✅ Access via `useLogger()` hook from `core/providers/useLogger.ts` (injected via `LoggerProvider`).
 
 ### Analytics
 

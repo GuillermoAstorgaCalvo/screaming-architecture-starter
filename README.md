@@ -42,9 +42,12 @@ The application will be available at `http://localhost:5173` (port configurable 
 - `pnpm run lint:fix` - Fix ESLint issues automatically
 - `pnpm run format` - Format code with Prettier
 - `pnpm run typecheck` - Run TypeScript type checking
-- `pnpm run test` - Run unit tests
+- `pnpm run test` - Run unit tests with Vitest
 - `pnpm run test:watch` - Run unit tests in watch mode
+- `pnpm run test:ui` - Run unit tests with Vitest UI
+- `pnpm run test:coverage` - Run unit tests with coverage report
 - `pnpm run test:e2e` - Run end-to-end tests with Playwright
+- `pnpm run test:e2e:ui` - Run end-to-end tests with Playwright UI
 - `pnpm run clean` - Clean build artifacts and dependencies
 
 ## 📁 Project Structure
@@ -63,29 +66,35 @@ See `docs/structure.md` for detailed structure documentation.
 
 ## 🛠️ Tech Stack
 
-- **React 19** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **TailwindCSS** - Utility-first CSS framework
-- **React Router** - Client-side routing
-- **TanStack Query** - Server state management
-- **Vitest** - Unit testing
-- **Playwright** - End-to-end testing
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
+- **React 19.2.0** - UI library
+- **TypeScript 5.9.3** - Type safety
+- **Vite 7.1.12** - Build tool and dev server
+- **TailwindCSS 4.1.16** - Utility-first CSS framework
+- **React Router 7.9.5** - Client-side routing
+- **TanStack Query 5.90.6** - Server state management
+- **Zustand 5.0.2** - Lightweight client-side state stores
+- **i18next 25.6.0** - Internationalization
+- **React Hook Form 7.66.0** - Form handling with Zod validation
+- **Zod 4.1.12** - Schema validation
+- **Web Vitals 5.1.0** - Performance monitoring
+- **Lucide React 0.548.0** - Icon library
+- **Sonner 2.0.7** - Toast notifications
+- **Playwright 1.56.1** - End-to-end testing
+- **ESLint 9.39.1** - Code linting
+- **Prettier 3.6.2** - Code formatting
 
 ## 📚 Documentation
 
 - [Folder Structure](docs/structure.md) - Detailed project structure
 - [TypeScript Configuration](docs/tsconfig.md) - TSConfig documentation
 - [Configuration Files](docs/config-files.md) - Configuration overview
+- [UI Customization Guide](docs/ui-customization-guide.md) - Complete guide for adapting the UI design system to different design systems
 
 ## 🏗️ Architectural Goals
 
 - **Separation of concerns**: Domain code does not depend on UI framework details or infrastructure specifics
 - **Explicit boundaries**: Clear ownership and import rules between `domains`, `core`, `infrastructure`, and `shared`
 - **Feature scalability**: New features are added by creating or extending domains, not scattering code
-- **Testability**: Domain logic is testable without rendering or network
 - **Performance & Observability**: Lazy-loaded pages/routes and atomic UI components; optional Web Vitals + error tracking adapters
 
 ## 🔒 Security
@@ -110,8 +119,7 @@ This is a starter template. When contributing to your own project:
 1. Follow the architectural boundaries
 2. Keep domains self-contained
 3. Use TypeScript for type safety
-4. Write tests for domain logic
-5. Follow the established code style (ESLint + Prettier)
+4. Follow the established code style (ESLint + Prettier)
 
 ## 📖 Additional Resources
 

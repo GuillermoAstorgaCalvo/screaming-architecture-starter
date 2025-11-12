@@ -26,10 +26,11 @@ Use these as references when bootstrapping a new repo from this template.
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",
-		"clean": "pnpm dlx rimraf dist node_modules && pnpm store prune",
+		"clean": "pnpm dlx rimraf dist node_modules pnpm store prune",
 		"typecheck": "tsc -b",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"test:e2e": "playwright test"
 	}
 }
 ```
@@ -41,31 +42,38 @@ Use these as references when bootstrapping a new repo from this template.
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",
 		"@radix-ui/react-slot": "^1.2.3",
-		"@tanstack/react-query": "^5.90.5",
+		"@tanstack/react-query": "^5.90.6",
+		"class-variance-authority": "^0.7.1",
+		"i18next": "^25.6.0",
+		"i18next-browser-languagedetector": "^8.2.0",
 		"lucide-react": "^0.548.0",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
-		"react-hook-form": "^7.65.0",
+		"react-hook-form": "^7.66.0",
+		"react-i18next": "^16.2.4",
 		"react-router-dom": "^7.9.5",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.3.1",
+		"web-vitals": "^5.1.0",
 		"zod": "^4.1.12"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.38.0",
+		"@eslint/js": "^9.39.1",
+		"@playwright/test": "^1.56.1",
 		"@tailwindcss/postcss": "^4.1.16",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.0",
-		"@types/node": "^24.9.2",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^24.10.0",
 		"@types/react": "^19.2.2",
 		"@types/react-dom": "^19.2.2",
-		"@typescript-eslint/eslint-plugin": "^8.46.2",
-		"@typescript-eslint/parser": "^8.46.2",
+		"@typescript-eslint/eslint-plugin": "^8.46.3",
+		"@typescript-eslint/parser": "^8.46.3",
 		"@vitejs/plugin-react-swc": "^4.2.0",
 		"@vitest/coverage-v8": "^4.0.6",
 		"autoprefixer": "^10.4.21",
 		"dotenv": "^17.2.3",
-		"eslint": "^9.38.0",
+		"eslint": "^9.39.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-import-resolver-typescript": "^4.4.4",
 		"eslint-plugin-boundaries": "^5.1.0",
@@ -80,7 +88,8 @@ Use these as references when bootstrapping a new repo from this template.
 		"eslint-plugin-testing-library": "^7.13.3",
 		"eslint-plugin-unicorn": "^62.0.0",
 		"eslint-plugin-unused-imports": "^4.3.0",
-		"globals": "^16.4.0",
+		"globals": "^16.5.0",
+		"jsdom": "^27.1.0",
 		"postcss": "^8.5.6",
 		"prettier": "^3.6.2",
 		"prettier-plugin-tailwindcss": "^0.7.1",
@@ -88,7 +97,8 @@ Use these as references when bootstrapping a new repo from this template.
 		"typescript": "^5.9.3",
 		"vite": "^7.1.12",
 		"vite-tsconfig-paths": "^5.1.4",
-		"vitest": "^4.0.6"
+		"vitest": "^4.0.6",
+		"msw": "^2.11.6"
 	}
 }
 ```
@@ -129,7 +139,8 @@ Use these as references when bootstrapping a new repo from this template.
 			"@infra/*": ["src/infrastructure/*"],
 			"@shared/*": ["src/shared/*"],
 			"@styles/*": ["src/styles/*"],
-			"@tests/*": ["tests/*"]
+			"@tests/*": ["tests/*"],
+			"@src-types/*": ["src/types/*"]
 		}
 	}
 }
@@ -288,9 +299,14 @@ The configuration enforces:
 	"semi": true,
 	"trailingComma": "es5",
 	"printWidth": 100,
-	"plugins": ["prettier-plugin-tailwindcss"]
+	"useTabs": true,
+	"tabWidth": 2,
+	"endOfLine": "lf",
+	"arrowParens": "avoid"
 }
 ```
+
+**Note**: `prettier-plugin-tailwindcss` is installed as a dev dependency and automatically loaded by Prettier (plugins field not needed in config).
 
 ### vite.config.ts (environment-aware)
 
@@ -304,7 +320,7 @@ See the actual `vite.config.ts` in the repository for the full environment-aware
 **Server Configuration:**
 
 - Environment-aware server settings via `getServerConfig(env)` function (uses `loadEnv(mode, process.cwd(), '')`)
-- Default port: 3000 (configurable via `VITE_PORT`, default: `'3000'`, parsed as integer)
+- Default port: 5173 (configurable via `VITE_PORT`, default: `'5173'`, parsed as integer)
 - Default host: `::` (all interfaces, configurable via `VITE_HOST`)
 - Auto-open browser (configurable via `VITE_OPEN`, default: `true` - set to `'false'` to disable)
 - CORS enabled
@@ -325,7 +341,7 @@ See the actual `vite.config.ts` in the repository for the full environment-aware
 - Manual chunk optimization via `getManualChunks()`:
   - `vendor`: `react`, `react-dom`, `react-router-dom`
   - `ui`: `@radix-ui/react-slot` (only includes actually installed packages)
-  - `query`: `@tanstack/react-query`
+  - `query`: `@tanstack/react-query` (v5.90.6)
 - Optimized chunk file naming: `assets/[name]-[hash].js` for chunks and entries, `assets/[name]-[hash].[ext]` for assets
 - CSS code splitting: enabled (configurable via `VITE_CSS_CODE_SPLIT`, default: `true` - set to `'false'` to disable)
 - Chunk size warning limit: 1000 KB (configurable via `VITE_CHUNK_SIZE_WARNING_LIMIT`, default: `'1000'`, parsed as integer)
@@ -340,7 +356,7 @@ See the actual `vite.config.ts` in the repository for the full environment-aware
 **Dependency Optimization:**
 
 - Environment-aware via `getOptimizeDepsConfig()` function
-- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query`, `lucide-react`
+- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query` (v5.90.6), `lucide-react`
 - `force: true` for consistent pre-bundling across restarts
 
 **ESBuild Configuration:**
@@ -457,13 +473,13 @@ if (existsSync(envLocalPath)) {
 /**
  * Get the base URL for E2E tests
  * Uses E2E_BASE_URL if provided, otherwise derives from VITE_PORT and VITE_HOST
- * Defaults to localhost:3000 to match Vite's default port
+ * Defaults to localhost:5173 to match Vite's default port
  */
 function getBaseUrl(): string {
 	if (process.env['E2E_BASE_URL']) {
 		return process.env['E2E_BASE_URL'];
 	}
-	const port = process.env['VITE_PORT'] ?? '3000';
+	const port = process.env['VITE_PORT'] ?? '5173';
 	const host = process.env['VITE_HOST'] ?? '::';
 	// Convert network interface bindings to localhost for URL usage
 	const hostname = host === '::' || host === '0.0.0.0' ? 'localhost' : host;

@@ -1,11 +1,5 @@
 import { getIconButtonVariantClasses } from '@core/ui/variants/iconButton';
-import type { IconButtonProps } from '@src-types/ui';
-
-export type {
-	IconButtonProps,
-	StandardSize as IconButtonSize,
-	IconButtonVariant,
-} from '@src-types/ui';
+import type { IconButtonProps } from '@src-types/ui/buttons';
 
 /**
  * IconButton - Reusable icon button component

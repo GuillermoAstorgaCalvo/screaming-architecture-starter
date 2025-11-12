@@ -1,0 +1,40 @@
+import ArrowLeftIcon from '@core/ui/icons/arrow-left-icon/ArrowLeftIcon';
+import ArrowRightIcon from '@core/ui/icons/arrow-right-icon/ArrowRightIcon';
+
+import type { ButtonConfig, ButtonConfigOptions } from './TransferActions.types';
+
+/**
+ * Creates the configuration for the move to target button
+ */
+export function createMoveToTargetButtonConfig({
+	buttonSize,
+	onClick,
+	disabled,
+	label,
+}: Readonly<ButtonConfigOptions>): ButtonConfig {
+	return {
+		icon: <ArrowRightIcon size={buttonSize} />,
+		onClick,
+		disabled,
+		ariaLabel: label ?? 'Move selected to right',
+		title: label ?? 'Move selected to right',
+	};
+}
+
+/**
+ * Creates the configuration for the move to source button
+ */
+export function createMoveToSourceButtonConfig({
+	buttonSize,
+	onClick,
+	disabled,
+	label,
+}: Readonly<ButtonConfigOptions>): ButtonConfig {
+	return {
+		icon: <ArrowLeftIcon size={buttonSize} />,
+		onClick,
+		disabled,
+		ariaLabel: label ?? 'Move selected to left',
+		title: label ?? 'Move selected to left',
+	};
+}

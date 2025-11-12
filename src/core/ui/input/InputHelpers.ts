@@ -1,5 +1,5 @@
 import { getInputVariantClasses } from '@core/ui/variants/input';
-import type { StandardSize } from '@src-types/ui';
+import type { StandardSize } from '@src-types/ui/base';
 
 export interface GetInputClassesOptions {
 	size: StandardSize;
@@ -24,9 +24,10 @@ export function getAriaDescribedBy(
 	error?: string,
 	helperText?: string
 ): string | undefined {
-	if (error) return `${inputId}-error`;
-	if (helperText) return `${inputId}-helper`;
-	return undefined;
+	const ids: string[] = [];
+	if (error) ids.push(`${inputId}-error`);
+	if (helperText) ids.push(`${inputId}-helper`);
+	return ids.length > 0 ? ids.join(' ') : undefined;
 }
 
 export function generateInputId(

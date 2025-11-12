@@ -15,6 +15,9 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 - `env.client.ts`: Client-safe `import.meta.env` surface (Zod-validated); forbid raw usage elsewhere.
 - `routes.ts`: Global route constants (e.g., `ROUTES.HOME`).
 - `runtime.ts`: Runtime configuration loader from `public/runtime-config.json`. Provides `getRuntimeConfig()`, `getAppConfig()` (merged env + runtime), and `getCachedRuntimeConfig()`. Validates with Zod schema (supports `API_BASE_URL` and `ANALYTICS_WRITE_KEY`). SSR-safe with caching.
+- `featureFlags.ts`: ✅ Feature flag definitions with metadata and default values. Central registry of all feature flags (`FEATURE_FLAGS`). Provides `getFeatureFlagDefinition()`, `getAllFeatureFlagDefinitions()`, `validateFeatureFlags()` functions. Feature flags enable gradual rollout, A/B testing, and safe feature toggling without code deployments.
+- `features.ts`: ✅ Feature flags runtime toggles. Provides `isFeatureEnabled()`, `isFeatureEnabledAsync()`, `getAllFeatureFlags()`, `getAllFeatureFlagsAsync()` functions. Supports runtime config overrides via `runtime-config.json`. Runtime config overrides take precedence over definition defaults.
+- `seo.ts`: ✅ SEO & Metadata configuration. Centralized SEO defaults (`DEFAULT_SEO`) and helper functions (`mergeSEOConfig`, `buildPageTitle`, `buildAbsoluteUrl`, `buildCanonicalUrl`, `buildOgImageUrl`, `buildTwitterImageUrl`, `buildRobotsContent`, `getDefaultSEO`). Enables per-route metadata updates and improves sharing/discoverability.
 - `init.ts`: Configuration initialization that sets up runtime configuration and configures `httpClient` baseURL. Should be called early in app lifecycle (main.tsx).
 
 ### lib (Framework-Specific Libraries)
@@ -22,10 +25,26 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 **Purpose**: React/framework-specific implementations and components that integrate with the framework ecosystem.
 
 - `httpClient.ts`: Exports `HttpClient` class implementing `HttpPort` interface and default `httpClient` instance. Supports default config, interceptors (request/response/error), all HTTP methods, automatic body serialization, timeout via AbortController. Includes helper modules:
-  - `httpClientHelpers.ts`: URL building (`buildURL`), header merging (`mergeHeaders`, `addHeadersFromSource`), body serialization (`serializeBody`, `prepareRequestBody`), response parsing (`parseResponse`, `parseJsonResponse`), timeout control (`createTimeoutController`), error creation (`createHttpError`), header conversion (`headersToRecord`).
-  - `httpClientInterceptors.ts`: Type definitions (`RequestInterceptor`, `ResponseInterceptor`, `ErrorInterceptor`) and execution utilities (`executeRequestInterceptors`, `executeResponseInterceptors`, `executeErrorInterceptors`).
+  - `httpClientUrl.ts`: URL building utilities (`buildURL`)
+  - `httpClientHeaders.ts`: Header manipulation and merging utilities (`mergeHeaders`, `headersToRecord`, `mergeHeaders`)
+  - `httpClientBody.ts`: Request body serialization and preparation utilities (`prepareRequestBody`, `serializeBody`)
+  - `httpClientResponseParsing.ts`: Response body parsing utilities (`parseResponse`, `parseJsonResponse`)
+  - `httpClientResponse.ts`: Response processing utilities (`processHttpResponse`)
+  - `httpClientTimeout.ts`: Request timeout management utilities (`createTimeoutController`, `TimeoutController`)
+  - `httpClientErrorCreation.ts`: HTTP error creation utilities (`createHttpError`)
+  - `httpClientErrorHandler.ts`: HTTP error handling utilities (`handleHttpError`)
+  - `httpClientInterceptors.ts`: Type definitions (`RequestInterceptor`, `ResponseInterceptor`, `ErrorInterceptor`) and execution utilities (`executeRequestInterceptors`, `executeResponseInterceptors`, `executeErrorInterceptors`)
+  - `httpClientConfig.ts`: HTTP client configuration management (`createDefaultConfig`, `mergeConfigAndHeaders`)
+  - `httpClientMethods.ts`: HTTP method factories (`createGetMethod`, `createPostMethod`, `createPutMethod`, `createPatchMethod`, `createDeleteMethod`)
+  - `httpClientRequest.ts`: Request preparation and configuration utilities (`prepareRequestConfig`, `prepareFetchConfig`, `clearTimeoutSafely`)
 - `ErrorBoundary.tsx`: Production-ready React ErrorBoundary (class component). Catches React errors and displays fallback UI with dev error details, reset button, and home link. Requires logger via props (cannot use hooks). Uses `env.DEV` for development error display.
 - `ErrorBoundaryWrapper.tsx`: Wrapper component that injects logger from `LoggerProvider` context into `ErrorBoundary` using `useLogger()` hook (bridges hooks to class component).
+- `date.ts`: ✅ Date manipulation utilities. Framework-agnostic date operations including `isValidDate()`, `toDate()`, `addDays()`, `addHours()`, `addMinutes()`, `daysDiff()`, `isPast()`, `isFuture()`, `isToday()`, `startOfDay()`, `endOfDay()`, `toUTCString()`. SSR-safe with proper Date object validation.
+- `formatDate.ts`: ✅ Date formatting utilities (main export). Provides `formatDate()`, `formatRelativeTime()`, `formatISO()`, `formatTime()`, `formatDateTime()` functions with configurable locale, timezone, and format options. SSR-safe with Intl.DateTimeFormat fallbacks.
+- `formatDate.types.ts`: ✅ Date formatting type definitions
+- `formatISO.ts`: ✅ ISO date formatting utilities
+- `formatRelativeTime.ts`: ✅ Relative time formatting utilities
+- `formatTime.ts`: ✅ Time formatting utilities
 
 **Note**: `lib/` may depend on React, React Router, and other framework libraries but must respect hexagonal architecture boundaries.
 
@@ -34,10 +53,19 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 **Purpose**: Pure, framework-agnostic utility functions that can be used in any JavaScript/TypeScript context.
 
 - `classNames.ts`: Conditionally join class names together (strings, arrays, objects). Supports strings, numbers, arrays, objects (truthy keys included), nested arrays. Falsy values are ignored. Zero-dependency utility similar to `clsx`.
-- `debounce.ts`: Debounce function implementation. Returns a debounced function with `cancel()` and `flush()` methods. Supports `leading` and `trailing` options (defaults: leading=false, trailing=true). Also supports `maxWait` option for maximum delay. Type-safe with generic function type support. Uses `setTimeout`/`clearTimeout` internally with state management for tracking call times and arguments. The returned function has attached `cancel` and `flush` methods via closure.
-- `throttle.ts`: Throttle function implementation. Returns a throttled function with `cancel()` and `flush()` methods. Supports `leading` and `trailing` options (defaults: leading=true, trailing=true). Type-safe with generic function type support. Uses `Date.now()` for timing calculations. The returned function has attached `cancel` and `flush` methods via closure.
+- `debounce.ts`: Debounce function implementation. Returns a debounced function with `cancel()` and `flush()` methods. Supports `leading` and `trailing` options (defaults: leading=false, trailing=true). Also supports `maxWait` option for maximum delay. Type-safe with generic function type support. Uses `setTimeout`/`clearTimeout` internally with state management for tracking call times and arguments. The returned function has attached `cancel` and `flush` methods via closure. Imports helpers from `debounceHelpers.ts`.
+- `debounceHelpers.ts`: Internal helper functions for debounce implementation. Exports `DebounceState` interface, `clearTimers()`, `createCancelHandler()`, `createFlushHandler()`, `createInvokeFunc()`, `createLeadingEdge()`, `createTrailingEdge()`, `scheduleMaxWait()`, `shouldInvoke()` utilities. These helpers are used internally by `debounce.ts` to keep the main implementation clean and testable.
+- `throttle.ts`: Throttle function implementation. Returns a throttled function with `cancel()` and `flush()` methods. Supports `leading` and `trailing` options (defaults: leading=true, trailing=true). Type-safe with generic function type support. Uses `Date.now()` for timing calculations. The returned function has attached `cancel` and `flush` methods via closure. Imports helpers from `throttleHelpers.ts`.
+- `throttleHelpers.ts`: Internal helper functions for throttle implementation. Exports `ThrottleState` interface, `clearTimer()`, `invokeFunc()`, `handleLeadingEdge()`, `handleTrailingEdge()`, `shouldInvoke()`, `scheduleTrailingEdge()`, `createCancelHandler()`, `createFlushHandler()`, `validateWait()`, `validateThrottleOptions()` utilities. These helpers are used internally by `throttle.ts` to keep the main implementation clean and testable.
+- `hookUtils.ts`: Utility functions for React hooks (note: this is React-specific, but kept here for now as it's used by core hooks). Exports `getDependenciesKey(dependencies)` - Serializes dependencies array to detect changes, handles non-serializable values with fallback strategy. Used by hooks for dependency comparison.
+- `seoDomUtils.ts`: ✅ SEO DOM utilities (main orchestrator). Applies SEO metadata to document head via `applySEOToDocument()` function. Orchestrates all SEO-related DOM updates by delegating to specialized modules for different meta tag types.
+- `seoDomUtils.basic.ts`: ✅ Basic SEO meta tags utilities. Updates basic meta tags (description, robots, keywords, author) and canonical URL via `updateBasicMetaTags()` and `updateCanonicalUrl()` functions.
+- `seoDomUtils.custom.ts`: ✅ Custom meta tags utilities. Updates custom meta tags via `updateCustomMetaTags()` function.
+- `seoDomUtils.openGraph.ts`: ✅ Open Graph meta tags utilities. Updates Open Graph meta tags (og:title, og:description, og:type, og:url, og:image, og:locale) via `updateOpenGraphTags()` function.
+- `seoDomUtils.twitter.ts`: ✅ Twitter Card meta tags utilities. Updates Twitter Card meta tags (twitter:card, twitter:title, twitter:description, twitter:image) via `updateTwitterTags()` function.
+- `seoDomUtils.helpers.ts`: ✅ SEO DOM utilities helper functions. Internal helper functions for SEO operations including type definitions and utility functions used by other SEO DOM utility modules.
 
-**Note**: `utils/` must be framework-agnostic - no React, DOM, or framework-specific dependencies.
+**Note**: `utils/` must be framework-agnostic - no React, DOM, or framework-specific dependencies. Exception: `hookUtils.ts` contains React-specific utilities but is co-located here as it's used by core hooks.
 
 ### ports (Hexagonal Architecture Ports)
 
@@ -45,7 +73,7 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 
 - `LoggerPort.ts`: Interface for application-wide logging. Exports `LoggerPort` interface with `debug()`, `info()`, `warn()`, `error()` methods. Also exports `LogLevel` type (`'debug' | 'info' | 'warn' | 'error'`) and `LogContext` type (`Record<string, unknown>`). Error method accepts optional error object and context.
 - `StoragePort.ts`: Interface for key/value storage access. Exports `StoragePort` interface with `getItem()` (returns `string | null`), `setItem()` (returns `boolean`), `removeItem()` (returns `boolean`), `clear()` (returns `boolean`), `getLength()` (returns `number`), `key()` (returns `string | null`). All write operations return boolean to indicate success.
-- `HttpPort.ts`: Interface for HTTP operations. Exports `HttpPort` interface with `request()`, `get()`, `post()`, `put()`, `patch()`, `delete()` methods. Also exports `HttpClientConfig` (extends `RequestInit` with `body`, `baseURL`, `timeout`, `headers`), `HttpClientResponse<T>` (data, status, statusText, headers, response), and `HttpClientError` (extends Error with status, data, response).
+- `HttpPort.ts`: Interface for HTTP operations. Exports `HttpPort` interface with `request()`, `get()`, `post()`, `put()`, `patch()`, `delete()`, `head()`, `options()` methods. Also exports `HttpClientConfig` (extends `RequestInit` with `body`, `baseURL`, `timeout`, `headers`), `HttpClientResponse<T>` (data, status, statusText, headers, response), and `HttpClientError` (extends Error with status, data, response).
 
 **Guidelines**: Pure TypeScript interfaces only. No implementations. Infrastructure adapters implement these; domains depend on ports only.
 
@@ -54,7 +82,7 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 **Purpose**: React hooks that provide reusable logic across components.
 
 - `useDebounce.ts`: Exports two hooks: `useDebounce<T>(value, delay)` - Hook to debounce a value. Returns debounced version that updates after delay. Uses `useState` and `useEffect` with debounced function, canceling previous debounce on unmount. `useDebouncedCallback<T>(callback, delay)` - Hook to debounce a callback function. Returns memoized debounced version that will only execute after delay has passed since the last call. Both hooks use `core/utils/debounce` internally.
-- `useThrottle.ts`: Exports two hooks: `useThrottle<T>(value, delay)` - Hook to throttle a value. Returns throttled version that updates at most once per delay period. `useThrottledCallback<T>(callback, delay)` - Hook to throttle a callback function. Returns memoized throttled version that executes at most once per delay period. Both hooks use `core/utils/throttle` internally and provide `cancel()` and `flush()` methods.
+- `useThrottle.ts`: Exports two hooks: `useThrottle<T>(value, delay)` - Hook to throttle a value. Returns throttled version that updates at most once per delay period. Uses `core/utils/throttle` internally. `useThrottledCallback<T>(callback, delay)` - Hook to throttle a callback function. Returns memoized throttled version that executes at most once per delay period. Returns a `ThrottledFunction` with `cancel()` and `flush()` methods attached. Both hooks use `core/utils/throttle` internally.
 - `useToggle.ts`: Hook for managing boolean toggle state. Takes `initialValue` (default `false`). Returns tuple: `[value, toggle, setTrue, setFalse]`. Uses `useCallback` for memoized functions. All three setters are provided: `toggle()` (flips value), `setTrue()`, `setFalse()`.
 - `useLocalStorage.ts`: Hook for reading/writing to localStorage via `StoragePort`. Takes `key` (string) and `initialValue` (generic `T`). Handles JSON serialization/deserialization, cross-tab sync via storage events (listens to `storage` events), SSR safety (guards for window). Returns tuple: `[value, setValue, removeValue]`. Uses `useStorage()` and `useLogger()` hooks. `setValue(null)` removes the item. Automatically syncs on mount and cross-tab changes.
 - `useFetch.ts`: ✅ Hook for fetching data using `httpClient`. Provides state management for loading, data, and error states. Supports automatic fetching on mount with dependency array, manual fetch triggering, request cancellation via AbortController, and automatic cleanup. Returns `{ data, error, loading, fetch, reset }`. Uses `useLogger()` for logging fetch operations. Configurable via `UseFetchOptions` (extends `HttpClientConfig` without body/method).
@@ -62,8 +90,19 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 - `useMediaQuery.ts`: ✅ Hook to track media query matches. Monitors CSS media queries and returns whether they currently match. SSR-safe with configurable initial state via `defaultMatches` option. Updates when media query matches change.
 - `useWindowSize.ts`: ✅ Hook to track window dimensions. Provides responsive window dimensions (`width`, `height`) that update on window resize events. SSR-safe with initial fallback values (defaults to 0 for SSR). Returns `{ width, height }` object.
 - `usePrevious.ts`: ✅ Hook that returns the previous value of a state or prop. Useful for comparing current vs previous values or implementing undo/redo functionality. Takes a value of generic type `T` and returns `T | undefined` (undefined on first render).
+- `useSEO.ts`: ✅ Hook to update document head metadata (SEO). Updates title, meta tags, Open Graph, and Twitter Card tags. Uses `mergeSEOConfig` from `@core/config/seo` to merge custom config with defaults. Supports per-route metadata updates. Takes `SEOConfig` object with optional properties (title, description, indexable, canonicalUrl, ogType, ogImage, ogImageWidth, ogImageHeight, ogImageAlt, ogLocale, twitterCard, twitterImage, twitterImageAlt, keywords, author, customMeta).
 
 **Guidelines**: React-specific. Should use ports/providers for dependencies (not direct infrastructure imports). May use `utils/` for pure logic.
+
+### http (HTTP Error Handling)
+
+**Purpose**: HTTP error normalization and adaptation utilities for converting HTTP errors to typed domain errors.
+
+- `errorAdapter.ts`: ✅ HTTP error adapter for normalizing HTTP errors to typed domain errors. Maps HTTP status codes to domain error types (network, timeout, validation, authentication, authorization, notFound, conflict, rateLimit, etc.). Provides `adapt()` method (via `HttpErrorAdapter` class) that converts `HttpClientError` or `ApiErrorResponse` to normalized `DomainError` with type-safe error categorization. Supports extracting validation errors from API responses with field-level error mapping. Exports `DomainErrorType`, `DomainError`, `adaptError()` convenience function, and `errorAdapter` singleton instance. Includes helper methods: `isType()`, `isClientError()`, `isServerError()`, `isRetryable()` for error type checking.
+- `errorAdapter.constants.ts`: Error adapter constants
+- `errorAdapter.handlers.ts`: Error handling functions
+- `errorAdapter.helpers.ts`: Helper functions (`isType`, `isClientError`, `isServerError`, `isRetryable`)
+- `errorAdapter.types.ts`: Type definitions (`DomainErrorType`, `DomainError`, etc.)
 
 ### providers (React Context Providers)
 
@@ -90,8 +129,7 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 
 **Purpose**: Library-agnostic form handling to avoid coupling domain code to specific form implementations.
 
-- `formAdapter.ts`: ✅ Form abstraction layer over react-hook-form. Exports `useFormAdapter<T>()` hook that wraps `useForm` and provides consistent `FormControls<T>` interface. Exposes `register`, `handleSubmit`, `reset`, `watch`, `setValue`, `getValues`, `errors`, `isValid`, `isSubmitting`, `isDirty`, `control`, `getFieldState`, `setError`, `clearErrors`, `trigger`. Enables easy swapping of form libraries without changing domain code.
-- `zodResolver.ts`: ✅ Zod validation resolver integration. Re-exports `zodResolver` from `@hookform/resolvers/zod` to provide consistent API through form adapter layer. Allows domains to use Zod validation without directly depending on @hookform/resolvers.
+- `formAdapter.ts`: ✅ Form abstraction layer over react-hook-form. Exports `useFormAdapter<T>()` hook that wraps `useForm` and provides consistent `FormControls<T>` interface. Exposes `register`, `handleSubmit`, `reset`, `watch`, `setValue`, `getValues`, `errors`, `isValid`, `isSubmitting`, `isDirty`, `control`, `getFieldState`, `setError`, `clearErrors`, `trigger`. Enables easy swapping of form libraries without changing domain code. Note: `zodResolver` should be imported directly from `@hookform/resolvers/zod` (not re-exported through adapter).
 - `controller.tsx`: ✅ Controller component for controlled components. Re-exports `Controller` from react-hook-form through the adapter layer for components that don't work with the `register` API (e.g., third-party UI libraries, custom components).
 - `useController.ts`: ✅ `useController` hook and related types for controlled components. Re-exports `useController` and types (`ControllerProps`, `ControllerRenderProps`, `FieldPath`, `UseControllerProps`, `UseControllerReturn`) from react-hook-form through the adapter layer.
 
@@ -99,14 +137,56 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 
 **Purpose**: Framework-agnostic security utilities for HTML sanitization, CSP, and permission management.
 
-- `sanitizeHtml.ts`: ✅ HTML sanitization utilities to prevent XSS attacks. Exports `escapeHtml(text)` - Escape HTML entities (safest option for untrusted content), `sanitizeHtml(html, options?)` - Sanitize HTML content with configurable allowed tags/attributes. Provides security-critical sanitization functions for rendering user-provided HTML safely.
-- `csp.ts`: ✅ Content Security Policy (CSP) helpers. Exports `generateNonce()` - Generate unique nonces per request/response, `generateHash(content, algorithm?)` - Generate SHA-256/384/512 hashes for inline content, `buildCSPPolicy(directives)` - Build CSP policy string. Provides CSP-related security utilities for server-side rendering or client-side contexts.
-- `permissions.ts`: ✅ Permission model helpers for managing and evaluating permissions. Exports `hasPermission(permissions, permission)` - Check if permission exists and is true, `hasAnyPermission(permissions, permissionList)` - Check if any permission in list is granted, `hasAllPermissions(permissions, permissionList)` - Check if all permissions in list are granted, `checkPermissions(permissions, requiredPermissions, requireAll?)` - Check permissions with detailed result including missing permissions, `mergePermissions(...permissionSets)` - Merge multiple permission sets. Provides generic permission evaluation logic following least privilege and fail-secure principles.
+- `sanitizeHtml.ts`: ✅ HTML sanitization utilities to prevent XSS attacks. Exports `sanitizeHtml(html, options?)` - Sanitize HTML content with configurable allowed tags/attributes. Provides security-critical sanitization functions for rendering user-provided HTML safely.
+- `sanitizeHtmlEscape.ts`: ✅ HTML escaping utilities. Exports `escapeHtml(text)` - Escape HTML entities (safest option for untrusted content). SSR-safe with fallback to basic entity escaping in non-browser environments.
+- `sanitizeHtmlDOMPurify.ts`: ✅ DOMPurify integration. Exports `sanitizeHtmlWithDOMPurify(html, options?)` - Use DOMPurify if available, falls back to basic sanitization. Also exports `isDOMPurifyAvailable()` and `validateHtmlInput()` utilities.
+- `sanitizeHtmlConstants.ts`: ✅ Constants and default configuration (`MAX_HTML_LENGTH`, `MAX_ESCAPE_LENGTH`, `DEFAULT_CONFIG`)
+- `sanitizeHtmlTypes.ts`: ✅ Type definitions (`SanitizeConfig`, `DOMPurifyConfig`, `DOMPurifyAPI`, `WindowWithDOMPurify`)
+- `sanitizeHtmlHelpers.ts`: ✅ Internal helper functions (`mergeSanitizeConfig`, `removeDangerousElements`, `processElement`, `removeDisallowedTag`)
+- `csp/`: ✅ Content Security Policy (CSP) helpers organized into focused modules:
+  - `csp/types.ts`: Type definitions (`HashAlgorithm`, `CSPDirectives`)
+  - `csp/nonce.ts`: Nonce generation and validation (`generateNonce()`)
+  - `csp/hash.ts`: Hash generation for inline content (`generateHash(content, algorithm?)` - Generate SHA-256/384/512 hashes)
+  - `csp/policy.ts`: Policy building, parsing, and recommended CSP (`buildCSPPolicy()`, `parseCSPPolicy()`, `getRecommendedCSP()`)
+  - `csp/helpers.ts`: Internal helper functions for policy operations
+- `permissionsTypes.ts`: ✅ Type definitions for the permission system (`Permissions`, `PermissionCheckResult`, `PermissionRoles`, etc.)
+- `permissionsCheck.ts`: ✅ Basic permission checking functions (`hasPermission()`, `hasAllPermissions()`, `hasAnyPermission()`)
+- `permissionsValidate.ts`: ✅ Detailed permission validation with results (`checkPermissions()` - returns detailed result including missing permissions)
+- `permissionsRoles.ts`: ✅ Role-based permission management (`getPermissionsFromRoles()`)
+- `permissionsManipulate.ts`: ✅ Permission manipulation utilities (`mergePermissions()`, `filterPermissions()`)
+- `permissionsPattern.ts`: ✅ Pattern matching with wildcards (`matchesPattern()`, `findPermissionsByPattern()`)
+
+### i18n (Internationalization)
+
+**Purpose**: Core i18n configuration using i18next with scalable, domain-driven architecture.
+
+- `i18n.ts`: ✅ Core i18next instance configuration. Registers common translations, initializes i18next with language detection, sets up RTL support (automatically updates HTML `dir` and `lang` attributes), and exports configured i18n instance and initialization promise.
+- `types.ts`: ✅ TypeScript types for translation keys (type-safe access). Defines translation interfaces for each namespace (`common`, `landing`, etc.) and provides type-safe translation key access.
+- `useTranslation.ts`: ✅ Custom hook wrapper with automatic resource loading. Provides `useTranslation` hook that automatically loads resources on-demand when first used. Type-safe translation function with autocomplete.
+- `useRtl.ts`: ✅ Hook to check if current language is RTL. Returns boolean indicating if current language requires RTL layout. Automatically updates when language changes.
+- `resourceLoader.ts`: ✅ Dynamic resource loading system (main export, re-exports from sub-modules). Handles lazy loading of translation resources and caches loaded resources to prevent re-loading.
+- `resourceLoader.cache.ts`: ✅ Resource caching utilities (`clearResourceCacheFor`, `isResourceCached`, `isResourceLoading`)
+- `resourceLoader.i18n.ts`: ✅ i18next integration functions (`addResourceToI18n`, `loadAndAddResource`)
+- `resourceLoader.load.ts`: ✅ Resource loading functions (`loadResource`)
+- `resourceLoader.registry.ts`: ✅ Resource loader registry (`registerResourceLoader`, `getRegisteredNamespaces`, `clearResourceLoaders`)
+- `resourceLoader.types.ts`: ✅ Type definitions for resource loading (`ResourceLoader`, `TranslationResource`, `AddResourceOptions`, etc.)
+- `resourceLoader.validation.ts`: ✅ Resource validation utilities
+- `registry.ts`: ✅ Domain translation registration system. Exports `registerDomainTranslations(namespace, loaderFactory)` for registering domain translations and `registerCommonTranslations(loaderFactory)` for registering common translations.
+- `constants.ts`: ✅ Centralized i18n constants. Exports `SUPPORTED_LANGUAGES`, `DEFAULT_LANGUAGE`, `RTL_LANGUAGES`, `DEFAULT_NAMESPACE`, `LANGUAGE_STORAGE_KEY`, `LANGUAGE_DETECTION_ORDER`. Helper functions: `isSupportedLanguage()`, `isRtlLanguage()`, `normalizeLanguage()`.
+- `errors.ts`: ✅ Custom error classes for i18n resource loading. Exports `ResourceLoaderNotFoundError` (thrown when resource loader is not found for a namespace) and `InvalidResourceFormatError` (thrown when resource format is invalid).
+- `useTranslationHelpers.ts`: ✅ Internal helper functions for resource loading state management. Exports `isResourceLoadedInI18n`, `ensureResourceLoaded`, `handleInitialLoad`, `handleExistingLoad`, `updateLoadingState` - utility functions for managing resource loading state.
+- `useTranslationLoader.ts`: ✅ Internal hook for managing resource loading effects. Exports `useResourceLoader`, `useResourceLoadingEffects` - hooks that handle loading effects and language changes.
+- `useTranslationState.ts`: ✅ Internal hook for managing translation loading state. Exports `useResourceLoadingState`, `useLoadingStateUpdater` - hooks that manage loading state per namespace/language.
+- `locales/`: ✅ Common/shared translations. Contains `en.json`, `es.json`, `ar.json` translation files. Domain translations are co-located with domains: `domains/<domain>/i18n/`.
+
+**Architecture**: Dynamic resource loading, domain registration, no core dependencies on domain translations, type safety, lazy loading, resource caching.
+
+### perf (Performance Utilities)
+
+- `reportWebVitals.ts`: ✅ Core Web Vitals performance monitoring. Tracks and reports Core Web Vitals metrics (LCP, INP, CLS, FCP, TTFB). Only runs in production mode. Uses logger adapter for reporting (can be extended to analytics services).
 
 ### Optional/Planned Core Modules
 
-- `i18n/`: (Optional) Core i18n instance, lazy namespaces, fallbacks, type-safe translation keys.
-- `perf/`: (Optional) Web Vitals reporting.
 - `analytics/`: (Optional) Feature flags, metrics adapter interfaces.
 - `router/`: (Optional) Generated route types.
 
@@ -120,8 +200,14 @@ Each UI component is organized in its own folder with related helper files, type
   - `Button.tsx`: Main button component (uses `getButtonVariantClasses` from `@core/ui/variants`)
 - `input/`: Text input component with label, error, helper text, icon support (left/right), sizes, and full width support.
   - `Input.tsx`: Main input component (exports types from `@src-types/ui`)
+  - `InputContent.tsx`: Input content component
+  - `InputField.tsx`: Input field component
   - `InputHelpers.ts`: Helper functions for input handling (uses `getInputVariantClasses` from `@core/ui/variants`)
-  - `InputParts.tsx`: Input sub-components (uses Label, ErrorText, HelperText from other folders) and type interfaces
+  - `InputIcon.tsx`: Input icon component
+  - `InputLabel.tsx`: Input label component
+  - `InputMessages.tsx`: Input error/helper text messages component
+  - `InputTypes.ts`: Input type definitions
+  - `InputWrapper.tsx`: Input wrapper component
   - `useInput.ts`: React hook for managing input state
 - `modal/`: Modal dialog component with overlay, close functionality, customizable sizes, optional footer, and keyboard navigation (ESC to close).
   - `Modal.tsx`: Main modal component (exports types from `@src-types/ui`)
@@ -143,12 +229,63 @@ Each UI component is organized in its own folder with related helper files, type
   - `IconButton.tsx`: Icon button component (uses `getIconButtonVariantClasses` from `@core/ui/variants`)
 - `label/`: Form label component.
   - `Label.tsx`: Label component
+- `textarea/`: Textarea component with label, error, helper text, sizes, full width support, and accessibility features.
+  - `Textarea.tsx`: Main textarea component (uses `getTextareaVariantClasses` from `@core/ui/variants`)
+  - `TextareaContent.tsx`: Textarea content component
+  - `TextareaField.tsx`: Textarea field component
+  - `TextareaHelpers.ts`: Helper functions for textarea handling
+  - `TextareaLabel.tsx`: Textarea label component
+  - `TextareaMessages.tsx`: Textarea error/helper text messages component
+  - `TextareaTypes.ts`: Textarea type definitions
+  - `TextareaWrapper.tsx`: Textarea wrapper component
+  - `useTextarea.ts`: React hook for managing textarea state
+- `checkbox/`: ✅ Checkbox component with label, error, helper text support, size variants (sm, md, lg), controlled/uncontrolled modes, and dark mode support.
+  - `Checkbox.tsx`: Main checkbox component (uses `getCheckboxVariantClasses` from `@core/ui/variants`)
+  - `CheckboxContent.tsx`: Checkbox content component
+  - `CheckboxField.tsx`: Checkbox field component
+  - `CheckboxHandlers.ts`: Checkbox event handlers
+  - `CheckboxHelpers.ts`: Helper functions for checkbox handling
+  - `CheckboxLabel.tsx`: Checkbox label component
+  - `CheckboxMessages.tsx`: Checkbox error/helper text messages component
+  - `CheckboxTypes.ts`: Checkbox type definitions
+  - `CheckboxWrapper.tsx`: Checkbox wrapper component
+  - `useCheckbox.ts`: React hook for managing checkbox state
+- `switch/`: ✅ Toggle switch component with label, error, helper text support, size variants (sm, md, lg), animated toggle transition, controlled/uncontrolled modes, and dark mode support.
+  - `Switch.tsx`: Main switch component (uses `getSwitchVariantClasses` from `@core/ui/variants`)
+  - `SwitchContainer.tsx`: Switch container component
+  - `SwitchContent.tsx`: Switch content component
+  - `SwitchField.tsx`: Switch field component
+  - `SwitchInput.tsx`: Switch input component
+  - `SwitchLabel.tsx`: Switch label component
+  - `SwitchMessages.tsx`: Switch error/helper text messages component
+  - `SwitchWrapper.tsx`: Switch wrapper component
+  - `SwitchHelpers.ts`: Helper functions for switch handling
+  - `SwitchHandlers.ts`: Switch event handlers
+  - `SwitchTypes.ts`: Switch type definitions
+  - `useSwitch.ts`: React hook for managing switch state
+  - `useSwitchField.ts`: React hook for switch field management
+  - `useSwitchFieldState.ts`: React hook for switch field state management
+- `select/`: ✅ Select/dropdown component with label, error, helper text support, size variants (sm, md, lg), custom dropdown arrow icon, and dark mode support.
+  - `Select.tsx`: Main select component (uses `getSelectVariantClasses` from `@core/ui/variants`)
+  - `SelectContent.tsx`: Select content component
+  - `SelectField.tsx`: Select field component
+  - `SelectHelpers.ts`: Helper functions for select handling
+  - `SelectLabel.tsx`: Select label component
+  - `SelectMessages.tsx`: Select error/helper text messages component
+  - `SelectTypes.ts`: Select type definitions
+  - `SelectWrapper.tsx`: Select wrapper component
+  - `useSelect.ts`: React hook for managing select state
 - `icons/`: Icon SVG components folder.
+  - `Icon.tsx`: ✅ Generic Icon wrapper component that uses the icon registry. Provides centralized icon management with type-safe icon names, fallback support, and consistent styling. Supports size variants (sm, md, lg).
+  - `iconRegistry.ts`: ✅ Icon registry for centralized icon management. Exports `iconRegistry` object, `getIcon()` function, `registerIcon()` function, and `hasIcon()` function. Provides logical name → SVG component mapping.
   - `clear-icon/ClearIcon.tsx`: Clear icon SVG component
   - `close-icon/CloseIcon.tsx`: Close icon SVG component used in modals and other UI elements
   - `heart-icon/HeartIcon.tsx`: Heart/like icon SVG component
   - `search-icon/SearchIcon.tsx`: Search icon SVG component
   - `settings-icon/SettingsIcon.tsx`: Settings icon SVG component
+- `loadable.tsx`: ✅ Code splitting wrapper around React.lazy and Suspense. Provides `Loadable` function that creates lazy-loaded components with customizable loading fallbacks. Accepts `loader` function and optional `loading` fallback. Returns a component that can be used like a normal React component with `fallback` prop support.
+- `loadableFallback.tsx`: ✅ Default loading fallback component for Loadable. Accessible loading state with `aria-live="polite"` and `aria-label="Loading"`. Extracted to separate file for Fast Refresh compatibility.
+- `loadableUtils.ts`: ✅ Utility functions for Loadable. Provides `createLoadable()` helper that creates a loadable component with default loading fallback. Extracted to separate file for Fast Refresh compatibility.
 
 **Component Structure Patterns:**
 
@@ -187,7 +324,7 @@ Create `ComponentParts.tsx` when you have **multiple sub-components** that compo
 
 **Examples:**
 
-- `input/InputParts.tsx`: Exports `InputWrapper`, `InputField`, `InputMessages`, `InputLabel`, `InputContent` (5 sub-components) plus interfaces for state management
+- `input/`: Exports `InputWrapper`, `InputField`, `InputMessages`, `InputLabel`, `InputContent` as separate component files plus `InputTypes.ts` for type interfaces
 - `modal/ModalParts.tsx`: Exports `CloseButton`, `ModalHeader`, `ModalContent`, `ModalFooter` (4 sub-components)
 
 **Multiple Component Files Guidelines:**
@@ -231,14 +368,116 @@ Extract hooks (`use*.ts` files) from components when:
   - `modal.ts`: Modal variant definitions using `cva`. Exports `modalDialogVariants` (dialog overlay), `modalBodyVariants` (modal content with size variants: sm, md, lg, xl, full), `ModalDialogVariants` and `ModalBodyVariants` types, and helper functions `getModalDialogVariantClasses` and `getModalBodyVariantClasses`.
   - `spinner.ts`: Spinner variant definition using `cva`. Exports `spinnerVariants`, `SpinnerVariants` type, and `getSpinnerVariantClasses` helper function. Supports size variants (sm, md, lg).
   - `icon.ts`: Icon variant definition using `cva`. Exports `iconVariants`, `IconVariants` type, and `getIconVariantClasses` helper function. Supports size variants (sm, md, lg). Used by all icon components (CloseIcon, ClearIcon, HeartIcon, etc.).
+  - `textarea.ts`: ✅ Textarea variant definition using `cva`. Exports `textareaVariants`, `TextareaVariants` type, and `getTextareaVariantClasses` helper function. Supports size variants (sm, md, lg) and state variants (normal, error). Uses `twMerge` for proper class merging.
+  - `checkbox.ts`: ✅ Checkbox variant definition using `cva`. Exports `checkboxVariants`, `CheckboxVariants` type, and `getCheckboxVariantClasses` helper function. Supports size variants (sm, md, lg). Uses `twMerge` for proper class merging.
+  - `switch.ts`: ✅ Switch variant definition using `cva`. Exports `switchVariants`, `SwitchVariants` type, and `getSwitchVariantClasses` helper function. Supports size variants (sm, md, lg). Uses `twMerge` for proper class merging.
+  - `select.ts`: ✅ Select variant definition using `cva`. Exports `selectVariants`, `SelectVariants` type, and `getSelectVariantClasses` helper function. Supports size variants (sm, md, lg) and state variants (normal, error). Uses `twMerge` for proper class merging.
+  - `radio.ts`: ✅ Radio variant definition using `cva`. Exports `radioVariants`, `RadioVariants` type, and `getRadioVariantClasses` helper function. Supports size variants (sm, md, lg). Uses `twMerge` for proper class merging.
+  - `badge.ts`: ✅ Badge variant definition using `cva`. Exports `badgeVariants`, `BadgeVariants` type, and `getBadgeVariantClasses` helper function. Supports size variants (sm, md, lg) and variant options (default, primary, success, warning, error, info). Uses `twMerge` for proper class merging.
+  - `heading.ts`: ✅ Heading variant definition using `cva`. Exports `headingVariants`, `HeadingVariants` type, and `getHeadingVariantClasses` helper function. Supports size variants (sm, md, lg, xl, 2xl). Uses `twMerge` for proper class merging.
+  - `text.ts`: ✅ Text variant definition using `cva`. Exports `textVariants`, `TextVariants` type, and `getTextVariantClasses` helper function. Supports size variants (sm, md, lg). Uses `twMerge` for proper class merging.
+  - `skeleton.ts`: ✅ Skeleton variant definition using `cva`. Exports `skeletonVariants`, `SkeletonVariants` type, and `getSkeletonVariantClasses` helper function. Supports variants (text, circular, rectangular). Uses `twMerge` for proper class merging.
+  - `card.ts`: ✅ Card variant definition using `cva`. Exports `cardVariants`, `CardVariants` type, and `getCardVariantClasses` helper function. Supports variant (elevated, outlined, flat) and padding (sm, md, lg) options. Uses `twMerge` for proper class merging.
+  - `link.ts`: ✅ Link variant definition using `cva`. Exports `linkVariants`, `LinkVariants` type, and `getLinkVariantClasses` helper function. Supports variant (default, subtle, muted) and size (sm, md, lg) options. Uses `twMerge` for proper class merging.
+
+- `radio/`: ✅ Radio button component with label, error, helper text support, size variants (sm, md, lg), controlled/uncontrolled modes, and dark mode support.
+  - `Radio.tsx`: Main radio component (uses `getRadioVariantClasses` from `@core/ui/variants`)
+  - `RadioA11yHelpers.ts`: Accessibility helpers (ARIA, ID generation)
+  - `RadioClassHelpers.ts`: Styling/class utilities
+  - `RadioFieldPropsHelpers.ts`: Field and content props building helpers
+  - `RadioInputPropsHelpers.ts`: Input props building helpers
+  - `RadioHandlers.ts`: Radio event handlers
+  - `RadioParts.tsx`: Radio sub-components and type interfaces
+  - `RadioTypes.ts`: Radio type definitions
+  - `useRadio.ts`: React hook for managing radio state
+  - `useRadioField.ts`: React hook for radio field management
+- `badge/`: ✅ Status/label display component with multiple variants (default, primary, success, warning, error, info), size variants (sm, md, lg), and dark mode support.
+  - `Badge.tsx`: Main badge component (uses `getBadgeVariantClasses` from `@core/ui/variants`)
+- `heading/`: ✅ Reusable typography heading component (h1-h6) with semantic heading elements, size variants, and dark mode support.
+  - `Heading.tsx`: Main heading component (uses `getHeadingVariantClasses` from `@core/ui/variants`)
+- `text/`: ✅ Reusable typography paragraph component with semantic paragraph element, size variants (sm, md, lg), and dark mode support.
+  - `Text.tsx`: Main text component (uses `getTextVariantClasses` from `@core/ui/variants`)
+- `skeleton/`: ✅ Loading state component with animated pulse effect, multiple variants (text, circular, rectangular), customizable width/height, and dark mode support.
+  - `Skeleton.tsx`: Main skeleton component (uses `getSkeletonVariantClasses` from `@core/ui/variants`)
+- `tooltip/`: ✅ Accessible tooltip component with positioning (top, bottom, left, right), configurable delay, keyboard accessible, screen reader support, and dark mode support.
+  - `Tooltip.tsx`: Main tooltip component
+  - `TooltipContent.tsx`: Tooltip content component
+  - `TooltipWrapper.tsx`: Tooltip wrapper component
+  - `tooltipUtils.ts`: Tooltip utility functions
+  - `useTooltip.ts`: React hook for managing tooltip state
+- `popover/`: ✅ Flexible overlay component with accessible ARIA attributes, flexible positioning (top, bottom, left, right with alignment), click outside to close, escape key to close, automatic positioning with viewport boundary detection, portal rendering, and dark mode support.
+  - `Popover.tsx`: Main popover component
+  - `PopoverContentSetup.tsx`: Popover content setup component
+  - `PopoverHelpers.tsx`: Popover helper components
+  - `PopoverParts.tsx`: Popover sub-components
+  - `PopoverSetup.tsx`: Popover setup component
+  - `PopoverHooks.ts`: Popover hook utilities
+  - `popoverPosition.ts`: Popover position utilities
+  - `usePopover.ts`: React hook for managing popover state
+  - `usePopoverHelpers.ts`: Popover helper hooks
+  - `usePopoverPosition.ts`: Hook for popover positioning logic
+- `accordion/`: ✅ Accordion component with expandable/collapsible sections, keyboard navigation, and accessibility features.
+  - `Accordion.tsx`: Main accordion component
+  - `AccordionContent.tsx`: Accordion content component
+  - `AccordionHeader.tsx`: Accordion header component
+  - `AccordionIcon.tsx`: Accordion icon component
+  - `AccordionItem.tsx`: Accordion item component
+  - `AccordionHelpers.ts`: Helper functions for accordion
+  - `useAccordion.ts`: React hook for managing accordion state
+- `avatar/`: ✅ Avatar component for user profile images with size variants and fallback support.
+  - `Avatar.tsx`: Main avatar component
+- `breadcrumbs/`: ✅ Breadcrumbs navigation component with navigation support via react-router-dom, customizable separator, and accessible navigation structure.
+  - `Breadcrumbs.tsx`: Main breadcrumbs component
+  - `BreadcrumbItem.tsx`: Breadcrumb item component
+- `card/`: ✅ Card container component with variant options (elevated, outlined, flat) and padding variants (sm, md, lg).
+  - `Card.tsx`: Main card component (uses `getCardVariantClasses` from `@core/ui/variants`)
+- `drawer/`: ✅ Drawer component (side panel) with flexible positioning, overlay, keyboard navigation, and portal rendering.
+  - `Drawer.tsx`: Main drawer component
+  - `DrawerDialog.tsx`: Drawer dialog wrapper
+  - `DrawerParts.tsx`: Drawer sub-components
+  - `DrawerHelpers.ts`: Helper functions for drawer
+  - `useDrawer.ts`: React hook for managing drawer state
+  - `useDrawerSetup.ts`: Drawer setup hook for configuration
+- `divider/`: ✅ Divider/separator component for visual separation.
+  - `Divider.tsx`: Main divider component
+- `link/`: ✅ Link component (navigation link) with variant options (default, subtle, muted) and size variants (sm, md, lg).
+  - `Link.tsx`: Main link component (uses `getLinkVariantClasses` from `@core/ui/variants`)
+- `pagination/`: ✅ Pagination component for navigating through pages with first/last, previous/next, and page number buttons.
+  - `Pagination.tsx`: Main pagination component
+  - `PaginationButton.tsx`: Pagination button component
+  - `PaginationButtons.tsx`: Pagination buttons container
+  - `FirstLastButtons.tsx`: First/Last page buttons
+  - `PrevNextButtons.tsx`: Previous/Next page buttons
+  - `PageNumberButtons.tsx`: Page number buttons
+  - `PaginationHelpers.ts`: Helper functions for pagination
+  - `PaginationHandlers.ts`: Pagination event handlers
+  - `usePagination.ts`: React hook for managing pagination state
+- `progress/`: ✅ Progress bar component for displaying progress indicators.
+  - `Progress.tsx`: Main progress component
+- `table/`: ✅ Table component for displaying tabular data with customizable columns, empty state support, and accessibility features.
+  - `Table.tsx`: Main table component
+  - `TableElement.tsx`: Table element wrapper
+  - `TableHeader.tsx`: Table header component
+  - `TableBody.tsx`: Table body component
+  - `TableRow.tsx`: Table row component
+  - `TableCell.tsx`: Table cell component
+  - `TableEmptyState.tsx`: Table empty state component
+  - `TableHelpers.ts`: Helper functions for table
+- `tabs/`: ✅ Tabs component for organizing content into tabs with keyboard navigation and accessibility features.
+  - `Tabs.tsx`: Main tabs component
+  - `TabsList.tsx`: Tabs list container
+  - `TabButton.tsx`: Tab button component
+  - `TabButtonContent.tsx`: Tab button content
+  - `TabsPanel.tsx`: Tabs panel component
+  - `TabsHelpers.ts`: Helper functions for tabs
+  - `useTabs.ts`: React hook for managing tabs state
+- `theme-toggle/`: ✅ Theme toggle component that cycles through light → dark → system → light. Accessible with keyboard navigation and proper ARIA labels. Presentational component that receives theme via props.
+  - `ThemeToggle.tsx`: Main theme toggle component
 
 **Optional/Planned:**
 
-- `loadable.ts`: Thin React.lazy/Suspense helper.
 - `animation/`: Centralized Framer Motion exports and shared variants.
 - `atoms/`, `molecules/`, `organisms/`: Atomic Design structure (optional when scaling).
-- `icons/registry.ts`: Logical name → SVG mapping.
-- Additional components: `Textarea.tsx`, `Select.tsx`, `Checkbox.tsx`, `Radio.tsx`, `Switch.tsx`, `Tooltip.tsx`, `Popover.tsx`, `Drawer.tsx`, `Tabs.tsx`, `Accordion.tsx`, `Table.tsx`, `Pagination.tsx`, `Skeleton.tsx`, `Badge.tsx`, `Avatar.tsx`, `Text.tsx`, `Heading.tsx`, `Icon.tsx`.
 
 UI dependency rules:
 
@@ -254,9 +493,13 @@ UI dependency rules:
 
 - `designTokens.ts`: Single source for design tokens (color, radius, spacing). Exported as `designTokens` const object with structure: `{ color: { primary: { DEFAULT, foreground }, surface: { DEFAULT, dark } }, radius: { sm, md, lg }, spacing: { xs, sm, md, lg, xl } }`. Also exports `DesignTokens` type.
 - `theme.ts`: Theme type definitions. Exports `Theme` type (`'light' | 'dark' | 'system'`) and `THEMES` const array (`['light', 'dark', 'system']`).
-- `ui.ts`: UI component constants. Exports size classes for icons (`ICON_SIZE_CLASSES`), text (`TEXT_SIZE_CLASSES`), buttons (`BUTTON_SIZE_CLASSES`, `BUTTON_BASE_CLASSES`, `BUTTON_VARIANT_CLASSES`), icon buttons (`ICON_BUTTON_SIZE_CLASSES`, `ICON_BUTTON_VARIANT_CLASSES`), inputs (`INPUT_SIZE_CLASSES`, `INPUT_BASE_CLASSES`, `INPUT_ERROR_CLASSES`, `INPUT_NORMAL_CLASSES`), spinners (`SPINNER_SIZE_CLASSES`), and modals (`MODAL_SIZE_CLASSES`). Uses types from `@src-types/ui`.
+- `ui.ts`: UI component constants. Exports size classes for icons (`ICON_SIZE_CLASSES`), text (`TEXT_SIZE_CLASSES`), buttons (`BUTTON_SIZE_CLASSES`, `BUTTON_BASE_CLASSES`, `BUTTON_VARIANT_CLASSES`), icon buttons (`ICON_BUTTON_SIZE_CLASSES`, `ICON_BUTTON_VARIANT_CLASSES`), inputs (`INPUT_SIZE_CLASSES`, `INPUT_BASE_CLASSES`, `INPUT_ERROR_CLASSES`, `INPUT_NORMAL_CLASSES`), textareas (`TEXTAREA_SIZE_CLASSES`, `TEXTAREA_BASE_CLASSES`, `TEXTAREA_ERROR_CLASSES`, `TEXTAREA_NORMAL_CLASSES`), spinners (`SPINNER_SIZE_CLASSES`), and modals (`MODAL_SIZE_CLASSES`). Uses types from `@src-types/ui`.
 - `endpoints.ts`: ✅ API endpoint constants. Central source of truth for API endpoint paths (`API_ENDPOINTS` object). Provides `buildApiUrl()` helper function to combine endpoint paths with baseURL from runtime config. Supports both static paths and function-based paths (e.g., `(id: string) => '/users/${id}'`).
 - `env.ts`: ✅ Environment-derived constants. Thin wrapper around validated env surface providing convenience accessors. Exports `IS_DEV`, `IS_PROD`, `ENV_MODE` constants and helper functions `isDevelopment()`, `isProduction()`, `getMode()`. Avoids re-parsing env elsewhere by providing pre-computed constants.
+- `aria.ts`: ✅ ARIA roles and attribute constants. Central source of truth for consistent ARIA usage across the application. Exports `ARIA_ROLES`, `ARIA_LIVE`, `ARIA_BUSY`, `ARIA_EXPANDED`, `ARIA_CHECKED`, `ARIA_SELECTED`, `ARIA_HIDDEN`, `ARIA_INVALID`, `ARIA_LABELS` constants and `createAriaLabel()` helper function. Supports accessibility standards and reduces duplication.
+- `breakpoints.ts`: ✅ Breakpoint constants for responsive design. Defines standard responsive breakpoints (xs: 0, sm: 640, md: 768, lg: 1024, xl: 1280, 2xl: 1536) matching Tailwind's default breakpoint system. Exports `breakpoints` object, `getBreakpoint()`, `createMinWidthQuery()`, `createMaxWidthQuery()`, and `createRangeQuery()` helper functions. Type-safe with `BreakpointSize` type.
+- `regex.ts`: ✅ Regular expression patterns for validation. Central source of truth for validation patterns including `EMAIL_REGEX`, `URL_REGEX`, `PHONE_REGEX`, `IPV4_REGEX`, `IPV6_REGEX`, `PASSWORD_MIN_REGEX`, `PASSWORD_STRONG_REGEX`, `USERNAME_REGEX`, `SLUG_REGEX`, `UUID_REGEX`, `HEX_COLOR_REGEX`, `CREDIT_CARD_REGEX`, `ZIP_CODE_REGEX`. Provides `testRegex()` helper function. All patterns are compiled RegExp objects ready to use.
+- `timeouts.ts`: ✅ Timeout constants for network and UI operations. Central source of truth for timeout values. Exports `HTTP_TIMEOUTS` (DEFAULT: 30s, SHORT: 5s, LONG: 60s, EXTENDED: 120s), `UI_TIMEOUTS` (debounce/throttle delays, loading delays, tooltip delays, toast delays), and `RETRY_TIMEOUTS` (retry delays, polling intervals). All values in milliseconds. Provides type exports for type-safe usage.
 
 ### Cross-References
 

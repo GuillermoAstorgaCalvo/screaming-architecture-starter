@@ -2,6 +2,8 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig, loadEnv } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+import { sourceTagger } from './vite-plugin-source-tagger';
+
 /**
  * Server configuration with environment variable support
  */
@@ -110,6 +112,7 @@ export default defineConfig(({ mode }) => {
 	return {
 		server: getServerConfig(env),
 		plugins: [
+			sourceTagger(), // Add source file tags in development
 			react(),
 			tsconfigPaths({
 				projects: ['./tsconfig.app.json'],

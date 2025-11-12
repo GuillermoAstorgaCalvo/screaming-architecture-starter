@@ -13,7 +13,7 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 ├── package.json                      # Scripts, engines, packageManager (pnpm), workspace-ready
 ├── pnpm-lock.yaml                    # Locked deps for reproducible installs (pnpm preferred)
 ├── tsconfig.base.json                # Path aliases: @app, @core, @domains, @infra, @shared, @styles, @src-types, @tests
-├── tsconfig.json                     # Project references orchestrator (references app and node configs)
+├── tsconfig.json                     # Project references orchestrator (references app, node, and vitest configs)
 ├── tsconfig.app.json                 # Application TypeScript config (extends base)
 ├── tsconfig.node.json                # Node/Vite configs & scripts (extends base)
 ├── tsconfig.vitest.json              # Unit tests (Vitest + jsdom, extends base)
@@ -35,20 +35,15 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 ├── LICENSE                           # Project license
 ├── CODEOWNERS                        # Ownership for critical paths/domains
 ├── SECURITY.md                       # Responsible disclosure and support policy
-├── .github/                          # CI workflows and templates
-│   ├── workflows/
-│   │   ├── ci.yml                   # typecheck, lint, unit tests, build
-│   │   └── nightly.yml (optional)   # e2e + Lighthouse on main/nightly
-│   ├── ISSUE_TEMPLATE/
-│   └── PULL_REQUEST_TEMPLATE.md
 └── README.md                         # High-level overview + quickstart
+# Note: .github/ directory for CI workflows and templates is optional and not yet implemented
 ```
 
 ## src/app: Application Shell
 
-- `App.tsx`: Root component. Composition-only: `LoggerProvider` (outermost with `loggerAdapter`), `ErrorBoundaryWrapper`, `HttpProvider` (with `httpClient`), `StorageProvider` (with `localStorageAdapter`), `ThemeProvider`, `QueryProvider`, `BrowserRouter`, and `Router`. No domain logic.
-- `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Creates React root, renders `<App />` wrapped in `StrictMode`, imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization.
-- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Includes `LoadingFallback` component for Suspense with accessible loading state (`aria-live="polite"`, `aria-label="Loading"`). Paths derive from `core/config/routes.ts` (`ROUTES` constants). Includes catch-all route (`path="*"`) for `Error404`.
+- `App.tsx`: Root component. Composition-only: `LoggerProvider` (outermost with `loggerAdapter`), `ErrorBoundaryWrapper`, `HttpProvider` (with `httpClient`), `StorageProvider` (with `localStorageAdapter`), `ThemeProvider`, `I18nProvider`, `QueryProvider`, `BrowserRouter`, and `Router`. No domain logic. Composition order: LoggerProvider > ErrorBoundary > HttpProvider > StorageProvider > ThemeProvider > I18nProvider > QueryProvider > BrowserRouter > Router.
+- `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Awaits `i18nInitPromise` from `@core/i18n/i18n` to ensure translations are loaded before rendering. Calls `reportWebVitals()` from `@core/perf/reportWebVitals` with logger adapter (only runs in production). Imports domain i18n registrations (e.g., `@domains/landing/i18n`). Creates React root, renders `<App />` wrapped in `StrictMode`, imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization.
+- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Includes `DefaultLoadingFallback` component from `@core/ui/loadableFallback` for Suspense with accessible loading state (`aria-live="polite"`, `aria-label="Loading"`). Paths derive from `core/config/routes.ts` via the generated helpers in `@core/router/routes.gen` (`buildRoute`, `ROUTE_KEYS`). Includes catch-all route (`path="*"`) for `Error404`.
 - `pages/*`: App-level system pages:
   - `Error404.tsx`: Not Found page (404 error)
   - `Error500.tsx`: Internal Server Error page (500 error)
@@ -60,8 +55,9 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
   - `ThemeProvider.tsx`: Theme management (light/dark/system) with persistence via StoragePort, system theme detection, HTML class management
   - `ThemeContext.tsx`: React context definition for theme (exports `ThemeContext` and `ThemeContextValue`)
   - `useTheme.ts`: Hook to access theme context (throws if used outside provider)
+  - `I18nProvider.tsx`: Provides i18next instance to the React component tree. Wraps application with `I18nextProvider` from `react-i18next` using the configured i18n instance from `@core/i18n/i18n`.
   - `QueryProvider.tsx`: React Query client provider with optimized defaults
-  - Note: `LoggerProvider`, `StorageProvider` are in `core/providers/` (not `app/providers/`)
+  - Note: `LoggerProvider`, `StorageProvider`, `HttpProvider` are in `core/providers/` (not `app/providers/`)
 
 ### PWA (optional)
 
@@ -71,6 +67,8 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 
 ```tsx
 // app/App.tsx (actual implementation)
+import Error500 from '@app/pages/Error500';
+import { I18nProvider } from '@app/providers/I18nProvider';
 import { QueryProvider } from '@app/providers/QueryProvider';
 import { ThemeProvider } from '@app/providers/ThemeProvider';
 import Router from '@app/router';
@@ -86,15 +84,17 @@ import { BrowserRouter } from 'react-router-dom';
 export default function App() {
 	return (
 		<LoggerProvider logger={loggerAdapter}>
-			<ErrorBoundaryWrapper>
+			<ErrorBoundaryWrapper fallback={<Error500 />}>
 				<HttpProvider http={httpClient}>
 					<StorageProvider storage={localStorageAdapter}>
 						<ThemeProvider>
-							<QueryProvider>
-								<BrowserRouter>
-									<Router />
-								</BrowserRouter>
-							</QueryProvider>
+							<I18nProvider>
+								<QueryProvider>
+									<BrowserRouter>
+										<Router />
+									</BrowserRouter>
+								</QueryProvider>
+							</I18nProvider>
 						</ThemeProvider>
 					</StorageProvider>
 				</HttpProvider>
@@ -113,9 +113,10 @@ The composition order matters:
 3. `HttpProvider` provides HTTP client for domain services and hooks (e.g., `useFetch`)
 4. `StorageProvider` must be before `ThemeProvider` since `ThemeProvider` uses storage via `useStorage` hook
 5. `ThemeProvider` manages theme state and persistence
-6. `QueryProvider` provides React Query client
-7. `BrowserRouter` enables routing
-8. `Router` renders routes
+6. `I18nProvider` provides i18next instance for translations (wraps with `I18nextProvider`)
+7. `QueryProvider` provides React Query client
+8. `BrowserRouter` enables routing
+9. `Router` renders routes
 
 ### Routing Principles
 

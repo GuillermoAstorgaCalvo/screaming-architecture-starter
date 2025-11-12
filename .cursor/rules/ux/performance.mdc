@@ -14,4 +14,4 @@ alwaysApply: false
 
 ### Observability
 
-- Optional Web Vitals via `core/perf/reportWebVitals.ts` with an adapter under `infrastructure/observability/*`.
+- ✅ Web Vitals reporting via `core/perf/reportWebVitals.ts`. Tracks and reports Core Web Vitals metrics (LCP, INP, CLS, FCP, TTFB). Only runs in production mode. Uses logger adapter for reporting (can be extended to analytics services). Called in `main.tsx` during app bootstrap. Optional adapter can be added under `infrastructure/observability/*` for external analytics services.

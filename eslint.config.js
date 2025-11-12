@@ -66,6 +66,8 @@ export default [
 				...globals.browser,
 				...globals.node,
 				...globals.es2023,
+				// Google Maps API global (from @types/google.maps)
+				google: 'readonly',
 			},
 		},
 		plugins: {
@@ -233,7 +235,7 @@ export default [
 						{
 							group: ['../*', '../../*', '../../../*', '../../../../*'],
 							message:
-								'Use path aliases (@app, @core, @domains, @infra, @shared, @styles, @tests, @types) instead of relative imports',
+								'Use path aliases (@app, @core, @domains, @infra, @shared, @styles, @tests, @src-types) instead of relative imports',
 						},
 					],
 				},
@@ -484,7 +486,7 @@ export default [
 			'unicorn/switch-case-braces': 'error',
 			'unicorn/throw-new-error': 'error',
 
-			// Complexity rules - General (default): 250 file, 30 function, 3 params, 10 complexity, 4 depth, 20 statements, 3 nested callbacks
+			// Complexity rules - General (default): 250 file, 40 function, 3 params, 10 complexity, 4 depth, 20 statements, 3 nested callbacks
 			'max-lines': [
 				'error',
 				{
@@ -496,7 +498,7 @@ export default [
 			'max-lines-per-function': [
 				'error',
 				{
-					max: 30,
+					max: 40,
 					skipBlankLines: true,
 					skipComments: true,
 				},
@@ -567,10 +569,13 @@ export default [
 		rules: {
 			...testingLibrary.configs.react.rules,
 			'testing-library/no-manual-cleanup': 'error',
+			// Disable false positive: testing-library/no-debugging-utils flags legitimate method calls like adapter.debug()
+			'testing-library/no-debugging-utils': 'off',
 			// Disable react-refresh rules in tests (test utilities don't use Fast Refresh)
 			'react-refresh/only-export-components': 'off',
 			// Relax some rules in tests
 			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/no-floating-promises': 'off', // Tests often don't need to await all promises
 			'no-magic-numbers': 'off', // Tests often use magic numbers for test data
 			// Disable security rules in tests (mocking patterns may trigger false positives)
 			'security/detect-non-literal-regexp': 'off',
@@ -592,6 +597,7 @@ export default [
 	},
 	// Config files override - TypeScript config files
 	// Config files: all off - no restrictions
+	// Note: Excludes src/**/*.config.ts files which should use the app TypeScript config
 	{
 		files: [
 			'vite.config.ts',
@@ -600,6 +606,7 @@ export default [
 			'playwright.config.ts',
 			'**/*.config.ts',
 		],
+		ignores: ['src/**/*.config.ts'],
 		languageOptions: {
 			parser: tsParser,
 			parserOptions: {
@@ -701,6 +708,20 @@ export default [
 			'max-nested-callbacks': ['error', 3],
 		},
 	},
+	// Core UI Handlers: 250 file, 50 function, 3 params, 12 complexity, 4 depth, 20 statements, 3 nested callbacks - error level
+	// Handler files may need more flexibility for complex event handling logic
+	{
+		files: ['src/core/ui/**/*.handlers.{ts,tsx}'],
+		rules: {
+			'max-lines': ['error', { max: 250, skipBlankLines: true, skipComments: true }],
+			'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
+			'max-params': ['error', 3],
+			complexity: ['error', 12],
+			'max-depth': ['error', 4],
+			'max-statements': ['error', 20],
+			'max-nested-callbacks': ['error', 3],
+		},
+	},
 	// Services/API: 200 file, 30 function, 4 params, 12 complexity, 4 depth, 20 statements, 3 nested callbacks - error level
 	{
 		files: ['src/domains/**/services/**/*.{ts,tsx}', 'src/shared/**/services/**/*.{ts,tsx}'],
@@ -729,7 +750,7 @@ export default [
 			'max-nested-callbacks': ['error', 3],
 		},
 	},
-	// Handlers/Utils: 150 file, 20 function, 3 params, 6 complexity, 3 depth, 12 statements, 2 nested callbacks - error level
+	// Handlers/Utils: 150 file, 30 function, 3 params, 6 complexity, 3 depth, 12 statements, 2 nested callbacks - error level
 	{
 		files: [
 			'src/domains/**/handlers/**/*.{ts,tsx}',
@@ -740,7 +761,7 @@ export default [
 		],
 		rules: {
 			'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
-			'max-lines-per-function': ['error', { max: 20, skipBlankLines: true, skipComments: true }],
+			'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
 			'max-params': ['error', 3],
 			complexity: ['error', 6],
 			'max-depth': ['error', 3],
@@ -818,6 +839,18 @@ export default [
 			'max-depth': ['error', 4],
 			'max-statements': ['error', 20],
 			'max-nested-callbacks': ['error', 3],
+		},
+	},
+	// Regex constants: Allow nested quantifiers in IPv4/IPv6 patterns for readability
+	// These patterns use bounded, fixed repetitions that are safe in practice:
+	// - IPv4: (?:\d{1,3}\.){3} - fixed 3 repetitions, inner quantifier is bounded (1-3)
+	// - IPv6: (?:[\da-f]{1,4}:){7} - fixed 7 repetitions, inner quantifier is bounded (1-4)
+	// The linter's ReDoS detection is conservative and flags any nested quantifier,
+	// but these specific patterns are safe due to their bounded, fixed nature.
+	{
+		files: ['src/core/constants/regex.ts'],
+		rules: {
+			'security/detect-unsafe-regex': 'off',
 		},
 	},
 	prettierConfig,

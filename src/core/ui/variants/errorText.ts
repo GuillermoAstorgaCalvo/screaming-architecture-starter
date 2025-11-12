@@ -1,5 +1,5 @@
-import { TEXT_SIZE_CLASSES } from '@core/constants/ui';
-import type { StandardSize } from '@src-types/ui';
+import { TEXT_SIZE_CLASSES } from '@core/constants/ui/shared';
+import type { StandardSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 

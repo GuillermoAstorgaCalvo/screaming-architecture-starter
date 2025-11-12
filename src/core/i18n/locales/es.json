@@ -1,0 +1,9 @@
+{
+	"app": {
+		"title": "Screaming Architecture Starter",
+		"description": "Tu aplicación está en ejecución. Todos los componentes UI principales y características se demuestran a continuación."
+	},
+	"nav": {
+		"home": "Inicio"
+	}
+}

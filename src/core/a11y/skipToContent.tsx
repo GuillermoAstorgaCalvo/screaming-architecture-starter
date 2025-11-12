@@ -1,8 +1,8 @@
+import { ARIA_LABELS } from '@core/constants/aria';
 import type { LoggerPort } from '@core/ports/LoggerPort';
 import { useLogger } from '@core/providers/useLogger';
 import { classNames } from '@core/utils/classNames';
-import type React from 'react';
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 
 export interface SkipToContentProps {
 	/**
@@ -113,12 +113,12 @@ const SKIP_LINK_CLASSES =
 
 export default function SkipToContent({
 	targetId = 'main-content',
-	label = 'Skip to main content',
+	label = ARIA_LABELS.SKIP_TO_CONTENT,
 	className,
 }: Readonly<SkipToContentProps>) {
 	const logger = useLogger();
 
-	const handleClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
+	const handleClick = (event: MouseEvent<HTMLAnchorElement>): void => {
 		event.preventDefault();
 		handleSkipToContent(targetId, logger);
 	};

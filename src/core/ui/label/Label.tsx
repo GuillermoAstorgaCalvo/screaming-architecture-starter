@@ -1,7 +1,6 @@
+import { ARIA_LABELS } from '@core/constants/aria';
 import { getLabelVariantClasses } from '@core/ui/variants/label';
-import type { LabelProps } from '@src-types/ui';
-
-export type { LabelProps, StandardSize as LabelSize } from '@src-types/ui';
+import type { LabelProps } from '@src-types/ui/forms';
 
 /**
  * Label - Reusable label component
@@ -34,7 +33,7 @@ export default function Label({
 		>
 			{children}
 			{required ? (
-				<span className="text-red-600 dark:text-red-400 ml-1" aria-label="required">
+				<span className="text-red-600 dark:text-red-400 ml-1" aria-label={ARIA_LABELS.REQUIRED}>
 					*
 				</span>
 			) : null}

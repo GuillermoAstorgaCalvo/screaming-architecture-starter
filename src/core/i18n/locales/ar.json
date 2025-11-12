@@ -1,0 +1,9 @@
+{
+	"app": {
+		"title": "Screaming Architecture Starter",
+		"description": "تطبيقك يعمل الآن. جميع مكونات واجهة المستخدم الأساسية والميزات موضحة أدناه."
+	},
+	"nav": {
+		"home": "الرئيسية"
+	}
+}

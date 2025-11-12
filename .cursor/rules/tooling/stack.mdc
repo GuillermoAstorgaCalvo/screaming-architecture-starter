@@ -20,13 +20,15 @@ alwaysApply: false
 
 ### State & Data
 
-- **React Query** for server state management (via `@tanstack/react-query`)
+- **React Query** (TanStack Query) for server state management
+- **React Hook Form** with **Zod** for form handling and validation
 - **Zustand** per domain stores (optional, not yet implemented - add when needed)
 
 ### Routing & i18n
 
 - **React Router** central routes in `app/router.tsx`
-- i18n in `core/i18n/*` and per-domain `i18n/*`
+- **i18next** with **react-i18next** for internationalization
+- i18n in `core/i18n/*` and per-domain `i18n/*` with dynamic resource loading
 
 ### Testing
 

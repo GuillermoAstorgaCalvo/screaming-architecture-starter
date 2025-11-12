@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🐛 Bug Report
+    url: https://github.com/ORIGINAL_OWNER/screaming-architecture-starter/issues/new?template=bug_report.yml
+    about: Report a bug or unexpected behavior
+  - name: ✨ Feature Request
+    url: https://github.com/ORIGINAL_OWNER/screaming-architecture-starter/issues/new?template=feature_request.yml
+    about: Suggest a new feature or enhancement
+  - name: 💬 Question / Discussion
+    url: https://github.com/ORIGINAL_OWNER/screaming-architecture-starter/discussions
+    about: Ask a question or start a discussion
+  - name: 📖 Documentation
+    url: https://github.com/ORIGINAL_OWNER/screaming-architecture-starter/issues/new
+    about: Report an issue with documentation or suggest improvements

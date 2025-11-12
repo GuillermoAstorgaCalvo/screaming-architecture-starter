@@ -41,10 +41,29 @@ export const isProduction = (): boolean => env.PROD;
  * Get current mode string
  * Convenience alias for env.MODE
  */
-export const getMode = (): 'development' | 'production' => env.MODE;
+export const getMode = (): 'development' | 'production' | 'test' => env.MODE;
 
 /**
- * Type for validated environment configuration
- * Re-exported from env.client.ts for convenience
+ * Check if analytics instrumentation should run
  */
-export type { Env } from '@core/config/env.client';
+export const { ANALYTICS_ENABLED } = env;
+
+/**
+ * Helper to check analytics enable flag
+ */
+export const isAnalyticsEnabled = (): boolean => ANALYTICS_ENABLED;
+
+/**
+ * Google Analytics measurement ID fallback from build-time env
+ */
+export const { GA_MEASUREMENT_ID } = env;
+
+/**
+ * Google Analytics debug flag override from build-time env
+ */
+export const { GA_DEBUG } = env;
+
+/**
+ * Google Analytics data layer name override from build-time env
+ */
+export const { GA_DATALAYER_NAME } = env;

@@ -1,8 +1,6 @@
 import Spinner from '@core/ui/spinner/Spinner';
 import { getButtonVariantClasses } from '@core/ui/variants/button';
-import type { ButtonProps } from '@src-types/ui';
-
-export type { ButtonProps, StandardSize as ButtonSize, ButtonVariant } from '@src-types/ui';
+import type { ButtonProps } from '@src-types/ui/buttons';
 
 /**
  * Button - Reusable button component with variants and sizes

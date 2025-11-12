@@ -1,21 +1,51 @@
 import { useLogger } from '@core/providers/useLogger';
 import { useStorage } from '@core/providers/useStorage';
 import { useCallback, useEffect, useState } from 'react';
+import type { z } from 'zod';
 
 // Type aliases for cleaner code
 type Storage = ReturnType<typeof useStorage>;
 type Logger = ReturnType<typeof useLogger>;
 
 /**
- * Load initial value from storage
+ * Options for loading stored value
  */
-function loadStoredValue<T>(storage: Storage, key: string, initialValue: T): T {
+interface LoadStoredValueOptions<T> {
+	storage: Storage;
+	key: string;
+	initialValue: T;
+	schema?: z.ZodType<T>;
+	logger?: Logger;
+}
+
+/**
+ * Load initial value from storage
+ * Optionally validates with Zod schema if provided
+ */
+function loadStoredValue<T>(options: LoadStoredValueOptions<T>): T {
+	const { storage, key, initialValue, schema, logger } = options;
 	try {
 		const item = storage.getItem(key);
 		if (item === null) {
 			return initialValue;
 		}
-		return JSON.parse(item) as T;
+		const parsed = JSON.parse(item) as unknown;
+
+		// Validate with schema if provided
+		if (schema) {
+			const result = schema.safeParse(parsed);
+			if (result.success) {
+				return result.data;
+			}
+			// Schema validation failed - log warning and return initial value
+			logger?.warn(`Storage value for key "${key}" failed schema validation, using initial value`, {
+				error: result.error.issues,
+			});
+			return initialValue;
+		}
+
+		// No schema provided - use type assertion (backward compatible)
+		return parsed as T;
 	} catch {
 		return initialValue;
 	}
@@ -29,6 +59,7 @@ interface StorageEventHandlerOptions<T> {
 	initialValue: T;
 	setStoredValue: (_value: T) => void;
 	logger: Logger;
+	schema?: z.ZodType<T>;
 }
 
 /**
@@ -38,7 +69,7 @@ interface StorageEventHandlerOptions<T> {
 function createStorageEventHandler<T>(
 	options: StorageEventHandlerOptions<T>
 ): (event: StorageEvent) => void {
-	const { key, initialValue, setStoredValue, logger } = options;
+	const { key, initialValue, setStoredValue, logger, schema } = options;
 	return (event: StorageEvent): void => {
 		// Security: only process events from localStorage (same origin)
 		// StorageEvent only fires for same-origin changes, but we validate storageArea anyway
@@ -53,8 +84,24 @@ function createStorageEventHandler<T>(
 		}
 
 		try {
-			const parsed = JSON.parse(event.newValue) as T;
-			setStoredValue(parsed);
+			const parsed = JSON.parse(event.newValue) as unknown;
+
+			// Validate with schema if provided
+			if (schema) {
+				const result = schema.safeParse(parsed);
+				if (result.success) {
+					setStoredValue(result.data);
+				} else {
+					logger.warn(`Storage event value for key "${key}" failed schema validation`, {
+						error: result.error.issues,
+					});
+					// Use initial value on validation failure
+					setStoredValue(initialValue);
+				}
+			} else {
+				// No schema provided - use type assertion (backward compatible)
+				setStoredValue(parsed as T);
+			}
 		} catch (error) {
 			logger.warn(`Failed to parse storage event value for key "${key}"`, {
 				error: error instanceof Error ? error.message : String(error),
@@ -100,9 +147,7 @@ function handleSetValue<T>(options: SetValueOptions<T>): void {
 			logger.warn(`Failed to set item "${key}" in storage`);
 		}
 	} catch (error) {
-		logger.error(`Failed to serialize value for key "${key}"`, {
-			error: error instanceof Error ? error.message : String(error),
-		});
+		logger.error(`Failed to serialize value for key "${key}"`, error, { key });
 	}
 }
 
@@ -114,13 +159,14 @@ interface StorageSyncOptions<T> {
 	initialValue: T;
 	logger: Logger;
 	setStoredValue: (_value: T) => void;
+	schema?: z.ZodType<T>;
 }
 
 /**
  * Setup storage event listener for cross-tab synchronization
  */
 function setupStorageSync<T>(options: StorageSyncOptions<T>): () => void {
-	const { key, initialValue, logger, setStoredValue } = options;
+	const { key, initialValue, logger, setStoredValue, schema } = options;
 
 	// Early return for SSR
 
@@ -130,12 +176,11 @@ function setupStorageSync<T>(options: StorageSyncOptions<T>): () => void {
 		};
 	}
 
-	const handleStorageChange = createStorageEventHandler({
-		key,
-		initialValue,
-		setStoredValue,
-		logger,
-	});
+	const handleStorageChange = createStorageEventHandler(
+		schema
+			? { key, initialValue, setStoredValue, logger, schema }
+			: { key, initialValue, setStoredValue, logger }
+	);
 
 	globalThis.window.addEventListener('storage', handleStorageChange);
 	return () => {
@@ -154,32 +199,39 @@ function setupStorageSync<T>(options: StorageSyncOptions<T>): () => void {
  * - Automatic JSON serialization/deserialization
  * - Syncs with storage on mount
  * - Type-safe with TypeScript generics
+ * - Optional Zod schema validation for runtime type safety
  *
  * @example
  * ```tsx
+ * // Without schema (backward compatible)
  * const [name, setName] = useLocalStorage<string>('user-name', 'Guest');
  *
- * // Update value
- * setName('John Doe');
- *
- * // Remove from storage
- * setName(null);
+ * // With Zod schema for validation
+ * import { z } from 'zod';
+ * const userSchema = z.object({ name: z.string(), age: z.number() });
+ * const [user, setUser] = useLocalStorage('user', { name: 'Guest', age: 0 }, userSchema);
  * ```
  *
  * @template T - The type of the stored value
  * @param key - The storage key
  * @param initialValue - The initial value if nothing is stored
+ * @param schema - Optional Zod schema for runtime validation
  * @returns A tuple of [value, setValue, removeValue]
  */
 
 export function useLocalStorage<T>(
 	key: string,
-	initialValue: T
+	initialValue: T,
+	schema?: z.ZodType<T>
 ): [T, (value: T | null) => void, () => void] {
 	const storage = useStorage();
 	const logger = useLogger();
 	const [storedValue, setStoredValue] = useState<T>(() =>
-		loadStoredValue(storage, key, initialValue)
+		loadStoredValue(
+			schema
+				? { storage, key, initialValue, schema, logger }
+				: { storage, key, initialValue, logger }
+		)
 	);
 
 	const setValue = useCallback(
@@ -194,8 +246,14 @@ export function useLocalStorage<T>(
 	}, [setValue]);
 
 	useEffect(
-		() => setupStorageSync({ key, initialValue, logger, setStoredValue }),
-		[key, initialValue, logger]
+		() =>
+			setupStorageSync(
+				schema
+					? { key, initialValue, logger, setStoredValue, schema }
+					: { key, initialValue, logger, setStoredValue }
+			),
+		// setStoredValue is a state setter (stable), but included for completeness
+		[key, initialValue, logger, setStoredValue, schema]
 	);
 
 	return [storedValue, setValue, removeValue];

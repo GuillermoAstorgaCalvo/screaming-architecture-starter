@@ -1,5 +1,5 @@
-import { TEXT_SIZE_CLASSES } from '@core/constants/ui';
-import type { StandardSize } from '@src-types/ui';
+import { TEXT_SIZE_CLASSES } from '@core/constants/ui/shared';
+import type { StandardSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
  *
  * Provides type-safe variant management for HelperText component.
  */
-export const helperTextVariants = cva('mt-1 text-gray-500 dark:text-gray-400', {
+export const helperTextVariants = cva('mt-1 text-text-muted', {
 	variants: {
 		size: {
 			sm: TEXT_SIZE_CLASSES.sm,

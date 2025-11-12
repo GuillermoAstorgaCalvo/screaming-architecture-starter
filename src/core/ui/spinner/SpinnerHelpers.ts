@@ -1,6 +1,6 @@
-import { SPINNER_SIZE_CLASSES } from '@core/constants/ui';
+import { SPINNER_SIZE_CLASSES } from '@core/constants/ui/overlays';
 import { classNames } from '@core/utils/classNames';
-import type { StandardSize } from '@src-types/ui';
+import type { StandardSize } from '@src-types/ui/base';
 
 /**
  * Gets the SVG props for the spinner

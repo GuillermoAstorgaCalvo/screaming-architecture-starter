@@ -1,3 +1,4 @@
+import { env } from '@core/config/env.client';
 import type { LogContext, LoggerPort, LogLevel } from '@core/ports/LoggerPort';
 
 /**
@@ -15,10 +16,13 @@ class LoggerAdapter implements LoggerPort {
 	private readonly isAvailable: boolean;
 	private readonly minLevel: LogLevel;
 
-	constructor(minLevel: LogLevel = 'debug') {
+	constructor(minLevel?: LogLevel) {
 		// Check if console is available (not in SSR or restricted environments)
 		this.isAvailable = typeof console !== 'undefined';
-		this.minLevel = minLevel;
+		// Set minLevel based on environment if not provided:
+		// - Production: 'warn' (only warnings and errors)
+		// - Development: 'debug' (all logs)
+		this.minLevel = minLevel ?? (env.PROD ? 'warn' : 'debug');
 	}
 
 	/**
@@ -59,7 +63,8 @@ class LoggerAdapter implements LoggerPort {
 		}
 
 		const formattedMessage = this.formatMessage(message, context);
-		console.warn(formattedMessage);
+		// eslint-disable-next-line no-console -- Logger adapter intentionally uses console for debug logs
+		console.debug(formattedMessage);
 	}
 
 	info(message: string, context?: LogContext): void {
@@ -68,7 +73,8 @@ class LoggerAdapter implements LoggerPort {
 		}
 
 		const formattedMessage = this.formatMessage(message, context);
-		console.warn(formattedMessage);
+		// eslint-disable-next-line no-console -- Logger adapter intentionally uses console for info logs
+		console.info(formattedMessage);
 	}
 
 	warn(message: string, context?: LogContext): void {
@@ -101,9 +107,15 @@ class LoggerAdapter implements LoggerPort {
  * Singleton instance of LoggerAdapter
  * Use this instance throughout the application to ensure consistent logging
  *
+ * Automatically sets minLevel based on environment:
+ * - Production: 'warn' (suppresses info and debug logs)
+ * - Development: 'debug' (shows all logs)
+ *
  * For production environments, consider:
  * - Integrating with Sentry, LogRocket, or similar services
- * - Setting minLevel based on environment (e.g., 'warn' in production)
  * - Adding log aggregation and filtering
  */
 export const loggerAdapter = new LoggerAdapter();
+
+// Export class for testing
+export { LoggerAdapter };
