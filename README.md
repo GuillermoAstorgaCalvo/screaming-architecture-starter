@@ -19,7 +19,7 @@ Provide a frontend template where the architecture screams the domain. The direc
 ### Prerequisites
 
 - **Node.js**: `>=22.21.1` (see `.nvmrc`)
-- **pnpm**: `10.22.0` (see `package.json`)
+- **pnpm**: `10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c` (see `package.json`)
 
 ### Installation
 
