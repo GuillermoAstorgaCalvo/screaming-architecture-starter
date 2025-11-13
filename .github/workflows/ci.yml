@@ -61,9 +61,9 @@ jobs:
         run: pnpm run lint
         continue-on-error: false
 
-      - name: Run tests
+      - name: Run tests with coverage
         id: test
-        run: pnpm run test -- --reporter=verbose --coverage
+        run: pnpm run test:coverage
         continue-on-error: false
 
       - name: Upload test coverage
@@ -74,6 +74,7 @@ jobs:
           name: test-coverage
           path: coverage/
           retention-days: 7
+          if-no-files-found: warn
 
       - name: Build
         id: build
