@@ -43,30 +43,16 @@ export function getInitialPosition(
 
 export function calculatePositionState(params: PositionStateParams): boolean {
 	const { position, scrollPosition, initialPosition, threshold, rect } = params;
+	const isVertical = position === 'top' || position === 'bottom';
+	const shouldStickBefore = position === 'top' || position === 'left';
 
-	switch (position) {
-		case 'top': {
-			return scrollPosition >= initialPosition - threshold;
-		}
-		case 'bottom': {
-			const viewportHeight = globalThis.window.innerHeight;
-			const elementBottom = initialPosition + rect.height;
-			const viewportBottom = scrollPosition + viewportHeight;
-			return viewportBottom >= elementBottom + threshold;
-		}
-		case 'left': {
-			return scrollPosition >= initialPosition - threshold;
-		}
-		case 'right': {
-			const viewportWidth = globalThis.window.innerWidth;
-			const elementRight = initialPosition + rect.width;
-			const viewportRight = scrollPosition + viewportWidth;
-			return viewportRight >= elementRight + threshold;
-		}
-		default: {
-			return false;
-		}
+	if (shouldStickBefore) {
+		return scrollPosition >= initialPosition - threshold;
 	}
+
+	const viewportSize = isVertical ? globalThis.window.innerHeight : globalThis.window.innerWidth;
+	const elementSize = isVertical ? rect.height : rect.width;
+	return scrollPosition + viewportSize >= initialPosition + elementSize + threshold;
 }
 
 export function createThrottledHandler(handler: () => void, delay: number): () => void {

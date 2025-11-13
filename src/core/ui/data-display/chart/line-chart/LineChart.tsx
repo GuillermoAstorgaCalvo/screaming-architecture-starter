@@ -1,15 +1,14 @@
-import type { LineChartProps } from '@src-types/ui/data/chart';
-import type { ComponentProps, ReactNode } from 'react';
-import { Line, LineChart as RechartsLineChart, ResponsiveContainer } from 'recharts';
-
 import {
 	ChartAxes,
 	ChartContainer,
 	ChartEmptyState,
 	ChartHeader,
 	ChartTooltipAndLegend,
-} from './ChartComponents';
-import { getChartColors } from './ChartHelpers';
+} from '@core/ui/data-display/chart/shared/ChartComponents';
+import { getChartColors } from '@core/ui/data-display/chart/shared/ChartHelpers';
+import type { LineChartProps } from '@src-types/ui/data/chart';
+import type { ComponentProps, ReactNode } from 'react';
+import { Line, LineChart as RechartsLineChart, ResponsiveContainer } from 'recharts';
 
 interface EmptyStateProps {
 	title?: string | undefined;

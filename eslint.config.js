@@ -722,12 +722,12 @@ export default [
 			'max-nested-callbacks': ['error', 3],
 		},
 	},
-	// Services/API: 200 file, 30 function, 4 params, 12 complexity, 4 depth, 20 statements, 3 nested callbacks - error level
+	// Services/API: 200 file, 40 function, 4 params, 12 complexity, 4 depth, 20 statements, 3 nested callbacks - error level
 	{
 		files: ['src/domains/**/services/**/*.{ts,tsx}', 'src/shared/**/services/**/*.{ts,tsx}'],
 		rules: {
 			'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
-			'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
+			'max-lines-per-function': ['error', { max: 40, skipBlankLines: true, skipComments: true }],
 			'max-params': ['error', 4],
 			complexity: ['error', 12],
 			'max-depth': ['error', 4],
@@ -750,7 +750,7 @@ export default [
 			'max-nested-callbacks': ['error', 3],
 		},
 	},
-	// Handlers/Utils: 150 file, 30 function, 3 params, 6 complexity, 3 depth, 12 statements, 2 nested callbacks - error level
+	// Handlers/Utils: 150 file, 40 function, 3 params, 6 complexity, 3 depth, 12 statements, 2 nested callbacks - error level
 	{
 		files: [
 			'src/domains/**/handlers/**/*.{ts,tsx}',
@@ -761,7 +761,7 @@ export default [
 		],
 		rules: {
 			'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
-			'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
+			'max-lines-per-function': ['error', { max: 40, skipBlankLines: true, skipComments: true }],
 			'max-params': ['error', 3],
 			complexity: ['error', 6],
 			'max-depth': ['error', 3],

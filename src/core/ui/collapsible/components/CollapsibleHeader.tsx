@@ -1,6 +1,6 @@
+import { getHeaderClasses } from '@core/ui/collapsible/helpers/CollapsibleHelpers';
 import type { ReactNode } from 'react';
 
-import { getHeaderClasses } from './CollapsibleHelpers';
 import { CollapsibleIcon } from './CollapsibleIcon';
 
 interface CollapsibleHeaderProps {

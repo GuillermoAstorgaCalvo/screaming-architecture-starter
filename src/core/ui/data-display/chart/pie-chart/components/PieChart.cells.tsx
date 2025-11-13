@@ -1,8 +1,7 @@
+import { getChartColor } from '@core/ui/data-display/chart/shared/ChartHelpers';
 import type { PieChartProps } from '@src-types/ui/data/chart';
 import type { ReactElement } from 'react';
 import { Cell } from 'recharts';
-
-import { getChartColor } from './ChartHelpers';
 
 /**
  * Renders the Cell components for each data entry in the pie chart

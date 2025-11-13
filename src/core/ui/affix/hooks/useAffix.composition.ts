@@ -1,10 +1,11 @@
+import type { AffixHooksParams, AffixHooksSetup } from '@core/ui/affix/types/useAffix.types';
+
 import { useStickyCalculation } from './useAffix.calculation';
 import { useScrollEffect } from './useAffix.effect';
 import { useEnabledSync } from './useAffix.enabled';
 import { useAffixRefs } from './useAffix.refs';
 import { useScrollHandler } from './useAffix.scroll';
 import { useAffixState } from './useAffix.state';
-import type { AffixHooksParams, AffixHooksSetup } from './useAffix.types';
 
 export function useAffixHooks(params: AffixHooksParams): AffixHooksSetup {
 	const { threshold, position, container, enabled, onStickyChange } = params;

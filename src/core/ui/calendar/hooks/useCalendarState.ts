@@ -1,7 +1,10 @@
+import {
+	getCalendarDays,
+	getWeekdayNames,
+	toDate,
+} from '@core/ui/calendar/helpers/CalendarHelpers';
 import type { CalendarProps } from '@src-types/ui/data/calendar';
 import { useId, useMemo, useState } from 'react';
-
-import { getCalendarDays, getWeekdayNames, toDate } from './CalendarHelpers';
 
 const DAYS_IN_WEEK = 7;
 

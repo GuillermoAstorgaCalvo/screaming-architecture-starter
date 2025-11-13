@@ -1,4 +1,4 @@
-import Input from '@core/ui/input/Input';
+import Input from '@core/ui/forms/input/Input';
 
 export interface DataTableFilterProps {
 	globalSearch: string;

@@ -1,4 +1,4 @@
-import type { RangeSelectionParams } from './CalendarHandlersTypes';
+import type { RangeSelectionParams } from '@core/ui/calendar/types/CalendarHandlersTypes';
 
 /**
  * Handles range selection logic for calendar dates

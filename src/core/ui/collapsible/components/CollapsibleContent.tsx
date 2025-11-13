@@ -1,6 +1,5 @@
+import { getContentClasses } from '@core/ui/collapsible/helpers/CollapsibleHelpers';
 import type { ReactNode } from 'react';
-
-import { getContentClasses } from './CollapsibleHelpers';
 
 interface CollapsibleContentProps {
 	contentId: string;

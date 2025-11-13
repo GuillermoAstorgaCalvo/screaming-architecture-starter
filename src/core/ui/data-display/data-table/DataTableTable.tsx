@@ -1,4 +1,4 @@
-import { getTableClasses } from '@core/ui/table/TableHelpers';
+import { getTableClasses } from '@core/ui/data-display/table/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn, DataTableProps } from '@src-types/ui/dataTable';
 import type { ReactElement } from 'react';

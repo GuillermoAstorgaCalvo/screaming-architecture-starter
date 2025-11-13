@@ -1,4 +1,4 @@
-import Pagination from '@core/ui/pagination/Pagination';
+import Pagination from '@core/ui/navigation/pagination/Pagination';
 import type { StandardSize } from '@src-types/ui/base';
 
 interface DataTablePaginationSectionProps {

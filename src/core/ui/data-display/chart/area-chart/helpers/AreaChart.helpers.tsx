@@ -1,63 +1,17 @@
-import type { AreaChartProps } from '@src-types/ui/data/chart';
-import type { HTMLAttributes, ReactNode } from 'react';
-import { Area, AreaChart as RechartsAreaChart, ResponsiveContainer } from 'recharts';
-
 import {
 	ChartAxes,
 	ChartContainer,
 	ChartEmptyState,
 	ChartHeader,
 	ChartTooltipAndLegend,
-} from './ChartComponents';
+} from '@core/ui/data-display/chart/shared/ChartComponents';
+import type { AreaChartProps } from '@src-types/ui/data/chart';
+import type { HTMLAttributes, ReactNode } from 'react';
+import { Area, AreaChart as RechartsAreaChart, ResponsiveContainer } from 'recharts';
 
-type CurveType = 'linear' | 'monotone' | 'step' | 'stepBefore' | 'stepAfter';
+import type { AreaProps } from './AreaChart.props';
 
-export interface AreaPropsConfig {
-	color: string;
-	dataKey: string;
-	curveType: CurveType;
-	strokeWidth: number;
-	fillOpacity: number;
-	showDots: boolean;
-	connectNulls: boolean;
-}
-
-export interface AreaProps {
-	type: CurveType;
-	dataKey: string;
-	stroke: string;
-	fill: string;
-	strokeWidth: number;
-	fillOpacity: number;
-	dot: false | { fill: string; r: number };
-	activeDot: { r: number };
-	connectNulls: boolean;
-	isAnimationActive: boolean;
-}
-
-/** Creates the props object for the Area component */
-export function createAreaProps({
-	color,
-	dataKey,
-	curveType,
-	strokeWidth,
-	fillOpacity,
-	showDots,
-	connectNulls,
-}: AreaPropsConfig): AreaProps {
-	return {
-		type: curveType,
-		dataKey,
-		stroke: color,
-		fill: color,
-		strokeWidth,
-		fillOpacity,
-		dot: showDots ? { fill: color, r: 4 } : false,
-		activeDot: { r: 6 },
-		connectNulls,
-		isAnimationActive: true,
-	};
-}
+export { createAreaProps } from './AreaChart.props';
 
 interface EmptyStateProps {
 	title?: string | undefined;
@@ -66,7 +20,6 @@ interface EmptyStateProps {
 	containerProps?: HTMLAttributes<HTMLDivElement>;
 }
 
-/** Renders the empty state when no data is available */
 export function renderEmptyState({
 	title,
 	emptyMessage,
@@ -160,36 +113,21 @@ interface RenderChartProps {
 }
 
 /** Renders the chart with data */
-export function renderChart({
-	data,
-	title,
-	description,
-	width,
-	height,
-	showLegend,
-	showTooltip,
-	showGrid,
-	areaProps,
-	chartClassName,
-	className,
-	containerProps,
-}: RenderChartProps) {
-	const chartContent = renderAreaChartContent({
-		data,
-		width,
-		height,
-		showGrid,
-		showTooltip,
-		showLegend,
-		areaProps,
-	});
-
+export function renderChart(props: RenderChartProps) {
 	return renderChartWrapper({
-		title,
-		description,
-		chartClassName,
-		className,
-		containerProps,
-		chartContent,
+		title: props.title,
+		description: props.description,
+		chartClassName: props.chartClassName,
+		className: props.className,
+		containerProps: props.containerProps,
+		chartContent: renderAreaChartContent({
+			data: props.data,
+			width: props.width,
+			height: props.height,
+			showGrid: props.showGrid,
+			showTooltip: props.showTooltip,
+			showLegend: props.showLegend,
+			areaProps: props.areaProps,
+		}),
 	});
 }

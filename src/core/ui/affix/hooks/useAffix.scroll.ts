@@ -1,6 +1,5 @@
+import type { ScrollHandlerParams } from '@core/ui/affix/types/useAffix.types';
 import { useCallback } from 'react';
-
-import type { ScrollHandlerParams } from './useAffix.types';
 
 export function useScrollHandler(params: ScrollHandlerParams): () => void {
 	const { calculateStickyState, isSticky, onStickyChange, setIsSticky, enabledRef } = params;

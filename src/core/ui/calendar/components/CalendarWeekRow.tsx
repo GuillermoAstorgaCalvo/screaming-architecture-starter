@@ -1,6 +1,10 @@
-import { renderDayCells } from './CalendarDayCell';
-import type { DayCellsOptions, WeekRowContainerOptions, WeekRowOptions } from './CalendarGridTypes';
-import { getWeekNumber } from './CalendarHelpers';
+import { renderDayCells } from '@core/ui/calendar/components/CalendarDayCell';
+import { getWeekNumber } from '@core/ui/calendar/helpers/CalendarHelpers';
+import type {
+	DayCellsOptions,
+	WeekRowContainerOptions,
+	WeekRowOptions,
+} from '@core/ui/calendar/types/CalendarGridTypes';
 
 interface WeekMetadata {
 	weekKey: number;

@@ -1,7 +1,7 @@
+import { getHeaderClasses } from '@core/ui/accordion/helpers/AccordionHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import { type ReactNode, useCallback } from 'react';
 
-import { getHeaderClasses } from './AccordionHelpers';
 import { AccordionIcon } from './AccordionIcon';
 
 type AccordionHeaderProps = Readonly<{

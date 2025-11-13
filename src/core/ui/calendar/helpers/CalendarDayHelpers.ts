@@ -1,7 +1,6 @@
+import type { CalendarDayProps } from '@core/ui/calendar/types/CalendarTypes';
 import type { CalendarEvent } from '@src-types/ui/data/calendar';
 import type { KeyboardEvent } from 'react';
-
-import type { CalendarDayProps } from './CalendarTypes';
 
 /**
  * Get aria label for day
@@ -71,6 +70,13 @@ export function createDayHandlers(
 /**
  * Create day props object
  */
+function assignIfDefined<T, K extends keyof T>(target: T, source: Readonly<T>, key: K): void {
+	const value = source[key];
+	if (value !== undefined) {
+		target[key] = value;
+	}
+}
+
 export function createDayProps(
 	props: Readonly<
 		CalendarDayProps & { weekdayNames?: string[]; showWeekNumber?: boolean; weekNumber?: number }
@@ -81,12 +87,15 @@ export function createDayProps(
 		isCurrentMonth: props.isCurrentMonth,
 		isToday: props.isToday,
 	};
-	if (props.isSelected !== undefined) dayProps.isSelected = props.isSelected;
-	if (props.isInRange !== undefined) dayProps.isInRange = props.isInRange;
-	if (props.isRangeStart !== undefined) dayProps.isRangeStart = props.isRangeStart;
-	if (props.isRangeEnd !== undefined) dayProps.isRangeEnd = props.isRangeEnd;
-	if (props.events !== undefined) dayProps.events = props.events;
-	if (props.disabled !== undefined) dayProps.disabled = props.disabled;
-	if (props.onClick !== undefined) dayProps.onClick = props.onClick;
+
+	assignIfDefined(dayProps, props, 'isSelected');
+	assignIfDefined(dayProps, props, 'isInRange');
+	assignIfDefined(dayProps, props, 'isRangeStart');
+	assignIfDefined(dayProps, props, 'isRangeEnd');
+	assignIfDefined(dayProps, props, 'events');
+	assignIfDefined(dayProps, props, 'disabled');
+	assignIfDefined(dayProps, props, 'onClick');
+	assignIfDefined(dayProps, props, 'renderDay');
+
 	return dayProps;
 }

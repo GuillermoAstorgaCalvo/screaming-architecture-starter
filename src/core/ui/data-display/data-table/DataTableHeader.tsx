@@ -1,4 +1,4 @@
-import { getHeaderClasses } from '@core/ui/table/TableHelpers';
+import { getHeaderClasses } from '@core/ui/data-display/table/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn } from '@src-types/ui/dataTable';
 

@@ -1,4 +1,4 @@
-import Chip from '@core/ui/chip/Chip';
+import Chip from '@core/ui/forms/chip/Chip';
 import type { ActiveFilterValue } from '@src-types/ui/advancedFilter';
 import type { ReactNode } from 'react';
 

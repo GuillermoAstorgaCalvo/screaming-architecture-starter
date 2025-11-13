@@ -1,7 +1,6 @@
+import { getContentClasses } from '@core/ui/accordion/helpers/AccordionHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import { getContentClasses } from './AccordionHelpers';
 
 type AccordionContentProps = Readonly<{
 	contentId: string;

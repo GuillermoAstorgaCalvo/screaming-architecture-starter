@@ -1,5 +1,5 @@
-import type { SingleSelectionParams } from './CalendarHandlersTypes';
-import { isSameDay } from './CalendarHelpers';
+import { isSameDay } from '@core/ui/calendar/helpers/CalendarHelpers';
+import type { SingleSelectionParams } from '@core/ui/calendar/types/CalendarHandlersTypes';
 
 /**
  * Handles single date selection logic for calendar

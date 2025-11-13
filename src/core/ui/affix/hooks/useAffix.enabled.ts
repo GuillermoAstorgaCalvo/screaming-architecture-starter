@@ -1,6 +1,5 @@
+import type { EnabledSyncParams } from '@core/ui/affix/types/useAffix.types';
 import { useEffect } from 'react';
-
-import type { EnabledSyncParams } from './useAffix.types';
 
 export function useEnabledSync(params: EnabledSyncParams): void {
 	const { enabled, elementRef, setIsSticky, initialPositionRef, enabledRef } = params;

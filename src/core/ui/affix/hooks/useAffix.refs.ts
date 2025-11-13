@@ -1,6 +1,5 @@
+import type { AffixRefs } from '@core/ui/affix/types/useAffix.types';
 import { useRef } from 'react';
-
-import type { AffixRefs } from './useAffix.types';
 
 export function useAffixRefs(enabled: boolean): AffixRefs {
 	const elementRef = useRef<HTMLDivElement>(null);

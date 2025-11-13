@@ -1,6 +1,5 @@
+import type { AffixPosition } from '@core/ui/affix/helpers/useAffix.helpers';
 import type { RefObject } from 'react';
-
-import type { AffixPosition } from './useAffix.helpers';
 
 export interface MutableRef<T> {
 	current: T;

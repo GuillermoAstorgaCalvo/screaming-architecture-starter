@@ -1,11 +1,16 @@
+import { renderPieCells } from '@core/ui/data-display/chart/pie-chart/components/PieChart.cells';
+import {
+	renderLegend,
+	renderTooltip,
+} from '@core/ui/data-display/chart/pie-chart/components/PieChart.overlays';
+import {
+	buildPieProps,
+	getBasePieProps,
+} from '@core/ui/data-display/chart/pie-chart/helpers/PieChart.config';
+import type { ChartContentParams } from '@core/ui/data-display/chart/pie-chart/types/PieChart.types';
 import type { PieChartProps } from '@src-types/ui/data/chart';
 import type { ReactElement } from 'react';
 import { Pie, PieChart as RechartsPieChart, ResponsiveContainer } from 'recharts';
-
-import { renderPieCells } from './PieChart.cells';
-import { buildPieProps, getBasePieProps } from './PieChart.config';
-import { renderLegend, renderTooltip } from './PieChart.overlays';
-import type { ChartContentParams } from './PieChart.types';
 
 /**
  * Renders the Pie component with all its configuration

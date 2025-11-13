@@ -1,12 +1,12 @@
+import { renderDayButton } from '@core/ui/calendar/components/CalendarDayRenderers';
 import {
 	createDayButtonProps,
 	createDayHandlers,
 	createDayProps,
 	getDayAriaLabel,
-} from './CalendarDayHelpers';
-import { renderDayButton } from './CalendarDayRenderers';
-import { getDayClasses } from './CalendarDayStyles';
-import type { CalendarDayProps } from './CalendarTypes';
+} from '@core/ui/calendar/helpers/CalendarDayHelpers';
+import { getDayClasses } from '@core/ui/calendar/helpers/CalendarDayStyles';
+import type { CalendarDayProps } from '@core/ui/calendar/types/CalendarTypes';
 
 interface CalendarDayCellProps extends CalendarDayProps {
 	/** Weekday names for header */

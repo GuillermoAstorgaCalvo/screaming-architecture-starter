@@ -1,7 +1,6 @@
+import { setupScrollListeners } from '@core/ui/affix/helpers/useAffix.helpers';
+import type { ScrollEffectParams } from '@core/ui/affix/types/useAffix.types';
 import { useEffect } from 'react';
-
-import { setupScrollListeners } from './useAffix.helpers';
-import type { ScrollEffectParams } from './useAffix.types';
 
 export function useScrollEffect(params: ScrollEffectParams): void {
 	const { enabled, container, elementRef, initialPositionRef, handleScroll } = params;

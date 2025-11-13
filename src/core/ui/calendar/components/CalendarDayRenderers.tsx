@@ -1,9 +1,8 @@
+import { MAX_VISIBLE_EVENTS } from '@core/ui/calendar/constants/CalendarDayConstants';
+import type { createDayButtonProps } from '@core/ui/calendar/helpers/CalendarDayHelpers';
+import type { CalendarDayProps } from '@core/ui/calendar/types/CalendarTypes';
 import type { CalendarEvent } from '@src-types/ui/data/calendar';
 import type { ReactElement } from 'react';
-
-import { MAX_VISIBLE_EVENTS } from './CalendarDayConstants';
-import type { createDayButtonProps } from './CalendarDayHelpers';
-import type { CalendarDayProps } from './CalendarTypes';
 
 /**
  * Default event badge renderer

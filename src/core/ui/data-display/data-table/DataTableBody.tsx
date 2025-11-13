@@ -1,4 +1,8 @@
-import { getCellClasses, getTableRowId, type RowClassName } from '@core/ui/table/TableHelpers';
+import {
+	getCellClasses,
+	getTableRowId,
+	type RowClassName,
+} from '@core/ui/data-display/table/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import type { CSSProperties, ReactNode } from 'react';

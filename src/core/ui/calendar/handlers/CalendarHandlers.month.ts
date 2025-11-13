@@ -2,7 +2,7 @@ import type {
 	MonthChangeParams,
 	MonthHandlers,
 	MonthNavigationParams,
-} from './CalendarHandlersTypes';
+} from '@core/ui/calendar/types/CalendarHandlersTypes';
 
 /**
  * Changes the displayed month

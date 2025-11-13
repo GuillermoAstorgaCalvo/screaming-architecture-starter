@@ -1,5 +1,6 @@
+import type { UseAffixOptions, UseAffixReturn } from '@core/ui/affix/types/useAffix.types';
+
 import { useAffixHooks } from './useAffix.composition';
-import type { UseAffixOptions, UseAffixReturn } from './useAffix.types';
 
 /**
  * Hook to manage affix/sticky behavior

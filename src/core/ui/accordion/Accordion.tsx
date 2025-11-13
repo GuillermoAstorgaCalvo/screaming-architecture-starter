@@ -1,9 +1,9 @@
 import type { AccordionProps } from '@src-types/ui/navigation/accordion';
 import { useId } from 'react';
 
-import { getAccordionClasses } from './AccordionHelpers';
-import { AccordionItem } from './AccordionItem';
-import { useAccordion } from './useAccordion';
+import { AccordionItem } from './components/AccordionItem';
+import { getAccordionClasses } from './helpers/AccordionHelpers';
+import { useAccordion } from './hooks/useAccordion';
 
 /**
  * Generates a unique accordion ID from the provided ID or a generated one.

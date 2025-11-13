@@ -9,6 +9,7 @@ import type {
 export class MockAuthAdapter implements AuthPort {
 	private tokens: AuthTokens | null = null;
 	private readonly listeners = new Set<AuthTokenChangeListener>();
+	private mockPayload: Record<string, unknown> | null = {};
 
 	getTokens(): AuthTokens | null {
 		return this.tokens;
@@ -40,14 +41,20 @@ export class MockAuthAdapter implements AuthPort {
 	}
 
 	decode<TPayload = Record<string, unknown>>(_token: string): DecodedAuthToken<TPayload> | null {
+		const payload = (this.mockPayload ?? {}) as TPayload;
+
 		return {
 			header: {} as Record<string, unknown>,
-			payload: {} as TPayload,
+			payload,
 			signature: null,
 			issuedAt: null,
 			expiresAt: null,
 			notBefore: null,
 		};
+	}
+
+	setMockPayload(payload: Record<string, unknown> | null): void {
+		this.mockPayload = payload ? { ...payload } : null;
 	}
 
 	isTokenExpired(

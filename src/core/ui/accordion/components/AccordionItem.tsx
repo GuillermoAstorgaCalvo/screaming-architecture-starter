@@ -1,10 +1,13 @@
+import {
+	getAccordionItemClasses,
+	getAccordionItemIds,
+} from '@core/ui/accordion/helpers/AccordionHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { AccordionProps, AccordionVariant } from '@src-types/ui/navigation/accordion';
 import { useMemo } from 'react';
 
 import { AccordionContent } from './AccordionContent';
 import { AccordionHeader } from './AccordionHeader';
-import { getAccordionItemClasses, getAccordionItemIds } from './AccordionHelpers';
 
 type AccordionItemProps = Readonly<{
 	item: AccordionProps['items'][number];

@@ -1,7 +1,13 @@
-import { buildRangeSelectionParams, handleRangeSelection } from './CalendarHandlers.range';
-import { buildSingleSelectionParams, handleSingleSelection } from './CalendarHandlers.single';
-import type { DayClickHandlerParams } from './CalendarHandlersTypes';
-import { isDateDisabled } from './CalendarHelpers';
+import {
+	buildRangeSelectionParams,
+	handleRangeSelection,
+} from '@core/ui/calendar/handlers/CalendarHandlers.range';
+import {
+	buildSingleSelectionParams,
+	handleSingleSelection,
+} from '@core/ui/calendar/handlers/CalendarHandlers.single';
+import { isDateDisabled } from '@core/ui/calendar/helpers/CalendarHelpers';
+import type { DayClickHandlerParams } from '@core/ui/calendar/types/CalendarHandlersTypes';
 
 /**
  * Creates handler for day click events

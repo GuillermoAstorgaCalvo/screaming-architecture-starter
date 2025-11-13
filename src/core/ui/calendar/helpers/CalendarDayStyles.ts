@@ -15,6 +15,31 @@ export function getOtherMonthClasses(): string {
 /**
  * Get state-specific classes (today, selected, range, etc.)
  */
+function isRangeHighlighted(isSelected: boolean, isInRange: boolean): boolean {
+	return isInRange && !isSelected;
+}
+
+function shouldApplyHover(disabled: boolean, isSelected: boolean): boolean {
+	return !disabled && !isSelected;
+}
+
+type StateParams = Parameters<typeof getStateClasses>[0];
+type OptionalStateKey = Exclude<keyof StateParams, 'isToday'>;
+
+function buildStateParams(
+	isToday: boolean,
+	...optionals: Array<[OptionalStateKey, boolean | undefined]>
+): StateParams {
+	const stateParams: Parameters<typeof getStateClasses>[0] = { isToday };
+
+	for (const [key, value] of optionals) {
+		if (value === undefined) continue;
+		stateParams[key] = value;
+	}
+
+	return stateParams;
+}
+
 export function getStateClasses({
 	isToday,
 	isSelected,
@@ -30,15 +55,23 @@ export function getStateClasses({
 	isRangeEnd?: boolean;
 	disabled?: boolean;
 }): string {
-	const classes: string[] = [];
-	if (isToday) classes.push('font-semibold ring-2 ring-primary');
-	if (isSelected) classes.push('bg-primary text-primary-foreground');
-	if (isInRange && !isSelected) classes.push('bg-primary/20');
-	if (isRangeStart) classes.push('rounded-l-lg');
-	if (isRangeEnd) classes.push('rounded-r-lg');
-	if (disabled) classes.push('opacity-50 cursor-not-allowed');
-	if (!disabled && !isSelected) classes.push('hover:bg-accent hover:text-accent-foreground');
-	return classes.join(' ');
+	const conditionalClasses: Array<[boolean, string]> = [
+		[isToday, 'font-semibold ring-2 ring-primary'],
+		[isSelected === true, 'bg-primary text-primary-foreground'],
+		[isRangeHighlighted(isSelected === true, isInRange === true), 'bg-primary/20'],
+		[isRangeStart === true, 'rounded-l-lg'],
+		[isRangeEnd === true, 'rounded-r-lg'],
+		[disabled === true, 'opacity-50 cursor-not-allowed'],
+		[
+			shouldApplyHover(disabled === true, isSelected === true),
+			'hover:bg-accent hover:text-accent-foreground',
+		],
+	];
+
+	return conditionalClasses
+		.filter(([condition]) => condition)
+		.map(([, className]) => className)
+		.join(' ');
 }
 
 /**
@@ -64,12 +97,14 @@ export function getDayClasses({
 	const baseClasses =
 		'aspect-square flex flex-col items-center justify-start p-1 text-sm cursor-pointer transition-colors';
 	const monthClasses = isCurrentMonth ? getCurrentMonthClasses() : getOtherMonthClasses();
-	const stateParams: Parameters<typeof getStateClasses>[0] = { isToday };
-	if (isSelected !== undefined) stateParams.isSelected = isSelected;
-	if (isInRange !== undefined) stateParams.isInRange = isInRange;
-	if (isRangeStart !== undefined) stateParams.isRangeStart = isRangeStart;
-	if (isRangeEnd !== undefined) stateParams.isRangeEnd = isRangeEnd;
-	if (disabled !== undefined) stateParams.disabled = disabled;
+	const stateParams = buildStateParams(
+		isToday,
+		['isSelected', isSelected],
+		['isInRange', isInRange],
+		['isRangeStart', isRangeStart],
+		['isRangeEnd', isRangeEnd],
+		['disabled', disabled]
+	);
 	const stateClasses = getStateClasses(stateParams);
 
 	return `${baseClasses} ${monthClasses} ${stateClasses}`.trim();

@@ -1,4 +1,4 @@
-import { TableEmptyState } from '@core/ui/table/TableEmptyState';
+import { TableEmptyState } from '@core/ui/data-display/table/TableEmptyState';
 
 import type {
 	BasePropsParams,

@@ -1,7 +1,6 @@
+import { CalendarNavigation } from '@core/ui/calendar/components/CalendarNavigation';
+import { formatMonthYear } from '@core/ui/calendar/helpers/CalendarHelpers';
 import type { ReactNode } from 'react';
-
-import { formatMonthYear } from './CalendarHelpers';
-import { CalendarNavigation } from './CalendarNavigation';
 
 interface CalendarHeaderProps {
 	displayMonth: Date;

@@ -128,6 +128,8 @@ export const tokenPayloadSchema = z.object({
 	email: z.email().optional(),
 	/** Roles */
 	roles: z.array(z.string()).optional(),
+	/** Permissions */
+	permissions: z.array(z.string()).optional(),
 	/** Issued at timestamp */
 	iat: z.number().optional(),
 	/** Expiration timestamp */

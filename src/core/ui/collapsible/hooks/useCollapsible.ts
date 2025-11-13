@@ -1,6 +1,5 @@
+import { createToggleHandler } from '@core/ui/collapsible/helpers/CollapsibleHelpers';
 import { useId, useState } from 'react';
-
-import { createToggleHandler } from './CollapsibleHelpers';
 
 export interface UseCollapsibleStateParams {
 	defaultExpanded: boolean;

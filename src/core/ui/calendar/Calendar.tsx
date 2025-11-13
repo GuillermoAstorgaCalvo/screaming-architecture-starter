@@ -1,9 +1,8 @@
+import { CalendarView } from '@core/ui/calendar/components/CalendarView';
+import { toDate } from '@core/ui/calendar/helpers/CalendarHelpers';
+import { useCalendarHandlers } from '@core/ui/calendar/hooks/useCalendarHandlers';
+import { useCalendarState } from '@core/ui/calendar/hooks/useCalendarState';
 import type { CalendarProps } from '@src-types/ui/data/calendar';
-
-import { toDate } from './CalendarHelpers';
-import { CalendarView } from './CalendarView';
-import { useCalendarHandlers } from './useCalendarHandlers';
-import { useCalendarState } from './useCalendarState';
 
 /**
  * Calendar - Standalone calendar view component

@@ -1,6 +1,5 @@
+import { getPieLabelFormatter } from '@core/ui/data-display/chart/pie-chart/helpers/PieChart.labels';
 import type { PieChartProps } from '@src-types/ui/data/chart';
-
-import { getPieLabelFormatter } from './PieChart.labels';
 
 /**
  * Gets the inner radius value as a percentage string or 0

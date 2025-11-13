@@ -1,5 +1,5 @@
-import type { WeekRowOptions } from './CalendarGridTypes';
-import { renderWeekRow } from './CalendarWeekRow';
+import { renderWeekRow } from '@core/ui/calendar/components/CalendarWeekRow';
+import type { WeekRowOptions } from '@core/ui/calendar/types/CalendarGridTypes';
 
 /**
  * Render weekday headers

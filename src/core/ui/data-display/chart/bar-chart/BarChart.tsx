@@ -1,15 +1,14 @@
-import type { BarChartProps } from '@src-types/ui/data/chart';
-import type { ReactNode } from 'react';
-import { Bar, BarChart as RechartsBarChart, ResponsiveContainer } from 'recharts';
-
 import {
 	ChartAxes,
 	ChartContainer,
 	ChartEmptyState,
 	ChartHeader,
 	ChartTooltipAndLegend,
-} from './ChartComponents';
-import { getChartColors } from './ChartHelpers';
+} from '@core/ui/data-display/chart/shared/ChartComponents';
+import { getChartColors } from '@core/ui/data-display/chart/shared/ChartHelpers';
+import type { BarChartProps } from '@src-types/ui/data/chart';
+import type { ReactNode } from 'react';
+import { Bar, BarChart as RechartsBarChart, ResponsiveContainer } from 'recharts';
 
 const DEFAULT_CHART_HEIGHT = 300;
 

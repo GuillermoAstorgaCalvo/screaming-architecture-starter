@@ -1,10 +1,9 @@
+import { buildCompleteChart } from '@core/ui/data-display/chart/pie-chart/components/PieChart.composition';
+import { renderEmptyState } from '@core/ui/data-display/chart/pie-chart/components/PieChart.empty';
+import type { ChartContentParams } from '@core/ui/data-display/chart/pie-chart/types/PieChart.types';
+import { ChartContainer, ChartHeader } from '@core/ui/data-display/chart/shared/ChartComponents';
 import type { PieChartProps } from '@src-types/ui/data/chart';
 import type { ReactElement } from 'react';
-
-import { ChartContainer, ChartHeader } from './ChartComponents';
-import { buildCompleteChart } from './PieChart.composition';
-import { renderEmptyState } from './PieChart.empty';
-import type { ChartContentParams } from './PieChart.types';
 
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_OUTER_RADIUS = 80;

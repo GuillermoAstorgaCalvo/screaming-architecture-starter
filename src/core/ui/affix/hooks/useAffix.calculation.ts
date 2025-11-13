@@ -1,12 +1,11 @@
-import { useCallback } from 'react';
-
 import {
 	calculatePositionState,
 	getInitialPosition,
 	getScrollX,
 	getScrollY,
-} from './useAffix.helpers';
-import type { StickyCalculationParams } from './useAffix.types';
+} from '@core/ui/affix/helpers/useAffix.helpers';
+import type { StickyCalculationParams } from '@core/ui/affix/types/useAffix.types';
+import { useCallback } from 'react';
 
 export function useStickyCalculation(params: StickyCalculationParams): () => boolean {
 	const { elementRef, position, threshold, container, enabledRef, initialPositionRef } = params;

@@ -1,7 +1,9 @@
+import {
+	renderCalendarWeeks,
+	renderWeekdayHeaders,
+} from '@core/ui/calendar/helpers/CalendarGridHelpers';
+import type { WeekRowOptions } from '@core/ui/calendar/types/CalendarGridTypes';
 import type { CalendarEvent, CalendarProps } from '@src-types/ui/data/calendar';
-
-import { renderCalendarWeeks, renderWeekdayHeaders } from './CalendarGridHelpers';
-import type { WeekRowOptions } from './CalendarGridTypes';
 
 interface CalendarGridProps {
 	weeks: Date[][];

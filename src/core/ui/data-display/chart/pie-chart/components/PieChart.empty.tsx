@@ -1,6 +1,5 @@
+import { ChartEmptyState } from '@core/ui/data-display/chart/shared/ChartComponents';
 import type { ReactElement, ReactNode } from 'react';
-
-import { ChartEmptyState } from './ChartComponents';
 
 /**
  * Renders the empty state when no data is available

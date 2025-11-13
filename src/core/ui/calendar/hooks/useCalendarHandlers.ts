@@ -1,6 +1,9 @@
-import { buildDayClickHandler } from './CalendarHandlers.day';
-import { buildMonthHandlers } from './CalendarHandlers.month';
-import type { CalendarHandlers, UseCalendarHandlersParams } from './CalendarHandlersTypes';
+import { buildDayClickHandler } from '@core/ui/calendar/handlers/CalendarHandlers.day';
+import { buildMonthHandlers } from '@core/ui/calendar/handlers/CalendarHandlers.month';
+import type {
+	CalendarHandlers,
+	UseCalendarHandlersParams,
+} from '@core/ui/calendar/types/CalendarHandlersTypes';
 
 /**
  * Builds all calendar handlers (month navigation and day click)

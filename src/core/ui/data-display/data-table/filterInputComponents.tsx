@@ -1,8 +1,8 @@
-import DatePicker from '@core/ui/date-picker/DatePicker';
-import DateRangePicker from '@core/ui/date-range-picker/DateRangePicker';
-import Input from '@core/ui/input/Input';
-import MultiSelect from '@core/ui/multi-select/MultiSelect';
-import Select from '@core/ui/select/Select';
+import DatePicker from '@core/ui/forms/date-picker/DatePicker';
+import DateRangePicker from '@core/ui/forms/date-range-picker/DateRangePicker';
+import Input from '@core/ui/forms/input/Input';
+import MultiSelect from '@core/ui/forms/multi-select/MultiSelect';
+import Select from '@core/ui/forms/select/Select';
 import type {
 	DateAdvancedFilter,
 	DateRangeAdvancedFilter,

@@ -1,9 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
-import { CollapsibleContent } from './CollapsibleContent';
-import { CollapsibleHeader } from './CollapsibleHeader';
-import { getContainerClasses } from './CollapsibleHelpers';
-import { useCollapsible } from './useCollapsible';
+import { CollapsibleContent } from './components/CollapsibleContent';
+import { CollapsibleHeader } from './components/CollapsibleHeader';
+import { getContainerClasses } from './helpers/CollapsibleHelpers';
+import { useCollapsible } from './hooks/useCollapsible';
 
 export interface CollapsibleProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
 	/** Header content (always visible) */

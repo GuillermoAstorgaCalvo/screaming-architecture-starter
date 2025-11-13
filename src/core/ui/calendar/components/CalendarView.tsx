@@ -2,8 +2,8 @@ import {
 	prepareCalendarSectionProps,
 	renderCalendarGrid,
 	renderCalendarHeader,
-} from './CalendarViewHelpers';
-import type { CalendarViewProps } from './CalendarViewTypes';
+} from '@core/ui/calendar/helpers/CalendarViewHelpers';
+import type { CalendarViewProps } from '@core/ui/calendar/types/CalendarViewTypes';
 
 /**
  * CalendarView - Main calendar view component that orchestrates header and grid

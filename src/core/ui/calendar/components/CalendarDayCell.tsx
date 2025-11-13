@@ -1,7 +1,7 @@
-import { CalendarDay } from './CalendarDay';
-import { calculateDayState } from './CalendarDayState';
-import type { DayCellOptions, DayCellsOptions } from './CalendarGridTypes';
-import { isToday } from './CalendarHelpers';
+import { CalendarDay } from '@core/ui/calendar/components/CalendarDay';
+import { calculateDayState } from '@core/ui/calendar/helpers/CalendarDayState';
+import { isToday } from '@core/ui/calendar/helpers/CalendarHelpers';
+import type { DayCellOptions, DayCellsOptions } from '@core/ui/calendar/types/CalendarGridTypes';
 
 /**
  * Render a single day cell

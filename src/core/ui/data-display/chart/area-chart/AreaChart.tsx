@@ -1,8 +1,11 @@
+import {
+	createAreaProps,
+	renderChart,
+	renderEmptyState,
+} from '@core/ui/data-display/chart/area-chart/helpers/AreaChart.helpers';
+import { getChartColors } from '@core/ui/data-display/chart/shared/ChartHelpers';
 import type { AreaChartProps } from '@src-types/ui/data/chart';
 import type { HTMLAttributes, ReactNode } from 'react';
-
-import { createAreaProps, renderChart, renderEmptyState } from './AreaChart.helpers';
-import { getChartColors } from './ChartHelpers';
 
 type CurveType = 'linear' | 'monotone' | 'step' | 'stepBefore' | 'stepAfter';
 

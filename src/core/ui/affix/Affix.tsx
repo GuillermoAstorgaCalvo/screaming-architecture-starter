@@ -2,7 +2,7 @@ import type { AffixProps } from '@src-types/ui/layout/primitives';
 import type { CSSProperties } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAffix } from './useAffix';
+import { useAffix } from './hooks/useAffix';
 
 /**
  * Affix position classes
