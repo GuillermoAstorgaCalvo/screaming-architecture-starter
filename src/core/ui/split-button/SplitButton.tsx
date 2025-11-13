@@ -1,7 +1,6 @@
+import { renderSplitButton } from '@core/ui/split-button/helpers/SplitButtonRenderers';
+import { useSplitButton } from '@core/ui/split-button/hooks/useSplitButton';
 import type { ButtonVariant, SplitButtonProps } from '@src-types/ui/buttons';
-
-import { renderSplitButton } from './SplitButtonRenderers';
-import { useSplitButton } from './useSplitButton';
 
 type ButtonType = 'button' | 'submit' | 'reset';
 type MenuAlign = 'start' | 'center' | 'end';

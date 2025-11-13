@@ -1,7 +1,6 @@
+import type { PanelState } from '@core/ui/utilities/splitter/hooks/useSplitter.state';
 import type { SplitterOrientation } from '@src-types/ui/layout/splitter';
 import { createContext, type MouseEvent, useContext } from 'react';
-
-import type { PanelState } from './useSplitter.state';
 
 interface SplitterContextValue {
 	readonly orientation: SplitterOrientation;

@@ -1,7 +1,9 @@
+import type {
+	TagInputFieldProps,
+	UseTagInputStateReturn,
+} from '@core/ui/forms/tag-input/types/TagInputTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { InputHTMLAttributes, KeyboardEvent } from 'react';
-
-import type { TagInputFieldProps, UseTagInputStateReturn } from './TagInputTypes';
 
 export interface BuildTagInputFieldPropsOptions {
 	readonly state: UseTagInputStateReturn;

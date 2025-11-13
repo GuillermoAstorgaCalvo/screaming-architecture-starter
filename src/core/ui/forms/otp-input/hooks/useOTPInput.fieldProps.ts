@@ -1,7 +1,6 @@
+import type { UseOTPInputFieldPropsOptions } from '@core/ui/forms/otp-input/hooks/useOTPInput.types';
+import type { OTPInputFieldProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import { useMemo } from 'react';
-
-import type { OTPInputFieldProps } from './OTPInputTypes';
-import type { UseOTPInputFieldPropsOptions } from './useOTPInput.types';
 
 /**
  * Builds accessibility-related field props

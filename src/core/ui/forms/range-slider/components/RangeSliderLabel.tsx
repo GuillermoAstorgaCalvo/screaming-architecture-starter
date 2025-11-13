@@ -1,6 +1,5 @@
+import type { RangeSliderLabelProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 import Label from '@core/ui/label/Label';
-
-import type { RangeSliderLabelProps } from './RangeSliderTypes';
 
 export function RangeSliderLabel({
 	id,

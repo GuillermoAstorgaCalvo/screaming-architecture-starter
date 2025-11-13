@@ -1,7 +1,9 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import {
+	createOptionHandlers,
+	getOptionClassName,
+} from '@core/ui/forms/combobox/helpers/ComboboxContentHelpers';
 import type { RefObject } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import { createOptionHandlers, getOptionClassName } from './ComboboxContentHelpers';
 
 interface ComboboxOptionItemProps {
 	readonly option: ComboboxOption;

@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { ColorInputMessagesProps } from '@core/ui/forms/color-input/types/ColorInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { ColorInputMessagesProps } from './ColorInputTypes';
 
 export function ColorInputMessages({
 	colorInputId,

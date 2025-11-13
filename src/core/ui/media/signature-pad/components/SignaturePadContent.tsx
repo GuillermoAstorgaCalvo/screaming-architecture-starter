@@ -1,8 +1,8 @@
-import { SignaturePadCanvas } from './SignaturePadCanvas';
-import { SignaturePadLabel } from './SignaturePadLabel';
-import { SignaturePadMessages } from './SignaturePadMessages';
-import type { SignaturePadContentProps } from './SignaturePadTypes';
-import { SignaturePadWrapper } from './SignaturePadWrapper';
+import { SignaturePadCanvas } from '@core/ui/media/signature-pad/components/SignaturePadCanvas';
+import { SignaturePadLabel } from '@core/ui/media/signature-pad/components/SignaturePadLabel';
+import { SignaturePadMessages } from '@core/ui/media/signature-pad/components/SignaturePadMessages';
+import { SignaturePadWrapper } from '@core/ui/media/signature-pad/components/SignaturePadWrapper';
+import type { SignaturePadContentProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 
 export function SignaturePadContent({
 	state,

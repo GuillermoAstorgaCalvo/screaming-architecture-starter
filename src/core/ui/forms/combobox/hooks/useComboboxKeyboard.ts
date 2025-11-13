@@ -1,7 +1,9 @@
+import type { ComboboxOption, ComboboxProps } from '@core/ui/forms/combobox/Combobox';
+import {
+	createKeyHandlerMap,
+	useKeyboardHandlers,
+} from '@core/ui/forms/combobox/helpers/useComboboxKeyboard.handlers';
 import { type KeyboardEvent, useCallback } from 'react';
-
-import type { ComboboxOption, ComboboxProps } from './Combobox';
-import { createKeyHandlerMap, useKeyboardHandlers } from './useComboboxKeyboard.handlers';
 
 export function useComboboxKeyboard(
 	_props: Readonly<Pick<ComboboxProps, 'options' | 'onChange'>>,

@@ -2,9 +2,8 @@
  * Rotate animation variants
  */
 
+import { motionDurations, motionEasing } from '@core/ui/utilities/motion/constants/motionConstants';
 import type { Variants } from 'framer-motion';
-
-import { motionDurations, motionEasing } from './motionConstants';
 
 /**
  * Rotate animation variants

@@ -3,9 +3,12 @@
  * Bouncy, attention-grabbing animations using spring physics
  */
 
+import {
+	motionDurations,
+	motionEasing,
+	springConfig,
+} from '@core/ui/utilities/motion/constants/motionConstants';
 import type { Variants } from 'framer-motion';
-
-import { motionDurations, motionEasing, springConfig } from './motionConstants';
 
 /**
  * Bounce animation variants

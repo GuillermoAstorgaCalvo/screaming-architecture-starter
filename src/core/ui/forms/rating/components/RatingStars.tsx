@@ -1,8 +1,7 @@
+import { RatingStarButton } from '@core/ui/forms/rating/components/RatingStarButton';
+import { getStarFill } from '@core/ui/forms/rating/helpers/Rating.helpers';
 import type { RatingProps } from '@src-types/ui/forms-advanced';
 import type { ReactNode } from 'react';
-
-import { getStarFill } from './Rating.helpers';
-import { RatingStarButton } from './RatingStarButton';
 
 export interface RatingStarsProps {
 	max: number;

@@ -1,8 +1,10 @@
+import {
+	getArrowClasses,
+	getPositionClasses,
+} from '@core/ui/overlays/tooltip/helpers/tooltipUtils';
 import { componentZIndex } from '@core/ui/theme/tokens';
 import type { TooltipProps } from '@src-types/ui/overlays/floating';
 import type { ReactNode } from 'react';
-
-import { getArrowClasses, getPositionClasses } from './tooltipUtils';
 
 interface TooltipContentProps {
 	readonly tooltipId: string;

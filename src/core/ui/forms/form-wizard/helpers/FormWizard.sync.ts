@@ -1,7 +1,6 @@
+import type { FormWizardState } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import { useMemo } from 'react';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardState } from './FormWizardTypes';
 
 /**
  * Synchronize controlled and internal active step state

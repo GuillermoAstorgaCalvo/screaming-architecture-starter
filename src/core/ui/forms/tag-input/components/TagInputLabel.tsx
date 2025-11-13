@@ -1,6 +1,5 @@
+import type { TagInputLabelProps } from '@core/ui/forms/tag-input/types/TagInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { TagInputLabelProps } from './TagInputTypes';
 
 export function TagInputLabel({ id, label, required }: Readonly<TagInputLabelProps>) {
 	return (

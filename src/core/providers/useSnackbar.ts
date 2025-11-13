@@ -1,4 +1,4 @@
-import type { SnackbarIntent, SnackbarItem } from '@core/ui/snackbar/snackbar.types';
+import type { SnackbarIntent, SnackbarItem } from '@core/ui/feedback/snackbar/types/snackbar.types';
 import { type ReactNode, useCallback, useContext } from 'react';
 
 import { SnackbarContext } from './SnackbarContext';

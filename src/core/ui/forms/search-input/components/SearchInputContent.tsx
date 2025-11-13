@@ -1,8 +1,8 @@
-import { SearchInputField } from './SearchInputField';
-import { SearchInputLabel } from './SearchInputLabel';
-import { SearchInputMessages } from './SearchInputMessages';
-import type { SearchInputContentProps } from './SearchInputTypes';
-import { SearchInputWrapper } from './SearchInputWrapper';
+import { SearchInputField } from '@core/ui/forms/search-input/components/SearchInputField';
+import { SearchInputLabel } from '@core/ui/forms/search-input/components/SearchInputLabel';
+import { SearchInputMessages } from '@core/ui/forms/search-input/components/SearchInputMessages';
+import { SearchInputWrapper } from '@core/ui/forms/search-input/components/SearchInputWrapper';
+import type { SearchInputContentProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 
 export function SearchInputContent({
 	state,

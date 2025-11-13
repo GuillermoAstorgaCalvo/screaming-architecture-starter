@@ -1,7 +1,6 @@
+import { DateRangePickerContent } from '@core/ui/forms/date-range-picker/components/DateRangePickerContent';
+import { useDateRangePickerProps } from '@core/ui/forms/date-range-picker/hooks/useDateRangePicker';
 import type { DateRangePickerProps } from '@src-types/ui/forms-dates';
-
-import { DateRangePickerContent } from './DateRangePickerContent';
-import { useDateRangePickerProps } from './useDateRangePicker';
 
 /**
  * DateRangePicker - Reusable date range input component with label, error, and helper text support

@@ -1,6 +1,5 @@
+import type { ColorInputLabelProps } from '@core/ui/forms/color-input/types/ColorInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { ColorInputLabelProps } from './ColorInputTypes';
 
 export function ColorInputLabel({ id, label, required }: Readonly<ColorInputLabelProps>) {
 	return (

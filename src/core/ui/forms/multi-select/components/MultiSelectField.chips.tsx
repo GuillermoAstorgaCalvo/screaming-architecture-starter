@@ -1,8 +1,7 @@
 import Chip from '@core/ui/chip/Chip';
+import { getOptionLabel } from '@core/ui/forms/multi-select/helpers/useMultiSelectHelpers';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
 import type { ReactElement } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
-import { getOptionLabel } from './useMultiSelectHelpers';
 
 export function createChip(
 	option: MultiSelectOption,

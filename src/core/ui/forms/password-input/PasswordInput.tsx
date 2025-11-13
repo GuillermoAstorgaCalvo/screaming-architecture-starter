@@ -1,7 +1,6 @@
+import { PasswordInputContent } from '@core/ui/forms/password-input/components/PasswordInputContent';
+import { usePasswordInputProps } from '@core/ui/forms/password-input/hooks/usePasswordInput';
 import type { PasswordInputProps } from '@src-types/ui/forms-specialized';
-
-import { PasswordInputContent } from './PasswordInputContent';
-import { usePasswordInputProps } from './usePasswordInput';
 
 /**
  * PasswordInput - Password input with show/hide visibility toggle

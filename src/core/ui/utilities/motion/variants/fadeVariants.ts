@@ -3,9 +3,8 @@
  * Common fade in/out animations
  */
 
+import { createVariant } from '@core/ui/utilities/motion/helpers/motionVariantFactory';
 import type { Variants } from 'framer-motion';
-
-import { createVariant } from './motionVariantFactory';
 
 /**
  * Fade animation variants

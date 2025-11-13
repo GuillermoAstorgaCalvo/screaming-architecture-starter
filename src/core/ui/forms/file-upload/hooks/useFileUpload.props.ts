@@ -1,7 +1,9 @@
+import type {
+	FileUploadContentProps,
+	FileUploadFile,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import type { FileUploadProps } from '@src-types/ui/forms-inputs';
 import type { ChangeEvent, DragEvent } from 'react';
-
-import type { FileUploadContentProps, FileUploadFile } from './FileUploadTypes';
 
 export function buildBasicProps(props: FileUploadProps, validationError: string | undefined) {
 	return {

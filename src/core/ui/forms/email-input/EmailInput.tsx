@@ -1,7 +1,6 @@
+import { EmailInputContent } from '@core/ui/forms/email-input/components/EmailInputContent';
+import { useEmailInputProps } from '@core/ui/forms/email-input/hooks/useEmailInput';
 import type { EmailInputProps } from '@src-types/ui/forms-specialized';
-
-import { EmailInputContent } from './EmailInputContent';
-import { useEmailInputProps } from './useEmailInput';
 
 /**
  * EmailInput - Email input with built-in validation UI

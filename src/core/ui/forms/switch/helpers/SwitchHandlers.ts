@@ -1,6 +1,5 @@
+import type { SwitchHandlers, SwitchHandlersConfig } from '@core/ui/forms/switch/types/SwitchTypes';
 import type { ChangeEvent, MouseEvent } from 'react';
-
-import type { SwitchHandlers, SwitchHandlersConfig } from './SwitchTypes';
 
 export function lockInputCheckedProperty(
 	element: HTMLInputElement,

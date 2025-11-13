@@ -1,13 +1,13 @@
-import type {
-	AdvancedNavigationHandlersParams,
-	BasicNavigationHandlersParams,
-} from './useWizard.handlers.groups.types';
 import {
 	useGoToStepHandler,
 	useNextStepHandler,
 	usePreviousStepHandler,
 	useSkipStepHandler,
-} from './useWizard.handlers.navigation.impl';
+} from '@core/ui/forms/wizard/hooks/useWizard.handlers.navigation.impl';
+import type {
+	AdvancedNavigationHandlersParams,
+	BasicNavigationHandlersParams,
+} from '@core/ui/forms/wizard/types/useWizard.handlers.groups.types';
 
 /**
  * Hook to create basic navigation handlers (next, previous)

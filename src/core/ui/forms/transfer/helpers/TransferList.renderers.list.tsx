@@ -1,9 +1,11 @@
 import Checkbox from '@core/ui/checkbox/Checkbox';
+import ListItem from '@core/ui/data-display/list/components/ListItem';
+import type {
+	RenderListItemProps,
+	RenderListProps,
+} from '@core/ui/forms/transfer/types/TransferList.types';
 import List from '@core/ui/list/List';
-import ListItem from '@core/ui/list/ListItem';
 import { twMerge } from 'tailwind-merge';
-
-import type { RenderListItemProps, RenderListProps } from './TransferList.types';
 
 /**
  * Renders a single list item

@@ -1,9 +1,8 @@
+import { TreeViewNode } from '@core/ui/data-display/tree-view/components/TreeViewNode';
+import { getTreeViewClasses } from '@core/ui/data-display/tree-view/helpers/TreeViewHelpers';
+import { useTreeViewSetup } from '@core/ui/data-display/tree-view/hooks/useTreeViewSetup';
 import type { TreeNode, TreeViewProps } from '@src-types/ui/navigation/treeView';
 import { type KeyboardEvent, useId } from 'react';
-
-import { getTreeViewClasses } from './TreeViewHelpers';
-import { TreeViewNode } from './TreeViewNode';
-import { useTreeViewSetup } from './useTreeViewSetup';
 
 /**
  * Generates a unique TreeView ID from the provided ID or a generated one.

@@ -1,4 +1,4 @@
-import type { AutocompleteOption } from './Autocomplete';
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 
 export function getOptionLabel(option: AutocompleteOption): string {
 	if (typeof option.label === 'string') {

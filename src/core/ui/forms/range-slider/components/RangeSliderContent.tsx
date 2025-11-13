@@ -1,9 +1,12 @@
-import { RangeSliderContainer } from './RangeSliderContainer';
-import { RangeSliderField } from './RangeSliderField';
-import { RangeSliderLabel } from './RangeSliderLabel';
-import { RangeSliderMessages } from './RangeSliderMessages';
-import type { RangeSliderContentProps, RangeSliderFieldWithLabelProps } from './RangeSliderTypes';
-import { RangeSliderWrapper } from './RangeSliderWrapper';
+import { RangeSliderContainer } from '@core/ui/forms/range-slider/components/RangeSliderContainer';
+import { RangeSliderField } from '@core/ui/forms/range-slider/components/RangeSliderField';
+import { RangeSliderLabel } from '@core/ui/forms/range-slider/components/RangeSliderLabel';
+import { RangeSliderMessages } from '@core/ui/forms/range-slider/components/RangeSliderMessages';
+import { RangeSliderWrapper } from '@core/ui/forms/range-slider/components/RangeSliderWrapper';
+import type {
+	RangeSliderContentProps,
+	RangeSliderFieldWithLabelProps,
+} from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 
 function buildRangeSliderFieldPropsFromLabelProps(props: Readonly<RangeSliderFieldWithLabelProps>) {
 	const {

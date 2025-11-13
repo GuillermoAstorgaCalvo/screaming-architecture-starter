@@ -1,6 +1,5 @@
+import type { ExtractedNumberInputProps } from '@core/ui/forms/number-input/types/useNumberInput.types';
 import type { NumberInputProps } from '@src-types/ui/forms-inputs';
-
-import type { ExtractedNumberInputProps } from './useNumberInput.types';
 
 /**
  * Extracts and destructures NumberInput component props

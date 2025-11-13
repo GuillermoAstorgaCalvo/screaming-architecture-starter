@@ -1,11 +1,13 @@
+import { MultiSelectField } from '@core/ui/forms/multi-select/components/MultiSelectField';
+import { MultiSelectListbox } from '@core/ui/forms/multi-select/components/MultiSelectListbox';
+import {
+	MENU_STYLES,
+	type MultiSelectListboxProps,
+} from '@core/ui/forms/multi-select/helpers/MultiSelectContentHelpers';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
+import type { MultiSelectContentProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 import Popover from '@core/ui/popover/Popover';
 import type { KeyboardEvent, Ref, RefObject } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
-import { MENU_STYLES, type MultiSelectListboxProps } from './MultiSelectContentHelpers';
-import { MultiSelectField } from './MultiSelectField';
-import { MultiSelectListbox } from './MultiSelectListbox';
-import type { MultiSelectContentProps } from './MultiSelectTypes';
 
 interface MultiSelectPopoverTriggerProps {
 	readonly triggerRef: RefObject<HTMLDivElement | null>;

@@ -1,6 +1,5 @@
+import type { MultiSelectFieldProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 import type { KeyboardEvent } from 'react';
-
-import type { MultiSelectFieldProps } from './MultiSelectTypes';
 
 export interface BackspaceKeyParams {
 	readonly input: HTMLInputElement | null;

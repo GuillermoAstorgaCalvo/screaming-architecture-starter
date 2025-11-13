@@ -1,7 +1,6 @@
+import { HoverCardContent } from '@core/ui/overlays/hover-card/components/HoverCardContent';
 import type { HoverCardProps } from '@src-types/ui/overlays/floating';
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
-
-import { HoverCardContent } from './HoverCardContent';
 
 interface AttachHandlersOptions {
 	readonly children: ReactNode;

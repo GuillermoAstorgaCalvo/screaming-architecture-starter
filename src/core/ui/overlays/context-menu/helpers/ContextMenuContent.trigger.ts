@@ -1,6 +1,5 @@
+import type { CreateTriggerNodeParams } from '@core/ui/overlays/context-menu/types/ContextMenuContent.types';
 import { cloneElement, type MouseEvent as ReactMouseEvent, type ReactElement } from 'react';
-
-import type { CreateTriggerNodeParams } from './ContextMenuContent.types';
 
 export function createTriggerNode({
 	trigger,

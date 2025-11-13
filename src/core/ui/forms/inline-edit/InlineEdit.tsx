@@ -1,8 +1,13 @@
+import {
+	renderEditInput,
+	renderViewMode,
+} from '@core/ui/forms/inline-edit/helpers/InlineEditRenderers';
+import {
+	useInlineEditSetup,
+	useStartEditing,
+} from '@core/ui/forms/inline-edit/helpers/InlineEditSetup';
 import type { InlineEditProps } from '@src-types/ui/forms-inputs';
 import { useId, useRef } from 'react';
-
-import { renderEditMode, renderViewMode } from './InlineEditRenderers';
-import { useInlineEditSetup, useStartEditing } from './InlineEditSetup';
 
 /**
  * InlineEdit - Editable text/field component (click to edit, blur to save)
@@ -71,7 +76,7 @@ export default function InlineEdit(props: Readonly<InlineEditProps>) {
 	const disabled = props.disabled ?? false;
 
 	if (setup.isEditing) {
-		return renderEditMode({
+		return renderEditInput({
 			id,
 			editValue: setup.editValue,
 			inputClasses: setup.inputClasses,

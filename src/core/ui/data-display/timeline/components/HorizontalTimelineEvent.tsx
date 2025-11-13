@@ -1,6 +1,6 @@
-import type { HorizontalTimelineEventProps } from './TimelineEvent.types';
-import { EventContent } from './TimelineEventContent';
-import { TimelineMarker } from './TimelineMarker';
+import { EventContent } from '@core/ui/data-display/timeline/components/TimelineEventContent';
+import { TimelineMarker } from '@core/ui/data-display/timeline/components/TimelineMarker';
+import type { HorizontalTimelineEventProps } from '@core/ui/data-display/timeline/types/TimelineEvent.types';
 
 export function HorizontalTimelineEvent({
 	event,

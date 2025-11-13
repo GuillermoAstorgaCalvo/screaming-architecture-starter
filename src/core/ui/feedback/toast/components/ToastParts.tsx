@@ -1,17 +1,19 @@
 import Button from '@core/ui/button/Button';
-import IconButton from '@core/ui/icon-button/IconButton';
-import Text from '@core/ui/text/Text';
-import { classNames } from '@core/utils/classNames';
-
-import { TOAST_ICON_STYLES, TOAST_ICON_SYMBOL } from './toast.constants';
+import {
+	TOAST_ICON_STYLES,
+	TOAST_ICON_SYMBOL,
+} from '@core/ui/feedback/toast/constants/toast.constants';
+import { getAriaLive, getToastClassName } from '@core/ui/feedback/toast/helpers/toast.utils';
 import type {
 	ToastBodyProps,
 	ToastContainerProps,
 	ToastContentProps,
 	ToastDismissButtonProps,
 	ToastIconProps,
-} from './toast.types';
-import { getAriaLive, getToastClassName } from './toast.utils';
+} from '@core/ui/feedback/toast/types/toast.types';
+import IconButton from '@core/ui/icon-button/IconButton';
+import Text from '@core/ui/text/Text';
+import { classNames } from '@core/utils/classNames';
 
 export function ToastIcon({ intent }: Readonly<ToastIconProps>) {
 	return (

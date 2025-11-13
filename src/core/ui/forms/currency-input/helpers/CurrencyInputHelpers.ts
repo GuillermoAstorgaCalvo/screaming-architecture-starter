@@ -57,7 +57,7 @@ export function formatCurrency(
 	currency: string,
 	locale = 'en-US'
 ): string {
-	if (value === undefined || value === '' || (typeof value === 'string' && value === '')) {
+	if (value === undefined || value === '') {
 		return '';
 	}
 	const numValue = typeof value === 'string' ? Number.parseFloat(value) : value;

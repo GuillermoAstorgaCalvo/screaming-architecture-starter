@@ -1,12 +1,11 @@
-import type { TreeViewProps } from '@src-types/ui/navigation/treeView';
-import { useMemo } from 'react';
-
-import { useTreeView } from './useTreeView';
+import { useTreeView } from '@core/ui/data-display/tree-view/hooks/useTreeView';
 import type {
 	SetupProps,
 	TreeViewOptionsParams,
 	TreeViewStateParams,
-} from './useTreeViewSetup.types';
+} from '@core/ui/data-display/tree-view/types/useTreeViewSetup.types';
+import type { TreeViewProps } from '@src-types/ui/navigation/treeView';
+import { useMemo } from 'react';
 
 export function buildTreeViewOptions(params: TreeViewOptionsParams) {
 	return {

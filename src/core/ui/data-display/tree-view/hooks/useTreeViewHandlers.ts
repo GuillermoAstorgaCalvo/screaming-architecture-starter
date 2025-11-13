@@ -1,6 +1,10 @@
-import { useTreeViewEventHandlers } from './useTreeViewEventHandlers';
-import { useTreeViewKeyboardHandlers } from './useTreeViewKeyboardHandlers';
-import type { SetupProps, TreeStateResult, TreeViewHandlersParams } from './useTreeViewSetup.types';
+import { useTreeViewEventHandlers } from '@core/ui/data-display/tree-view/helpers/useTreeViewEventHandlers';
+import { useTreeViewKeyboardHandlers } from '@core/ui/data-display/tree-view/hooks/useTreeViewKeyboardHandlers';
+import type {
+	SetupProps,
+	TreeStateResult,
+	TreeViewHandlersParams,
+} from '@core/ui/data-display/tree-view/types/useTreeViewSetup.types';
 
 export function useTreeViewHandlers(params: TreeViewHandlersParams) {
 	const eventHandlers = useTreeViewEventHandlers({

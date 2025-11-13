@@ -1,8 +1,7 @@
+import { MapLoadingOverlay } from '@core/ui/media/map/components/MapLoadingOverlay';
 import type { MapProps } from '@src-types/ui/maps';
 import type { HTMLAttributes, RefObject } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { MapLoadingOverlay } from './MapLoadingOverlay';
 
 interface MapContainerProps extends HTMLAttributes<HTMLDivElement> {
 	mapRef: RefObject<HTMLDivElement | null>;

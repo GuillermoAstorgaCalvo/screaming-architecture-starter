@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardState } from './FormWizardTypes';
 import {
 	createFormWizardHandlers,
 	getInitialState,
 	savePersistedData,
-} from './useFormWizardState.helpers';
+} from '@core/ui/forms/form-wizard/helpers/useFormWizardState.helpers';
+import type { FormWizardState } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
+import { useEffect, useMemo, useState } from 'react';
+import type { FieldValues } from 'react-hook-form';
 
 /**
  * Hook to manage form wizard state values and persistence

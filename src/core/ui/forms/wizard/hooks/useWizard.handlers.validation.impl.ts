@@ -1,8 +1,7 @@
+import { validateStep } from '@core/ui/forms/wizard/hooks/useWizard.handlers.validation';
+import type { UseWizardStateReturn } from '@core/ui/forms/wizard/types/useWizard.state.types';
 import type { WizardStepConfig } from '@src-types/ui/navigation/wizard';
 import { useCallback } from 'react';
-
-import { validateStep } from './useWizard.handlers.validation';
-import type { UseWizardStateReturn } from './useWizard.state.types';
 
 /**
  * Parameters for creating validation handler

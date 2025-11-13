@@ -1,8 +1,7 @@
+import type { PasswordInputFieldProps } from '@core/ui/forms/password-input/types/PasswordInputTypes';
 import { classNames } from '@core/utils/classNames';
 import { Eye, EyeOff } from 'lucide-react';
 import type { InputHTMLAttributes, MouseEvent } from 'react';
-
-import type { PasswordInputFieldProps } from './PasswordInputTypes';
 
 type PasswordInputProps = Readonly<{
 	id: string | undefined;

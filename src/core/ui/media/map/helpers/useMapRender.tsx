@@ -1,8 +1,7 @@
+import { MapContainer } from '@core/ui/media/map/components/MapContainer';
+import { MapError } from '@core/ui/media/map/components/MapError';
 import type { MapProps } from '@src-types/ui/maps';
 import type { HTMLAttributes, ReactElement, RefObject } from 'react';
-
-import { MapContainer } from './MapContainer';
-import { MapError } from './MapError';
 
 interface MapRenderParams {
 	error: string | null;

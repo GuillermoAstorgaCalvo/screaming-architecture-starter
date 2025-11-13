@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { DateRangePickerMessagesProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { DateRangePickerMessagesProps } from './DateRangePickerTypes';
 
 export function DateRangePickerMessages({
 	dateRangePickerId,

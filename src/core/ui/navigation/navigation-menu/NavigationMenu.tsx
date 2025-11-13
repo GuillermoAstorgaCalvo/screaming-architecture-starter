@@ -1,12 +1,11 @@
+import { NavigationMenuItem } from '@core/ui/navigation/navigation-menu/components/NavigationMenuItem';
+import { getNavigationMenuClasses } from '@core/ui/navigation/navigation-menu/helpers/navigationMenuClasses';
+import { useNavigationMenu } from '@core/ui/navigation/navigation-menu/hooks/useNavigationMenu';
 import type {
 	NavigationMenuItem as NavigationMenuItemType,
 	NavigationMenuProps,
 } from '@src-types/ui/navigation/navigationMenu';
 import type { KeyboardEvent, RefObject } from 'react';
-
-import { getNavigationMenuClasses } from './navigationMenuClasses';
-import { NavigationMenuItem } from './NavigationMenuItem';
-import { useNavigationMenu } from './useNavigationMenu';
 
 // Shared props interface - properties are used by extending interfaces and passed to components via spread
 interface SharedMenuProps {

@@ -1,7 +1,9 @@
+import type {
+	OTPInputFieldProps,
+	UseOTPInputStateReturn,
+} from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { InputHTMLAttributes, RefObject } from 'react';
-
-import type { OTPInputFieldProps, UseOTPInputStateReturn } from './OTPInputTypes';
 
 export interface UseOTPInputPropsOptions {
 	readonly props: Readonly<OTPInputProps>;

@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { FileUploadMessagesProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { FileUploadMessagesProps } from './FileUploadTypes';
 
 export function FileUploadMessages({
 	fileUploadId,

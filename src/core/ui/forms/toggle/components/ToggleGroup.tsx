@@ -1,10 +1,9 @@
+import { ToggleGroupContext } from '@core/ui/forms/toggle/components/ToggleGroupContext';
+import { useToggleGroup } from '@core/ui/forms/toggle/hooks/useToggleGroup';
+import { useToggleGroupContext } from '@core/ui/forms/toggle/hooks/useToggleGroupContext';
+import Toggle from '@core/ui/forms/toggle/Toggle';
+import type { ToggleGroupProps } from '@core/ui/forms/toggle/types/ToggleGroupTypes';
 import type { ReactNode } from 'react';
-
-import Toggle from './Toggle';
-import { ToggleGroupContext } from './ToggleGroupContext';
-import type { ToggleGroupProps } from './ToggleGroupTypes';
-import { useToggleGroup } from './useToggleGroup';
-import { useToggleGroupContext } from './useToggleGroupContext';
 
 /**
  * ToggleGroup - Container for managing multiple Toggle components

@@ -1,5 +1,5 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
-import type { SnackbarItem } from '@core/ui/snackbar/snackbar.types';
+import type { SnackbarItem } from '@core/ui/feedback/snackbar/types/snackbar.types';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { SnackbarContext, type SnackbarContextValue } from './SnackbarContext';

@@ -1,7 +1,6 @@
+import { RatingStars } from '@core/ui/forms/rating/components/RatingStars';
 import type { RatingProps } from '@src-types/ui/forms-advanced';
 import type { ReactNode } from 'react';
-
-import { RatingStars } from './RatingStars';
 
 export interface RatingContentProps {
 	max: number;

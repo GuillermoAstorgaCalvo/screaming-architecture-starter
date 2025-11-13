@@ -1,3 +1,13 @@
+import type {
+	ContextMenuItem,
+	ContextMenuItemOrSeparator,
+} from '@core/ui/overlays/context-menu/ContextMenu';
+import {
+	findNextEnabledIndex,
+	handleArrowKeyNavigation,
+	handleEnterOrSpace,
+	handleEscapeKey,
+} from '@core/ui/overlays/context-menu/helpers/ContextMenuHelpers';
 import {
 	createRef,
 	type KeyboardEvent,
@@ -7,14 +17,6 @@ import {
 	useRef,
 	useState,
 } from 'react';
-
-import type { ContextMenuItem, ContextMenuItemOrSeparator } from './ContextMenu';
-import {
-	findNextEnabledIndex,
-	handleArrowKeyNavigation,
-	handleEnterOrSpace,
-	handleEscapeKey,
-} from './ContextMenuHelpers';
 
 function isSeparator(
 	item: ContextMenuItemOrSeparator

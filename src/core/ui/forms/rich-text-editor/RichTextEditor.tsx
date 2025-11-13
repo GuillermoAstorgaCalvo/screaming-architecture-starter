@@ -1,7 +1,6 @@
+import { RichTextEditorContent } from '@core/ui/forms/rich-text-editor/components/RichTextEditorContent';
+import { useRichTextEditorProps } from '@core/ui/forms/rich-text-editor/hooks/useRichTextEditor';
 import type { RichTextEditorProps } from '@src-types/ui/forms-editors';
-
-import { RichTextEditorContent } from './RichTextEditorContent';
-import { useRichTextEditorProps } from './useRichTextEditor';
 
 /**
  * RichTextEditor - WYSIWYG editor for rich text

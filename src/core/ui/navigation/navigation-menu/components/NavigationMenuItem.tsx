@@ -1,8 +1,7 @@
 import Link from '@core/ui/link/Link';
+import { getNavigationMenuItemClasses } from '@core/ui/navigation/navigation-menu/helpers/navigationMenuClasses';
 import type { NavigationMenuItem as NavigationMenuItemType } from '@src-types/ui/navigation/navigationMenu';
 import type { ReactNode, RefObject } from 'react';
-
-import { getNavigationMenuItemClasses } from './navigationMenuClasses';
 
 interface NavigationMenuItemProps {
 	readonly item: NavigationMenuItemType;

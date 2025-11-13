@@ -1,7 +1,6 @@
 import Input from '@core/ui/input/Input';
+import type { PromptDialogInputType } from '@core/ui/overlays/prompt-dialog/PromptDialog';
 import { type ChangeEvent, useCallback } from 'react';
-
-import type { PromptDialogInputType } from './PromptDialog';
 
 interface PromptDialogInputProps {
 	label: string;

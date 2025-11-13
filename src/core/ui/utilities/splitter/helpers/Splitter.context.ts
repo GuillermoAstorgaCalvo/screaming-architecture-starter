@@ -1,7 +1,6 @@
+import type { useSplitter } from '@core/ui/utilities/splitter/hooks/useSplitter';
 import type { SplitterOrientation } from '@src-types/ui/layout/splitter';
 import { useMemo } from 'react';
-
-import type { useSplitter } from './useSplitter';
 
 interface CreateSplitterContextValueParams {
 	readonly orientation: SplitterOrientation;

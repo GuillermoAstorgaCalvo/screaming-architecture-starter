@@ -1,9 +1,14 @@
+import {
+	createDisplayHandlers,
+	useFocusInput,
+} from '@core/ui/forms/inline-edit/helpers/InlineEditHandlers';
+import {
+	buildHookOptions,
+	computeValues,
+} from '@core/ui/forms/inline-edit/helpers/InlineEditHelpers';
+import { useInlineEdit } from '@core/ui/forms/inline-edit/hooks/useInlineEdit';
 import type { InlineEditProps } from '@src-types/ui/forms-inputs';
 import type { ChangeEvent, FocusEvent, KeyboardEvent, RefObject } from 'react';
-
-import { createDisplayHandlers, useFocusInput } from './InlineEditHandlers';
-import { buildHookOptions, computeValues } from './InlineEditHelpers';
-import { useInlineEdit } from './useInlineEdit';
 
 export interface UseInlineEditSetupOptions {
 	readonly controlledValue?: string | undefined;

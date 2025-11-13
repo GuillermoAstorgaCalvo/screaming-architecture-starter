@@ -1,8 +1,10 @@
+import {
+	COUNTRY_CODES,
+	getCountryCodeByDialCode,
+} from '@core/ui/forms/phone-input/helpers/PhoneInputHelpers';
+import type { PhoneInputFieldProps } from '@core/ui/forms/phone-input/types/PhoneInputTypes';
 import { classNames } from '@core/utils/classNames';
 import type { ChangeEvent, InputHTMLAttributes } from 'react';
-
-import { COUNTRY_CODES, getCountryCodeByDialCode } from './PhoneInputHelpers';
-import type { PhoneInputFieldProps } from './PhoneInputTypes';
 
 type SelectorSize = 'sm' | 'md' | 'lg';
 

@@ -21,13 +21,15 @@
  * ```
  */
 
+import {
+	type EffectiveMotionStrategy,
+	useMotionConfig,
+} from '@core/ui/utilities/motion/hooks/useMotionConfig';
+import type { MotionStaggerProps } from '@core/ui/utilities/motion/types/motionTypes';
+import { STATIC_VARIANTS } from '@core/ui/utilities/motion/variants/reducedMotionVariants';
+import { staggerContainerVariants } from '@core/ui/utilities/motion/variants/staggerVariants';
 import { type HTMLMotionProps, motion } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
-
-import type { MotionStaggerProps } from './motionTypes';
-import { STATIC_VARIANTS } from './reducedMotionVariants';
-import { staggerContainerVariants } from './staggerVariants';
-import { type EffectiveMotionStrategy, useMotionConfig } from './useMotionConfig';
 
 const MIN_REDUCED_DELAY = 0.05;
 

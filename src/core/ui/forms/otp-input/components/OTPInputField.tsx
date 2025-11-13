@@ -1,9 +1,11 @@
+import {
+	renderOTPInput,
+	type RenderOTPInputProps,
+} from '@core/ui/forms/otp-input/helpers/OTPInputFieldHelpers';
+import { useOTPInputFieldHandlers } from '@core/ui/forms/otp-input/hooks/useOTPInputField';
+import { useOTPInputFieldEffects } from '@core/ui/forms/otp-input/hooks/useOTPInputFieldEffects';
+import type { OTPInputFieldProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import type { ClipboardEvent, FocusEvent, KeyboardEvent } from 'react';
-
-import { renderOTPInput, type RenderOTPInputProps } from './OTPInputFieldHelpers';
-import type { OTPInputFieldProps } from './OTPInputTypes';
-import { useOTPInputFieldHandlers } from './useOTPInputField';
-import { useOTPInputFieldEffects } from './useOTPInputFieldEffects';
 
 interface RenderInputsParams {
 	readonly length: number;

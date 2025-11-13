@@ -125,6 +125,33 @@ export function parseDefaultSize(
 }
 
 /**
+ * Get dimension key (width or height) based on orientation
+ */
+function getDimensionKey(orientation: SplitterOrientation): 'width' | 'height' {
+	return orientation === 'horizontal' ? 'width' : 'height';
+}
+
+/**
+ * Get normal size if panel should use it, otherwise null
+ */
+function getNormalSize(
+	panelState: { size?: number | undefined } | undefined,
+	isCollapsed: boolean
+): number | null {
+	if (panelState?.size !== undefined && !isCollapsed) {
+		return panelState.size;
+	}
+	return null;
+}
+
+/**
+ * Check if panel should be collapsed
+ */
+function shouldCollapse(isCollapsed: boolean, collapsible: boolean): boolean {
+	return isCollapsed && collapsible;
+}
+
+/**
  * Calculate panel style based on state
  */
 export function calculatePanelStyle({
@@ -142,14 +169,15 @@ export function calculatePanelStyle({
 	readonly collapsedSize: number;
 	readonly style?: CSSProperties | undefined;
 }): CSSProperties {
-	const dimensionKey = orientation === 'horizontal' ? 'width' : 'height';
+	const dimensionKey = getDimensionKey(orientation);
 	const panelStyle: CSSProperties = { ...style };
 
-	if (panelState?.size !== undefined && !isCollapsed) {
-		panelStyle[dimensionKey] = sizeToCSS(panelState.size);
+	const normalSize = getNormalSize(panelState, isCollapsed);
+	if (normalSize !== null) {
+		panelStyle[dimensionKey] = sizeToCSS(normalSize);
 	}
 
-	if (isCollapsed && collapsible) {
+	if (shouldCollapse(isCollapsed, collapsible)) {
 		panelStyle[dimensionKey] = `${collapsedSize}px`;
 	}
 

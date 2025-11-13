@@ -1,7 +1,6 @@
+import { TagInputContent } from '@core/ui/forms/tag-input/components/TagInputContent';
+import { useTagInputProps } from '@core/ui/forms/tag-input/hooks/useTagInput';
 import type { TagInputProps } from '@src-types/ui/forms-inputs';
-
-import { TagInputContent } from './TagInputContent';
-import { useTagInputProps } from './useTagInput';
 
 /**
  * TagInput - Component for adding/removing multiple tags

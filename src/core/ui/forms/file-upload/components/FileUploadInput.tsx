@@ -1,4 +1,4 @@
-import type { FileUploadInputProps } from './FileUploadContentHelpers';
+import type { FileUploadInputProps } from '@core/ui/forms/file-upload/helpers/FileUploadContentHelpers';
 
 export function FileUploadInput({
 	inputId,

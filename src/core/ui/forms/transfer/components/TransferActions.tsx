@@ -1,12 +1,15 @@
 import Flex from '@core/ui/flex/Flex';
-
 import {
 	createMoveToSourceButtonConfig,
 	createMoveToTargetButtonConfig,
-} from './TransferActions.config';
-import { renderActionButtons } from './TransferActions.helpers';
-import type { TransferActionsProps } from './TransferActions.types';
-import { getButtonSize, getContainerClasses, getGapClass } from './TransferActions.utils';
+} from '@core/ui/forms/transfer/helpers/TransferActions.config';
+import { renderActionButtons } from '@core/ui/forms/transfer/helpers/TransferActions.helpers';
+import {
+	getButtonSize,
+	getContainerClasses,
+	getGapClass,
+} from '@core/ui/forms/transfer/helpers/TransferActions.utils';
+import type { TransferActionsProps } from '@core/ui/forms/transfer/types/TransferActions.types';
 
 /**
  * TransferActions - Action buttons for moving items between lists

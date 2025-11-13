@@ -1,4 +1,4 @@
-import type { InputWrapperProps } from './InputTypes';
+import type { InputWrapperProps } from '@core/ui/forms/input/types/InputTypes';
 
 export function InputWrapper({ fullWidth, children, ...props }: Readonly<InputWrapperProps>) {
 	return (

@@ -1,8 +1,7 @@
+import { useDragHandlers } from '@core/ui/utilities/sortable-list/hooks/useSortableList.drag';
+import { useKeyboardHandlers } from '@core/ui/utilities/sortable-list/hooks/useSortableList.keyboard';
 import type { SortableListItem } from '@src-types/ui/layout/list';
 import type { DragEvent, KeyboardEvent } from 'react';
-
-import { useDragHandlers } from './useSortableList.drag';
-import { useKeyboardHandlers } from './useSortableList.keyboard';
 
 interface UseSortableListParams<T> {
 	items: readonly SortableListItem<T>[];

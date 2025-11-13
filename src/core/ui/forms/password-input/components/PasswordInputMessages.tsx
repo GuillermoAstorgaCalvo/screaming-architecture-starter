@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { PasswordInputMessagesProps } from '@core/ui/forms/password-input/types/PasswordInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { PasswordInputMessagesProps } from './PasswordInputTypes';
 
 export function PasswordInputMessages({
 	inputId,

@@ -1,5 +1,8 @@
-import type { OptionItemData, RenderOptionsParams } from './MultiSelectContentHelpers';
-import { MultiSelectOptionItem } from './MultiSelectOptionItem';
+import { MultiSelectOptionItem } from '@core/ui/forms/multi-select/components/MultiSelectOptionItem';
+import type {
+	OptionItemData,
+	RenderOptionsParams,
+} from '@core/ui/forms/multi-select/helpers/MultiSelectContentHelpers';
 
 export function renderOptionItem({
 	option,

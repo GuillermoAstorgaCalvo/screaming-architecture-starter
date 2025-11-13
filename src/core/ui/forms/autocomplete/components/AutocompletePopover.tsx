@@ -1,11 +1,13 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
+import { AutocompleteField } from '@core/ui/forms/autocomplete/components/AutocompleteField';
+import { AutocompleteListbox } from '@core/ui/forms/autocomplete/components/AutocompleteListbox';
+import {
+	type AutocompleteListboxProps,
+	MENU_STYLES,
+} from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import type { AutocompleteContentProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
 import Popover from '@core/ui/popover/Popover';
 import type { ReactNode, Ref, RefObject } from 'react';
-
-import type { AutocompleteOption } from './Autocomplete';
-import { type AutocompleteListboxProps, MENU_STYLES } from './AutocompleteContentHelpers';
-import { AutocompleteField } from './AutocompleteField';
-import { AutocompleteListbox } from './AutocompleteListbox';
-import type { AutocompleteContentProps } from './AutocompleteTypes';
 
 interface AutocompletePopoverTriggerProps {
 	readonly triggerRef: RefObject<HTMLDivElement | null>;

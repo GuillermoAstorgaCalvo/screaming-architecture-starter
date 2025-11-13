@@ -1,8 +1,10 @@
+import {
+	useItemClickHandler,
+	useSubmenuCloseHandler,
+} from '@core/ui/navigation/menubar/hooks/useMenubar.click';
+import { useKeyDownHandler } from '@core/ui/navigation/menubar/hooks/useMenubar.keyboard';
 import type { MenubarItem } from '@src-types/ui/navigation/menubar';
 import type { RefObject } from 'react';
-
-import { useItemClickHandler, useSubmenuCloseHandler } from './useMenubar.click';
-import { useKeyDownHandler } from './useMenubar.keyboard';
 
 interface UseMenubarParams {
 	readonly items: readonly MenubarItem[];

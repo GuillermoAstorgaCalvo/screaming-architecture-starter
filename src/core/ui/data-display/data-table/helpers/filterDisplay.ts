@@ -1,7 +1,6 @@
+import { reactNodeToString } from '@core/ui/data-display/data-table/helpers/filterUtils';
 import type { ActiveFilterValue, AdvancedFilter } from '@src-types/ui/advancedFilter';
 import type { ReactNode } from 'react';
-
-import { reactNodeToString } from './filterUtils';
 
 const EMPTY_STRING = '';
 const FILTER_TYPE_TEXT = 'text';

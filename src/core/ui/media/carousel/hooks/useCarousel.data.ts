@@ -1,6 +1,5 @@
+import { normalizeSlides } from '@core/ui/media/carousel/helpers/useCarousel.utils';
 import { type ReactNode, useId } from 'react';
-
-import { normalizeSlides } from './useCarousel.utils';
 
 export interface UseCarouselDataReturn {
 	readonly carouselId: string;

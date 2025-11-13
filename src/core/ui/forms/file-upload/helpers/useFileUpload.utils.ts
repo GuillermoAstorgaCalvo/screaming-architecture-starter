@@ -1,5 +1,8 @@
-import { validateFile } from './FileUploadHelpers';
-import type { FileUploadContentProps, FileUploadFile } from './FileUploadTypes';
+import { validateFile } from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import type {
+	FileUploadContentProps,
+	FileUploadFile,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
 
 const RADIX_BASE = 36;
 const RANDOM_STRING_LENGTH = 9;

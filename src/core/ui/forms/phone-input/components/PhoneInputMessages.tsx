@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { PhoneInputMessagesProps } from '@core/ui/forms/phone-input/types/PhoneInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { PhoneInputMessagesProps } from './PhoneInputTypes';
 
 export function PhoneInputMessages({
 	inputId,

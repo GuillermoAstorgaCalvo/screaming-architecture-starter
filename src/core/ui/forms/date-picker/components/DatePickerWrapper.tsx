@@ -1,6 +1,5 @@
+import type { DatePickerWrapperProps } from '@core/ui/forms/date-picker/types/DatePickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { DatePickerWrapperProps } from './DatePickerTypes';
 
 export function DatePickerWrapper({
 	fullWidth,

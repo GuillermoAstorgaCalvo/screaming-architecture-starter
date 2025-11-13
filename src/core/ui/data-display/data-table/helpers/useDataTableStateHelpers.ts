@@ -1,9 +1,11 @@
+import {
+	applyFilters,
+	type useDataTableFilter,
+} from '@core/ui/data-display/data-table/hooks/useDataTableFilter';
+import type { useDataTableSort } from '@core/ui/data-display/data-table/hooks/useDataTableSort';
+import { useDataTableSorting } from '@core/ui/data-display/data-table/hooks/useDataTableSorting';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import { useMemo } from 'react';
-
-import { applyFilters, type useDataTableFilter } from './useDataTableFilter';
-import type { useDataTableSort } from './useDataTableSort';
-import { useDataTableSorting } from './useDataTableSorting';
 
 export interface UseDataTableDataTransformationOptions<T> {
 	initialData: T[];

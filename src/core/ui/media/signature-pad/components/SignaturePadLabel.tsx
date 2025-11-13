@@ -1,4 +1,4 @@
-import type { SignaturePadLabelProps } from './SignaturePadTypes';
+import type { SignaturePadLabelProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 
 export function SignaturePadLabel({ id, label, required }: Readonly<SignaturePadLabelProps>) {
 	return (

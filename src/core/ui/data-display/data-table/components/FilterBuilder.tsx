@@ -1,12 +1,11 @@
-import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
-
 import {
 	AddFilterForm,
 	FilterBuilderClosed,
 	FilterBuilderHeader,
 	FilterList,
-} from './FilterBuilderComponents';
-import { useFilterBuilder } from './useFilterBuilder';
+} from '@core/ui/data-display/data-table/components/FilterBuilderComponents';
+import { useFilterBuilder } from '@core/ui/data-display/data-table/hooks/useFilterBuilder';
+import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 
 export interface FilterBuilderProps {
 	/** Whether the builder is open */

@@ -1,6 +1,18 @@
 import { designTokens } from '@core/constants/designTokens';
 import type { Config } from 'tailwindcss';
 
+/**
+ * Tailwind CSS Configuration
+ *
+ * CSS Purging: Tailwind automatically purges unused classes based on the `content` paths.
+ * Only classes found in the specified files will be included in the final CSS bundle.
+ * This ensures optimal bundle size by removing unused utility classes.
+ *
+ * To verify purging is working:
+ * 1. Add a class that doesn't exist in your codebase (e.g., `bg-purple-999`)
+ * 2. Build the project: `pnpm run build`
+ * 3. Check dist/assets/index-*.css - the class should NOT be present
+ */
 export default {
 	content: [
 		'./index.html',

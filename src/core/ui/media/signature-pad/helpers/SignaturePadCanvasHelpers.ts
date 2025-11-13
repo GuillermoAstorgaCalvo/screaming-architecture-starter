@@ -1,6 +1,5 @@
+import type { SignaturePadCanvasProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 import type { CSSProperties } from 'react';
-
-import type { SignaturePadCanvasProps } from './SignaturePadTypes';
 
 export const DISABLED_OPACITY = 0.5;
 export const DEFAULT_WIDTH = 500;

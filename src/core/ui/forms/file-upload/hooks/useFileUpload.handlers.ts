@@ -1,9 +1,17 @@
+import {
+	createFilePreview,
+	validateFiles,
+} from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import {
+	createFileUploadFile,
+	processFiles,
+} from '@core/ui/forms/file-upload/helpers/useFileUpload.utils';
+import type {
+	FileUploadContentProps,
+	FileUploadFile,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import type { FileUploadProps } from '@src-types/ui/forms-inputs';
 import { type ChangeEvent, useCallback } from 'react';
-
-import { createFilePreview, validateFiles } from './FileUploadHelpers';
-import type { FileUploadContentProps, FileUploadFile } from './FileUploadTypes';
-import { createFileUploadFile, processFiles } from './useFileUpload.utils';
 
 export function useFilePreviewUpdater(
 	files: readonly FileUploadFile[],

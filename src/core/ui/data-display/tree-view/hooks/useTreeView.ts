@@ -1,6 +1,12 @@
-import { useTreeNodeUtils } from './useTreeView.hooks';
-import { useExpansionState, useSelectionState } from './useTreeView.state';
-import type { UseTreeViewOptions, UseTreeViewReturn } from './useTreeView.types';
+import { useTreeNodeUtils } from '@core/ui/data-display/tree-view/hooks/useTreeView.hooks';
+import {
+	useExpansionState,
+	useSelectionState,
+} from '@core/ui/data-display/tree-view/hooks/useTreeView.state';
+import type {
+	UseTreeViewOptions,
+	UseTreeViewReturn,
+} from '@core/ui/data-display/tree-view/types/useTreeView.types';
 
 function useTreeViewState(options: UseTreeViewOptions) {
 	const {

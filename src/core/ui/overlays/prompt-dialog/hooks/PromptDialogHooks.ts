@@ -1,6 +1,8 @@
+import {
+	createCancelHandler,
+	createConfirmHandler,
+} from '@core/ui/overlays/prompt-dialog/helpers/PromptDialogHelpers';
 import { useCallback, useMemo, useState } from 'react';
-
-import { createCancelHandler, createConfirmHandler } from './PromptDialogHelpers';
 
 interface UsePromptDialogStateOptions {
 	defaultValue: string;

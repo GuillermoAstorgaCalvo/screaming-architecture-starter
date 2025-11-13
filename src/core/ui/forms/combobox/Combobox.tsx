@@ -1,7 +1,6 @@
+import { ComboboxContent } from '@core/ui/forms/combobox/components/ComboboxContent';
+import { useCombobox } from '@core/ui/forms/combobox/hooks/useCombobox';
 import type { ReactNode } from 'react';
-
-import { ComboboxContent } from './ComboboxContent';
-import { useCombobox } from './useCombobox';
 
 export interface ComboboxOption {
 	readonly value: string;

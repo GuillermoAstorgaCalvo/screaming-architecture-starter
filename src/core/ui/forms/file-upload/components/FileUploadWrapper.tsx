@@ -1,6 +1,5 @@
+import type { FileUploadWrapperProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { FileUploadWrapperProps } from './FileUploadTypes';
 
 export function FileUploadWrapper({
 	fullWidth,

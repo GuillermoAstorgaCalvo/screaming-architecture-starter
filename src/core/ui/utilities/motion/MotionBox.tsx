@@ -1,7 +1,7 @@
-import { createMotionProps } from './MotionBox/createMotionProps';
-import { renderMotionComponent } from './MotionBox/renderMotionComponent';
-import type { MotionBoxProps } from './motionTypes';
-import { useMotionConfig } from './useMotionConfig';
+import { createMotionProps } from '@core/ui/utilities/motion/helpers/MotionBox/createMotionProps';
+import { renderMotionComponent } from '@core/ui/utilities/motion/helpers/MotionBox/renderMotionComponent';
+import { useMotionConfig } from '@core/ui/utilities/motion/hooks/useMotionConfig';
+import type { MotionBoxProps } from '@core/ui/utilities/motion/types/motionTypes';
 
 export function MotionBox({
 	variant = 'fade',

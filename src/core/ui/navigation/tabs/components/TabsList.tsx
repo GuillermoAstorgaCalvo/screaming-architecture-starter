@@ -1,10 +1,9 @@
 import { ARIA_LABELS, ARIA_ROLES } from '@core/constants/aria';
+import { TabButton } from '@core/ui/navigation/tabs/components/TabButton';
+import { getTabsClasses } from '@core/ui/navigation/tabs/helpers/TabsHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TabsProps, TabsVariant } from '@src-types/ui/navigation/tabs';
 import { type KeyboardEvent, useMemo } from 'react';
-
-import { TabButton } from './TabButton';
-import { getTabsClasses } from './TabsHelpers';
 
 // ============================================================================
 // TabsList Component

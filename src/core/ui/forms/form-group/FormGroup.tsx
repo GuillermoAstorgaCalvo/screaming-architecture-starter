@@ -1,6 +1,6 @@
 import type { FormGroupProps } from '@src-types/ui/forms';
 
-import { getFormGroupVariantClasses } from './FormGroupHelpers';
+import { getFormGroupVariantClasses } from './helpers/FormGroupHelpers';
 
 /**
  * FormGroup - Wrapper for related fields with spacing/alignment

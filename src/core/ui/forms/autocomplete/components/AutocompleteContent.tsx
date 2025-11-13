@@ -1,15 +1,14 @@
-import { useRef } from 'react';
-
+import { AutocompleteLabel } from '@core/ui/forms/autocomplete/components/AutocompleteLabel';
+import { AutocompleteMessages } from '@core/ui/forms/autocomplete/components/AutocompleteMessages';
+import { AutocompletePopover } from '@core/ui/forms/autocomplete/components/AutocompletePopover';
+import { AutocompleteWrapper } from '@core/ui/forms/autocomplete/components/AutocompleteWrapper';
 import {
 	buildListboxProps,
 	prepareLabelProps,
 	prepareMessagesProps,
-} from './AutocompleteContentHelpers';
-import { AutocompleteLabel } from './AutocompleteLabel';
-import { AutocompleteMessages } from './AutocompleteMessages';
-import { AutocompletePopover } from './AutocompletePopover';
-import type { AutocompleteContentProps } from './AutocompleteTypes';
-import { AutocompleteWrapper } from './AutocompleteWrapper';
+} from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import type { AutocompleteContentProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
+import { useRef } from 'react';
 
 export function AutocompleteContent(props: Readonly<AutocompleteContentProps>) {
 	const triggerRef = useRef<HTMLDivElement | null>(null);

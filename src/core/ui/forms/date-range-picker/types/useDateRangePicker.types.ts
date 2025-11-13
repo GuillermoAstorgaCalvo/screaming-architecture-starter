@@ -1,10 +1,9 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { DateRangePickerProps } from '@src-types/ui/forms-dates';
-
 import type {
 	DateRangePickerContentProps,
 	DateRangePickerInputProps,
-} from './DateRangePickerTypes';
+} from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { DateRangePickerProps } from '@src-types/ui/forms-dates';
 
 export interface UseDateRangePickerPropsOptions {
 	readonly props: Readonly<DateRangePickerProps>;

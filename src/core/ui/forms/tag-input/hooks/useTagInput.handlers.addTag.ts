@@ -1,5 +1,9 @@
-import { isDuplicateTag, isValidTag, normalizeTag } from './TagInputHelpers';
-import type { HandleAddTagOptions } from './useTagInput.handlers.types';
+import {
+	isDuplicateTag,
+	isValidTag,
+	normalizeTag,
+} from '@core/ui/forms/tag-input/helpers/TagInputHelpers';
+import type { HandleAddTagOptions } from '@core/ui/forms/tag-input/hooks/useTagInput.handlers.types';
 
 /**
  * Handles adding a new tag from the input value

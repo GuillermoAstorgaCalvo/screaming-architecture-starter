@@ -1,12 +1,14 @@
-import type { CurrencyInputProps } from '@src-types/ui/forms-specialized';
-
-import type { CurrencyInputFieldProps, UseCurrencyInputStateReturn } from './CurrencyInputTypes';
-import { createCurrencyChangeHandler } from './useCurrencyInput.handlers';
+import { createCurrencyChangeHandler } from '@core/ui/forms/currency-input/helpers/useCurrencyInput.handlers';
 import {
 	buildCurrencyInputFieldProps,
 	extractCurrencyInputProps,
-} from './useCurrencyInput.helpers';
-import { useCurrencyInputState } from './useCurrencyInput.state';
+} from '@core/ui/forms/currency-input/helpers/useCurrencyInput.helpers';
+import { useCurrencyInputState } from '@core/ui/forms/currency-input/helpers/useCurrencyInput.state';
+import type {
+	CurrencyInputFieldProps,
+	UseCurrencyInputStateReturn,
+} from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
+import type { CurrencyInputProps } from '@src-types/ui/forms-specialized';
 
 export interface UseCurrencyInputPropsOptions {
 	readonly props: Readonly<CurrencyInputProps>;

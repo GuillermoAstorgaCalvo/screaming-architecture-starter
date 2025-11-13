@@ -1,10 +1,9 @@
 import { ARIA_ROLES } from '@core/constants/aria';
+import { TabButtonContent } from '@core/ui/navigation/tabs/components/TabButtonContent';
+import { getTabButtonClasses, getTabIds } from '@core/ui/navigation/tabs/helpers/TabsHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TabsProps, TabsVariant } from '@src-types/ui/navigation/tabs';
 import { useCallback, useMemo } from 'react';
-
-import { TabButtonContent } from './TabButtonContent';
-import { getTabButtonClasses, getTabIds } from './TabsHelpers';
 
 // ============================================================================
 // Types

@@ -1,7 +1,6 @@
+import { handleAddTag } from '@core/ui/forms/tag-input/hooks/useTagInput.handlers.addTag';
+import type { CreateKeyDownHandlerOptions } from '@core/ui/forms/tag-input/hooks/useTagInput.handlers.types';
 import type { KeyboardEvent } from 'react';
-
-import { handleAddTag } from './useTagInput.handlers.addTag';
-import type { CreateKeyDownHandlerOptions } from './useTagInput.handlers.types';
 
 /**
  * Handles Enter or separator key press

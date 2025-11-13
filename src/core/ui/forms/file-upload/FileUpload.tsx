@@ -1,7 +1,6 @@
+import { FileUploadContent } from '@core/ui/forms/file-upload/components/FileUploadContent';
+import { useFileUploadProps } from '@core/ui/forms/file-upload/hooks/useFileUpload';
 import type { FileUploadProps } from '@src-types/ui/forms-inputs';
-
-import { FileUploadContent } from './FileUploadContent';
-import { useFileUploadProps } from './useFileUpload';
 
 /**
  * FileUpload - File input component with drag-and-drop, preview, progress, and validation

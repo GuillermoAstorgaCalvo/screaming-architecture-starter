@@ -1,10 +1,20 @@
 import { METER_BASE_CLASSES, METER_SIZE_CLASSES } from '@core/constants/ui/display/progress';
+import {
+	MeterElement,
+	MeterLabel,
+	MeterValue,
+} from '@core/ui/data-display/meter/components/MeterComponents';
+import {
+	buildAriaLabelProps,
+	buildMeterValueProps,
+} from '@core/ui/data-display/meter/helpers/Meter.helpers';
+import {
+	calculatePercentage,
+	getMeterAriaLabel,
+	getVariantFromThresholds,
+} from '@core/ui/data-display/meter/utils/Meter.utils';
 import type { MeterProps } from '@src-types/ui/feedback';
 import { twMerge } from 'tailwind-merge';
-
-import { buildAriaLabelProps, buildMeterValueProps } from './Meter.helpers';
-import { calculatePercentage, getMeterAriaLabel, getVariantFromThresholds } from './Meter.utils';
-import { MeterElement, MeterLabel, MeterValue } from './MeterComponents';
 
 /**
  * Meter - Measurement display component for showing values within ranges

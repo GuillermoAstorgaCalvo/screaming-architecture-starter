@@ -1,11 +1,14 @@
+import {
+	createFilePreview,
+	formatFileSize,
+	isImageFile,
+} from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import type { FileUploadPreviewItemProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import Image from '@core/ui/image/Image';
 import Progress from '@core/ui/progress/Progress';
 import { classNames } from '@core/utils/classNames';
 import type { StandardSize } from '@src-types/ui/base';
 import { useCallback, useEffect, useState } from 'react';
-
-import { createFilePreview, formatFileSize, isImageFile } from './FileUploadHelpers';
-import type { FileUploadPreviewItemProps } from './FileUploadTypes';
 
 const FILE_EXTENSION_DISPLAY_LENGTH = 3;
 

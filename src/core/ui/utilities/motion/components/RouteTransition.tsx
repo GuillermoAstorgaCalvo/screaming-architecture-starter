@@ -26,20 +26,26 @@
  * ```
  */
 
-import { motion } from 'framer-motion';
-import type { ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
-
-import { AnimatePresence } from './AnimatePresence';
-import { fadeVariants } from './fadeVariants';
-import type { MotionDuration, MotionVariant, ReducedMotionStrategy } from './motionTypes';
+import { AnimatePresence } from '@core/ui/utilities/motion/components/AnimatePresence';
+import {
+	type EffectiveMotionStrategy,
+	useMotionConfig,
+} from '@core/ui/utilities/motion/hooks/useMotionConfig';
+import type {
+	MotionDuration,
+	MotionVariant,
+	ReducedMotionStrategy,
+} from '@core/ui/utilities/motion/types/motionTypes';
+import { fadeVariants } from '@core/ui/utilities/motion/variants/fadeVariants';
 import {
 	REDUCED_FADE_VARIANTS,
 	STATIC_VARIANTS,
 	withInstantTransitions,
-} from './reducedMotionVariants';
-import { slideVariants } from './slideVariants';
-import { type EffectiveMotionStrategy, useMotionConfig } from './useMotionConfig';
+} from '@core/ui/utilities/motion/variants/reducedMotionVariants';
+import { slideVariants } from '@core/ui/utilities/motion/variants/slideVariants';
+import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Props for RouteTransition component

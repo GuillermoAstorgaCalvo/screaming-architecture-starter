@@ -1,6 +1,5 @@
+import type { TextareaLabelProps } from '@core/ui/forms/textarea/types/TextareaTypes';
 import Label from '@core/ui/label/Label';
-
-import type { TextareaLabelProps } from './TextareaTypes';
 
 export function TextareaLabel({ id, label, required }: Readonly<TextareaLabelProps>) {
 	return (

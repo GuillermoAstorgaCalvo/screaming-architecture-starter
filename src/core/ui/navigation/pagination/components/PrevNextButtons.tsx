@@ -1,7 +1,9 @@
+import { PaginationButton } from '@core/ui/navigation/pagination/components/PaginationButton';
+import {
+	createNextPageHandler,
+	createPreviousPageHandler,
+} from '@core/ui/navigation/pagination/helpers/PaginationHandlers';
 import type { StandardSize } from '@src-types/ui/base';
-
-import { PaginationButton } from './PaginationButton';
-import { createNextPageHandler, createPreviousPageHandler } from './PaginationHandlers';
 
 // ============================================================================
 // Previous/Next Button Components

@@ -1,4 +1,4 @@
-import type { DateRangePickerInputProps } from './DateRangePickerTypes';
+import type { DateRangePickerInputProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 
 interface DateRangePickerInputComponentProps {
 	readonly id: string | undefined;

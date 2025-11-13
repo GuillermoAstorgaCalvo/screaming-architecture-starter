@@ -1,9 +1,12 @@
-import { SliderContainer } from './SliderContainer';
-import { SliderField } from './SliderField';
-import { SliderLabel } from './SliderLabel';
-import { SliderMessages } from './SliderMessages';
-import type { SliderContentProps, SliderFieldWithLabelProps } from './SliderTypes';
-import { SliderWrapper } from './SliderWrapper';
+import { SliderContainer } from '@core/ui/forms/slider/components/SliderContainer';
+import { SliderField } from '@core/ui/forms/slider/components/SliderField';
+import { SliderLabel } from '@core/ui/forms/slider/components/SliderLabel';
+import { SliderMessages } from '@core/ui/forms/slider/components/SliderMessages';
+import { SliderWrapper } from '@core/ui/forms/slider/components/SliderWrapper';
+import type {
+	SliderContentProps,
+	SliderFieldWithLabelProps,
+} from '@core/ui/forms/slider/types/SliderTypes';
 
 function buildSliderFieldPropsFromLabelProps(props: Readonly<SliderFieldWithLabelProps>) {
 	const {

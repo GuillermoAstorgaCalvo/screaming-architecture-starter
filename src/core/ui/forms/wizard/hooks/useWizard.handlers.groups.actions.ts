@@ -1,5 +1,8 @@
-import { useCancelHandler, useCompletionHandler } from './useWizard.handlers.actions.impl';
-import type { ActionHandlersParams } from './useWizard.handlers.groups.types';
+import {
+	useCancelHandler,
+	useCompletionHandler,
+} from '@core/ui/forms/wizard/hooks/useWizard.handlers.actions.impl';
+import type { ActionHandlersParams } from '@core/ui/forms/wizard/types/useWizard.handlers.groups.types';
 
 /**
  * Hook to create action handlers (complete, cancel)

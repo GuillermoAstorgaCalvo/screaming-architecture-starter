@@ -1,10 +1,12 @@
+import { SplitterContext } from '@core/ui/utilities/splitter/components/SplitterContext';
+import {
+	extractPanelConfigs,
+	getContainerClasses,
+} from '@core/ui/utilities/splitter/helpers/Splitter.helpers';
+import { renderSplitterChildren } from '@core/ui/utilities/splitter/helpers/Splitter.render';
+import { useSplitterSetup } from '@core/ui/utilities/splitter/hooks/Splitter.hooks';
 import type { SplitterProps } from '@src-types/ui/layout/splitter';
 import { useId, useMemo, useRef } from 'react';
-
-import { extractPanelConfigs, getContainerClasses } from './Splitter.helpers';
-import { useSplitterSetup } from './Splitter.hooks';
-import { renderSplitterChildren } from './Splitter.render';
-import { SplitterContext } from './SplitterContext';
 
 /**
  * Splitter - Component for creating resizable panels with multiple panels support

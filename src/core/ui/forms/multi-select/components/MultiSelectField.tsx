@@ -1,12 +1,11 @@
-import { forwardRef, type ReactElement } from 'react';
-
-import { FieldContainer } from './MultiSelectField.container';
-import { FieldInput } from './MultiSelectField.input';
-import { prepareFieldState } from './MultiSelectField.state';
+import { FieldContainer } from '@core/ui/forms/multi-select/components/MultiSelectField.container';
+import { FieldInput } from '@core/ui/forms/multi-select/components/MultiSelectField.input';
+import { prepareFieldState } from '@core/ui/forms/multi-select/helpers/MultiSelectField.state';
 import type {
 	MultiSelectFieldComponentProps,
 	RenderFieldContentParams,
-} from './MultiSelectField.types';
+} from '@core/ui/forms/multi-select/types/MultiSelectField.types';
+import { forwardRef, type ReactElement } from 'react';
 
 function renderFieldContent(params: RenderFieldContentParams): ReactElement {
 	return (

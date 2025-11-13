@@ -5,11 +5,10 @@
  * defaults and reduced-motion awareness.
  */
 
+import { AnimatePresence } from '@core/ui/utilities/motion/components/AnimatePresence';
+import { MotionBox } from '@core/ui/utilities/motion/MotionBox';
+import type { MotionBoxProps } from '@core/ui/utilities/motion/types/motionTypes';
 import { type Key, type ReactNode, useEffect, useReducer } from 'react';
-
-import { AnimatePresence } from './AnimatePresence';
-import { MotionBox } from './MotionBox';
-import type { MotionBoxProps } from './motionTypes';
 
 /**
  * Props for MotionPresence component

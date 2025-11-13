@@ -1,13 +1,16 @@
-import { DateRangePickerContainer } from './DateRangePickerContainer';
-import { DateRangePickerField } from './DateRangePickerField';
-import { generateEndDatePickerId, generateStartDatePickerId } from './DateRangePickerHelpers';
-import { DateRangePickerLabel } from './DateRangePickerLabel';
-import { DateRangePickerMessages } from './DateRangePickerMessages';
+import { DateRangePickerContainer } from '@core/ui/forms/date-range-picker/components/DateRangePickerContainer';
+import { DateRangePickerField } from '@core/ui/forms/date-range-picker/components/DateRangePickerField';
+import { DateRangePickerLabel } from '@core/ui/forms/date-range-picker/components/DateRangePickerLabel';
+import { DateRangePickerMessages } from '@core/ui/forms/date-range-picker/components/DateRangePickerMessages';
+import { DateRangePickerWrapper } from '@core/ui/forms/date-range-picker/components/DateRangePickerWrapper';
+import {
+	generateEndDatePickerId,
+	generateStartDatePickerId,
+} from '@core/ui/forms/date-range-picker/helpers/DateRangePickerHelpers';
 import type {
 	DateRangePickerContentProps,
 	DateRangePickerFieldWithLabelProps,
-} from './DateRangePickerTypes';
-import { DateRangePickerWrapper } from './DateRangePickerWrapper';
+} from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 
 function buildDateRangePickerFieldProps(
 	props: Readonly<DateRangePickerFieldWithLabelProps>,

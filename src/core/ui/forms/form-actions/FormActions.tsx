@@ -1,6 +1,6 @@
 import type { FormActionsProps } from '@src-types/ui/forms';
 
-import { getFormActionsVariantClasses } from './FormActionsHelpers';
+import { getFormActionsVariantClasses } from './helpers/FormActionsHelpers';
 
 /**
  * FormActions - Container for submit/cancel button groups with consistent spacing

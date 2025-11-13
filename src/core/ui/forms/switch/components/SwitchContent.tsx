@@ -1,9 +1,12 @@
-import { SwitchContainer } from './SwitchContainer';
-import { SwitchField } from './SwitchField';
-import { SwitchLabel } from './SwitchLabel';
-import { SwitchMessages } from './SwitchMessages';
-import type { SwitchContentProps, SwitchFieldWithLabelProps } from './SwitchTypes';
-import { SwitchWrapper } from './SwitchWrapper';
+import { SwitchContainer } from '@core/ui/forms/switch/components/SwitchContainer';
+import { SwitchField } from '@core/ui/forms/switch/components/SwitchField';
+import { SwitchLabel } from '@core/ui/forms/switch/components/SwitchLabel';
+import { SwitchMessages } from '@core/ui/forms/switch/components/SwitchMessages';
+import { SwitchWrapper } from '@core/ui/forms/switch/components/SwitchWrapper';
+import type {
+	SwitchContentProps,
+	SwitchFieldWithLabelProps,
+} from '@core/ui/forms/switch/types/SwitchTypes';
 
 function buildSwitchFieldPropsFromLabelProps(props: Readonly<SwitchFieldWithLabelProps>) {
 	const {

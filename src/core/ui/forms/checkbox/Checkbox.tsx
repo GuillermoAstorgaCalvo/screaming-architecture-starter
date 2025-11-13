@@ -1,7 +1,6 @@
+import { CheckboxContent } from '@core/ui/forms/checkbox/components/CheckboxContent';
+import { useCheckboxProps } from '@core/ui/forms/checkbox/hooks/useCheckbox';
 import type { CheckboxProps } from '@src-types/ui/forms';
-
-import { CheckboxContent } from './CheckboxContent';
-import { useCheckboxProps } from './useCheckbox';
 
 /**
  * Checkbox - Reusable checkbox component with label, error, and helper text support

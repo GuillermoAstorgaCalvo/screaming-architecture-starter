@@ -1,5 +1,6 @@
-import { ARIA_ATTRIBUTES, MENU_STYLES } from './DropdownMenuHelpers';
-import type { RenderDropdownMenuContentParams } from './DropdownMenuRenderers.types';
+import { MENU_STYLES } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuHelpers';
+import { ARIA_ATTRIBUTES } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuTrigger';
+import type { RenderDropdownMenuContentParams } from '@core/ui/overlays/dropdown-menu/types/DropdownMenuRenderers.types';
 
 export function createMenuWrapperProps({
 	menuRef,

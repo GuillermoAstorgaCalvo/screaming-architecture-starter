@@ -1,3 +1,5 @@
+import { TimelineConnector } from '@core/ui/data-display/timeline/components/TimelineConnector';
+import { TimelineEvent } from '@core/ui/data-display/timeline/components/TimelineEvent';
 import { getTimelineVariantClasses } from '@core/ui/variants/timeline';
 import type { StandardSize } from '@src-types/ui/base';
 import type {
@@ -7,9 +9,6 @@ import type {
 	TimelineProps,
 } from '@src-types/ui/layout/timeline';
 import { useMemo } from 'react';
-
-import { TimelineConnector } from './TimelineConnector';
-import { TimelineEvent } from './TimelineEvent';
 
 interface TimelineItemProps {
 	readonly event: TimelineEventType;

@@ -1,6 +1,5 @@
+import { moveItem } from '@core/ui/utilities/sortable-list/helpers/SortableListHelpers';
 import type { SortableListItem } from '@src-types/ui/layout/list';
-
-import { moveItem } from './SortableListHelpers';
 
 /**
  * Resets all drag state to initial values

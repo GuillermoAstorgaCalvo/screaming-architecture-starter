@@ -1,5 +1,5 @@
-import { renderChips } from './MultiSelectField.chips';
-import type { FieldContainerProps } from './MultiSelectField.types';
+import { renderChips } from '@core/ui/forms/multi-select/components/MultiSelectField.chips';
+import type { FieldContainerProps } from '@core/ui/forms/multi-select/types/MultiSelectField.types';
 
 export function FieldContainer({
 	selectedOptions,

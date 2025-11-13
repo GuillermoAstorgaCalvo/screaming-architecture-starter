@@ -1,8 +1,7 @@
+import { getDisplayContent } from '@core/ui/forms/inline-edit/helpers/InlineEditHelpers';
 import type { InlineEditProps } from '@src-types/ui/forms-inputs';
 import type { ChangeEvent, FocusEvent, KeyboardEvent, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { getDisplayContent } from './InlineEditHelpers';
 
 export interface EditInputOptions {
 	readonly id: string;
@@ -97,41 +96,6 @@ export function renderDisplayButton(options: Readonly<RenderDisplayButtonOptions
 			{displayContent}
 		</button>
 	);
-}
-
-export interface RenderEditModeOptions {
-	readonly id: string;
-	readonly editValue: string;
-	readonly inputClasses: string;
-	readonly placeholder: string;
-	readonly disabled: boolean;
-	readonly handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	readonly handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
-	readonly handleBlur: (e: FocusEvent<HTMLInputElement>) => void;
-	readonly inputProps: Readonly<
-		Omit<
-			InlineEditProps,
-			| 'value'
-			| 'defaultValue'
-			| 'onSave'
-			| 'onCancel'
-			| 'onChange'
-			| 'placeholder'
-			| 'size'
-			| 'disabled'
-			| 'displayClassName'
-			| 'inputClassName'
-			| 'showEmptyPlaceholder'
-			| 'renderDisplay'
-		>
-	>;
-}
-
-/**
- * Render edit mode input
- */
-export function renderEditMode(options: Readonly<RenderEditModeOptions>) {
-	return renderEditInput(options);
 }
 
 export interface RenderViewModeOptions {

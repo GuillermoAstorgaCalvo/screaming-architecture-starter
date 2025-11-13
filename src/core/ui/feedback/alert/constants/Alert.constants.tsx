@@ -1,6 +1,5 @@
+import type { AlertIntent } from '@core/ui/feedback/alert/types/Alert.types';
 import type { ReactNode } from 'react';
-
-import type { AlertIntent } from './Alert.types';
 
 export const ALERT_INTENT_STYLES: Record<AlertIntent, string> = {
 	info: 'border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-300/40 dark:bg-sky-950/60 dark:text-sky-100',

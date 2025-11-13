@@ -1,5 +1,3 @@
-import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
-
 import {
 	DateFilterInput,
 	DateRangeFilterInput,
@@ -7,7 +5,8 @@ import {
 	MultiSelectFilterInput,
 	SelectFilterInput,
 	TextFilterInput,
-} from './filterInputComponents';
+} from '@core/ui/data-display/data-table/components/filterInputComponents';
+import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 
 export interface FilterInputProps {
 	filter: AdvancedFilter;

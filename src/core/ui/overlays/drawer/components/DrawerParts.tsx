@@ -1,9 +1,8 @@
 import { ARIA_LABELS } from '@core/constants/aria';
 import IconButton from '@core/ui/icon-button/IconButton';
 import CloseIcon from '@core/ui/icons/close-icon/CloseIcon';
+import { getOverlayClasses } from '@core/ui/overlays/drawer/helpers/DrawerHelpers';
 import type { MouseEvent, ReactNode } from 'react';
-
-import { getOverlayClasses } from './DrawerHelpers';
 
 export function DrawerTitle({ id, title }: { readonly id: string; readonly title: string }) {
 	return (

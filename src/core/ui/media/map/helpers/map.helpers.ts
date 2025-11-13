@@ -40,15 +40,22 @@ function getBasicOptions(options: MapProps['options']): Partial<google.maps.MapO
 
 function getControlOptions(options: MapProps['options']): Partial<google.maps.MapOptions> {
 	const controls: Partial<google.maps.MapOptions> = {};
-	if (options.disableDefaultUI !== undefined) controls.disableDefaultUI = options.disableDefaultUI;
-	if (options.zoomControl !== undefined) controls.zoomControl = options.zoomControl;
-	if (options.streetViewControl !== undefined)
-		controls.streetViewControl = options.streetViewControl;
-	if (options.fullscreenControl !== undefined)
-		controls.fullscreenControl = options.fullscreenControl;
-	if (options.mapTypeControl !== undefined) controls.mapTypeControl = options.mapTypeControl;
-	if (options.scaleControl !== undefined) controls.scaleControl = options.scaleControl;
-	if (options.rotateControl !== undefined) controls.rotateControl = options.rotateControl;
+	const controlKeys: Array<keyof MapProps['options']> = [
+		'disableDefaultUI',
+		'zoomControl',
+		'streetViewControl',
+		'fullscreenControl',
+		'mapTypeControl',
+		'scaleControl',
+		'rotateControl',
+	];
+
+	for (const key of controlKeys) {
+		if (options[key] !== undefined) {
+			controls[key as keyof google.maps.MapOptions] = options[key] as never;
+		}
+	}
+
 	return controls;
 }
 

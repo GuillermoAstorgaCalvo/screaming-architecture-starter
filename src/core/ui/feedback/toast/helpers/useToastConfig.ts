@@ -1,6 +1,12 @@
-import { buildDismissParams, type UseToastConfigParams } from './toast.dismiss.builders';
-import { getDefaultRole } from './toast.utils';
-import { useToastDismiss, type UseToastDismissReturn } from './useToastDismiss';
+import {
+	buildDismissParams,
+	type UseToastConfigParams,
+} from '@core/ui/feedback/toast/helpers/toast.dismiss.builders';
+import { getDefaultRole } from '@core/ui/feedback/toast/helpers/toast.utils';
+import {
+	useToastDismiss,
+	type UseToastDismissReturn,
+} from '@core/ui/feedback/toast/helpers/useToastDismiss';
 
 export interface UseToastConfigReturn {
 	readonly accessibleRole: 'status' | 'alert';

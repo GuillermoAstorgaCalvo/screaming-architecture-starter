@@ -1,6 +1,5 @@
+import type { UseWizardStateReturn } from '@core/ui/forms/wizard/types/useWizard.state.types';
 import type { WizardStepConfig } from '@src-types/ui/navigation/wizard';
-
-import type { UseWizardStateReturn } from './useWizard.state.types';
 
 /**
  * Computed values for wizard handlers

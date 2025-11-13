@@ -1,11 +1,10 @@
-import type { ReactNode, RefObject } from 'react';
-
 import {
 	renderEndMessage,
 	renderErrorState,
 	renderLoadingState,
 	renderSentinel,
-} from './InfiniteScrollStateRenderers';
+} from '@core/ui/utilities/infinite-scroll/components/InfiniteScrollStateRenderers';
+import type { ReactNode, RefObject } from 'react';
 
 /**
  * Props for rendering infinite scroll content

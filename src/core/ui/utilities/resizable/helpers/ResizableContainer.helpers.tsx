@@ -1,7 +1,4 @@
-import type { ResizableDirection } from '@src-types/ui/overlays/containers';
-import type { CSSProperties } from 'react';
-import { twMerge } from 'tailwind-merge';
-
+import { ResizeHandle } from '@core/ui/utilities/resizable/components/ResizeHandle';
 import type {
 	ContainerClassesParams,
 	ContainerStylesParams,
@@ -9,8 +6,10 @@ import type {
 	PrepareDataParams,
 	PreparedContainerData,
 	PreparedData,
-} from './ResizableContainer.types';
-import { ResizeHandle } from './ResizeHandle';
+} from '@core/ui/utilities/resizable/types/ResizableContainer.types';
+import type { ResizableDirection } from '@src-types/ui/overlays/containers';
+import type { CSSProperties } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 export function getResizeHandleClasses(direction: ResizableDirection, disabled: boolean): string {
 	const baseClasses = 'absolute bg-gray-300 dark:bg-gray-600 transition-colors';

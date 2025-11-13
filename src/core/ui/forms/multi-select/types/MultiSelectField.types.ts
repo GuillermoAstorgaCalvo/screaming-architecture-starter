@@ -1,7 +1,6 @@
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
+import type { MultiSelectFieldProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 import type { KeyboardEvent, ReactNode, Ref } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
-import type { MultiSelectFieldProps } from './MultiSelectTypes';
 
 export interface MultiSelectFieldComponentProps extends MultiSelectFieldProps {
 	readonly selectedValues: string[];

@@ -1,4 +1,12 @@
-import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
+import type {
+	AdvancedFilter,
+	AdvancedFilterType,
+	DateAdvancedFilter,
+	DateRangeAdvancedFilter,
+	MultiSelectAdvancedFilter,
+	SelectAdvancedFilter,
+	TextAdvancedFilter,
+} from '@src-types/ui/advancedFilter';
 
 const EMPTY_STRING = '';
 const FILTER_TYPE_TEXT = 'text';
@@ -17,23 +25,31 @@ function isSimpleFilterActive(value: string | undefined): boolean {
 /**
  * Checks if a filter has an active value
  */
+function isSimpleValueFilterActive(
+	filter: TextAdvancedFilter | SelectAdvancedFilter | DateAdvancedFilter
+): boolean {
+	return isSimpleFilterActive(filter.value);
+}
+
+function isMultiSelectFilterActive(filter: MultiSelectAdvancedFilter): boolean {
+	return Boolean(filter.value?.some(value => isSimpleFilterActive(value)));
+}
+
+function isDateRangeFilterActive(filter: DateRangeAdvancedFilter): boolean {
+	return isSimpleFilterActive(filter.startValue) || isSimpleFilterActive(filter.endValue);
+}
+
+const FILTER_ACTIVE_CHECKERS: Record<AdvancedFilterType, (filter: AdvancedFilter) => boolean> = {
+	[FILTER_TYPE_TEXT]: filter => isSimpleValueFilterActive(filter as TextAdvancedFilter),
+	[FILTER_TYPE_SELECT]: filter => isSimpleValueFilterActive(filter as SelectAdvancedFilter),
+	[FILTER_TYPE_DATE]: filter => isSimpleValueFilterActive(filter as DateAdvancedFilter),
+	[FILTER_TYPE_MULTI_SELECT]: filter =>
+		isMultiSelectFilterActive(filter as MultiSelectAdvancedFilter),
+	[FILTER_TYPE_DATE_RANGE]: filter => isDateRangeFilterActive(filter as DateRangeAdvancedFilter),
+};
+
 export function isFilterActive(filter: AdvancedFilter): boolean {
-	switch (filter.type) {
-		case FILTER_TYPE_TEXT:
-		case FILTER_TYPE_SELECT:
-		case FILTER_TYPE_DATE: {
-			return isSimpleFilterActive(filter.value);
-		}
-		case FILTER_TYPE_MULTI_SELECT: {
-			return Boolean(filter.value && filter.value.length > 0);
-		}
-		case FILTER_TYPE_DATE_RANGE: {
-			return isSimpleFilterActive(filter.startValue) || isSimpleFilterActive(filter.endValue);
-		}
-		default: {
-			return false;
-		}
-	}
+	return FILTER_ACTIVE_CHECKERS[filter.type](filter);
 }
 
 /**

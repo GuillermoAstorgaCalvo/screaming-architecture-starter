@@ -1,6 +1,16 @@
+import type { NumberInputValueAndCapability } from '@core/ui/forms/number-input/helpers/NumberInputValue';
 import type { ChangeEvent } from 'react';
 
-import type { NumberInputValueAndCapability } from './NumberInputValue';
+function getBaseValue(value: number | undefined, fallback: number | undefined): number {
+	return value ?? fallback ?? 0;
+}
+
+function clampValue(value: number, min: number | undefined, max: number | undefined): number {
+	let clamped = value;
+	if (min !== undefined) clamped = Math.max(clamped, min);
+	if (max !== undefined) clamped = Math.min(clamped, max);
+	return clamped;
+}
 
 export interface CreateIncrementHandlerOptions {
 	readonly currentValue: number | undefined;
@@ -34,13 +44,9 @@ export function createIncrementHandler({
 }: Readonly<CreateIncrementHandlerOptions>): () => void {
 	return () => {
 		if (disabled || !canIncrement) return;
-		const baseValue = currentValue ?? min ?? 0;
+		const baseValue = getBaseValue(currentValue, min);
 		const newValue = baseValue + step;
-		const hasMax = max !== undefined;
-		const clampedValue = hasMax ? Math.min(newValue, max) : newValue;
-		if (onChange) {
-			onChange(clampedValue);
-		}
+		onChange?.(clampValue(newValue, min, max));
 	};
 }
 
@@ -76,13 +82,9 @@ export function createDecrementHandler({
 }: Readonly<CreateDecrementHandlerOptions>): () => void {
 	return () => {
 		if (disabled || !canDecrement) return;
-		const baseValue = currentValue ?? max ?? 0;
+		const baseValue = getBaseValue(currentValue, max);
 		const newValue = baseValue - step;
-		const hasMin = min !== undefined;
-		const clampedValue = hasMin ? Math.max(newValue, min) : newValue;
-		if (onChange) {
-			onChange(clampedValue);
-		}
+		onChange?.(clampValue(newValue, min, max));
 	};
 }
 
@@ -118,11 +120,7 @@ export function createInputChangeHandler({
 		}
 		const numValue = Number.parseFloat(inputValue);
 		if (!Number.isNaN(numValue)) {
-			// Clamp to min/max if specified
-			let clampedValue = numValue;
-			if (min !== undefined) clampedValue = Math.max(clampedValue, min);
-			if (max !== undefined) clampedValue = Math.min(clampedValue, max);
-			onChange(clampedValue);
+			onChange(clampValue(numValue, min, max));
 		}
 	};
 }

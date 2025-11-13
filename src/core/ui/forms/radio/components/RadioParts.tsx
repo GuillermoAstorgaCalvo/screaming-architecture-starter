@@ -1,14 +1,11 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
-import HelperText from '@core/ui/helper-text/HelperText';
-import Label from '@core/ui/label/Label';
-import { classNames } from '@core/utils/classNames';
-
 import {
 	buildRadioFieldPropsFromLabelProps,
 	buildRadioFieldWithLabelProps,
-} from './RadioFieldPropsHelpers';
-import { buildRadioHandlers } from './RadioHandlers';
-import { buildRadioInputProps } from './RadioInputPropsHelpers';
+} from '@core/ui/forms/radio/helpers/RadioFieldPropsHelpers';
+import { buildRadioHandlers } from '@core/ui/forms/radio/helpers/RadioHandlers';
+import { buildRadioInputProps } from '@core/ui/forms/radio/helpers/RadioInputPropsHelpers';
+import { useRadioFieldState } from '@core/ui/forms/radio/hooks/useRadioField';
 import type {
 	RadioContainerProps,
 	RadioContentProps,
@@ -17,8 +14,10 @@ import type {
 	RadioLabelProps,
 	RadioMessagesProps,
 	RadioWrapperProps,
-} from './RadioTypes';
-import { useRadioFieldState } from './useRadioField';
+} from '@core/ui/forms/radio/types/RadioTypes';
+import HelperText from '@core/ui/helper-text/HelperText';
+import Label from '@core/ui/label/Label';
+import { classNames } from '@core/utils/classNames';
 
 export function RadioWrapper({ fullWidth, children, ...props }: Readonly<RadioWrapperProps>) {
 	return (

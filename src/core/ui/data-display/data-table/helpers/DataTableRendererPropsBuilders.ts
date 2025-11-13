@@ -3,7 +3,7 @@ import {
 	extractFilterParams,
 	extractPaginationParams,
 	extractSortSelectionParams,
-} from './DataTableParamExtractors';
+} from '@core/ui/data-display/data-table/helpers/DataTableParamExtractors';
 import {
 	buildBaseProps,
 	buildColumnProps,
@@ -11,8 +11,8 @@ import {
 	buildPaginationProps,
 	buildSortAndSelectionProps,
 	buildStyleProps,
-} from './DataTablePropBuilders';
-import type { RendererPropsParams } from './DataTableTypes';
+} from '@core/ui/data-display/data-table/helpers/DataTablePropBuilders';
+import type { RendererPropsParams } from '@core/ui/data-display/data-table/types/DataTableTypes';
 
 /**
  * Builds feature props (filter, column, sort/selection, pagination) from renderer params

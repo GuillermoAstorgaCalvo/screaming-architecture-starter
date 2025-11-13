@@ -1,7 +1,12 @@
+import {
+	buildRangeSliderStateReturn,
+	useRangeHandlers,
+} from '@core/ui/forms/range-slider/helpers/useRangeSliderState.helpers';
+import {
+	useRangeDerivedState,
+	useRangeValueState,
+} from '@core/ui/forms/range-slider/hooks/useRangeSliderState.hooks';
 import type { ChangeEvent, RefObject } from 'react';
-
-import { composeRangeSliderState, useRangeHandlers } from './useRangeSliderState.helpers';
-import { useRangeDerivedState, useRangeValueState } from './useRangeSliderState.hooks';
 
 export interface UseRangeSliderStateReturn {
 	readonly safeMinValue: number;
@@ -50,7 +55,7 @@ export function useRangeSliderState({
 		onChange,
 	});
 
-	return composeRangeSliderState({
+	return buildRangeSliderStateReturn({
 		valueState,
 		calculations,
 		handlers,

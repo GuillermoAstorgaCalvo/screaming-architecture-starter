@@ -1,7 +1,6 @@
+import { SignaturePadContent } from '@core/ui/media/signature-pad/components/SignaturePadContent';
+import { useSignaturePadProps } from '@core/ui/media/signature-pad/hooks/useSignaturePad';
 import type { SignaturePadProps } from '@src-types/ui/media';
-
-import { SignaturePadContent } from './SignaturePadContent';
-import { useSignaturePadProps } from './useSignaturePad';
 
 /**
  * SignaturePad - Signature capture component

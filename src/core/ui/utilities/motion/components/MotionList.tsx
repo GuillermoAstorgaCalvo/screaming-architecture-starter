@@ -5,16 +5,15 @@
  * collections with consistent timing and reduced-motion awareness.
  */
 
-import type { ComponentProps, Key, ReactNode } from 'react';
-
-import { MotionBox } from './MotionBox';
-import { MotionStagger } from './MotionStagger';
+import { MotionStagger } from '@core/ui/utilities/motion/components/MotionStagger';
+import { MotionBox } from '@core/ui/utilities/motion/MotionBox';
 import type {
 	MotionBoxProps,
 	MotionDuration,
 	MotionVariant,
 	ReducedMotionStrategy,
-} from './motionTypes';
+} from '@core/ui/utilities/motion/types/motionTypes';
+import type { ComponentProps, Key, ReactNode } from 'react';
 
 /**
  * Props for MotionList component

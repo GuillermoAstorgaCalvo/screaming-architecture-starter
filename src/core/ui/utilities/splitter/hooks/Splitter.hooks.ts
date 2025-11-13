@@ -1,8 +1,7 @@
+import { useSplitterContextValue } from '@core/ui/utilities/splitter/helpers/Splitter.context';
+import { useSplitter } from '@core/ui/utilities/splitter/hooks/useSplitter';
 import type { SplitterOrientation, SplitterPanelConfig } from '@src-types/ui/layout/splitter';
 import type { RefObject } from 'react';
-
-import { useSplitterContextValue } from './Splitter.context';
-import { useSplitter } from './useSplitter';
 
 interface UseSplitterSetupParams {
 	readonly containerRef: RefObject<HTMLDivElement | null>;

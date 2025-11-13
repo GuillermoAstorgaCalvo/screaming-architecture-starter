@@ -88,7 +88,7 @@ export function wrapWithResponsiveContainer(
 	chartContent: ReactElement
 ): ReactElement {
 	return (
-		<ResponsiveContainer width={width} height={height}>
+		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
 			{chartContent}
 		</ResponsiveContainer>
 	);

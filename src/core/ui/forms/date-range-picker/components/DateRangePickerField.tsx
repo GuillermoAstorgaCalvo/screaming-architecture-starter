@@ -1,5 +1,5 @@
-import { DateRangePickerInput } from './DateRangePickerInput';
-import type { DateRangePickerFieldProps } from './DateRangePickerTypes';
+import { DateRangePickerInput } from '@core/ui/forms/date-range-picker/components/DateRangePickerInput';
+import type { DateRangePickerFieldProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 
 export function DateRangePickerField(props: Readonly<DateRangePickerFieldProps>) {
 	const {

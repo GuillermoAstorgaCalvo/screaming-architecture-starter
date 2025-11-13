@@ -1,6 +1,5 @@
+import { getScrollAreaClasses } from '@core/ui/utilities/scroll-area/helpers/ScrollAreaHelpers';
 import type { ScrollAreaProps } from '@src-types/ui/layout/scroll';
-
-import { getScrollAreaClasses } from './ScrollAreaHelpers';
 
 /**
  * ScrollArea - Custom scrollable container component

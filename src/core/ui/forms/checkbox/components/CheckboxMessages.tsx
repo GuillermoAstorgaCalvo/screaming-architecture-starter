@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { CheckboxMessagesProps } from '@core/ui/forms/checkbox/types/CheckboxTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { CheckboxMessagesProps } from './CheckboxTypes';
 
 export function CheckboxMessages({
 	checkboxId,

@@ -1,6 +1,5 @@
+import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/CommandPalette';
 import { useCallback } from 'react';
-
-import type { CommandPaletteCommand } from './CommandPalette';
 
 export function useCommandSelection(
 	onSelect: ((command: CommandPaletteCommand) => void) | undefined,

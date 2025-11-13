@@ -1,8 +1,7 @@
+import type { RenderVideoParams } from '@core/ui/media/video/types/video.types';
 import Skeleton from '@core/ui/skeleton/Skeleton';
 import Spinner from '@core/ui/spinner/Spinner';
 import type { ReactElement } from 'react';
-
-import type { RenderVideoParams } from './video.types';
 
 export function shouldShowErrorPlaceholder({
 	hasError,

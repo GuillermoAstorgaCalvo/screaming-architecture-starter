@@ -1,7 +1,6 @@
 import { type FormControls, useFormAdapter } from '@core/forms/formAdapter';
+import type { FormWizardProps } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardProps } from './FormWizardTypes';
 
 /**
  * Initialize form controls using form adapter

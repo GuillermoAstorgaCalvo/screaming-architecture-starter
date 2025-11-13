@@ -1,7 +1,6 @@
+import type { UseRangeSliderStateReturn } from '@core/ui/forms/range-slider/hooks/useRangeSliderState';
+import type { RangeSliderInputProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 import type { ChangeEvent, RefObject } from 'react';
-
-import type { RangeSliderInputProps } from './RangeSliderTypes';
-import type { UseRangeSliderStateReturn } from './useRangeSliderState';
 
 interface ActiveTrackProps {
 	readonly left: number;

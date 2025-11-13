@@ -1,8 +1,7 @@
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
+import type { MultiSelectContentProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 import { classNames } from '@core/utils/classNames';
 import type { CSSProperties, KeyboardEvent, MouseEvent, RefObject } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
-import type { MultiSelectContentProps } from './MultiSelectTypes';
 
 export const MENU_STYLES = {
 	CONTAINER: 'flex flex-col gap-1 py-2',

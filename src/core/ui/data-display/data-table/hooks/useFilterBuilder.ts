@@ -1,7 +1,9 @@
+import {
+	createNewFilter,
+	getDefaultFilterType,
+} from '@core/ui/data-display/data-table/helpers/filterBuilderHelpers';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 import { useCallback, useState } from 'react';
-
-import { createNewFilter, getDefaultFilterType } from './filterBuilderHelpers';
 
 interface UseFilterBuilderOptions {
 	readonly filters: AdvancedFilter[];

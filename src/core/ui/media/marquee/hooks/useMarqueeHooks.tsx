@@ -1,11 +1,10 @@
-import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
-
-import { useMarquee } from './useMarquee';
 import {
 	buildLoopAnimationStyle,
 	calculateDuplicateCount,
 	createDuplicatedContentFactory,
-} from './useMarqueeHelpers';
+} from '@core/ui/media/marquee/helpers/useMarqueeHelpers';
+import { useMarquee } from '@core/ui/media/marquee/hooks/useMarquee';
+import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 
 interface UseDuplicateCountOptions {
 	readonly loop: boolean;

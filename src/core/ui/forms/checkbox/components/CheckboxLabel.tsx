@@ -1,6 +1,5 @@
+import type { CheckboxLabelProps } from '@core/ui/forms/checkbox/types/CheckboxTypes';
 import Label from '@core/ui/label/Label';
-
-import type { CheckboxLabelProps } from './CheckboxTypes';
 
 export function CheckboxLabel({ id, label, required, size = 'sm' }: Readonly<CheckboxLabelProps>) {
 	return (

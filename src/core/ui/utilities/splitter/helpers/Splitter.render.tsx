@@ -1,8 +1,7 @@
+import { SplitterHandle } from '@core/ui/utilities/splitter/components/SplitterHandle';
+import { SplitterPanel } from '@core/ui/utilities/splitter/components/SplitterPanel';
 import type { SplitterPanelConfig } from '@src-types/ui/layout/splitter';
 import { Children, cloneElement, isValidElement, type ReactNode } from 'react';
-
-import { SplitterHandle } from './SplitterHandle';
-import { SplitterPanel } from './SplitterPanel';
 
 /**
  * Render splitter children (panels and handles)

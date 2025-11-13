@@ -1,7 +1,6 @@
+import { useTreeViewKeyboard } from '@core/ui/data-display/tree-view/hooks/useTreeViewKeyboard';
+import type { KeyboardHandlersParams } from '@core/ui/data-display/tree-view/types/useTreeViewSetup.types';
 import { type KeyboardEvent, useCallback } from 'react';
-
-import { useTreeViewKeyboard } from './useTreeViewKeyboard';
-import type { KeyboardHandlersParams } from './useTreeViewSetup.types';
 
 export function useTreeViewKeyboardHandlers(params: KeyboardHandlersParams) {
 	const { handleKeyDown: handleKeyboardNavigation } = useTreeViewKeyboard({

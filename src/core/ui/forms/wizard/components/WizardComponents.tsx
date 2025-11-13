@@ -1,9 +1,11 @@
+import {
+	WizardNavigation,
+	type WizardNavigationProps,
+} from '@core/ui/forms/wizard/components/WizardNavigation';
 import Progress from '@core/ui/progress/Progress';
 import Stepper from '@core/ui/stepper/Stepper';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import { WizardNavigation, type WizardNavigationProps } from './WizardNavigation';
 
 interface WizardStepperProps {
 	steps: Array<{ id: string; label: string; description?: string; content: ReactNode }>;

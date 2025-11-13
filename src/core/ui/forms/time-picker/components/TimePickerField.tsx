@@ -1,5 +1,5 @@
-import { TimePickerInput } from './TimePickerInput';
-import type { TimePickerFieldProps } from './TimePickerTypes';
+import { TimePickerInput } from '@core/ui/forms/time-picker/components/TimePickerInput';
+import type { TimePickerFieldProps } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 
 export function TimePickerField(props: Readonly<TimePickerFieldProps>) {
 	const { id, timePickerClasses, ariaDescribedBy, disabled, required, props: inputProps } = props;

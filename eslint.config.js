@@ -576,6 +576,7 @@ export default [
 			// Relax some rules in tests
 			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/no-floating-promises': 'off', // Tests often don't need to await all promises
+			'@typescript-eslint/no-unnecessary-condition': 'off', // Tests often use defensive optional chaining/nullish coalescing
 			'no-magic-numbers': 'off', // Tests often use magic numbers for test data
 			// Disable security rules in tests (mocking patterns may trigger false positives)
 			'security/detect-non-literal-regexp': 'off',

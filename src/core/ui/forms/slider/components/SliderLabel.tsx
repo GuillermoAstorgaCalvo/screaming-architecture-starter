@@ -1,6 +1,5 @@
+import type { SliderLabelProps } from '@core/ui/forms/slider/types/SliderTypes';
 import Label from '@core/ui/label/Label';
-
-import type { SliderLabelProps } from './SliderTypes';
 
 export function SliderLabel({ id, label, required, size = 'sm' }: Readonly<SliderLabelProps>) {
 	return (

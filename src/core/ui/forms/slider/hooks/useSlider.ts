@@ -1,15 +1,14 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { SliderProps } from '@src-types/ui/forms-advanced';
-import { useId } from 'react';
-
 import {
 	generateSliderId,
 	getAriaDescribedBy,
 	getSliderClasses,
 	getSliderThumbClasses,
 	getSliderTrackClasses,
-} from './SliderHelpers';
-import type { SliderContentProps, SliderInputProps } from './SliderTypes';
+} from '@core/ui/forms/slider/helpers/SliderHelpers';
+import type { SliderContentProps, SliderInputProps } from '@core/ui/forms/slider/types/SliderTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { SliderProps } from '@src-types/ui/forms-advanced';
+import { useId } from 'react';
 
 export interface UseSliderPropsOptions {
 	readonly props: Readonly<SliderProps>;

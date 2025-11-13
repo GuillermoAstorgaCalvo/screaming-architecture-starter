@@ -1,11 +1,13 @@
-import { useId } from 'react';
-
 import {
 	generateSearchInputId,
 	getAriaDescribedBy,
 	getSearchInputClasses,
-} from './SearchInputHelpers';
-import type { UseSearchInputStateOptions, UseSearchInputStateReturn } from './SearchInputTypes';
+} from '@core/ui/forms/search-input/helpers/SearchInputHelpers';
+import type {
+	UseSearchInputStateOptions,
+	UseSearchInputStateReturn,
+} from '@core/ui/forms/search-input/types/SearchInputTypes';
+import { useId } from 'react';
 
 /**
  * Hook to compute search input state (ID, error state, ARIA attributes, and classes)

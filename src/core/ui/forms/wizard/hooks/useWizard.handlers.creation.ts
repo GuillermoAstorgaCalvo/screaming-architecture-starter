@@ -1,17 +1,17 @@
-import { combineAllHandlers } from './useWizard.handlers.combine';
-import type { WizardHandlerComputedValues } from './useWizard.handlers.computed';
-import { useActionHandlers } from './useWizard.handlers.groups.actions';
+import { combineAllHandlers } from '@core/ui/forms/wizard/hooks/useWizard.handlers.combine';
+import type { WizardHandlerComputedValues } from '@core/ui/forms/wizard/hooks/useWizard.handlers.computed';
+import { useActionHandlers } from '@core/ui/forms/wizard/hooks/useWizard.handlers.groups.actions';
 import {
 	useAdvancedNavigationHandlers,
 	useBasicNavigationHandlers,
-} from './useWizard.handlers.groups.navigation';
+} from '@core/ui/forms/wizard/hooks/useWizard.handlers.groups.navigation';
+import { useValidationHandlers } from '@core/ui/forms/wizard/hooks/useWizard.handlers.groups.validation';
 import type {
 	ActionHandlersReturn,
 	AllWizardHandlersParams,
 	ValidationHandlersReturn,
-} from './useWizard.handlers.groups.types';
-import { useValidationHandlers } from './useWizard.handlers.groups.validation';
-import type { UseWizardHandlersOptions } from './useWizard.handlers.types';
+} from '@core/ui/forms/wizard/types/useWizard.handlers.groups.types';
+import type { UseWizardHandlersOptions } from '@core/ui/forms/wizard/types/useWizard.handlers.types';
 
 /**
  * Hook to create validation handlers with computed parameters

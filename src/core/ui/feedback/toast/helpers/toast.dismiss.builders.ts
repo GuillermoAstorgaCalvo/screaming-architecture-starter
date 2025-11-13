@@ -1,6 +1,6 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
+import type { ToastProps } from '@core/ui/feedback/toast/types/toast.types';
 
-import type { ToastProps } from './toast.types';
 import type { UseToastDismissParams } from './useToastDismiss';
 
 export interface BuildDismissParamsInput {

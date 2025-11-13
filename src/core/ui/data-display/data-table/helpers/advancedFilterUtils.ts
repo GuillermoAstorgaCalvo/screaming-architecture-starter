@@ -46,45 +46,40 @@ function convertDateRangeFilter(
 	filter: AdvancedFilter & { type: 'date-range' },
 	advancedFilters: Record<string, AdvancedFilterValue>
 ): void {
-	if (
-		(filter.startValue && filter.startValue !== '') ||
-		(filter.endValue && filter.endValue !== '')
-	) {
-		advancedFilters[filter.id] = {
-			start: filter.startValue ?? '',
-			end: filter.endValue ?? '',
-		};
+	const start = filter.startValue ?? '';
+	const end = filter.endValue ?? '';
+
+	if (start !== '' || end !== '') {
+		advancedFilters[filter.id] = { start, end };
 	}
 }
+
+const filterConverters: Record<
+	AdvancedFilter['type'],
+	(filter: AdvancedFilter, advancedFilters: Record<string, AdvancedFilterValue>) => void
+> = {
+	text: (filter, advancedFilters) =>
+		convertTextFilter(filter as AdvancedFilter & { type: 'text' }, advancedFilters),
+	select: (filter, advancedFilters) =>
+		convertSingleValueFilter(filter as AdvancedFilter & { type: 'select' }, advancedFilters),
+	date: (filter, advancedFilters) =>
+		convertSingleValueFilter(filter as AdvancedFilter & { type: 'date' }, advancedFilters),
+	'multi-select': (filter, advancedFilters) =>
+		convertMultiSelectFilter(filter as AdvancedFilter & { type: 'multi-select' }, advancedFilters),
+	'date-range': (filter, advancedFilters) =>
+		convertDateRangeFilter(filter as AdvancedFilter & { type: 'date-range' }, advancedFilters),
+};
 
 /**
  * Converts AdvancedFilter array to DataTableFilter format
  */
 export function advancedFiltersToDataTableFilter(
 	filters: AdvancedFilter[]
-): DataTableFilter['advancedFilters'] {
+): DataTableFilter['advancedFilters'] | undefined {
 	const advancedFilters: Record<string, AdvancedFilterValue> = {};
 
 	for (const filter of filters) {
-		switch (filter.type) {
-			case 'text': {
-				convertTextFilter(filter, advancedFilters);
-				break;
-			}
-			case 'select':
-			case 'date': {
-				convertSingleValueFilter(filter, advancedFilters);
-				break;
-			}
-			case 'multi-select': {
-				convertMultiSelectFilter(filter, advancedFilters);
-				break;
-			}
-			case 'date-range': {
-				convertDateRangeFilter(filter, advancedFilters);
-				break;
-			}
-		}
+		filterConverters[filter.type](filter, advancedFilters);
 	}
 
 	return Object.keys(advancedFilters).length > 0 ? advancedFilters : undefined;
@@ -126,12 +121,23 @@ function applyDateRangeFilter<T>(row: T, range: { start: string; end: string }):
 	);
 }
 
+const filterAppliers: Record<
+	AdvancedFilter['type'],
+	<T>(row: T, filterValue: AdvancedFilterValue, filter: AdvancedFilter) => boolean
+> = {
+	text: (row, value) => applyTextFilter(row, value as string),
+	select: (row, value) => applySingleValueFilter(row, value as string),
+	date: (row, value) => applySingleValueFilter(row, value as string),
+	'multi-select': (row, value) => applyMultiSelectFilter(row, value as string[]),
+	'date-range': (row, value) => applyDateRangeFilter(row, value as { start: string; end: string }),
+};
+
 /**
  * Applies advanced filters to data
  */
 export function applyAdvancedFilters<T>(
 	data: T[],
-	advancedFilters: DataTableFilter['advancedFilters'],
+	advancedFilters: DataTableFilter['advancedFilters'] | undefined,
 	filters: AdvancedFilter[]
 ): T[] {
 	if (!advancedFilters || Object.keys(advancedFilters).length === 0) {
@@ -141,26 +147,9 @@ export function applyAdvancedFilters<T>(
 	return data.filter(row => {
 		return filters.every(filter => {
 			const filterValue = advancedFilters[filter.id];
-			if (!filterValue) return true; // Filter not set, include row
+			if (filterValue === undefined) return true; // Filter not set, include row
 
-			switch (filter.type) {
-				case 'text': {
-					return applyTextFilter(row, filterValue as string);
-				}
-				case 'select':
-				case 'date': {
-					return applySingleValueFilter(row, filterValue as string);
-				}
-				case 'multi-select': {
-					return applyMultiSelectFilter(row, filterValue as string[]);
-				}
-				case 'date-range': {
-					return applyDateRangeFilter(row, filterValue as { start: string; end: string });
-				}
-				default: {
-					return true;
-				}
-			}
+			return filterAppliers[filter.type](row, filterValue, filter);
 		});
 	});
 }

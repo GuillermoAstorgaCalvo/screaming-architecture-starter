@@ -1,9 +1,11 @@
+import {
+	CarouselArrow,
+	CarouselDots,
+} from '@core/ui/media/carousel/components/CarouselBaseComponents';
+import type { CarouselContentProps } from '@core/ui/media/carousel/types/useCarousel.types';
 import { classNames } from '@core/utils/classNames';
 import type { CarouselProps } from '@src-types/ui/layout/carousel';
 import { Children, type KeyboardEvent, type ReactElement, type ReactNode } from 'react';
-
-import { CarouselArrow, CarouselDots } from './CarouselBaseComponents';
-import type { CarouselContentProps } from './useCarousel.types';
 
 interface CarouselSlidesProps {
 	readonly slides: ReactNode[];

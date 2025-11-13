@@ -1,17 +1,19 @@
 import Divider from '@core/ui/divider/Divider';
-import { MenuItemButton } from '@core/ui/dropdown-menu/MenuItemButton';
-import Popover from '@core/ui/popover/Popover';
-import { classNames } from '@core/utils/classNames';
-import type { ReactNode } from 'react';
-
-import { MENU_STYLES } from './ContextMenuContent.styles';
-import { createTriggerNode } from './ContextMenuContent.trigger';
+import { MENU_STYLES } from '@core/ui/overlays/context-menu/helpers/ContextMenuContent.styles';
+import { createTriggerNode } from '@core/ui/overlays/context-menu/helpers/ContextMenuContent.trigger';
+import {
+	getContextMenuPosition,
+	isSeparator,
+} from '@core/ui/overlays/context-menu/helpers/ContextMenuHelpers';
 import type {
 	RenderContextMenuContentParams,
 	RenderMenuContentParams,
 	RenderPopoverParams,
-} from './ContextMenuContent.types';
-import { getContextMenuPosition, isSeparator } from './ContextMenuHelpers';
+} from '@core/ui/overlays/context-menu/types/ContextMenuContent.types';
+import { MenuItemButton } from '@core/ui/overlays/dropdown-menu/components/MenuItemButton';
+import Popover from '@core/ui/popover/Popover';
+import { classNames } from '@core/utils/classNames';
+import type { ReactNode } from 'react';
 
 export function renderMenuContent({
 	items,

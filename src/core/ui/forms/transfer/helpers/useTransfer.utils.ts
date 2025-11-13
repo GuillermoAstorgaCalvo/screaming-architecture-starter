@@ -1,6 +1,5 @@
+import type { FilterOptionsParams } from '@core/ui/forms/transfer/types/useTransfer.types';
 import type { TransferOption } from '@src-types/ui/data/transfer';
-
-import type { FilterOptionsParams } from './useTransfer.types';
 
 /**
  * Computes source and target options based on current value

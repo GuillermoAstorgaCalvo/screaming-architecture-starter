@@ -1,7 +1,9 @@
+import type { ExtractedSearchInputProps } from '@core/ui/forms/search-input/hooks/useSearchInputProps.extract';
+import type {
+	SearchInputFieldProps,
+	UseSearchInputStateReturn,
+} from '@core/ui/forms/search-input/types/SearchInputTypes';
 import type { ChangeEvent } from 'react';
-
-import type { SearchInputFieldProps, UseSearchInputStateReturn } from './SearchInputTypes';
-import type { ExtractedSearchInputProps } from './useSearchInputProps.extract';
 
 /**
  * Determines whether the clear button should be visible

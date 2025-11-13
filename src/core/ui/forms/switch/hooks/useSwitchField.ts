@@ -1,8 +1,10 @@
+import {
+	buildSwitchHandlers,
+	lockInputCheckedProperty,
+} from '@core/ui/forms/switch/helpers/SwitchHandlers';
+import { useSwitchFieldState } from '@core/ui/forms/switch/hooks/useSwitchFieldState';
+import type { SwitchFieldProps, SwitchInputProps } from '@core/ui/forms/switch/types/SwitchTypes';
 import type { RefObject } from 'react';
-
-import { buildSwitchHandlers, lockInputCheckedProperty } from './SwitchHandlers';
-import type { SwitchFieldProps, SwitchInputProps } from './SwitchTypes';
-import { useSwitchFieldState } from './useSwitchFieldState';
 
 interface UseSwitchFieldReturn {
 	readonly id: string | undefined;

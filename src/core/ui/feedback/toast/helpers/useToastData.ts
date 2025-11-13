@@ -1,7 +1,10 @@
-import { extractDismissConfig } from './toast.dismiss.builders';
-import { extractRenderProps, type UseToastDataRenderProps } from './toast.props.builders';
-import type { ToastProps } from './toast.types';
-import { useToastConfig } from './useToastConfig';
+import { extractDismissConfig } from '@core/ui/feedback/toast/helpers/toast.dismiss.builders';
+import {
+	extractRenderProps,
+	type UseToastDataRenderProps,
+} from '@core/ui/feedback/toast/helpers/toast.props.builders';
+import { useToastConfig } from '@core/ui/feedback/toast/helpers/useToastConfig';
+import type { ToastProps } from '@core/ui/feedback/toast/types/toast.types';
 
 export interface UseToastDataReturn {
 	readonly isOpen: boolean;

@@ -1,13 +1,15 @@
 import Dialog from '@core/ui/dialog/Dialog';
-
-import { DEFAULT_CANCEL_LABEL, DEFAULT_CONFIRM_LABEL } from './confirmDialog.constants';
+import {
+	DEFAULT_CANCEL_LABEL,
+	DEFAULT_CONFIRM_LABEL,
+} from '@core/ui/overlays/confirm-dialog/helpers/confirmDialog.constants';
 import {
 	prepareDialogProps,
 	prepareHandlers,
-	renderDialogContent,
+	renderDescription,
 	renderFooter,
-} from './ConfirmDialog.helpers';
-import type { ConfirmDialogProps } from './confirmDialog.types';
+} from '@core/ui/overlays/confirm-dialog/helpers/ConfirmDialog.helpers';
+import type { ConfirmDialogProps } from '@core/ui/overlays/confirm-dialog/types/confirmDialog.types';
 
 /**
  * ConfirmDialog - Specialized confirmation dialog wrapper
@@ -74,7 +76,7 @@ export default function ConfirmDialog({
 		onConfirm: handleConfirm,
 	});
 
-	const dialogContent = renderDialogContent({ description });
+	const dialogContent = renderDescription(description);
 
 	const dialogProps = prepareDialogProps({
 		isOpen,

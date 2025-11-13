@@ -1,10 +1,13 @@
+import { useTagInputHandlers } from '@core/ui/forms/tag-input/hooks/useTagInput.handlers';
+import type { extractTagInputProps } from '@core/ui/forms/tag-input/hooks/useTagInput.props';
+import {
+	useInputValueState,
+	useRemoveTagHandler,
+	useTagState,
+} from '@core/ui/forms/tag-input/hooks/useTagInput.state';
+import { useTagInputState } from '@core/ui/forms/tag-input/hooks/useTagInput.uiState';
+import type { UseTagInputStateReturn } from '@core/ui/forms/tag-input/types/TagInputTypes';
 import type { KeyboardEvent } from 'react';
-
-import type { UseTagInputStateReturn } from './TagInputTypes';
-import { useTagInputHandlers } from './useTagInput.handlers';
-import type { extractTagInputProps } from './useTagInput.props';
-import { useInputValueState, useRemoveTagHandler, useTagState } from './useTagInput.state';
-import { useTagInputState } from './useTagInput.uiState';
 
 export interface UseTagInputStateAndHandlersOptions {
 	readonly extractedProps: ReturnType<typeof extractTagInputProps>;

@@ -1,4 +1,4 @@
-import type { EventContentProps } from './TimelineEvent.types';
+import type { EventContentProps } from '@core/ui/data-display/timeline/types/TimelineEvent.types';
 
 export function EventContent({
 	event,

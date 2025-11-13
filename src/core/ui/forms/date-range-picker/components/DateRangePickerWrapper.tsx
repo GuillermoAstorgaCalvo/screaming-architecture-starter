@@ -1,6 +1,5 @@
+import type { DateRangePickerWrapperProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { DateRangePickerWrapperProps } from './DateRangePickerTypes';
 
 export function DateRangePickerWrapper({
 	fullWidth,

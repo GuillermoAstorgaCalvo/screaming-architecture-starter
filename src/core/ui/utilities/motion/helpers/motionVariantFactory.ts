@@ -5,10 +5,9 @@
  * while preserving any transition overrides defined on individual states.
  */
 
+import { getMotionDuration, getMotionEasing } from '@core/ui/utilities/motion/helpers/motionUtils';
+import type { MotionDuration, MotionEasing } from '@core/ui/utilities/motion/types/motionTypes';
 import type { TargetAndTransition, Transition, Variants } from 'framer-motion';
-
-import type { MotionDuration, MotionEasing } from './motionTypes';
-import { getMotionDuration, getMotionEasing } from './motionUtils';
 
 /**
  * Timing configuration for a variant state
@@ -79,6 +78,13 @@ function applyTiming(state: TargetAndTransition, timing?: VariantTiming): Target
 }
 
 /**
+ * Resolve duration value to a number
+ */
+function resolveDuration(duration: MotionDuration | number): number {
+	return typeof duration === 'number' ? duration : getMotionDuration(duration);
+}
+
+/**
  * Resolve timing configuration to a Transition object
  */
 function resolveTiming(timing?: VariantTiming): Transition | undefined {
@@ -90,7 +96,7 @@ function resolveTiming(timing?: VariantTiming): Transition | undefined {
 	const resolved: Transition = {};
 
 	if (duration !== undefined) {
-		resolved.duration = typeof duration === 'number' ? duration : getMotionDuration(duration);
+		resolved.duration = resolveDuration(duration);
 	}
 
 	if (ease) {

@@ -1,7 +1,10 @@
+import {
+	createOptionHandlers,
+	getOptionClassName,
+	MENU_STYLES,
+} from '@core/ui/forms/multi-select/helpers/MultiSelectContentHelpers';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
 import type { RefObject } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
-import { createOptionHandlers, getOptionClassName, MENU_STYLES } from './MultiSelectContentHelpers';
 
 interface MultiSelectOptionItemProps {
 	readonly option: MultiSelectOption;

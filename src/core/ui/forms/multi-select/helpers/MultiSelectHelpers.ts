@@ -1,10 +1,12 @@
 import { INPUT_BASE_CLASSES, INPUT_SIZE_CLASSES } from '@core/constants/ui/forms';
 import { FORM_ERROR_CLASSES } from '@core/constants/ui/shared';
+import type { MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
+import type {
+	UseMultiSelectStateOptions,
+	UseMultiSelectStateReturn,
+} from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 import { classNames } from '@core/utils/classNames';
 import { useId } from 'react';
-
-import type { MultiSelectProps } from './MultiSelect';
-import type { UseMultiSelectStateOptions, UseMultiSelectStateReturn } from './MultiSelectTypes';
 
 export function generateMultiSelectId(
 	generatedId: string,

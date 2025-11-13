@@ -2,7 +2,7 @@ import type {
 	BuildTableStateOptionsParams,
 	BuildTableStateParamsOptions,
 	UseTableStateOptions,
-} from './useDataTableStateBuilders.types';
+} from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
 
 /**
  * Builds options for table state hook

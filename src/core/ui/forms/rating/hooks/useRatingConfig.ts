@@ -1,7 +1,6 @@
+import { useRatingStateAndHandlers } from '@core/ui/forms/rating/hooks/useRatingHandlers';
+import { useRatingStylesAndContainer } from '@core/ui/forms/rating/hooks/useRatingStyles';
 import type { RatingProps } from '@src-types/ui/forms-advanced';
-
-import { useRatingStateAndHandlers } from './useRatingHandlers';
-import { useRatingStylesAndContainer } from './useRatingStyles';
 
 export interface UseRatingConfigParams {
 	controlledValue?: number | undefined;

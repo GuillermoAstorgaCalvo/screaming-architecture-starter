@@ -1,4 +1,4 @@
-import type { SnackbarIntent } from './snackbar.types';
+import type { SnackbarIntent } from '@core/ui/feedback/snackbar/types/snackbar.types';
 
 export const SNACKBAR_INTENT_STYLES: Record<SnackbarIntent, string> = {
 	info: 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900',

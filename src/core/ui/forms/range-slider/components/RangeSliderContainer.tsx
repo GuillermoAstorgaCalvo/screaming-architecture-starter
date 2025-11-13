@@ -1,6 +1,5 @@
+import type { RangeSliderContainerProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { RangeSliderContainerProps } from './RangeSliderTypes';
 
 export function RangeSliderContainer({
 	children,

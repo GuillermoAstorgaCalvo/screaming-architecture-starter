@@ -1,4 +1,4 @@
-import { DataTableFilter } from './DataTableFilter';
+import { DataTableFilter } from '@core/ui/data-display/data-table/components/DataTableFilter';
 
 interface DataTableNoResultsProps {
 	enableGlobalFilter: boolean;

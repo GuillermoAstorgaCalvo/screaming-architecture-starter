@@ -1,9 +1,11 @@
+import { getVideoConfig } from '@core/ui/media/video/helpers/video.config';
+import { renderVideo } from '@core/ui/media/video/helpers/video.helpers';
+import type {
+	UseVideoLifecycleParams,
+	VideoLifecycleState,
+} from '@core/ui/media/video/types/video.types';
 import type { VideoProps } from '@src-types/ui/feedback';
 import { type ReactElement, type SyntheticEvent, useCallback, useState } from 'react';
-
-import { getVideoConfig } from './video.config';
-import { renderVideo } from './video.helpers';
-import type { UseVideoLifecycleParams, VideoLifecycleState } from './video.types';
 
 /**
  * Video - Video player component with controls, loading states, and error handling

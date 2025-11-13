@@ -5,8 +5,8 @@ import { ThemeProvider } from '@app/providers/ThemeProvider';
 import Router from '@app/router';
 import { env } from '@core/config/env.client';
 import { getCachedRuntimeConfig } from '@core/config/runtime';
+import { useHttpClientAuth } from '@core/hooks/useHttpClientAuth';
 import { ErrorBoundaryWrapper } from '@core/lib/ErrorBoundaryWrapper';
-import { createAuthTokenRequestInterceptor } from '@core/lib/httpAuthInterceptor';
 import { httpClient } from '@core/lib/httpClient';
 import type { AnalyticsInitOptions } from '@core/ports/AnalyticsPort';
 import { AnalyticsProvider } from '@core/providers/AnalyticsProvider';
@@ -15,9 +15,9 @@ import { HttpProvider } from '@core/providers/HttpProvider';
 import { LoggerProvider } from '@core/providers/LoggerProvider';
 import { StorageProvider } from '@core/providers/StorageProvider';
 import { ToastProvider } from '@core/providers/ToastProvider';
-import { LayoutGroup } from '@core/ui/motion/LayoutGroup';
-import { MotionProvider } from '@core/ui/motion/MotionProvider';
-import ToastContainer from '@core/ui/toast/ToastContainer';
+import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
+import { LayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup';
+import { MotionProvider } from '@core/ui/utilities/motion/components/MotionProvider';
 import {
 	googleAnalyticsAdapter,
 	noopAnalyticsAdapter,
@@ -30,15 +30,6 @@ import { BrowserRouter } from 'react-router-dom';
 const authAdapter = new JwtAuthAdapter({
 	storage: localStorageAdapter,
 });
-
-const httpClientWithAuthFlag = httpClient as typeof httpClient & {
-	__authInterceptorAttached?: boolean;
-};
-
-if (!httpClientWithAuthFlag.__authInterceptorAttached) {
-	httpClientWithAuthFlag.addRequestInterceptor(createAuthTokenRequestInterceptor(authAdapter));
-	httpClientWithAuthFlag.__authInterceptorAttached = true;
-}
 
 /**
  * App component - Root composition
@@ -57,6 +48,8 @@ if (!httpClientWithAuthFlag.__authInterceptorAttached) {
  * See: .cursor/rules/architecture/folder-structure-root-app.mdc
  */
 export default function App() {
+	useHttpClientAuth(authAdapter);
+
 	const analyticsEnabled = env.ANALYTICS_ENABLED;
 	const analyticsAdapter = analyticsEnabled ? googleAnalyticsAdapter : noopAnalyticsAdapter;
 	const analyticsConfig = getAnalyticsConfig(analyticsEnabled);

@@ -1,7 +1,6 @@
+import { calculatePercentage } from '@core/ui/forms/slider/helpers/SliderHelpers';
+import type { SliderInputProps } from '@core/ui/forms/slider/types/SliderTypes';
 import { type RefObject, useEffect, useRef } from 'react';
-
-import { calculatePercentage } from './SliderHelpers';
-import type { SliderInputProps } from './SliderTypes';
 
 interface SliderInputComponentProps {
 	readonly id: string | undefined;

@@ -3,8 +3,11 @@ import {
 	useDragOverHandler,
 	useDragStartHandler,
 	useDropHandler,
-} from './useSortableList.drag.handlers';
-import type { DragEventHandlersParams, UseDragHandlersReturn } from './useSortableList.drag.types';
+} from '@core/ui/utilities/sortable-list/hooks/useSortableList.drag.handlers';
+import type {
+	DragEventHandlersParams,
+	UseDragHandlersReturn,
+} from '@core/ui/utilities/sortable-list/types/useSortableList.drag.types';
 
 /**
  * Creates drag event handlers

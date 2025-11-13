@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { NumberInputMessagesProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { NumberInputMessagesProps } from './NumberInputTypes';
 
 export function NumberInputMessages({
 	inputId,

@@ -1,7 +1,6 @@
+import type { CountryCode } from '@core/ui/forms/phone-input/types/PhoneInputTypes';
 import { getInputVariantClasses } from '@core/ui/variants/input';
 import type { StandardSize } from '@src-types/ui/base';
-
-import type { CountryCode } from './PhoneInputTypes';
 
 export interface GetPhoneInputClassesOptions {
 	size: StandardSize;

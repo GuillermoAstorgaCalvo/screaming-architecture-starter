@@ -1,6 +1,5 @@
+import type { CurrencyInputFieldProps } from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
 import type { InputHTMLAttributes } from 'react';
-
-import type { CurrencyInputFieldProps } from './CurrencyInputTypes';
 
 function CurrencySymbol({ currency }: Readonly<{ currency: string }>) {
 	// Get currency symbol based on currency code

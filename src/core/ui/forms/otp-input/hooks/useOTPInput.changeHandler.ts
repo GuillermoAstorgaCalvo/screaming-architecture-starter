@@ -1,6 +1,5 @@
+import type { UseOTPInputChangeHandlerOptions } from '@core/ui/forms/otp-input/hooks/useOTPInput.types';
 import { useCallback } from 'react';
-
-import type { UseOTPInputChangeHandlerOptions } from './useOTPInput.types';
 
 /**
  * Creates change handler for OTP input

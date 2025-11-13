@@ -1,9 +1,11 @@
 import { INPUT_BASE_CLASSES, INPUT_SIZE_CLASSES } from '@core/constants/ui/forms';
 import { FORM_ERROR_CLASSES } from '@core/constants/ui/shared';
+import type {
+	UseAutocompleteStateOptions,
+	UseAutocompleteStateReturn,
+} from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
 import { classNames } from '@core/utils/classNames';
 import { useId } from 'react';
-
-import type { UseAutocompleteStateOptions, UseAutocompleteStateReturn } from './AutocompleteTypes';
 
 export function generateAutocompleteId(
 	generatedId: string,
@@ -108,50 +110,38 @@ export interface HighlightPart {
  * ```
  */
 function processMatches(text: string, regex: RegExp): HighlightPart[] {
-	const parts: HighlightPart[] = [];
+	const matches = Array.from(text.matchAll(regex));
+	if (matches.length === 0) {
+		return [];
+	}
+
 	let lastIndex = 0;
-	let match: RegExpExecArray | null;
-
-	// Reset regex lastIndex to ensure we start from the beginning
-	regex.lastIndex = 0;
-
-	while ((match = regex.exec(text)) !== null) {
+	const parts = matches.flatMap(match => {
 		const [matchText] = match;
-		const matchIndex = match.index;
+		const matchIndex = typeof match.index === 'number' ? match.index : 0;
+		const leading =
+			matchIndex > lastIndex ? [{ text: text.slice(lastIndex, matchIndex), isMatch: false }] : [];
 
-		// Add text before the match
-		if (matchIndex > lastIndex) {
-			parts.push({
-				text: text.slice(lastIndex, matchIndex),
-				isMatch: false,
-			});
-		}
+		lastIndex = matchIndex + (matchText.length > 0 ? matchText.length : 1);
 
-		// Add the match
-		parts.push({
-			text: matchText,
-			isMatch: true,
-		});
+		return [
+			...leading,
+			{
+				text: matchText,
+				isMatch: true,
+			},
+		];
+	});
 
-		const { lastIndex: newLastIndex } = regex;
-		lastIndex = newLastIndex;
-
-		// Prevent infinite loop if regex matches empty string
-		const matchLength = matchText.length;
-		if (matchLength === 0) {
-			regex.lastIndex++;
-		}
-	}
-
-	// Add remaining text after the last match
-	if (lastIndex < text.length) {
-		parts.push({
-			text: text.slice(lastIndex),
-			isMatch: false,
-		});
-	}
-
-	return parts;
+	return lastIndex < text.length
+		? [
+				...parts,
+				{
+					text: text.slice(lastIndex),
+					isMatch: false,
+				},
+			]
+		: parts;
 }
 
 export function highlightMatches(text: string, query: string): HighlightPart[] {

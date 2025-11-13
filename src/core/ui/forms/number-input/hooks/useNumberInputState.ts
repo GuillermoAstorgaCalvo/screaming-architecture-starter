@@ -1,8 +1,13 @@
+import {
+	generateNumberInputId,
+	getAriaDescribedBy,
+} from '@core/ui/forms/number-input/helpers/NumberInputAccessibility';
+import { getNumberInputClasses } from '@core/ui/forms/number-input/helpers/NumberInputClasses';
+import type {
+	UseNumberInputStateOptions,
+	UseNumberInputStateReturn,
+} from '@core/ui/forms/number-input/types/NumberInputTypes';
 import { useId, useMemo } from 'react';
-
-import { generateNumberInputId, getAriaDescribedBy } from './NumberInputAccessibility';
-import { getNumberInputClasses } from './NumberInputClasses';
-import type { UseNumberInputStateOptions, UseNumberInputStateReturn } from './NumberInputTypes';
 
 /**
  * Hook to compute number input state (ID, error state, ARIA attributes, and classes)

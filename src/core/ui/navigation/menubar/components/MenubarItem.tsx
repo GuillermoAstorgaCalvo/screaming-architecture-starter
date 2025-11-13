@@ -1,7 +1,6 @@
+import { getMenubarItemClasses } from '@core/ui/navigation/menubar/helpers/MenubarHelpers';
 import type { MenubarItem as MenubarItemType } from '@src-types/ui/navigation/menubar';
 import type { RefObject } from 'react';
-
-import { getMenubarItemClasses } from './MenubarHelpers';
 
 interface MenubarItemProps {
 	readonly item: MenubarItemType;

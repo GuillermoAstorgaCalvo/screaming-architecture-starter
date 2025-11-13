@@ -1,11 +1,10 @@
 import Text from '@core/ui/text/Text';
-import type { ReactNode, RefObject } from 'react';
-
 import {
 	DefaultEndMessage,
 	DefaultErrorComponent,
 	DefaultLoadingComponent,
-} from './InfiniteScrollComponents';
+} from '@core/ui/utilities/infinite-scroll/components/InfiniteScrollComponents';
+import type { ReactNode, RefObject } from 'react';
 
 /**
  * Renders the empty state when no children are present

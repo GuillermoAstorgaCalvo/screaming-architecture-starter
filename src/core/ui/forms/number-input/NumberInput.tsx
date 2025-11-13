@@ -1,7 +1,6 @@
+import { NumberInputContent } from '@core/ui/forms/number-input/components/NumberInputContent';
+import { useNumberInputProps } from '@core/ui/forms/number-input/hooks/useNumberInput';
 import type { NumberInputProps } from '@src-types/ui/forms-inputs';
-
-import { NumberInputContent } from './NumberInputContent';
-import { useNumberInputProps } from './useNumberInput';
 
 /**
  * NumberInput - Specialized number input with increment/decrement controls

@@ -3,7 +3,7 @@
  * Functions for determining initial animation state
  */
 
-import type { MotionInitialState } from './motionTypes';
+import type { MotionInitialState } from '@core/ui/utilities/motion/types/motionTypes';
 
 /**
  * Initial state type

@@ -1,16 +1,15 @@
-import type { RichTextEditorProps } from '@src-types/ui/forms-editors';
-import { useId } from 'react';
-
 import {
 	generateEditorId,
 	getAriaDescribedBy,
 	getRichTextEditorClasses,
-} from './RichTextEditorHelpers';
+} from '@core/ui/forms/rich-text-editor/helpers/RichTextEditorHelpers';
 import type {
 	RichTextEditorFieldProps,
 	UseRichTextEditorStateOptions,
 	UseRichTextEditorStateReturn,
-} from './RichTextEditorTypes';
+} from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
+import type { RichTextEditorProps } from '@src-types/ui/forms-editors';
+import { useId } from 'react';
 
 export interface UseRichTextEditorPropsOptions {
 	readonly props: Readonly<RichTextEditorProps>;

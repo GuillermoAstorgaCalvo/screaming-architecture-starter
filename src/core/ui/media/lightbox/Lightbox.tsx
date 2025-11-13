@@ -6,8 +6,8 @@ import {
 	LightboxHeader,
 	LightboxImageDisplay,
 	LightboxNavigationArrows,
-} from './LightboxComponents';
-import { useLightboxId, useLightboxKeyboard, useLightboxState } from './useLightbox';
+} from './components/LightboxComponents';
+import { useLightboxId, useLightboxKeyboard, useLightboxState } from './hooks/useLightbox';
 
 interface ExtractedLightboxProps {
 	readonly isOpen: boolean;

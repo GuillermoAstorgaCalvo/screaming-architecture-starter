@@ -1,6 +1,5 @@
+import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/CommandPalette';
 import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from 'react';
-
-import type { CommandPaletteCommand } from './CommandPalette';
 
 export interface CommandPaletteOverlayProps {
 	readonly isOpen: boolean;

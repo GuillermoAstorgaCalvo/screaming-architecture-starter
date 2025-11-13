@@ -1,7 +1,6 @@
+import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/CommandPalette';
+import type { KeyboardNavigationParams } from '@core/ui/overlays/command-palette/hooks/useCommandPalette.keyboard';
 import type { KeyboardEvent, MouseEvent, RefObject } from 'react';
-
-import type { CommandPaletteCommand } from './CommandPalette';
-import type { KeyboardNavigationParams } from './useCommandPalette.keyboard';
 
 export interface UseCommandPaletteParams {
 	readonly commands: CommandPaletteCommand[];

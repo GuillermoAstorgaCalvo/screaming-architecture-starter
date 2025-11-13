@@ -1,8 +1,14 @@
-import { CheckboxField } from './CheckboxField';
-import { CheckboxLabel } from './CheckboxLabel';
-import { CheckboxMessages } from './CheckboxMessages';
-import type { CheckboxContentProps, CheckboxFieldWithLabelProps } from './CheckboxTypes';
-import { CheckboxContainer, CheckboxWrapper } from './CheckboxWrapper';
+import { CheckboxField } from '@core/ui/forms/checkbox/components/CheckboxField';
+import { CheckboxLabel } from '@core/ui/forms/checkbox/components/CheckboxLabel';
+import { CheckboxMessages } from '@core/ui/forms/checkbox/components/CheckboxMessages';
+import {
+	CheckboxContainer,
+	CheckboxWrapper,
+} from '@core/ui/forms/checkbox/components/CheckboxWrapper';
+import type {
+	CheckboxContentProps,
+	CheckboxFieldWithLabelProps,
+} from '@core/ui/forms/checkbox/types/CheckboxTypes';
 
 function CheckboxFieldWithLabel(props: Readonly<CheckboxFieldWithLabelProps>) {
 	const {

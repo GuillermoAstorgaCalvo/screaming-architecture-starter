@@ -2,8 +2,11 @@ import {
 	renderHeaderSection,
 	renderListSection,
 	renderSearchSection,
-} from './TransferList.renderers.sections';
-import type { TransferListContentProps, TransferListSetup } from './TransferList.types';
+} from '@core/ui/forms/transfer/helpers/TransferList.renderers.sections';
+import type {
+	TransferListContentProps,
+	TransferListSetup,
+} from '@core/ui/forms/transfer/types/TransferList.types';
 
 /**
  * Renders the complete transfer list content (header, search, and list)

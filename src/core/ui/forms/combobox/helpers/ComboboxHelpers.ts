@@ -1,9 +1,11 @@
 import { INPUT_BASE_CLASSES, INPUT_SIZE_CLASSES } from '@core/constants/ui/forms';
 import { FORM_ERROR_CLASSES } from '@core/constants/ui/shared';
+import type {
+	UseComboboxStateOptions,
+	UseComboboxStateReturn,
+} from '@core/ui/forms/combobox/types/ComboboxTypes';
 import { classNames } from '@core/utils/classNames';
 import { useId } from 'react';
-
-import type { UseComboboxStateOptions, UseComboboxStateReturn } from './ComboboxTypes';
 
 export function generateComboboxId(
 	generatedId: string,

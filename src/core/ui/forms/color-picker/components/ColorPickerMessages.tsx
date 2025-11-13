@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { ColorPickerMessagesProps } from '@core/ui/forms/color-picker/types/ColorPickerTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { ColorPickerMessagesProps } from './ColorPickerTypes';
 
 export function ColorPickerMessages({
 	colorPickerId,

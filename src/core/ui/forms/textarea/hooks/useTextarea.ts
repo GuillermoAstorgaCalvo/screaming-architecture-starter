@@ -1,12 +1,15 @@
-import type { TextareaProps } from '@src-types/ui/forms';
-import { type TextareaHTMLAttributes, useId } from 'react';
-
-import { generateTextareaId, getAriaDescribedBy, getTextareaClasses } from './TextareaHelpers';
+import {
+	generateTextareaId,
+	getAriaDescribedBy,
+	getTextareaClasses,
+} from '@core/ui/forms/textarea/helpers/TextareaHelpers';
 import type {
 	TextareaFieldProps,
 	UseTextareaStateOptions,
 	UseTextareaStateReturn,
-} from './TextareaTypes';
+} from '@core/ui/forms/textarea/types/TextareaTypes';
+import type { TextareaProps } from '@src-types/ui/forms';
+import { type TextareaHTMLAttributes, useId } from 'react';
 
 export interface UseTextareaPropsOptions {
 	readonly props: Readonly<TextareaProps>;

@@ -1,14 +1,13 @@
-import type { DropdownMenuItem } from '@core/ui/dropdown-menu/DropdownMenu.types';
-import type { ButtonVariant, SplitButtonProps } from '@src-types/ui/buttons';
-import { type ReactElement, useMemo } from 'react';
-
+import type { DropdownMenuItem } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import {
 	createDropdownTrigger,
 	getBorderColorClass,
 	getDropdownButtonClasses,
 	getMainButtonClasses,
 	handleMenuItemSelect,
-} from './SplitButtonHelpers';
+} from '@core/ui/split-button/helpers/SplitButtonHelpers';
+import type { ButtonVariant, SplitButtonProps } from '@src-types/ui/buttons';
+import { type ReactElement, useMemo } from 'react';
 
 interface UseSplitButtonParams {
 	readonly variant: ButtonVariant;

@@ -1,6 +1,5 @@
+import type { EmailInputFieldProps } from '@core/ui/forms/email-input/types/EmailInputTypes';
 import type { InputHTMLAttributes } from 'react';
-
-import type { EmailInputFieldProps } from './EmailInputTypes';
 
 interface EmailInputProps {
 	readonly id: string | undefined;

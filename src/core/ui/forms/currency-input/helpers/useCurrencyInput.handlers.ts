@@ -1,6 +1,5 @@
+import { parseCurrency } from '@core/ui/forms/currency-input/helpers/CurrencyInputHelpers';
 import type { ChangeEvent } from 'react';
-
-import { parseCurrency } from './CurrencyInputHelpers';
 
 interface CreateCurrencyChangeHandlerOptions {
 	readonly onChange?: ((e: ChangeEvent<HTMLInputElement>) => void) | undefined;

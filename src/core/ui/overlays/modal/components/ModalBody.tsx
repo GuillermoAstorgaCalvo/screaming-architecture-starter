@@ -1,9 +1,12 @@
 import { ARIA_LABELS } from '@core/constants/aria';
+import {
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+} from '@core/ui/overlays/modal/components/ModalParts';
 import { getModalBodyVariantClasses } from '@core/ui/variants/modal';
 import type { ModalSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import { ModalContent, ModalFooter, ModalHeader } from './ModalParts';
 
 interface RenderModalContentProps {
 	readonly titleId: string;

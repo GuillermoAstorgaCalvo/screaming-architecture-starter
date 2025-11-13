@@ -1,7 +1,9 @@
+import {
+	getVisiblePages,
+	usePaginationId,
+} from '@core/ui/navigation/pagination/helpers/PaginationHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import { useCallback, useMemo } from 'react';
-
-import { getVisiblePages, usePaginationId } from './PaginationHelpers';
 
 export interface UsePaginationHandlersOptions {
 	currentPage: number;

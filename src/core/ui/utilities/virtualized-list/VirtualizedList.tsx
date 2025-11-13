@@ -1,10 +1,12 @@
+import { VirtualizedListContent } from '@core/ui/utilities/virtualized-list/components/VirtualizedListContent';
+import {
+	useInitialScroll,
+	useScrollHandler,
+} from '@core/ui/utilities/virtualized-list/hooks/VirtualizedListHooks';
 import type { VirtualizedListProps } from '@src-types/ui/layout/scroll';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useMemo, useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { VirtualizedListContent } from './VirtualizedListContent';
-import { useInitialScroll, useScrollHandler } from './VirtualizedListHooks';
 
 /**
  * VirtualizedList - Efficiently renders large lists using virtualization

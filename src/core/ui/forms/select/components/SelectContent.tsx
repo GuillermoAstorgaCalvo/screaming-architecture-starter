@@ -1,8 +1,11 @@
-import { SelectField } from './SelectField';
-import { SelectLabel } from './SelectLabel';
-import { SelectMessages } from './SelectMessages';
-import type { SelectFieldProps, UseSelectStateReturn } from './SelectTypes';
-import { SelectWrapper } from './SelectWrapper';
+import { SelectField } from '@core/ui/forms/select/components/SelectField';
+import { SelectLabel } from '@core/ui/forms/select/components/SelectLabel';
+import { SelectMessages } from '@core/ui/forms/select/components/SelectMessages';
+import { SelectWrapper } from '@core/ui/forms/select/components/SelectWrapper';
+import type {
+	SelectFieldProps,
+	UseSelectStateReturn,
+} from '@core/ui/forms/select/types/SelectTypes';
 
 // ============================================================================
 // Content Component

@@ -1,9 +1,14 @@
-import { getHeaderClasses } from '@core/ui/data-display/table/TableHelpers';
+import {
+	SelectionCheckbox,
+	SortButton,
+} from '@core/ui/data-display/data-table/components/DataTableHeaderComponents';
+import {
+	getColumnStyle,
+	renderColumnResizer,
+} from '@core/ui/data-display/data-table/components/DataTableHeaderHelpers';
+import { getHeaderClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn } from '@src-types/ui/dataTable';
-
-import { SelectionCheckbox, SortButton } from './DataTableHeaderComponents';
-import { getColumnStyle, renderColumnResizer } from './DataTableHeaderHelpers';
 
 type SortDirection = 'asc' | 'desc' | null;
 

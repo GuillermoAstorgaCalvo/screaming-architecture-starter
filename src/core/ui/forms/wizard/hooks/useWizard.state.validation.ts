@@ -1,6 +1,5 @@
+import type { StepValidationState } from '@core/ui/forms/wizard/types/useWizard.state.types';
 import { useCallback, useState } from 'react';
-
-import type { StepValidationState } from './useWizard.state.types';
 
 /**
  * Hook to manage step validation state

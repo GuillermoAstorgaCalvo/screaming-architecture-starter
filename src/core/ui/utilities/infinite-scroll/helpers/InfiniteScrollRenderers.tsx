@@ -1,9 +1,11 @@
+import { renderInfiniteScrollContainer } from '@core/ui/utilities/infinite-scroll/components/InfiniteScrollContainerRenderer';
+import { renderEmptyState } from '@core/ui/utilities/infinite-scroll/components/InfiniteScrollStateRenderers';
+import {
+	buildContainerRenderProps,
+	buildEmptyStateProps,
+} from '@core/ui/utilities/infinite-scroll/helpers/InfiniteScrollBuilders';
+import type { InfiniteScrollProps } from '@core/ui/utilities/infinite-scroll/types/InfiniteScrollRenderers.types';
 import type { ReactNode } from 'react';
-
-import { buildContainerRenderProps, buildEmptyStateProps } from './InfiniteScrollBuilders';
-import { renderInfiniteScrollContainer } from './InfiniteScrollContainerRenderer';
-import type { InfiniteScrollProps } from './InfiniteScrollRenderers.types';
-import { renderEmptyState } from './InfiniteScrollStateRenderers';
 
 /**
  * Determines if the empty state should be shown

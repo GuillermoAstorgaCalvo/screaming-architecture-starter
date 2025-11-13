@@ -1,7 +1,6 @@
+import { handleMenubarKeyDown } from '@core/ui/navigation/menubar/helpers/MenubarKeyboard';
 import type { MenubarItem } from '@src-types/ui/navigation/menubar';
 import { type KeyboardEvent, type RefObject, useCallback } from 'react';
-
-import { handleMenubarKeyDown } from './MenubarHelpers';
 
 interface KeyDownHandlerParams {
 	readonly items: readonly MenubarItem[];

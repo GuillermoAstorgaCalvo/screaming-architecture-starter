@@ -1,7 +1,6 @@
+import { moveItem } from '@core/ui/utilities/sortable-list/helpers/SortableListHelpers';
 import type { SortableListItem } from '@src-types/ui/layout/list';
 import { type KeyboardEvent, useCallback, useMemo } from 'react';
-
-import { moveItem } from './SortableListHelpers';
 
 interface UseKeyboardHandlersParams<T> {
 	items: readonly SortableListItem<T>[];

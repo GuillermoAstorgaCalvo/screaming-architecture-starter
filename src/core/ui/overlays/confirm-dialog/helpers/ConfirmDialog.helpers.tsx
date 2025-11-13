@@ -1,14 +1,12 @@
 import Button from '@core/ui/button/Button';
-import type { ModalSize } from '@src-types/ui/base';
-import type { ReactNode } from 'react';
-
 import type {
-	DialogContentProps,
 	DialogProps,
 	DialogVariant,
 	FooterProps,
 	Handlers,
-} from './confirmDialog.types';
+} from '@core/ui/overlays/confirm-dialog/types/confirmDialog.types';
+import type { ModalSize } from '@src-types/ui/base';
+import type { ReactNode } from 'react';
 
 /**
  * Creates a confirm handler that executes the onConfirm callback and then closes the dialog
@@ -98,72 +96,6 @@ export function prepareHandlers(
 }
 
 /**
- * Renders the dialog content (description)
- */
-export function renderDialogContent({ description }: DialogContentProps): ReactNode | null {
-	return renderDescription(description);
-}
-
-/**
- * Base dialog props with required fields and defaults
- */
-interface BaseDialogProps {
-	readonly isOpen: boolean;
-	readonly onClose: () => void;
-	readonly title: string;
-	readonly size: ModalSize;
-	readonly variant: DialogVariant;
-	readonly footer: ReactNode;
-	readonly children: ReactNode;
-}
-
-/**
- * Dialog props with defaults applied
- */
-interface DialogPropsWithDefaults extends BaseDialogProps {
-	readonly showCloseButton: boolean;
-	readonly closeOnOverlayClick: boolean;
-}
-
-/**
- * Builds the base dialog props with default values
- */
-function buildBaseDialogProps({
-	isOpen,
-	onClose,
-	title,
-	size,
-	variant,
-	footer,
-	children,
-}: BaseDialogProps): DialogPropsWithDefaults {
-	return {
-		isOpen,
-		onClose,
-		title,
-		size,
-		variant,
-		showCloseButton: false,
-		footer,
-		closeOnOverlayClick: false,
-		children,
-	};
-}
-
-/**
- * Conditionally adds className to dialog props if defined
- */
-function addClassNameIfDefined(
-	props: DialogPropsWithDefaults,
-	className: string | undefined
-): DialogPropsWithDefaults & { className?: string } {
-	if (className !== undefined) {
-		return { ...props, className };
-	}
-	return props;
-}
-
-/**
  * Prepares and returns the Dialog component props
  */
 export function prepareDialogProps({
@@ -187,15 +119,19 @@ export function prepareDialogProps({
 	readonly children: ReactNode;
 	readonly className?: string;
 } {
-	const baseProps = buildBaseDialogProps({
+	const baseProps = {
 		isOpen,
 		onClose,
 		title,
 		size,
 		variant,
+		showCloseButton: false,
 		footer,
+		closeOnOverlayClick: false,
 		children,
-	});
-
-	return addClassNameIfDefined(baseProps, className);
+	};
+	if (className === undefined) {
+		return baseProps;
+	}
+	return { ...baseProps, className };
 }

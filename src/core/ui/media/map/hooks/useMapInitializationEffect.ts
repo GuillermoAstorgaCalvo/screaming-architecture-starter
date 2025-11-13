@@ -1,7 +1,6 @@
+import { initializeMapInstance } from '@core/ui/media/map/helpers/mapInitialization.helpers';
 import type { MapProps } from '@src-types/ui/maps';
 import { type RefObject, useEffect, useMemo } from 'react';
-
-import { initializeMapInstance } from './mapInitialization.helpers';
 
 interface UseMapInitializationEffectParams {
 	resolvedApiKey: string;

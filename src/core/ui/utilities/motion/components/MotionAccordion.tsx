@@ -5,11 +5,10 @@
  * that respects reduced motion strategies.
  */
 
+import { MotionPresence } from '@core/ui/utilities/motion/components/MotionPresence';
+import type { MotionBoxProps } from '@core/ui/utilities/motion/types/motionTypes';
 import type { Key, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { MotionPresence } from './MotionPresence';
-import type { MotionBoxProps } from './motionTypes';
 
 /**
  * Props for MotionAccordion component

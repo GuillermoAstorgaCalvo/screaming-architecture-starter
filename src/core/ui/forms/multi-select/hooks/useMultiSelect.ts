@@ -1,9 +1,12 @@
-import type { MultiSelectProps } from './MultiSelect';
-import { extractMultiSelectProps } from './MultiSelectHelpers';
-import type { MultiSelectContentProps } from './MultiSelectTypes';
-import { buildMultiSelectContentProps } from './useMultiSelect.contentProps';
-import { buildMultiSelectFieldPropsFromState } from './useMultiSelect.fieldProps';
-import { useMultiSelectData, useMultiSelectStateSetup } from './useMultiSelect.setup';
+import { extractMultiSelectProps } from '@core/ui/forms/multi-select/helpers/MultiSelectHelpers';
+import { buildMultiSelectContentProps } from '@core/ui/forms/multi-select/hooks/useMultiSelect.contentProps';
+import { buildMultiSelectFieldPropsFromState } from '@core/ui/forms/multi-select/hooks/useMultiSelect.fieldProps';
+import {
+	useMultiSelectData,
+	useMultiSelectStateSetup,
+} from '@core/ui/forms/multi-select/hooks/useMultiSelect.setup';
+import type { MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
+import type { MultiSelectContentProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 
 export function useMultiSelect(props: Readonly<MultiSelectProps>): MultiSelectContentProps {
 	const extracted = extractMultiSelectProps(props);

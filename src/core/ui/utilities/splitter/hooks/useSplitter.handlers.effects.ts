@@ -1,8 +1,7 @@
+import { isHorizontal } from '@core/ui/utilities/splitter/helpers/useSplitter.helpers';
+import type { ResizeHandlers } from '@core/ui/utilities/splitter/types/useSplitter.handlers.types';
 import type { SplitterOrientation } from '@src-types/ui/layout/splitter';
 import { useEffect } from 'react';
-
-import type { ResizeHandlers } from './useSplitter.handlers.types';
-import { isHorizontal } from './useSplitter.helpers';
 
 export function useResizeEffect(
 	isResizing: boolean,

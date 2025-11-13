@@ -1,10 +1,12 @@
-import { ListProvider } from '@core/ui/list/ListProvider';
+import { ListProvider } from '@core/ui/data-display/list/providers/ListProvider';
+import {
+	prepareItemHandlers,
+	useSortableListConfig,
+} from '@core/ui/utilities/sortable-list/helpers/SortableListHelpers';
+import { renderSortableItems } from '@core/ui/utilities/sortable-list/helpers/SortableListRenderers';
 import { getListVariantClasses } from '@core/ui/variants/list';
 import type { SortableListProps } from '@src-types/ui/layout/list';
 import { useId } from 'react';
-
-import { prepareItemHandlers, useSortableListConfig } from './SortableListHelpers';
-import { renderSortableItems } from './SortableListRenderers';
 
 /**
  * SortableList - Drag-and-drop sortable list component

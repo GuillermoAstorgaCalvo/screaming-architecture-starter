@@ -1,4 +1,4 @@
-import type { MultiSelectOption } from './MultiSelect';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
 
 export function getOptionLabel(option: MultiSelectOption): string {
 	if (typeof option.label === 'string') {

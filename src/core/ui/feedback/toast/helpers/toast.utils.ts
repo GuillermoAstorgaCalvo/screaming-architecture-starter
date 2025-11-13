@@ -1,7 +1,6 @@
+import { TOAST_INTENT_STYLES } from '@core/ui/feedback/toast/constants/toast.constants';
+import type { ToastIntent } from '@core/ui/feedback/toast/types/toast.types';
 import { classNames } from '@core/utils/classNames';
-
-import { TOAST_INTENT_STYLES } from './toast.constants';
-import type { ToastIntent } from './toast.types';
 
 export const getDefaultRole = (intent: ToastIntent): 'status' | 'alert' =>
 	intent === 'error' ? 'alert' : 'status';

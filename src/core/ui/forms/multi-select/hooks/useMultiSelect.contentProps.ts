@@ -1,7 +1,13 @@
-import type { MultiSelectOption } from './MultiSelect';
-import type { extractMultiSelectProps } from './MultiSelectHelpers';
-import type { MultiSelectContentProps, MultiSelectFieldProps } from './MultiSelectTypes';
-import type { MultiSelectData, MultiSelectStateSetup } from './useMultiSelect.setup';
+import type { extractMultiSelectProps } from '@core/ui/forms/multi-select/helpers/MultiSelectHelpers';
+import type {
+	MultiSelectData,
+	MultiSelectStateSetup,
+} from '@core/ui/forms/multi-select/hooks/useMultiSelect.setup';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
+import type {
+	MultiSelectContentProps,
+	MultiSelectFieldProps,
+} from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 
 export function buildMultiSelectContentProps(params: {
 	readonly extracted: ReturnType<typeof extractMultiSelectProps>;

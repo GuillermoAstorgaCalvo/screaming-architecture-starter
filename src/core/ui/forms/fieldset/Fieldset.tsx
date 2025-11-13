@@ -1,7 +1,6 @@
 import { TEXT_SIZE_CLASSES } from '@core/constants/ui/shared';
+import { getFieldsetVariantClasses } from '@core/ui/forms/fieldset/helpers/FieldsetHelpers';
 import type { FieldsetProps } from '@src-types/ui/forms';
-
-import { getFieldsetVariantClasses } from './FieldsetHelpers';
 
 /**
  * Fieldset - Semantic grouping for form fields

@@ -1,14 +1,13 @@
-import type { TreeNode } from '@src-types/ui/navigation/treeView';
-import type { ReactNode } from 'react';
-
 import {
 	getTreeChildrenClasses,
 	getTreeExpandIconClasses,
 	getTreeNodeContentClasses,
 	getTreeNodeIconClasses,
-} from './TreeViewHelpers';
-import { prepareTreeNodeElementData } from './TreeViewNodeData';
-import type { TreeNodeElementProps } from './TreeViewNodeTypes';
+} from '@core/ui/data-display/tree-view/helpers/TreeViewHelpers';
+import { prepareTreeNodeElementData } from '@core/ui/data-display/tree-view/helpers/TreeViewNodeData';
+import type { TreeNodeElementProps } from '@core/ui/data-display/tree-view/types/TreeViewNodeTypes';
+import type { TreeNode } from '@src-types/ui/navigation/treeView';
+import type { ReactNode } from 'react';
 
 /**
  * Renders the expand/collapse icon

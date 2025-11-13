@@ -1,6 +1,5 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
 import { useCallback } from 'react';
-
-import type { ComboboxOption } from './Combobox';
 
 export interface UseActionHandlersParams {
 	isOpen: boolean;

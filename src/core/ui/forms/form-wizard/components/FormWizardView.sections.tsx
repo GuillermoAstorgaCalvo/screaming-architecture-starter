@@ -1,16 +1,19 @@
-import type { ReactNode } from 'react';
-import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardProps, FormWizardState } from './FormWizardTypes';
-import type { WizardViewData } from './FormWizardView.data';
 import {
 	type ExtractedWizardProps,
 	renderContentSection,
 	renderNavigationSection,
 	renderProgressSection,
 	renderStepperSection,
-} from './FormWizardView.helpers';
-import type { useFormWizardHandlers } from './useFormWizardHandlers';
+} from '@core/ui/forms/form-wizard/components/FormWizardView.helpers';
+import type { useFormWizardHandlers } from '@core/ui/forms/form-wizard/hooks/useFormWizardHandlers';
+import type {
+	FormWizardProps,
+	FormWizardState,
+} from '@core/ui/forms/form-wizard/types/FormWizardTypes';
+import type { ReactNode } from 'react';
+import type { FieldValues } from 'react-hook-form';
+
+import type { WizardViewData } from './FormWizardView.data';
 
 interface RenderSectionsParams<T extends FieldValues> {
 	readonly viewData: WizardViewData<T>;

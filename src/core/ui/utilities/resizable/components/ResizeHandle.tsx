@@ -1,8 +1,10 @@
+import {
+	getAriaLabel,
+	getResizeHandleClasses,
+} from '@core/ui/utilities/resizable/helpers/ResizableContainer.helpers';
 import type { ResizableDirection } from '@src-types/ui/overlays/containers';
 import type { MouseEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { getAriaLabel, getResizeHandleClasses } from './ResizableContainer.helpers';
 
 export interface ResizeHandleProps {
 	readonly direction: ResizableDirection;

@@ -1,5 +1,5 @@
-import { renderSelectAllButton } from './TransferList.renderers.button';
-import type { RenderHeaderProps } from './TransferList.types';
+import { renderSelectAllButton } from '@core/ui/forms/transfer/helpers/TransferList.renderers.button';
+import type { RenderHeaderProps } from '@core/ui/forms/transfer/types/TransferList.types';
 
 /**
  * Renders the header section with title and select all button

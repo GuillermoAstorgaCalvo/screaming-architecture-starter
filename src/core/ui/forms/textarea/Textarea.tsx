@@ -1,7 +1,6 @@
+import { TextareaContent } from '@core/ui/forms/textarea/components/TextareaContent';
+import { useTextareaProps } from '@core/ui/forms/textarea/hooks/useTextarea';
 import type { TextareaProps } from '@src-types/ui/forms';
-
-import { TextareaContent } from './TextareaContent';
-import { useTextareaProps } from './useTextarea';
 
 /**
  * Textarea - Reusable textarea component with label, error, and helper text support

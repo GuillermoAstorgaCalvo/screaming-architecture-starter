@@ -1,4 +1,4 @@
-import type { CurrencyInputWrapperProps } from './CurrencyInputTypes';
+import type { CurrencyInputWrapperProps } from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
 
 export function CurrencyInputWrapper({
 	fullWidth,

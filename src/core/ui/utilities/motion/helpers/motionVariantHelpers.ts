@@ -3,21 +3,20 @@
  * Functions for working with motion variants
  */
 
-import type { Variants } from 'framer-motion';
-
-import { blurVariants, shakeVariants } from './effectVariants';
-import { fadeVariants } from './fadeVariants';
-import type { MotionVariant } from './motionTypes';
-import { rotateVariants } from './rotateVariants';
-import { scaleUpVariants, scaleVariants } from './scaleVariants';
-import { heightVariants, widthVariants } from './sizeVariants';
+import type { MotionVariant } from '@core/ui/utilities/motion/types/motionTypes';
+import { blurVariants, shakeVariants } from '@core/ui/utilities/motion/variants/effectVariants';
+import { fadeVariants } from '@core/ui/utilities/motion/variants/fadeVariants';
+import { rotateVariants } from '@core/ui/utilities/motion/variants/rotateVariants';
+import { scaleUpVariants, scaleVariants } from '@core/ui/utilities/motion/variants/scaleVariants';
+import { heightVariants, widthVariants } from '@core/ui/utilities/motion/variants/sizeVariants';
 import {
 	slideBottomVariants,
 	slideRightVariants,
 	slideTopVariants,
 	slideVariants,
-} from './slideVariants';
-import { bounceVariants } from './springVariants';
+} from '@core/ui/utilities/motion/variants/slideVariants';
+import { bounceVariants } from '@core/ui/utilities/motion/variants/springVariants';
+import type { Variants } from 'framer-motion';
 
 /**
  * Map of variant names to their variant objects

@@ -1,9 +1,8 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
+import { HoverCardWrapper } from '@core/ui/overlays/hover-card/components/HoverCardWrapper';
+import { useHoverCard } from '@core/ui/overlays/hover-card/hooks/useHoverCard';
 import type { HoverCardProps } from '@src-types/ui/overlays/floating';
 import { type ReactNode, useId, useState } from 'react';
-
-import { HoverCardWrapper } from './HoverCardWrapper';
-import { useHoverCard } from './useHoverCard';
 
 interface UseHoverCardStateOptions {
 	readonly delay: number;

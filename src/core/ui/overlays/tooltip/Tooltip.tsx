@@ -1,9 +1,8 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
+import { TooltipWrapper } from '@core/ui/overlays/tooltip/components/TooltipWrapper';
+import { useTooltip } from '@core/ui/overlays/tooltip/hooks/useTooltip';
 import type { TooltipProps } from '@src-types/ui/overlays/floating';
 import { useId, useState } from 'react';
-
-import { TooltipWrapper } from './TooltipWrapper';
-import { useTooltip } from './useTooltip';
 
 interface UseTooltipStateOptions {
 	readonly delay: number;

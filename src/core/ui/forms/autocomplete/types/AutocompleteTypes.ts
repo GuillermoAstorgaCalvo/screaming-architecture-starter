@@ -1,6 +1,5 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 import type { InputHTMLAttributes, KeyboardEvent, ReactNode, RefObject } from 'react';
-
-import type { AutocompleteOption } from './Autocomplete';
 
 export interface UseAutocompleteStateOptions {
 	readonly autocompleteId?: string | undefined;

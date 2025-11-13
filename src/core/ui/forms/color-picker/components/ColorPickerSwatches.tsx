@@ -1,6 +1,5 @@
+import type { ColorPickerSwatchesProps } from '@core/ui/forms/color-picker/types/ColorPickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { ColorPickerSwatchesProps } from './ColorPickerTypes';
 
 export function ColorPickerSwatches({
 	swatches,

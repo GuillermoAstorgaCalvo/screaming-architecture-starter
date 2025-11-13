@@ -1,6 +1,5 @@
+import type { PhoneInputLabelProps } from '@core/ui/forms/phone-input/types/PhoneInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { PhoneInputLabelProps } from './PhoneInputTypes';
 
 export function PhoneInputLabel({ id, label, required }: Readonly<PhoneInputLabelProps>) {
 	return (

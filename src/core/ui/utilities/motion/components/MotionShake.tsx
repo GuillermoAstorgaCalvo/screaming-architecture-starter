@@ -23,13 +23,12 @@
  * ```
  */
 
+import { buildGestureLayoutProps } from '@core/ui/utilities/motion/helpers/motionPropsHelpers';
+import { getMotionDuration, getMotionEasing } from '@core/ui/utilities/motion/helpers/motionUtils';
+import type { MotionShakeProps } from '@core/ui/utilities/motion/types/motionTypes';
+import { shakeVariants } from '@core/ui/utilities/motion/variants/effectVariants';
 import { motion } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
-
-import { shakeVariants } from './effectVariants';
-import { buildGestureLayoutProps } from './motionPropsHelpers';
-import type { MotionShakeProps } from './motionTypes';
-import { getMotionDuration, getMotionEasing } from './motionUtils';
 
 /**
  * Get initial state for shake animation

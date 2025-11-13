@@ -63,7 +63,7 @@ function renderBarChartContent({
 	radius,
 }: BarChartContentProps) {
 	return (
-		<ResponsiveContainer width={width} height={height}>
+		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
 			<RechartsBarChart
 				data={data}
 				layout={isHorizontal ? 'vertical' : 'horizontal'}

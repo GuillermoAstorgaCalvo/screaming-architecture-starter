@@ -1,4 +1,4 @@
-import type { RichTextEditorWrapperProps } from './RichTextEditorTypes';
+import type { RichTextEditorWrapperProps } from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
 
 export function RichTextEditorWrapper({
 	fullWidth,

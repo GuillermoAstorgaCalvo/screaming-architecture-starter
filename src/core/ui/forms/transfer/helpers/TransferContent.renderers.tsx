@@ -1,10 +1,10 @@
-import { TransferActions } from './TransferActions';
+import { TransferActions } from '@core/ui/forms/transfer/components/TransferActions';
+import { TransferList } from '@core/ui/forms/transfer/components/TransferList';
 import type {
 	RenderActionsProps,
 	RenderSourceListProps,
 	RenderTargetListProps,
-} from './TransferContent.types';
-import { TransferList } from './TransferList';
+} from '@core/ui/forms/transfer/types/TransferContent.types';
 
 /**
  * Renders the source list component

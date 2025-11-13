@@ -1,6 +1,5 @@
+import type { InputIconProps } from '@core/ui/forms/input/types/InputTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { InputIconProps } from './InputTypes';
 
 export function InputIcon({ position, children }: Readonly<InputIconProps>) {
 	const positionClasses =

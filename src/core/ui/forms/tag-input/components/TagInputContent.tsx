@@ -1,8 +1,8 @@
-import { TagInputField } from './TagInputField';
-import { TagInputLabel } from './TagInputLabel';
-import { TagInputMessages } from './TagInputMessages';
-import type { TagInputContentProps } from './TagInputTypes';
-import { TagInputWrapper } from './TagInputWrapper';
+import { TagInputField } from '@core/ui/forms/tag-input/components/TagInputField';
+import { TagInputLabel } from '@core/ui/forms/tag-input/components/TagInputLabel';
+import { TagInputMessages } from '@core/ui/forms/tag-input/components/TagInputMessages';
+import { TagInputWrapper } from '@core/ui/forms/tag-input/components/TagInputWrapper';
+import type { TagInputContentProps } from '@core/ui/forms/tag-input/types/TagInputTypes';
 
 export function TagInputContent({
 	state,

@@ -35,12 +35,10 @@ export function getNextVisibleNodeId(
 		return visibleNodeIds[0] ?? null;
 	}
 
-	if (direction === 'next') {
-		const nextIndex = currentIndex + 1;
-		return visibleNodeIds[nextIndex] ?? null;
-	}
-	const prevIndex = currentIndex - 1;
-	return prevIndex >= 0 ? (visibleNodeIds[prevIndex] ?? null) : null;
+	const offset = direction === 'next' ? 1 : -1;
+	const targetIndex = currentIndex + offset;
+
+	return visibleNodeIds[targetIndex] ?? null;
 }
 
 /**

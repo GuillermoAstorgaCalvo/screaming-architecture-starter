@@ -1,10 +1,9 @@
+import type { WizardNavigationProps } from '@core/ui/forms/wizard/components/WizardNavigation';
+import { convertStepsToStepperSteps } from '@core/ui/forms/wizard/helpers/wizardUtils';
+import type { useWizard } from '@core/ui/forms/wizard/hooks/useWizard';
 import type { StandardSize } from '@src-types/ui/base';
 import type { WizardProps } from '@src-types/ui/navigation/wizard';
 import { type ReactNode, useMemo } from 'react';
-
-import type { useWizard } from './useWizard';
-import type { WizardNavigationProps } from './WizardNavigation';
-import { convertStepsToStepperSteps } from './wizardUtils';
 
 interface UseStepperStepsProps {
 	steps: ReadonlyArray<{ id: string; label: string; description?: string; content: ReactNode }>;
@@ -113,18 +112,23 @@ interface WizardConfig {
 	className?: string | undefined;
 }
 
+const DEFAULT_WIZARD_CONFIG: Omit<WizardConfig, 'steps' | 'className'> = {
+	orientation: 'horizontal',
+	size: 'md',
+	showNumbers: true,
+	showNavigation: true,
+	nextButtonLabel: 'Next',
+	previousButtonLabel: 'Previous',
+	finishButtonLabel: 'Finish',
+	showProgress: true,
+	allowBackNavigation: true,
+};
+
 export function extractWizardConfig(props: Readonly<WizardProps>): WizardConfig {
 	return {
+		...DEFAULT_WIZARD_CONFIG,
+		...props,
 		steps: props.steps,
-		orientation: props.orientation ?? 'horizontal',
-		size: props.size ?? 'md',
-		showNumbers: props.showNumbers ?? true,
-		showNavigation: props.showNavigation ?? true,
-		nextButtonLabel: props.nextButtonLabel ?? 'Next',
-		previousButtonLabel: props.previousButtonLabel ?? 'Previous',
-		finishButtonLabel: props.finishButtonLabel ?? 'Finish',
-		showProgress: props.showProgress ?? true,
-		allowBackNavigation: props.allowBackNavigation ?? true,
 		className: props.className,
 	};
 }

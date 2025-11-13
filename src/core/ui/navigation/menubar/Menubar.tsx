@@ -1,13 +1,12 @@
+import { MenubarItem } from '@core/ui/navigation/menubar/components/MenubarItem';
+import { MenubarSubmenu } from '@core/ui/navigation/menubar/components/MenubarSubmenu';
+import { getMenubarClasses } from '@core/ui/navigation/menubar/helpers/MenubarHelpers';
+import { useMenubar } from '@core/ui/navigation/menubar/hooks/useMenubar';
 import type {
 	MenubarItem as MenubarItemType,
 	MenubarProps,
 } from '@src-types/ui/navigation/menubar';
 import { createRef, type RefObject, useMemo, useState } from 'react';
-
-import { getMenubarClasses } from './MenubarHelpers';
-import { MenubarItem } from './MenubarItem';
-import { MenubarSubmenu } from './MenubarSubmenu';
-import { useMenubar } from './useMenubar';
 
 interface RenderMenubarItemParams {
 	readonly item: MenubarItemType;

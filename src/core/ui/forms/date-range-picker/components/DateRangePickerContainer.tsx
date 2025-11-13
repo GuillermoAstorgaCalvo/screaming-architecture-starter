@@ -1,6 +1,5 @@
+import type { DateRangePickerContainerProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { DateRangePickerContainerProps } from './DateRangePickerTypes';
 
 export function DateRangePickerContainer({
 	children,

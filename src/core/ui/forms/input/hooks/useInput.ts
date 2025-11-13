@@ -1,8 +1,15 @@
+import {
+	generateInputId,
+	getAriaDescribedBy,
+	getInputClasses,
+} from '@core/ui/forms/input/helpers/InputHelpers';
+import type {
+	InputFieldProps,
+	UseInputStateOptions,
+	UseInputStateReturn,
+} from '@core/ui/forms/input/types/InputTypes';
 import type { InputProps } from '@src-types/ui/forms';
 import { type InputHTMLAttributes, type ReactNode, useId } from 'react';
-
-import { generateInputId, getAriaDescribedBy, getInputClasses } from './InputHelpers';
-import type { InputFieldProps, UseInputStateOptions, UseInputStateReturn } from './InputTypes';
 
 export interface UseInputPropsOptions {
 	readonly props: Readonly<InputProps>;

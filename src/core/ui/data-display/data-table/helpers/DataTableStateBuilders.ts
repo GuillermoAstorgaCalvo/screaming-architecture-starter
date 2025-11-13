@@ -1,6 +1,12 @@
+import {
+	type DataTableStateOptions,
+	DEFAULT_PAGE_SIZE,
+} from '@core/ui/data-display/data-table/types/DataTableTypes';
 import type { DataTableProps } from '@src-types/ui/dataTable';
 
-import { type DataTableStateOptions, DEFAULT_PAGE_SIZE } from './DataTableTypes';
+function withDefault<T>(value: T | null | undefined, fallback: T): T {
+	return value ?? fallback;
+}
 
 /**
  * Builds state options from DataTable props
@@ -10,16 +16,16 @@ export function buildStateOptions<T>(props: Readonly<DataTableProps<T>>): DataTa
 		columns: props.columns,
 		data: props.data,
 		getRowId: props.getRowId,
-		enableSorting: props.enableSorting ?? true,
-		enableGlobalFilter: props.enableGlobalFilter ?? true,
-		enablePagination: props.enablePagination ?? true,
-		enableColumnReorder: props.enableColumnReorder ?? false,
+		enableSorting: withDefault(props.enableSorting, true),
+		enableGlobalFilter: withDefault(props.enableGlobalFilter, true),
+		enablePagination: withDefault(props.enablePagination, true),
+		enableColumnReorder: withDefault(props.enableColumnReorder, false),
 		initialSort: props.initialSort,
 		onSortChange: props.onSortChange,
 		initialFilter: props.initialFilter,
 		onFilterChange: props.onFilterChange,
-		initialPage: props.initialPage ?? 1,
-		pageSize: props.pageSize ?? DEFAULT_PAGE_SIZE,
+		initialPage: withDefault(props.initialPage, 1),
+		pageSize: withDefault(props.pageSize, DEFAULT_PAGE_SIZE),
 		onPageChange: props.onPageChange,
 		selectedRowIds: props.selectedRowIds,
 		onSelectionChange: props.onSelectionChange,

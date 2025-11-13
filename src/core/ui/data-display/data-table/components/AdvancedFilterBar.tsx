@@ -1,7 +1,6 @@
+import { AdvancedFilterBarContent } from '@core/ui/data-display/data-table/components/AdvancedFilterBarContent';
+import { useAdvancedFilterBar } from '@core/ui/data-display/data-table/hooks/useAdvancedFilterBar';
 import type { AdvancedFilterConfig } from '@src-types/ui/advancedFilter';
-
-import { AdvancedFilterBarContent } from './AdvancedFilterBarContent';
-import { useAdvancedFilterBar } from './useAdvancedFilterBar';
 
 export interface AdvancedFilterBarProps extends AdvancedFilterConfig {
 	/** Additional className */

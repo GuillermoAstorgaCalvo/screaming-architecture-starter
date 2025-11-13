@@ -1,10 +1,10 @@
-import { buildContentPropsFromValues } from './useDateRangePicker.contentProps';
-import { createFieldOptionsFromProps } from './useDateRangePicker.fieldProps';
-import { useDateRangePickerState } from './useDateRangePicker.state';
+import { buildContentPropsFromValues } from '@core/ui/forms/date-range-picker/hooks/useDateRangePicker.contentProps';
+import { createFieldOptionsFromProps } from '@core/ui/forms/date-range-picker/hooks/useDateRangePicker.fieldProps';
+import { useDateRangePickerState } from '@core/ui/forms/date-range-picker/hooks/useDateRangePicker.state';
 import type {
 	UseDateRangePickerPropsOptions,
 	UseDateRangePickerPropsReturn,
-} from './useDateRangePicker.types';
+} from '@core/ui/forms/date-range-picker/types/useDateRangePicker.types';
 
 /**
  * Hook to process DateRangePicker component props and return content props

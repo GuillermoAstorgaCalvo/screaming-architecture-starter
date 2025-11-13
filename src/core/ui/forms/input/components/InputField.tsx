@@ -1,5 +1,5 @@
-import { InputIcon } from './InputIcon';
-import type { InputFieldProps } from './InputTypes';
+import { InputIcon } from '@core/ui/forms/input/components/InputIcon';
+import type { InputFieldProps } from '@core/ui/forms/input/types/InputTypes';
 
 export function InputField({
 	id,

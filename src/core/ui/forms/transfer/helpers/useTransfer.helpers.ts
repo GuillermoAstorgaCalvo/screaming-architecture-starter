@@ -1,4 +1,7 @@
-import type { BuildTransferReturnParams, UseTransferReturn } from './useTransfer.types';
+import type {
+	BuildTransferReturnParams,
+	UseTransferReturn,
+} from '@core/ui/forms/transfer/types/useTransfer.types';
 
 /**
  * Builds the return value for useTransfer hook

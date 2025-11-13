@@ -1,8 +1,10 @@
+import { renderInfiniteScrollContent } from '@core/ui/utilities/infinite-scroll/components/InfiniteScrollContentRenderer';
+import {
+	buildContainerElementProps,
+	buildContentProps,
+} from '@core/ui/utilities/infinite-scroll/helpers/InfiniteScrollBuilders';
+import type { InfiniteScrollContainerProps } from '@core/ui/utilities/infinite-scroll/types/InfiniteScrollRenderers.types';
 import type { ReactNode } from 'react';
-
-import { buildContainerElementProps, buildContentProps } from './InfiniteScrollBuilders';
-import { renderInfiniteScrollContent } from './InfiniteScrollContentRenderer';
-import type { InfiniteScrollContainerProps } from './InfiniteScrollRenderers.types';
 
 /**
  * Renders a container wrapper div with the given props and content

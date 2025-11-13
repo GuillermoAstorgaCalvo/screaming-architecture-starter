@@ -1,6 +1,5 @@
+import type { TimePickerContainerProps } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { TimePickerContainerProps } from './TimePickerTypes';
 
 export function TimePickerContainer({
 	children,

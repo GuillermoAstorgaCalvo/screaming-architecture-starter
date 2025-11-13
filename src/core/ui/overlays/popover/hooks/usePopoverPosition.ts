@@ -1,7 +1,9 @@
+import {
+	calculatePopoverPosition,
+	type PopoverPositionState,
+} from '@core/ui/overlays/popover/helpers/popoverPosition';
 import type { PopoverPosition } from '@src-types/ui/overlays/floating';
 import { type RefObject, useEffect, useState } from 'react';
-
-import { calculatePopoverPosition, type PopoverPositionState } from './popoverPosition';
 
 interface UsePopoverPositionOptions {
 	readonly triggerRef: RefObject<HTMLElement | null>;

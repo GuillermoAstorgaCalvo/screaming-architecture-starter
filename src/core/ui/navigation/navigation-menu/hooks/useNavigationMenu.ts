@@ -1,7 +1,6 @@
+import { handleNavigationKeyDown } from '@core/ui/navigation/navigation-menu/helpers/navigationMenuKeyboard';
 import type { NavigationMenuItem } from '@src-types/ui/navigation/navigationMenu';
 import { createRef, type KeyboardEvent, useCallback, useMemo } from 'react';
-
-import { handleNavigationKeyDown } from './navigationMenuKeyboard';
 
 interface UseNavigationMenuParams {
 	readonly items: readonly NavigationMenuItem[];

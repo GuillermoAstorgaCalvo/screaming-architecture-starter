@@ -1,13 +1,15 @@
-import { type RefObject, useCallback, useEffect, useId, useRef, useState } from 'react';
-
-import type { DropdownMenuItem, DropdownMenuItemOrSeparator } from './DropdownMenu.types';
-import { findNextEnabledIndex } from './DropdownMenuHelpers';
+import { findNextEnabledIndex } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuNavigation';
 import {
 	useDropdownMenuKeyboard,
 	useDropdownMenuRefs,
 	useDropdownMenuSelection,
 	useHighlightedIndex,
-} from './useDropdownMenuHooks';
+} from '@core/ui/overlays/dropdown-menu/hooks/useDropdownMenuHooks';
+import type {
+	DropdownMenuItem,
+	DropdownMenuItemOrSeparator,
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
+import { type RefObject, useCallback, useEffect, useId, useRef, useState } from 'react';
 
 interface UseDropdownMenuParams {
 	readonly items: DropdownMenuItemOrSeparator[];

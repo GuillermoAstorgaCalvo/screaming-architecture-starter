@@ -1,4 +1,7 @@
-import { calculateAllSelected, createSelectAllHandler } from './TransferList.helpers';
+import {
+	calculateAllSelected,
+	createSelectAllHandler,
+} from '@core/ui/forms/transfer/helpers/TransferList.helpers';
 import {
 	getContainerClasses,
 	getHeaderClasses,
@@ -7,8 +10,11 @@ import {
 	getListContainerClasses,
 	getListPadding,
 	getMinWidth,
-} from './TransferList.styles';
-import type { TransferListSetup, TransferListSetupOptions } from './TransferList.types';
+} from '@core/ui/forms/transfer/helpers/TransferList.styles';
+import type {
+	TransferListSetup,
+	TransferListSetupOptions,
+} from '@core/ui/forms/transfer/types/TransferList.types';
 
 /**
  * Sets up the transfer list by calculating IDs, classes, and derived state

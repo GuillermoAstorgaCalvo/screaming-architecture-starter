@@ -1,8 +1,8 @@
-import { renderErrorState } from './LoadingWrapperHelpers.error';
+import { renderErrorState } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.error';
 import type {
 	ErrorStateParams,
 	LoadingWrapperStateParams,
-} from './LoadingWrapperHelpers.state.types';
+} from '@core/ui/utilities/loading-wrapper/types/LoadingWrapperHelpers.state.types';
 
 /** Build props for error state rendering */
 export function buildErrorStateParams({

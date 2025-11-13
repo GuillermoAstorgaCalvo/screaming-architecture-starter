@@ -1,6 +1,9 @@
+import type {
+	ContextMenuItem,
+	ContextMenuItemOrSeparator,
+	ContextMenuProps,
+} from '@core/ui/overlays/context-menu/ContextMenu';
 import type { KeyboardEvent, ReactElement, ReactNode, RefObject } from 'react';
-
-import type { ContextMenuItem, ContextMenuItemOrSeparator, ContextMenuProps } from './ContextMenu';
 
 export interface CreateTriggerNodeParams {
 	readonly trigger: ReactElement;

@@ -1,6 +1,5 @@
+import type { SearchInputLabelProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { SearchInputLabelProps } from './SearchInputTypes';
 
 export function SearchInputLabel({ id, label, required }: Readonly<SearchInputLabelProps>) {
 	return (

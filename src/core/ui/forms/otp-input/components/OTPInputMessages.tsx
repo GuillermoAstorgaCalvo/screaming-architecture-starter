@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { OTPInputMessagesProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { OTPInputMessagesProps } from './OTPInputTypes';
 
 export function OTPInputMessages({ inputId, error, helperText }: Readonly<OTPInputMessagesProps>) {
 	const hasError = Boolean(error);

@@ -1,7 +1,10 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
+import {
+	type AutocompleteListboxProps,
+	getListboxStyles,
+} from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
 import type { RefObject } from 'react';
 
-import type { AutocompleteOption } from './Autocomplete';
-import { type AutocompleteListboxProps, getListboxStyles } from './AutocompleteContentHelpers';
 import { AutocompleteOptionItem } from './AutocompleteOptionItem';
 
 function renderOptionItem({

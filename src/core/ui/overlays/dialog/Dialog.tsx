@@ -1,9 +1,8 @@
+import { DialogDialog } from '@core/ui/overlays/dialog/components/DialogDialog';
+import { useDialogSetup } from '@core/ui/overlays/dialog/hooks/useDialogSetup';
+import type { DialogProps } from '@core/ui/overlays/dialog/types/dialog.types';
 import type { ModalSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import type { DialogProps } from './dialog.types';
-import { DialogDialog } from './DialogDialog';
-import { useDialogSetup } from './useDialogSetup';
 
 interface DialogSetupOptions {
 	readonly dialogId?: string;

@@ -1,5 +1,8 @@
-import { handleDisabledChange, handleDisabledClick } from './CheckboxHandlers';
-import type { CheckboxFieldProps } from './CheckboxTypes';
+import {
+	handleDisabledChange,
+	handleDisabledClick,
+} from '@core/ui/forms/checkbox/helpers/CheckboxHandlers';
+import type { CheckboxFieldProps } from '@core/ui/forms/checkbox/types/CheckboxTypes';
 
 export function CheckboxField({
 	id,

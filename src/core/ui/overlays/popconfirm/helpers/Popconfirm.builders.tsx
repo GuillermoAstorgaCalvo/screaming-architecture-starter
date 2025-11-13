@@ -1,8 +1,10 @@
+import { prepareHandlers } from '@core/ui/overlays/popconfirm/helpers/Popconfirm.handlers';
+import {
+	renderFooter,
+	renderPopconfirmContent,
+} from '@core/ui/overlays/popconfirm/helpers/Popconfirm.renderers';
 import type { PopoverPosition } from '@src-types/ui/overlays/floating';
 import type { ReactNode } from 'react';
-
-import { prepareHandlers } from './Popconfirm.handlers';
-import { renderFooter, renderPopconfirmContent } from './Popconfirm.renderers';
 
 /**
  * Popover props type for Popconfirm

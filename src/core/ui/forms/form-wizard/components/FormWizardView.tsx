@@ -1,12 +1,14 @@
 import type { FormControls } from '@core/forms/formAdapter';
+import { prepareWizardViewData } from '@core/ui/forms/form-wizard/components/FormWizardView.data';
+import { extractWizardProps } from '@core/ui/forms/form-wizard/components/FormWizardView.props';
+import { renderWizardSections } from '@core/ui/forms/form-wizard/components/FormWizardView.sections';
+import type { useFormWizardHandlers } from '@core/ui/forms/form-wizard/hooks/useFormWizardHandlers';
+import type {
+	FormWizardProps,
+	FormWizardState,
+} from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import { useMemo } from 'react';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardProps, FormWizardState } from './FormWizardTypes';
-import { prepareWizardViewData } from './FormWizardView.data';
-import { extractWizardProps } from './FormWizardView.props';
-import { renderWizardSections } from './FormWizardView.sections';
-import type { useFormWizardHandlers } from './useFormWizardHandlers';
 
 interface FormWizardViewProps<T extends FieldValues = FieldValues> {
 	readonly state: FormWizardState<T>;

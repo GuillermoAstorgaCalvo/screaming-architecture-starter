@@ -1,8 +1,7 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import type { ComboboxContentProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
 import { classNames } from '@core/utils/classNames';
 import type { CSSProperties, KeyboardEvent, MouseEvent, RefObject } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import type { ComboboxContentProps } from './ComboboxTypes';
 
 export const MENU_STYLES = {
 	CONTAINER: 'flex flex-col gap-1 py-2',

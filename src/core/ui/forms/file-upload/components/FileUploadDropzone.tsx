@@ -1,7 +1,6 @@
+import { getFileUploadDropzoneClasses } from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import type { FileUploadDropzoneProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import { type DragEvent, type KeyboardEvent, useRef } from 'react';
-
-import { getFileUploadDropzoneClasses } from './FileUploadHelpers';
-import type { FileUploadDropzoneProps } from './FileUploadTypes';
 
 function useDragCounter() {
 	const counterRef = useRef(0);

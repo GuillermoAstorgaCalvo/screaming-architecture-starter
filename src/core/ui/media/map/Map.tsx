@@ -1,7 +1,6 @@
+import { renderMap } from '@core/ui/media/map/helpers/useMapRender';
+import { useMapState } from '@core/ui/media/map/hooks/useMapState';
 import type { MapProps } from '@src-types/ui/maps';
-
-import { renderMap } from './useMapRender';
-import { useMapState } from './useMapState';
 
 /**
  * Map - Google Maps component with React integration

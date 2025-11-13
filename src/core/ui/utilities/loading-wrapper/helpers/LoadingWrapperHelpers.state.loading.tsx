@@ -1,10 +1,12 @@
-import type { ReactNode } from 'react';
-
-import { renderSkeletonState, renderSpinnerState } from './LoadingWrapperHelpers.loading.render';
+import {
+	renderSkeletonState,
+	renderSpinnerState,
+} from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.loading.render';
 import type {
 	LoadingStateParams,
 	LoadingWrapperStateParams,
-} from './LoadingWrapperHelpers.state.types';
+} from '@core/ui/utilities/loading-wrapper/types/LoadingWrapperHelpers.state.types';
+import type { ReactNode } from 'react';
 
 /** Build props for loading state rendering */
 export function buildLoadingStateParams({
@@ -34,6 +36,30 @@ type LoadingStateProps = Readonly<{
 	props: Readonly<Record<string, unknown>>;
 }>;
 
+function buildSkeletonProps(
+	props: Readonly<Record<string, unknown>>,
+	skeletonComponent?: ReactNode,
+	className?: string
+) {
+	return {
+		...(skeletonComponent && { skeletonComponent }),
+		...(className && { className }),
+		props,
+	};
+}
+
+function buildSpinnerProps(
+	props: Readonly<Record<string, unknown>>,
+	loadingText?: string,
+	className?: string
+) {
+	return {
+		...(loadingText && { loadingText }),
+		...(className && { className }),
+		props,
+	};
+}
+
 /**
  * Render loading state
  */
@@ -54,18 +80,10 @@ export function renderLoadingState({
 	}
 
 	if (useSkeleton) {
-		return renderSkeletonState({
-			...(skeletonComponent && { skeletonComponent }),
-			...(className && { className }),
-			props,
-		});
+		return renderSkeletonState(buildSkeletonProps(props, skeletonComponent, className));
 	}
 
-	return renderSpinnerState({
-		...(loadingText && { loadingText }),
-		...(className && { className }),
-		props,
-	});
+	return renderSpinnerState(buildSpinnerProps(props, loadingText, className));
 }
 
 /** Render loading state if loading */

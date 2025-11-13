@@ -1,8 +1,8 @@
-import { EmailInputField } from './EmailInputField';
-import { EmailInputLabel } from './EmailInputLabel';
-import { EmailInputMessages } from './EmailInputMessages';
-import type { EmailInputContentProps } from './EmailInputTypes';
-import { EmailInputWrapper } from './EmailInputWrapper';
+import { EmailInputField } from '@core/ui/forms/email-input/components/EmailInputField';
+import { EmailInputLabel } from '@core/ui/forms/email-input/components/EmailInputLabel';
+import { EmailInputMessages } from '@core/ui/forms/email-input/components/EmailInputMessages';
+import { EmailInputWrapper } from '@core/ui/forms/email-input/components/EmailInputWrapper';
+import type { EmailInputContentProps } from '@core/ui/forms/email-input/types/EmailInputTypes';
 
 export function EmailInputContent({
 	state,

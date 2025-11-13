@@ -1,9 +1,8 @@
 import IconButton from '@core/ui/icon-button/IconButton';
 import Icon from '@core/ui/icons/Icon';
 import Tooltip from '@core/ui/tooltip/Tooltip';
+import { useCopyButton } from '@core/ui/utilities/copy-button/hooks/useCopyButton';
 import type { CopyButtonProps } from '@src-types/ui/buttons';
-
-import { useCopyButton } from './useCopyButton';
 
 interface HookOptionsInput {
 	text: string;

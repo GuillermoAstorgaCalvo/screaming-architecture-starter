@@ -1,5 +1,5 @@
-import { SliderInput } from './SliderInput';
-import type { SliderFieldProps } from './SliderTypes';
+import { SliderInput } from '@core/ui/forms/slider/components/SliderInput';
+import type { SliderFieldProps } from '@core/ui/forms/slider/types/SliderTypes';
 
 export function SliderField(props: Readonly<SliderFieldProps>) {
 	const {

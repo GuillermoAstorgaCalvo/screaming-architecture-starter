@@ -1,6 +1,5 @@
+import type { TreeStateResult } from '@core/ui/data-display/tree-view/types/useTreeViewSetup.types';
 import { useMemo, useState } from 'react';
-
-import type { TreeStateResult } from './useTreeViewSetup.types';
 
 function getFocusedNodeId(selectedNodeIds: Set<string>, allNodeIds: string[]): string | null {
 	if (selectedNodeIds.size > 0) {

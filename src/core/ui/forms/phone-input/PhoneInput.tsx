@@ -1,7 +1,6 @@
+import { PhoneInputContent } from '@core/ui/forms/phone-input/components/PhoneInputContent';
+import { usePhoneInputProps } from '@core/ui/forms/phone-input/hooks/usePhoneInput';
 import type { PhoneInputProps } from '@src-types/ui/forms-specialized';
-
-import { PhoneInputContent } from './PhoneInputContent';
-import { usePhoneInputProps } from './usePhoneInput';
 
 /**
  * PhoneInput - Phone number input with country code selector

@@ -1,7 +1,6 @@
+import { TimePickerContent } from '@core/ui/forms/time-picker/components/TimePickerContent';
+import { useTimePickerProps } from '@core/ui/forms/time-picker/hooks/useTimePicker';
 import type { TimePickerProps } from '@src-types/ui/forms-dates';
-
-import { TimePickerContent } from './TimePickerContent';
-import { useTimePickerProps } from './useTimePicker';
 
 /**
  * TimePicker - Reusable time input component with label, error, and helper text support

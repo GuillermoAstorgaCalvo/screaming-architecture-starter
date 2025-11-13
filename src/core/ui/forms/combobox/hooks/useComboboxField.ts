@@ -1,8 +1,7 @@
+import type { ComboboxProps } from '@core/ui/forms/combobox/Combobox';
+import type { useComboboxState } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
+import type { ComboboxFieldProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
 import type { ChangeEvent } from 'react';
-
-import type { ComboboxProps } from './Combobox';
-import type { useComboboxState } from './ComboboxHelpers';
-import type { ComboboxFieldProps } from './ComboboxTypes';
 
 const BLUR_DELAY_MS = 200;
 

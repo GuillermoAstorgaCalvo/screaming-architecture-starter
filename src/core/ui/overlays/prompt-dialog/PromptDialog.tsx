@@ -1,19 +1,18 @@
 import Dialog from '@core/ui/dialog/Dialog';
-import type { ModalSize } from '@src-types/ui/base';
-
 import {
 	createDialogContent,
 	createDialogFooter,
 	DEFAULT_CANCEL_LABEL,
 	DEFAULT_CONFIRM_LABEL,
-} from './PromptDialogHelpers';
-import { usePromptDialogState } from './PromptDialogHooks';
+} from '@core/ui/overlays/prompt-dialog/helpers/PromptDialogHelpers';
+import { usePromptDialogState } from '@core/ui/overlays/prompt-dialog/hooks/PromptDialogHooks';
 import type {
 	DialogPartsOptions,
 	DialogPropsParams,
 	PrepareDialogOptions,
 	PrepareDialogPropsOptions,
-} from './PromptDialogTypes';
+} from '@core/ui/overlays/prompt-dialog/types/PromptDialogTypes';
+import type { ModalSize } from '@src-types/ui/base';
 
 export type PromptDialogVariant = 'default' | 'centered' | 'fullscreen';
 export type PromptDialogInputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';

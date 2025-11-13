@@ -1,6 +1,5 @@
+import type { SliderContainerProps } from '@core/ui/forms/slider/types/SliderTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { SliderContainerProps } from './SliderTypes';
 
 export function SliderContainer({
 	children,

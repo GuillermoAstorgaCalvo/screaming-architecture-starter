@@ -1,7 +1,13 @@
+import {
+	generateOTPInputId,
+	getAriaDescribedBy,
+	getOTPInputClasses,
+} from '@core/ui/forms/otp-input/helpers/OTPInputHelpers';
+import type {
+	UseOTPInputStateOptions,
+	UseOTPInputStateReturn,
+} from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import { useId } from 'react';
-
-import { generateOTPInputId, getAriaDescribedBy, getOTPInputClasses } from './OTPInputHelpers';
-import type { UseOTPInputStateOptions, UseOTPInputStateReturn } from './OTPInputTypes';
 
 /**
  * Hook to compute OTP input state (ID, error state, ARIA attributes, and classes)

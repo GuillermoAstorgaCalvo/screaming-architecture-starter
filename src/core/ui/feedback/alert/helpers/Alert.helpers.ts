@@ -1,7 +1,6 @@
+import { ALERT_ICON_PATHS } from '@core/ui/feedback/alert/constants/Alert.constants';
+import type { AlertIntent } from '@core/ui/feedback/alert/types/Alert.types';
 import type { ReactNode } from 'react';
-
-import { ALERT_ICON_PATHS } from './Alert.constants';
-import type { AlertIntent } from './Alert.types';
 
 export function getDefaultRole(intent: AlertIntent): 'alert' | 'status' {
 	return intent === 'error' || intent === 'warning' ? 'alert' : 'status';

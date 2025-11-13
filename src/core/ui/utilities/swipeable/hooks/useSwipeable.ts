@@ -1,12 +1,13 @@
-import type { SwipeableAction, SwipeableDirection } from '@src-types/ui/overlays/interactions';
-import { type Dispatch, type SetStateAction, type TouchEvent, useState } from 'react';
-
+import {
+	RESET_SWIPE_STATE,
+	type SwipeState,
+} from '@core/ui/utilities/swipeable/helpers/SwipeableHelpers.types';
 import {
 	calculateSwipeStyles,
 	calculateSwipeValues,
-	RESET_SWIPE_STATE,
-	type SwipeState,
-} from './SwipeableHelpers';
+} from '@core/ui/utilities/swipeable/helpers/SwipeableHelpers.values';
+import type { SwipeableAction, SwipeableDirection } from '@src-types/ui/overlays/interactions';
+import { type Dispatch, type SetStateAction, type TouchEvent, useState } from 'react';
 
 /**
  * Parameters for touch handlers

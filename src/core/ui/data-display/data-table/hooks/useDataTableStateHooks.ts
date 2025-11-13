@@ -1,18 +1,18 @@
-import { useDataTable } from './useDataTable';
-import { useDataTableColumns } from './useDataTableColumns';
-import { useDataTableFilter } from './useDataTableFilter';
-import { useDataTableSort } from './useDataTableSort';
-import { buildColumnStateOptions } from './useDataTableStateBuilders.column';
-import { buildFilterStateOptions } from './useDataTableStateBuilders.filter';
-import { buildSortStateOptions } from './useDataTableStateBuilders.sort';
+import { useDataTableDataTransformation } from '@core/ui/data-display/data-table/helpers/useDataTableStateHelpers';
+import { useDataTable } from '@core/ui/data-display/data-table/hooks/useDataTable';
+import { useDataTableColumns } from '@core/ui/data-display/data-table/hooks/useDataTableColumns';
+import { useDataTableFilter } from '@core/ui/data-display/data-table/hooks/useDataTableFilter';
+import { useDataTableSort } from '@core/ui/data-display/data-table/hooks/useDataTableSort';
+import { buildColumnStateOptions } from '@core/ui/data-display/data-table/state/useDataTableStateBuilders.column';
+import { buildFilterStateOptions } from '@core/ui/data-display/data-table/state/useDataTableStateBuilders.filter';
+import { buildSortStateOptions } from '@core/ui/data-display/data-table/state/useDataTableStateBuilders.sort';
 import type {
 	UseColumnStateOptions,
 	UseDataTableStateHooksOptions,
 	UseFilterStateOptions,
 	UseSortStateOptions,
 	UseTableStateOptions,
-} from './useDataTableStateBuilders.types';
-import { useDataTableDataTransformation } from './useDataTableStateHelpers';
+} from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
 
 /**
  * Hook for managing column state

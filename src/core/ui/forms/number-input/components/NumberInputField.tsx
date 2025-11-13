@@ -1,8 +1,7 @@
+import { NumberInputButton } from '@core/ui/forms/number-input/components/NumberInputButton';
+import type { NumberInputFieldProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 import Icon from '@core/ui/icons/Icon';
 import type { InputHTMLAttributes } from 'react';
-
-import { NumberInputButton } from './NumberInputButton';
-import type { NumberInputFieldProps } from './NumberInputTypes';
 
 interface NumberInputProps {
 	readonly id: string | undefined;

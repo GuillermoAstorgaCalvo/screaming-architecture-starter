@@ -1,8 +1,10 @@
+import { useInlineEditHandlers } from '@core/ui/forms/inline-edit/hooks/useInlineEdit.handlers';
+import { useInlineEditState } from '@core/ui/forms/inline-edit/hooks/useInlineEdit.state';
+import {
+	buildInlineEditReturn,
+	useInlineEditValue,
+} from '@core/ui/forms/inline-edit/hooks/useInlineEdit.utils';
 import type { ChangeEvent, FocusEvent, KeyboardEvent } from 'react';
-
-import { useInlineEditHandlers } from './useInlineEdit.handlers';
-import { useInlineEditState } from './useInlineEdit.state';
-import { buildInlineEditReturn, useInlineEditValue } from './useInlineEdit.utils';
 
 export interface UseInlineEditOptions {
 	readonly value?: string;

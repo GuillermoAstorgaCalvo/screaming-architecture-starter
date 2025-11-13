@@ -1,6 +1,5 @@
+import type { FileUploadLabelProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import Label from '@core/ui/label/Label';
-
-import type { FileUploadLabelProps } from './FileUploadTypes';
 
 export function FileUploadLabel({
 	id,

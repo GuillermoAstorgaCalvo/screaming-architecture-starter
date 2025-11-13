@@ -1,8 +1,7 @@
+import { RatingContainer } from '@core/ui/forms/rating/components/RatingContainer';
+import { RatingContent } from '@core/ui/forms/rating/components/RatingContent';
+import { useRating } from '@core/ui/forms/rating/hooks/useRating';
 import type { RatingProps } from '@src-types/ui/forms-advanced';
-
-import { RatingContainer } from './RatingContainer';
-import { RatingContent } from './RatingContent';
-import { useRating } from './useRating';
 
 /**
  * Rating - Star rating component with interactive and read-only modes

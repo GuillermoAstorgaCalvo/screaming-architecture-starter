@@ -1,9 +1,8 @@
+import { CommandPaletteDialog } from '@core/ui/overlays/command-palette/components/CommandPaletteDialog';
+import { CommandPaletteList } from '@core/ui/overlays/command-palette/components/CommandPaletteList';
+import { CommandPaletteSearchInput } from '@core/ui/overlays/command-palette/components/CommandPaletteSearchInput';
+import type { CommandPaletteContentProps } from '@core/ui/overlays/command-palette/types/CommandPaletteParts.types';
 import type { KeyboardEvent } from 'react';
-
-import { CommandPaletteDialog } from './CommandPaletteDialog';
-import { CommandPaletteList } from './CommandPaletteList';
-import type { CommandPaletteContentProps } from './CommandPaletteParts.types';
-import { CommandPaletteSearchInput } from './CommandPaletteSearchInput';
 
 export function CommandPaletteContent(props: Readonly<CommandPaletteContentProps>) {
 	const handleKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {

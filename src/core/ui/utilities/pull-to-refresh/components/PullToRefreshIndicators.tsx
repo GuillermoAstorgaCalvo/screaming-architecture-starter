@@ -1,7 +1,6 @@
 import Spinner from '@core/ui/spinner/Spinner';
+import { INDICATOR_BASE_CLASSES } from '@core/ui/utilities/pull-to-refresh/helpers/PullToRefreshHelpers';
 import type { ReactNode } from 'react';
-
-import { INDICATOR_BASE_CLASSES } from './PullToRefreshHelpers';
 
 /**
  * Indicator renderer props

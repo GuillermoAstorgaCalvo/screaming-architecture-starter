@@ -1,6 +1,5 @@
+import type { SearchHandlersParams } from '@core/ui/forms/transfer/types/useTransfer.types';
 import { useCallback } from 'react';
-
-import type { SearchHandlersParams } from './useTransfer.types';
 
 /**
  * Creates search change handlers

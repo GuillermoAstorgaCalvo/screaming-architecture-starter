@@ -1,18 +1,17 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { PhoneInputProps } from '@src-types/ui/forms-specialized';
-import { type InputHTMLAttributes, useId, useState } from 'react';
-
 import {
 	generatePhoneInputId,
 	getAriaDescribedBy,
 	getDefaultCountryCode,
 	getPhoneInputClasses,
-} from './PhoneInputHelpers';
+} from '@core/ui/forms/phone-input/helpers/PhoneInputHelpers';
 import type {
 	PhoneInputFieldProps,
 	UsePhoneInputStateOptions,
 	UsePhoneInputStateReturn,
-} from './PhoneInputTypes';
+} from '@core/ui/forms/phone-input/types/PhoneInputTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { PhoneInputProps } from '@src-types/ui/forms-specialized';
+import { type InputHTMLAttributes, useId, useState } from 'react';
 
 export interface UsePhoneInputPropsOptions {
 	readonly props: Readonly<PhoneInputProps>;

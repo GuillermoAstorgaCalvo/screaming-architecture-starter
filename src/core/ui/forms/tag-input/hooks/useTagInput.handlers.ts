@@ -1,12 +1,11 @@
-import { type KeyboardEvent, useCallback } from 'react';
-
-import { createKeyDownHandler } from './useTagInput.handlers.keyboard';
+import { createKeyDownHandler } from '@core/ui/forms/tag-input/hooks/useTagInput.handlers.keyboard';
 import type {
 	CreateKeyDownHandlerOptions,
 	HandlerOptionsParams,
 	UseTagInputHandlersOptions,
 	UseTagInputHandlersReturn,
-} from './useTagInput.handlers.types';
+} from '@core/ui/forms/tag-input/hooks/useTagInput.handlers.types';
+import { type KeyboardEvent, useCallback } from 'react';
 
 /**
  * Builds handler options from individual parameters

@@ -4,7 +4,7 @@ import type {
 	PaginationParamsForBuilder,
 	RendererPropsParams,
 	SortSelectionParamsForBuilder,
-} from './DataTableTypes';
+} from '@core/ui/data-display/data-table/types/DataTableTypes';
 
 export function extractFilterParams<T>(params: RendererPropsParams<T>): FilterParamsForBuilder {
 	const { filter, setGlobalSearch, globalSearchPlaceholder, enableGlobalFilter } = params;

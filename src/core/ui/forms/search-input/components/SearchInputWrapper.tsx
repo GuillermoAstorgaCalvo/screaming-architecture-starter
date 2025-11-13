@@ -1,4 +1,4 @@
-import type { SearchInputWrapperProps } from './SearchInputTypes';
+import type { SearchInputWrapperProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 
 export function SearchInputWrapper({
 	fullWidth,

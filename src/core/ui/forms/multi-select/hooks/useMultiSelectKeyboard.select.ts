@@ -1,6 +1,5 @@
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
 import { useCallback } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
 
 export interface SelectHandlerParams {
 	readonly setInputValue: (value: string) => void;

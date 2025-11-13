@@ -1,14 +1,13 @@
-import type { WizardProps } from '@src-types/ui/navigation/wizard';
-import { twMerge } from 'tailwind-merge';
-
-import { useWizard } from './useWizard';
-import { WizardBody } from './WizardComponents';
+import { WizardBody } from '@core/ui/forms/wizard/components/WizardComponents';
 import {
 	createNavigationProps,
 	extractWizardConfig,
 	useStepperSteps,
 	useWizardState,
-} from './WizardHelpers';
+} from '@core/ui/forms/wizard/helpers/WizardHelpers';
+import { useWizard } from '@core/ui/forms/wizard/hooks/useWizard';
+import type { WizardProps } from '@src-types/ui/navigation/wizard';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Wizard - Multi-step form wizard component with validation and navigation

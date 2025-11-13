@@ -1,8 +1,7 @@
 import type { FormControls } from '@core/forms/formAdapter';
+import type { FormWizardStep } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { ReactNode } from 'react';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardStep } from './FormWizardTypes';
 
 /**
  * Render step content with form controls

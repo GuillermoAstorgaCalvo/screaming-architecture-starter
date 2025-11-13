@@ -1,8 +1,8 @@
-import { NumberInputField } from './NumberInputField';
-import { NumberInputLabel } from './NumberInputLabel';
-import { NumberInputMessages } from './NumberInputMessages';
-import type { NumberInputContentProps } from './NumberInputTypes';
-import { NumberInputWrapper } from './NumberInputWrapper';
+import { NumberInputField } from '@core/ui/forms/number-input/components/NumberInputField';
+import { NumberInputLabel } from '@core/ui/forms/number-input/components/NumberInputLabel';
+import { NumberInputMessages } from '@core/ui/forms/number-input/components/NumberInputMessages';
+import { NumberInputWrapper } from '@core/ui/forms/number-input/components/NumberInputWrapper';
+import type { NumberInputContentProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 
 export function NumberInputContent({
 	state,

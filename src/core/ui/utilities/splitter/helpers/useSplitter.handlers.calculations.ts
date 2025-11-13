@@ -1,10 +1,13 @@
+import {
+	applySizeConstraints,
+	getDimension,
+} from '@core/ui/utilities/splitter/helpers/useSplitter.helpers';
 import type {
 	PanelConstraints,
 	PanelRef,
 	PanelSizeParams,
 	SizeGetters,
-} from './useSplitter.handlers.types';
-import { applySizeConstraints, getDimension } from './useSplitter.helpers';
+} from '@core/ui/utilities/splitter/types/useSplitter.handlers.types';
 
 export function getPanelConstraints(
 	panel: PanelRef,
@@ -19,6 +22,30 @@ export function getPanelConstraints(
 	};
 }
 
+function adjustSizesForConstraints(params: {
+	newPanelSize: number;
+	newNextPanelSize: number;
+	currentPanelSize: number;
+	currentNextPanelSize: number;
+	constraints: PanelConstraints;
+}): { newPanelSize: number; newNextPanelSize: number } {
+	const { newPanelSize, newNextPanelSize, currentPanelSize, currentNextPanelSize, constraints } =
+		params;
+	const totalSize = currentPanelSize + currentNextPanelSize;
+	const adjustedTotal = newPanelSize + newNextPanelSize;
+	if (adjustedTotal !== totalSize) {
+		const diff = totalSize - adjustedTotal;
+		if (
+			newPanelSize === constraints.panelMinSize ||
+			(constraints.panelMaxSize && newPanelSize === constraints.panelMaxSize)
+		) {
+			return { newPanelSize, newNextPanelSize: newNextPanelSize + diff };
+		}
+		return { newPanelSize: newPanelSize + diff, newNextPanelSize };
+	}
+	return { newPanelSize, newNextPanelSize };
+}
+
 export function calculatePanelSizes(
 	delta: number,
 	params: PanelSizeParams,
@@ -31,7 +58,6 @@ export function calculatePanelSizes(
 	let newPanelSize = currentPanelSize + delta;
 	let newNextPanelSize = currentNextPanelSize - delta;
 
-	// Apply constraints
 	newPanelSize = applySizeConstraints(
 		newPanelSize,
 		constraints.panelMinSize,
@@ -43,20 +69,11 @@ export function calculatePanelSizes(
 		constraints.nextPanelMaxSize
 	);
 
-	// Adjust if constraints were applied
-	const totalSize = currentPanelSize + currentNextPanelSize;
-	const adjustedTotal = newPanelSize + newNextPanelSize;
-	if (adjustedTotal !== totalSize) {
-		const diff = totalSize - adjustedTotal;
-		if (
-			newPanelSize === constraints.panelMinSize ||
-			(constraints.panelMaxSize && newPanelSize === constraints.panelMaxSize)
-		) {
-			newNextPanelSize += diff;
-		} else {
-			newPanelSize += diff;
-		}
-	}
-
-	return { newPanelSize, newNextPanelSize };
+	return adjustSizesForConstraints({
+		newPanelSize,
+		newNextPanelSize,
+		currentPanelSize,
+		currentNextPanelSize,
+		constraints,
+	});
 }

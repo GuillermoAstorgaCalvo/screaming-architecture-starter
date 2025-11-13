@@ -1,4 +1,4 @@
-import type { PhoneInputWrapperProps } from './PhoneInputTypes';
+import type { PhoneInputWrapperProps } from '@core/ui/forms/phone-input/types/PhoneInputTypes';
 
 export function PhoneInputWrapper({
 	fullWidth,

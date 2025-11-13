@@ -1,6 +1,5 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 import { useCallback } from 'react';
-
-import type { AutocompleteOption } from './Autocomplete';
 
 export interface UseActionHandlersParams {
 	isOpen: boolean;

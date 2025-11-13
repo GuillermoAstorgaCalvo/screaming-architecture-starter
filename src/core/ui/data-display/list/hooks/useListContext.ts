@@ -1,6 +1,5 @@
+import { ListContext, type ListContextValue } from '@core/ui/data-display/list/context/ListContext';
 import { useContext } from 'react';
-
-import { ListContext, type ListContextValue } from './ListContext';
 
 /**
  * Hook to access list context

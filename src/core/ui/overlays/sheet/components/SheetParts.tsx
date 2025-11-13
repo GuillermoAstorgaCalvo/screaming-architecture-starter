@@ -1,9 +1,8 @@
 import { ARIA_LABELS } from '@core/constants/aria';
 import IconButton from '@core/ui/icon-button/IconButton';
 import CloseIcon from '@core/ui/icons/close-icon/CloseIcon';
+import { getOverlayClasses } from '@core/ui/overlays/sheet/helpers/SheetHelpers';
 import type { MouseEvent, ReactNode } from 'react';
-
-import { getOverlayClasses } from './SheetHelpers';
 
 export function SheetTitle({ id, title }: { readonly id: string; readonly title: string }) {
 	return (

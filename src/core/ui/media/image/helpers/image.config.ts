@@ -1,11 +1,10 @@
-import type { ImageProps } from '@src-types/ui/feedback';
-
 import type {
 	ForwardedImageProps,
 	ImageConfig,
 	RenderImageProps,
 	UseImageLifecycleParams,
-} from './image.types';
+} from '@core/ui/media/image/types/image.types';
+import type { ImageProps } from '@src-types/ui/feedback';
 
 export function getImageConfig(props: Readonly<ImageProps>): ImageConfig {
 	return {

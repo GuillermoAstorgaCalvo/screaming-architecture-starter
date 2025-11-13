@@ -1,6 +1,5 @@
+import { useFormWizardState } from '@core/ui/forms/form-wizard/hooks/useFormWizardState';
 import type { FieldValues } from 'react-hook-form';
-
-import { useFormWizardState } from './useFormWizardState';
 
 /**
  * Initialize wizard state with persistence and step tracking

@@ -1,6 +1,5 @@
+import type { AutocompleteFieldProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
 import { forwardRef } from 'react';
-
-import type { AutocompleteFieldProps } from './AutocompleteTypes';
 
 export interface AutocompleteFieldComponentProps extends AutocompleteFieldProps {}
 

@@ -1,7 +1,6 @@
+import { MultiSelectContent } from '@core/ui/forms/multi-select/components/MultiSelectContent';
+import { useMultiSelect } from '@core/ui/forms/multi-select/hooks/useMultiSelect';
 import type { ReactNode } from 'react';
-
-import { MultiSelectContent } from './MultiSelectContent';
-import { useMultiSelect } from './useMultiSelect';
 
 export interface MultiSelectOption {
 	readonly value: string;

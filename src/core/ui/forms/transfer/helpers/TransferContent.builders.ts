@@ -2,13 +2,13 @@ import type {
 	extractTransferProps,
 	getActionLabels,
 	getListLabels,
-} from './TransferContent.helpers';
+} from '@core/ui/forms/transfer/helpers/TransferContent.helpers';
 import type {
 	RenderActionsProps,
 	RenderSourceListProps,
 	RenderTargetListProps,
-} from './TransferContent.types';
-import type { UseTransferReturn } from './useTransfer.types';
+} from '@core/ui/forms/transfer/types/TransferContent.types';
+import type { UseTransferReturn } from '@core/ui/forms/transfer/types/useTransfer.types';
 
 /**
  * Builds props for the source list component

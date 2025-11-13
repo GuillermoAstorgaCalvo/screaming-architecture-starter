@@ -1,6 +1,5 @@
+import { FilterInput } from '@core/ui/data-display/data-table/components/FilterInput';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
-
-import { FilterInput } from './FilterInput';
 
 export interface FilterInputsGridProps {
 	filters: AdvancedFilter[];

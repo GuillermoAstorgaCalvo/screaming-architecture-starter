@@ -1,6 +1,5 @@
+import type { RenderSearchProps } from '@core/ui/forms/transfer/types/TransferList.types';
 import Input from '@core/ui/input/Input';
-
-import type { RenderSearchProps } from './TransferList.types';
 
 /**
  * Renders the search input

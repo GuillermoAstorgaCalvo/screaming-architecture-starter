@@ -1,10 +1,12 @@
 import { useSnackbar } from '@core/providers/useSnackbar';
+import { SNACKBAR_POSITION_CLASSES } from '@core/ui/feedback/snackbar/constants/snackbar.constants';
+import Snackbar from '@core/ui/feedback/snackbar/Snackbar';
+import type {
+	SnackbarItem,
+	SnackbarPosition,
+} from '@core/ui/feedback/snackbar/types/snackbar.types';
 import { classNames } from '@core/utils/classNames';
 import { useEffect, useState } from 'react';
-
-import Snackbar from './Snackbar';
-import { SNACKBAR_POSITION_CLASSES } from './snackbar.constants';
-import type { SnackbarItem, SnackbarPosition } from './snackbar.types';
 
 export interface SnackbarContainerProps {
 	/** Position of snackbars @default 'bottom-center' */

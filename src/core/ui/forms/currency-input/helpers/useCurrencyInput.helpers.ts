@@ -1,8 +1,10 @@
+import type {
+	CurrencyInputFieldProps,
+	UseCurrencyInputStateReturn,
+} from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { CurrencyInputProps } from '@src-types/ui/forms-specialized';
 import type { ChangeEvent, InputHTMLAttributes } from 'react';
-
-import type { CurrencyInputFieldProps, UseCurrencyInputStateReturn } from './CurrencyInputTypes';
 
 interface BuildCurrencyInputFieldPropsOptions {
 	readonly state: UseCurrencyInputStateReturn;

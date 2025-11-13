@@ -1,6 +1,6 @@
 import Button from '@core/ui/button/Button';
-import DropdownMenu from '@core/ui/dropdown-menu/DropdownMenu';
-import type { DropdownMenuItem } from '@core/ui/dropdown-menu/DropdownMenu.types';
+import DropdownMenu from '@core/ui/overlays/dropdown-menu/DropdownMenu';
+import type { DropdownMenuItem } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import type { ButtonVariant, SplitButtonProps } from '@src-types/ui/buttons';
 import type { ReactElement } from 'react';
 

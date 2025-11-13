@@ -1,13 +1,15 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { DragEvent, RefObject } from 'react';
-
 import type {
 	FileUploadDropzoneSectionProps,
 	FileUploadFieldState,
 	FileUploadInputProps,
 	FileUploadLabelSectionProps,
-} from './FileUploadContentHelpers';
-import type { FileUploadContentProps, FileUploadFile } from './FileUploadTypes';
+} from '@core/ui/forms/file-upload/helpers/FileUploadContentHelpers';
+import type {
+	FileUploadContentProps,
+	FileUploadFile,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { DragEvent, RefObject } from 'react';
 
 export interface FileUploadFieldContentProps {
 	readonly fileUploadId?: string;

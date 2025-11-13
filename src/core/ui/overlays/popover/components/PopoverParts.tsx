@@ -1,6 +1,5 @@
+import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
 import type { ReactNode, RefObject } from 'react';
-
-import type { PopoverPositionState } from './popoverPosition';
 
 interface PopoverContentProps {
 	readonly popoverRef: RefObject<HTMLDivElement>;

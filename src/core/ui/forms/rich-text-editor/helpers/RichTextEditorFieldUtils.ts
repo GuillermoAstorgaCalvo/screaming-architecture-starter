@@ -1,7 +1,6 @@
+import type { RichTextEditorEditorContentProps } from '@core/ui/forms/rich-text-editor/components/RichTextEditorEditorContent';
+import { formatHeight } from '@core/ui/forms/rich-text-editor/helpers/RichTextEditorEditor';
 import type { useEditor } from '@tiptap/react';
-
-import { formatHeight } from './RichTextEditorEditor';
-import type { RichTextEditorEditorContentProps } from './RichTextEditorEditorContent';
 
 export function getContainerStyle(minHeight?: number | string, maxHeight?: number | string) {
 	return {

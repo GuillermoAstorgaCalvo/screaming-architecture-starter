@@ -1,14 +1,20 @@
-import { useState } from 'react';
-
-import { useStepState } from './useWizard.state.step';
-import { useStepHelpers, useStepTracking } from './useWizard.state.tracking';
+import { useStepState } from '@core/ui/forms/wizard/hooks/useWizard.state.step';
+import {
+	useStepHelpers,
+	useStepTracking,
+} from '@core/ui/forms/wizard/hooks/useWizard.state.tracking';
+import {
+	useResetHandler,
+	useWizardProgress,
+	useWizardStateMemo,
+} from '@core/ui/forms/wizard/hooks/useWizard.state.utils';
+import { useValidationState } from '@core/ui/forms/wizard/hooks/useWizard.state.validation';
 import type {
 	StepValidationState,
 	UseWizardStateOptions,
 	UseWizardStateReturn,
-} from './useWizard.state.types';
-import { useResetHandler, useWizardProgress, useWizardStateMemo } from './useWizard.state.utils';
-import { useValidationState } from './useWizard.state.validation';
+} from '@core/ui/forms/wizard/types/useWizard.state.types';
+import { useState } from 'react';
 
 interface WizardStateHooks {
 	activeStep: number;

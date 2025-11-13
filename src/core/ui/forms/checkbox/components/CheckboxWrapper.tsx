@@ -1,6 +1,8 @@
+import type {
+	CheckboxContainerProps,
+	CheckboxWrapperProps,
+} from '@core/ui/forms/checkbox/types/CheckboxTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { CheckboxContainerProps, CheckboxWrapperProps } from './CheckboxTypes';
 
 export function CheckboxWrapper({ fullWidth, children, ...props }: Readonly<CheckboxWrapperProps>) {
 	return (

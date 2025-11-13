@@ -1,7 +1,7 @@
-import { extractTransferListProps } from './TransferList.helpers';
-import { renderTransferListContent } from './TransferList.renderers';
-import { setupTransferList } from './TransferList.setup';
-import type { TransferListProps } from './TransferList.types';
+import { extractTransferListProps } from '@core/ui/forms/transfer/helpers/TransferList.helpers';
+import { renderTransferListContent } from '@core/ui/forms/transfer/helpers/TransferList.renderers';
+import { setupTransferList } from '@core/ui/forms/transfer/helpers/TransferList.setup';
+import type { TransferListProps } from '@core/ui/forms/transfer/types/TransferList.types';
 
 /**
  * TransferList - Individual list panel for Transfer component

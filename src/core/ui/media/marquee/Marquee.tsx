@@ -1,11 +1,10 @@
 import { ARIA_LABELS } from '@core/constants/aria';
+import { shouldShowMeasure } from '@core/ui/media/marquee/helpers/useMarqueeHelpers';
+import { useMarquee } from '@core/ui/media/marquee/hooks/useMarquee';
+import { useMarqueeState } from '@core/ui/media/marquee/hooks/useMarqueeHooks';
 import { classNames } from '@core/utils/classNames';
 import type { MarqueeProps } from '@src-types/ui/layout/marquee';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
-
-import { useMarquee } from './useMarquee';
-import { shouldShowMeasure } from './useMarqueeHelpers';
-import { useMarqueeState } from './useMarqueeHooks';
 
 const DEFAULT_SPEED = 50;
 const DEFAULT_DIRECTION = 'left';

@@ -1,13 +1,15 @@
 import Button from '@core/ui/button/Button';
+import {
+	ALERT_INTENT_ICON_STYLES,
+	DISMISS_ICON,
+} from '@core/ui/feedback/alert/constants/Alert.constants';
+import { getDefaultIcon } from '@core/ui/feedback/alert/helpers/Alert.helpers';
+import type { AlertAction, AlertIntent } from '@core/ui/feedback/alert/types/Alert.types';
 import Heading from '@core/ui/heading/Heading';
 import IconButton from '@core/ui/icon-button/IconButton';
 import Text from '@core/ui/text/Text';
 import { classNames } from '@core/utils/classNames';
 import type { ReactNode } from 'react';
-
-import { ALERT_INTENT_ICON_STYLES, DISMISS_ICON } from './Alert.constants';
-import { getDefaultIcon } from './Alert.helpers';
-import type { AlertAction, AlertIntent } from './Alert.types';
 
 interface AlertIconProps {
 	readonly intent: AlertIntent;

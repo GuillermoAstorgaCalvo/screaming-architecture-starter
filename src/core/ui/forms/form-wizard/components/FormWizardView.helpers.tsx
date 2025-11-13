@@ -1,13 +1,19 @@
+import {
+	ContentSection,
+	StepperSection,
+} from '@core/ui/forms/form-wizard/components/FormWizardView.layout';
+import { NavigationSection } from '@core/ui/forms/form-wizard/components/FormWizardView.navigation';
+import { ProgressSection } from '@core/ui/forms/form-wizard/components/FormWizardView.progress';
+import type { useFormWizardHandlers } from '@core/ui/forms/form-wizard/hooks/useFormWizardHandlers';
+import type {
+	FormWizardProps,
+	FormWizardState,
+	FormWizardStep,
+} from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { StepperOrientation, StepperStep } from '@src-types/ui/navigation/stepper';
 import type { ReactNode } from 'react';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardProps, FormWizardState, FormWizardStep } from './FormWizardTypes';
-import { ContentSection, StepperSection } from './FormWizardView.layout';
-import { NavigationSection } from './FormWizardView.navigation';
-import { ProgressSection } from './FormWizardView.progress';
-import type { useFormWizardHandlers } from './useFormWizardHandlers';
 
 export interface StepMetadata<T extends FieldValues> {
 	readonly currentStep: FormWizardStep<T> | undefined;

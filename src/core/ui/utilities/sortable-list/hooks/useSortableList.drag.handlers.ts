@@ -1,15 +1,14 @@
-import { type DragEvent, useCallback } from 'react';
-
 import {
 	createDragOverLogic,
 	createDragStartLogic,
 	createDropLogic,
-} from './useSortableList.drag.logic';
+} from '@core/ui/utilities/sortable-list/helpers/useSortableList.drag.logic';
 import type {
 	UseDragOverHandlerParams,
 	UseDragStartHandlerParams,
 	UseDropHandlerParams,
-} from './useSortableList.drag.types';
+} from '@core/ui/utilities/sortable-list/types/useSortableList.drag.types';
+import { type DragEvent, useCallback } from 'react';
 
 /**
  * Creates drag start handler

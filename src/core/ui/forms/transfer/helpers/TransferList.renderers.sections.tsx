@@ -1,7 +1,10 @@
-import { renderHeader } from './TransferList.renderers.header';
-import { renderList } from './TransferList.renderers.list';
-import { renderSearch } from './TransferList.renderers.search';
-import type { TransferListContentProps, TransferListSetup } from './TransferList.types';
+import { renderHeader } from '@core/ui/forms/transfer/helpers/TransferList.renderers.header';
+import { renderList } from '@core/ui/forms/transfer/helpers/TransferList.renderers.list';
+import { renderSearch } from '@core/ui/forms/transfer/helpers/TransferList.renderers.search';
+import type {
+	TransferListContentProps,
+	TransferListSetup,
+} from '@core/ui/forms/transfer/types/TransferList.types';
 
 /**
  * Renders the header section with extracted props

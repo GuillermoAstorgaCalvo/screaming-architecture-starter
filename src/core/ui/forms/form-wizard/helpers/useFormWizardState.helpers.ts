@@ -76,38 +76,6 @@ interface FormWizardHandlersParams<T extends FieldValues> {
 	persistKey: string;
 }
 
-function createSetActiveStepHandler(setActiveStep: (step: number) => void, stepsLength: number) {
-	return (step: number) => {
-		if (step >= 0 && step < stepsLength) {
-			setActiveStep(step);
-		}
-	};
-}
-
-function createMarkStepCompletedHandler(
-	setCompletedSteps: Dispatch<SetStateAction<Set<number>>>,
-	setErrorSteps: Dispatch<SetStateAction<Set<number>>>
-) {
-	return (stepIndex: number) => {
-		setCompletedSteps(prev => new Set([...prev, stepIndex]));
-		setErrorSteps(prev => {
-			const next = new Set(prev);
-			next.delete(stepIndex);
-			return next;
-		});
-	};
-}
-
-function createClearStepErrorHandler(setErrorSteps: Dispatch<SetStateAction<Set<number>>>) {
-	return (stepIndex: number) => {
-		setErrorSteps(prev => {
-			const next = new Set(prev);
-			next.delete(stepIndex);
-			return next;
-		});
-	};
-}
-
 function createResetHandler<T extends FieldValues>({
 	setActiveStep,
 	setCompletedSteps,
@@ -139,12 +107,29 @@ export function createFormWizardHandlers<T extends FieldValues>(
 	const { setActiveStep, setCompletedSteps, setErrorSteps, setFormData, stepsLength } = params;
 
 	return {
-		handleSetActiveStep: createSetActiveStepHandler(setActiveStep, stepsLength),
-		handleMarkStepCompleted: createMarkStepCompletedHandler(setCompletedSteps, setErrorSteps),
+		handleSetActiveStep: (step: number) => {
+			if (step >= 0 && step < stepsLength) {
+				setActiveStep(step);
+			}
+		},
+		handleMarkStepCompleted: (stepIndex: number) => {
+			setCompletedSteps(prev => new Set([...prev, stepIndex]));
+			setErrorSteps(prev => {
+				const next = new Set(prev);
+				next.delete(stepIndex);
+				return next;
+			});
+		},
 		handleMarkStepError: (stepIndex: number) => {
 			setErrorSteps(prev => new Set([...prev, stepIndex]));
 		},
-		handleClearStepError: createClearStepErrorHandler(setErrorSteps),
+		handleClearStepError: (stepIndex: number) => {
+			setErrorSteps(prev => {
+				const next = new Set(prev);
+				next.delete(stepIndex);
+				return next;
+			});
+		},
 		handleUpdateFormData: (data: Partial<T>) => {
 			setFormData(prev => ({ ...prev, ...data }));
 		},

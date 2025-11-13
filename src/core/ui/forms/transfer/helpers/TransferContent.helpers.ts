@@ -32,14 +32,20 @@ export function getListLabels(labels?: TransferProps<unknown>['labels']):
 			selectNone?: string;
 	  }
 	| undefined {
-	if (labels?.selectAll === undefined && labels?.selectNone === undefined) {
+	if (!labels) {
 		return undefined;
 	}
 
-	return {
-		...(labels.selectAll !== undefined && { selectAll: labels.selectAll }),
-		...(labels.selectNone !== undefined && { selectNone: labels.selectNone }),
-	} as const;
+	const result: { selectAll?: string; selectNone?: string } = {};
+
+	if (labels.selectAll !== undefined) {
+		result.selectAll = labels.selectAll;
+	}
+	if (labels.selectNone !== undefined) {
+		result.selectNone = labels.selectNone;
+	}
+
+	return Object.keys(result).length > 0 ? result : undefined;
 }
 
 /**
@@ -51,34 +57,38 @@ export function getActionLabels(labels?: TransferProps<unknown>['labels']):
 			moveToLeft?: string;
 	  }
 	| undefined {
-	if (labels?.moveToRight === undefined && labels?.moveToLeft === undefined) {
+	if (!labels) {
 		return undefined;
 	}
 
-	return {
-		...(labels.moveToRight !== undefined && { moveToRight: labels.moveToRight }),
-		...(labels.moveToLeft !== undefined && { moveToLeft: labels.moveToLeft }),
-	} as const;
+	const result: { moveToRight?: string; moveToLeft?: string } = {};
+
+	if (labels.moveToRight !== undefined) {
+		result.moveToRight = labels.moveToRight;
+	}
+	if (labels.moveToLeft !== undefined) {
+		result.moveToLeft = labels.moveToLeft;
+	}
+
+	return Object.keys(result).length > 0 ? result : undefined;
 }
+
+const DEFAULT_TRANSFER_PROPS = {
+	sourceTitle: 'Available',
+	targetTitle: 'Selected',
+	searchPlaceholder: 'Search...',
+	showSearch: true,
+	size: 'md' as const,
+	disabled: false,
+	maxHeight: 300,
+	showSelectAll: true,
+} as const;
 
 /**
  * Extracts and normalizes transfer props with defaults
  */
 export function extractTransferProps<T>(props: Readonly<TransferProps<T>>) {
 	const {
-		sourceTitle = 'Available',
-		targetTitle = 'Selected',
-		searchPlaceholder = 'Search...',
-		showSearch = true,
-		size = 'md',
-		disabled = false,
-		renderItem,
-		renderEmpty,
-		maxHeight = 300,
-		showSelectAll = true,
-		labels,
-		transferId,
-		className,
 		onChange: _onChange,
 		options: _options,
 		value: _value,
@@ -87,19 +97,8 @@ export function extractTransferProps<T>(props: Readonly<TransferProps<T>>) {
 	} = props;
 
 	return {
-		sourceTitle,
-		targetTitle,
-		searchPlaceholder,
-		showSearch,
-		size,
-		disabled,
-		renderItem,
-		renderEmpty,
-		maxHeight,
-		showSelectAll,
-		labels,
-		transferId,
-		className,
+		...DEFAULT_TRANSFER_PROPS,
+		...restProps,
 		restProps,
 	};
 }

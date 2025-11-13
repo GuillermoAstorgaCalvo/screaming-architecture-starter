@@ -1,8 +1,7 @@
+import type { SearchInputFieldProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 import Icon from '@core/ui/icons/Icon';
 import { classNames } from '@core/utils/classNames';
 import type { InputHTMLAttributes, MouseEvent } from 'react';
-
-import type { SearchInputFieldProps } from './SearchInputTypes';
 
 function SearchIcon() {
 	return (

@@ -1,9 +1,8 @@
+import { useSplitterContext } from '@core/ui/utilities/splitter/components/SplitterContext';
+import { isHorizontal } from '@core/ui/utilities/splitter/helpers/useSplitter.helpers';
 import type { SplitterOrientation } from '@src-types/ui/layout/splitter';
 import { forwardRef, type MouseEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { useSplitterContext } from './SplitterContext';
-import { isHorizontal } from './useSplitter.helpers';
 
 export interface SplitterHandleProps {
 	readonly panelIndex: number;

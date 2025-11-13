@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { TextareaMessagesProps } from '@core/ui/forms/textarea/types/TextareaTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { TextareaMessagesProps } from './TextareaTypes';
 
 export function TextareaMessages({
 	textareaId,

@@ -1,7 +1,6 @@
+import { ColorPickerContent } from '@core/ui/forms/color-picker/components/ColorPickerContent';
+import { useColorPickerProps } from '@core/ui/forms/color-picker/hooks/useColorPicker';
 import type { ColorPickerProps } from '@src-types/ui/forms-advanced';
-
-import { ColorPickerContent } from './ColorPickerContent';
-import { useColorPickerProps } from './useColorPicker';
 
 /**
  * ColorPicker - Color selection component with input and preset swatches

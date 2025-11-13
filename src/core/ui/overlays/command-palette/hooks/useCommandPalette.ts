@@ -1,13 +1,14 @@
+import type {
+	HandlersSetupParams,
+	UseCommandPaletteParams,
+	UseCommandPaletteReturn,
+} from '@core/ui/overlays/command-palette/types/useCommandPalette.types';
+
 import { useCommandPaletteEffects } from './useCommandPalette.effects';
 import { useCommandPaletteHandlers } from './useCommandPalette.handlers';
 import { useCommandPaletteRefs } from './useCommandPalette.refs';
 import { useCommandSelection } from './useCommandPalette.selection';
 import { useCommandPaletteState, useSearchState } from './useCommandPalette.state';
-import type {
-	HandlersSetupParams,
-	UseCommandPaletteParams,
-	UseCommandPaletteReturn,
-} from './useCommandPalette.types';
 
 function useCommandPaletteStateAndEffects(params: UseCommandPaletteParams, searchQuery: string) {
 	const { searchInputRef, commandsListRef } = useCommandPaletteRefs();

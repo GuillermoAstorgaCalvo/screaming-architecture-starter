@@ -1,6 +1,5 @@
+import type { DatePickerContainerProps } from '@core/ui/forms/date-picker/types/DatePickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { DatePickerContainerProps } from './DatePickerTypes';
 
 export function DatePickerContainer({
 	children,

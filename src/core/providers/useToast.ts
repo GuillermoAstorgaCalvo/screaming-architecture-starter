@@ -1,4 +1,4 @@
-import type { ToastAction, ToastIntent } from '@core/ui/toast/toast.types';
+import type { ToastAction, ToastIntent } from '@core/ui/feedback/toast/types/toast.types';
 import { type ReactNode, useCallback, useContext } from 'react';
 
 import { ToastContext } from './ToastContext';

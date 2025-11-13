@@ -1,11 +1,10 @@
 import Backdrop from '@core/ui/backdrop/Backdrop';
-import { useEscapeKey } from '@core/ui/modal/useModal';
+import { ActionSheetContent } from '@core/ui/overlays/action-sheet/components/ActionSheet.components';
+import { createActionSheetHandlers } from '@core/ui/overlays/action-sheet/helpers/ActionSheet.helpers';
+import { useEscapeKey } from '@core/ui/overlays/modal/hooks/useModal';
 import type { ActionSheetProps } from '@src-types/ui/overlays/interactions';
 import { useId } from 'react';
 import { createPortal } from 'react-dom';
-
-import { ActionSheetContent } from './ActionSheet.components';
-import { createActionSheetHandlers } from './ActionSheet.helpers';
 
 /**
  * ActionSheet - Mobile-style action sheet

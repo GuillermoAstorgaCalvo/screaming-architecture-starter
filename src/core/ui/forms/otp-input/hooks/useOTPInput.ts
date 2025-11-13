@@ -1,17 +1,16 @@
-import type { StandardSize } from '@src-types/ui/base';
-import { useRef } from 'react';
-
-import { useOTPInputChangeHandler } from './useOTPInput.changeHandler';
-import { useOTPInputFieldProps } from './useOTPInput.fieldProps';
-import { useOTPInputState } from './useOTPInput.state';
+import { useOTPInputChangeHandler } from '@core/ui/forms/otp-input/hooks/useOTPInput.changeHandler';
+import { useOTPInputFieldProps } from '@core/ui/forms/otp-input/hooks/useOTPInput.fieldProps';
+import { useOTPInputState } from '@core/ui/forms/otp-input/hooks/useOTPInput.state';
 import type {
 	OTPInputProps,
 	UseOTPInputChangeHandlerOptions,
 	UseOTPInputFieldPropsOptions,
 	UseOTPInputPropsOptions,
 	UseOTPInputPropsReturn,
-} from './useOTPInput.types';
-import { useOTPInputValue } from './useOTPInput.value';
+} from '@core/ui/forms/otp-input/hooks/useOTPInput.types';
+import { useOTPInputValue } from '@core/ui/forms/otp-input/hooks/useOTPInput.value';
+import type { StandardSize } from '@src-types/ui/base';
+import { useRef } from 'react';
 
 /**
  * Extracts and normalizes OTP input props with default values

@@ -1,8 +1,10 @@
+import {
+	resolveLoadingPlaceholder,
+	shouldShowErrorPlaceholder,
+} from '@core/ui/media/video/helpers/video.placeholders';
+import { renderReadyVideo } from '@core/ui/media/video/helpers/video.render';
+import type { RenderVideoParams } from '@core/ui/media/video/types/video.types';
 import type { ReactElement } from 'react';
-
-import { resolveLoadingPlaceholder, shouldShowErrorPlaceholder } from './video.placeholders';
-import { renderReadyVideo } from './video.render';
-import type { RenderVideoParams } from './video.types';
 
 export function renderVideo(params: RenderVideoParams): ReactElement {
 	if (shouldShowErrorPlaceholder(params)) {

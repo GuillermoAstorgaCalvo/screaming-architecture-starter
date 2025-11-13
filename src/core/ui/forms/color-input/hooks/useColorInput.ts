@@ -1,16 +1,15 @@
-import type { ColorInputProps } from '@src-types/ui/forms';
-import { type InputHTMLAttributes, useId } from 'react';
-
 import {
 	generateColorInputId,
 	getAriaDescribedBy,
 	getColorInputClasses,
-} from './ColorInputHelpers';
+} from '@core/ui/forms/color-input/helpers/ColorInputHelpers';
 import type {
 	ColorInputFieldProps,
 	UseColorInputStateOptions,
 	UseColorInputStateReturn,
-} from './ColorInputTypes';
+} from '@core/ui/forms/color-input/types/ColorInputTypes';
+import type { ColorInputProps } from '@src-types/ui/forms';
+import { type InputHTMLAttributes, useId } from 'react';
 
 export interface UseColorInputPropsOptions {
 	readonly props: Readonly<ColorInputProps>;

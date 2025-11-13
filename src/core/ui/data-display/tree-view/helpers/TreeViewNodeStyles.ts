@@ -1,6 +1,5 @@
+import { getTreeNodeClasses } from '@core/ui/data-display/tree-view/helpers/TreeViewHelpers';
 import type { StandardSize } from '@src-types/ui/base';
-
-import { getTreeNodeClasses } from './TreeViewHelpers';
 
 /**
  * Gets CSS classes for tree node element

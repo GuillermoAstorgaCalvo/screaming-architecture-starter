@@ -1,8 +1,52 @@
+import {
+	calculatePanelSizes,
+	getPanelConstraints,
+} from '@core/ui/utilities/splitter/helpers/useSplitter.handlers.calculations';
+import {
+	calculateNewSize,
+	getDimension,
+	isHorizontal,
+	setDimension,
+} from '@core/ui/utilities/splitter/helpers/useSplitter.helpers';
+import type {
+	MouseDownContext,
+	MouseMoveContext,
+	PanelRef,
+} from '@core/ui/utilities/splitter/types/useSplitter.handlers.types';
+import type { SplitterOrientation } from '@src-types/ui/layout/splitter';
 import type { MouseEvent as ReactMouseEvent } from 'react';
 
-import { calculatePanelSizes, getPanelConstraints } from './useSplitter.handlers.calculations';
-import type { MouseDownContext, MouseMoveContext } from './useSplitter.handlers.types';
-import { calculateNewSize, getDimension, isHorizontal, setDimension } from './useSplitter.helpers';
+interface UpdatePanelsParams {
+	readonly panel: PanelRef;
+	readonly nextPanel: PanelRef;
+	readonly newPanelSize: number;
+	readonly newNextPanelSize: number;
+	readonly orientation: SplitterOrientation;
+	readonly setPanelSize: (panelId: string, size: number) => void;
+	readonly onResize?: ((panelId: string, size: number) => void) | undefined;
+}
+
+function updatePanels(params: UpdatePanelsParams): void {
+	const { panel, nextPanel, newPanelSize, newNextPanelSize, orientation, setPanelSize, onResize } =
+		params;
+	setDimension(orientation, panel.element, newPanelSize);
+	setDimension(orientation, nextPanel.element, newNextPanelSize);
+	setPanelSize(panel.id, newPanelSize);
+	setPanelSize(nextPanel.id, newNextPanelSize);
+	onResize?.(panel.id, newPanelSize);
+	onResize?.(nextPanel.id, newNextPanelSize);
+}
+
+function canStartResize(disabled: boolean, panelIndex: number, panelRefsLength: number): boolean {
+	return !disabled && panelIndex >= 0 && panelIndex < panelRefsLength - 1;
+}
+
+function getStartPosition(
+	orientation: SplitterOrientation,
+	event: ReactMouseEvent<HTMLButtonElement>
+): number {
+	return isHorizontal(orientation) ? event.clientX : event.clientY;
+}
 
 export function processMouseMove(event: MouseEvent, context: MouseMoveContext): void {
 	const { resizeState, panelRefs, orientation, sizeGetters, setPanelSize, onResize } = context;
@@ -13,32 +57,27 @@ export function processMouseMove(event: MouseEvent, context: MouseMoveContext): 
 
 	const panel = panelRefs[panelIndex];
 	const nextPanel = panelRefs[panelIndex + 1];
-
 	if (!panel || !nextPanel) {
 		return;
 	}
 
 	const startSize = startSizes[panelIndex] ?? 0;
-	const delta =
-		calculateNewSize({
-			event,
-			orientation,
-			startPos,
-			startSize,
-		}) - startSize;
+	const delta = calculateNewSize({ event, orientation, startPos, startSize }) - startSize;
+	const { newPanelSize, newNextPanelSize } = calculatePanelSizes(
+		delta,
+		{ panel, nextPanel, orientation },
+		getPanelConstraints(panel, nextPanel, sizeGetters)
+	);
 
-	const constraints = getPanelConstraints(panel, nextPanel, sizeGetters);
-	const panelParams = { panel, nextPanel, orientation };
-	const { newPanelSize, newNextPanelSize } = calculatePanelSizes(delta, panelParams, constraints);
-
-	setDimension(orientation, panel.element, newPanelSize);
-	setDimension(orientation, nextPanel.element, newNextPanelSize);
-
-	setPanelSize(panel.id, newPanelSize);
-	setPanelSize(nextPanel.id, newNextPanelSize);
-
-	onResize?.(panel.id, newPanelSize);
-	onResize?.(nextPanel.id, newNextPanelSize);
+	updatePanels({
+		panel,
+		nextPanel,
+		newPanelSize,
+		newNextPanelSize,
+		orientation,
+		setPanelSize,
+		onResize,
+	});
 }
 
 export function processMouseDown(
@@ -47,7 +86,7 @@ export function processMouseDown(
 	context: MouseDownContext
 ): void {
 	const { disabled, panelRefs, orientation, setResizeState } = context;
-	if (disabled || panelIndex < 0 || panelIndex >= panelRefs.length - 1) {
+	if (!canStartResize(disabled, panelIndex, panelRefs.length)) {
 		return;
 	}
 
@@ -56,12 +95,11 @@ export function processMouseDown(
 
 	const panel = panelRefs[panelIndex];
 	const nextPanel = panelRefs[panelIndex + 1];
-
 	if (!panel || !nextPanel) {
 		return;
 	}
 
-	const startPos = isHorizontal(orientation) ? event.clientX : event.clientY;
+	const startPos = getStartPosition(orientation, event);
 	const startSizes = panelRefs.map(p => getDimension(orientation, p.element));
 
 	setResizeState({

@@ -1,8 +1,7 @@
+import type { useDataTableState } from '@core/ui/data-display/data-table/hooks/useDataTableState';
 import type { StandardSize } from '@src-types/ui/base';
 import type { DataTableProps } from '@src-types/ui/dataTable';
 import type { ReactNode } from 'react';
-
-import type { useDataTableState } from './useDataTableState';
 
 export const DEFAULT_PAGE_SIZE = 10;
 

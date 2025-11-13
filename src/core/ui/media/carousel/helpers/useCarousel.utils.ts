@@ -1,7 +1,6 @@
+import type { CarouselContentProps } from '@core/ui/media/carousel/types/useCarousel.types';
 import type { CarouselProps } from '@src-types/ui/layout/carousel';
 import type { ReactNode } from 'react';
-
-import type { CarouselContentProps } from './useCarousel.types';
 
 export function calculateNewIndex(index: number, totalSlides: number, loop: boolean): number {
 	if (index < 0) {

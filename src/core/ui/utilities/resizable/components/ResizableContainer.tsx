@@ -1,7 +1,9 @@
+import { prepareAllData } from '@core/ui/utilities/resizable/helpers/ResizableContainer.helpers';
+import type {
+	ProcessedContainerProps,
+	ResizableContainerProps,
+} from '@core/ui/utilities/resizable/types/ResizableContainer.types';
 import { type ForwardedRef, forwardRef } from 'react';
-
-import { prepareAllData } from './ResizableContainer.helpers';
-import type { ProcessedContainerProps, ResizableContainerProps } from './ResizableContainer.types';
 
 function processContainerProps(props: ResizableContainerProps): ProcessedContainerProps {
 	const {

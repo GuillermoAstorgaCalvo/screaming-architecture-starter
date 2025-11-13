@@ -1,6 +1,5 @@
+import type { PullState } from '@core/ui/utilities/pull-to-refresh/helpers/PullToRefreshHelpers';
 import { type Dispatch, type RefObject, type SetStateAction, useRef, useState } from 'react';
-
-import type { PullState } from './PullToRefreshHelpers';
 
 /**
  * Hook return type for pull-to-refresh state

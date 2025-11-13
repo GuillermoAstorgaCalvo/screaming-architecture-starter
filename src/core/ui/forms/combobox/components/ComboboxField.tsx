@@ -1,6 +1,5 @@
+import type { ComboboxFieldProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
 import { forwardRef } from 'react';
-
-import type { ComboboxFieldProps } from './ComboboxTypes';
 
 export interface ComboboxFieldComponentProps extends ComboboxFieldProps {}
 

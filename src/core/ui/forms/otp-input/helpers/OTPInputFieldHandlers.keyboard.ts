@@ -1,6 +1,5 @@
+import type { HandlerDependencies } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.types';
 import type { KeyboardEvent } from 'react';
-
-import type { HandlerDependencies } from './OTPInputFieldHandlers.types';
 
 function createBackspaceHandler(
 	updateValue: (valueArray: string[]) => void,
@@ -48,44 +47,65 @@ function createArrowKeyHandlers(length: number, focusInput: (index: number) => v
 	};
 }
 
+interface KeyHandlerContext {
+	index: number;
+	valueArray: string[];
+	handleBackspace: (index: number, valueArray: string[]) => void;
+	handleArrowKeysFn: (index: number, key: string) => void;
+	updateValue: (valueArray: string[]) => void;
+	e: KeyboardEvent<HTMLInputElement>;
+}
+
+function handleBackspaceKey(ctx: KeyHandlerContext): void {
+	ctx.e.preventDefault();
+	ctx.handleBackspace(ctx.index, ctx.valueArray);
+}
+
+function handleArrowKeys(ctx: KeyHandlerContext & { key: string }): void {
+	ctx.e.preventDefault();
+	ctx.handleArrowKeysFn(ctx.index, ctx.key);
+}
+
+function handleDeleteKey(ctx: KeyHandlerContext): void {
+	ctx.e.preventDefault();
+	ctx.valueArray[ctx.index] = '';
+	ctx.updateValue(ctx.valueArray);
+}
+
+function handleVerticalArrows(e: KeyboardEvent<HTMLInputElement>): void {
+	e.preventDefault();
+}
+
 export function createKeyboardHandlers(deps: HandlerDependencies) {
 	const { length, getValueArray, updateValue, focusInput } = deps;
 
 	const handleBackspace = createBackspaceHandler(updateValue, focusInput);
-	const handleArrowKeys = createArrowKeyHandlers(length, focusInput);
-
-	const handleDeleteKey = (index: number, valueArray: string[]): void => {
-		valueArray[index] = '';
-		updateValue(valueArray);
-	};
+	const handleArrowKeysFn = createArrowKeyHandlers(length, focusInput);
 
 	const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>): void => {
 		const valueArray = getValueArray();
-		switch (e.key) {
-			case 'Backspace': {
-				e.preventDefault();
-				handleBackspace(index, valueArray);
-				break;
-			}
-			case 'ArrowLeft':
-			case 'ArrowRight': {
-				e.preventDefault();
-				handleArrowKeys(index, e.key);
-				break;
-			}
-			case 'Delete': {
-				e.preventDefault();
-				handleDeleteKey(index, valueArray);
-				break;
-			}
-			case 'ArrowUp':
-			case 'ArrowDown': {
-				e.preventDefault();
-				break;
-			}
-			default: {
-				break;
-			}
+		const { key } = e;
+		const ctx: KeyHandlerContext = {
+			index,
+			valueArray,
+			handleBackspace,
+			handleArrowKeysFn,
+			updateValue,
+			e,
+		};
+
+		const keyHandlers: Record<string, () => void> = {
+			Backspace: () => handleBackspaceKey(ctx),
+			ArrowLeft: () => handleArrowKeys({ ...ctx, key }),
+			ArrowRight: () => handleArrowKeys({ ...ctx, key }),
+			Delete: () => handleDeleteKey(ctx),
+			ArrowUp: () => handleVerticalArrows(e),
+			ArrowDown: () => handleVerticalArrows(e),
+		};
+
+		const handler = keyHandlers[key];
+		if (handler) {
+			handler();
 		}
 	};
 

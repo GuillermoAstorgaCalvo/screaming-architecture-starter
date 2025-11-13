@@ -1,8 +1,11 @@
+import {
+	DrawerFooter,
+	DrawerHeader,
+	DrawerMainContent,
+} from '@core/ui/overlays/drawer/components/DrawerParts';
+import { getDrawerClasses } from '@core/ui/overlays/drawer/helpers/DrawerHelpers';
 import type { DrawerPosition, DrawerSize } from '@src-types/ui/overlays/panels';
 import type { ReactNode, RefObject } from 'react';
-
-import { getDrawerClasses } from './DrawerHelpers';
-import { DrawerFooter, DrawerHeader, DrawerMainContent } from './DrawerParts';
 
 interface DrawerDialogProps {
 	readonly id: string;

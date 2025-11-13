@@ -1,9 +1,9 @@
-import { useCarouselAutoPlay } from './useCarousel.autoplay';
-import { useCarouselData } from './useCarousel.data';
-import { useCarouselKeyboard } from './useCarousel.keyboard';
-import { useCarouselState } from './useCarousel.state';
-import type { UseCarouselSetupParams } from './useCarousel.types';
-import { prepareCarouselContentProps } from './useCarousel.utils';
+import { prepareCarouselContentProps } from '@core/ui/media/carousel/helpers/useCarousel.utils';
+import { useCarouselAutoPlay } from '@core/ui/media/carousel/hooks/useCarousel.autoplay';
+import { useCarouselData } from '@core/ui/media/carousel/hooks/useCarousel.data';
+import { useCarouselKeyboard } from '@core/ui/media/carousel/hooks/useCarousel.keyboard';
+import { useCarouselState } from '@core/ui/media/carousel/hooks/useCarousel.state';
+import type { UseCarouselSetupParams } from '@core/ui/media/carousel/types/useCarousel.types';
 
 interface UseCarouselLogicParams {
 	readonly controlledActiveIndex: number | undefined;

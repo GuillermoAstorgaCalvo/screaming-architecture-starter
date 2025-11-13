@@ -1,6 +1,6 @@
+import type { ToastProps } from '@core/ui/feedback/toast/types/toast.types';
 import type { ReactNode } from 'react';
 
-import type { ToastProps } from './toast.types';
 import type { UseToastDismissReturn } from './useToastDismiss';
 
 export interface BuildToastContainerPropsParams {

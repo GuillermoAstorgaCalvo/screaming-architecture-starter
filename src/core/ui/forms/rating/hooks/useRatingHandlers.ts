@@ -1,6 +1,5 @@
+import { useRatingState } from '@core/ui/forms/rating/hooks/useRatingState';
 import { useCallback } from 'react';
-
-import { useRatingState } from './useRatingState';
 
 export interface UseRatingHandlersParams {
 	readOnly: boolean;

@@ -1,6 +1,6 @@
-import { RangeSliderElements } from './RangeSliderComponents';
-import type { RangeSliderInputProps } from './RangeSliderTypes';
-import { useRangeSliderState } from './useRangeSliderState';
+import { RangeSliderElements } from '@core/ui/forms/range-slider/components/RangeSliderComponents';
+import { useRangeSliderState } from '@core/ui/forms/range-slider/hooks/useRangeSliderState';
+import type { RangeSliderInputProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 
 interface RangeSliderInputComponentProps {
 	readonly minId: string | undefined;

@@ -1,11 +1,13 @@
 import { env } from '@core/config/env.client';
 import Box from '@core/ui/box/Box';
+import {
+	buildActionsProps,
+	getDisplayText,
+} from '@core/ui/error-boundary/helpers/ErrorBoundaryUI.helpers';
+import { renderErrorContent } from '@core/ui/error-boundary/helpers/ErrorBoundaryUI.renderers';
+import type { ErrorBoundaryUIProps } from '@core/ui/error-boundary/types/ErrorBoundaryUITypes';
 import Flex from '@core/ui/flex/Flex';
 import { classNames } from '@core/utils/classNames';
-
-import { buildActionsProps, getDisplayText } from './ErrorBoundaryUI.helpers';
-import { renderErrorContent } from './ErrorBoundaryUI.renderers';
-import type { ErrorBoundaryUIProps } from './ErrorBoundaryUITypes';
 
 /**
  * ErrorBoundaryUI - Customizable error UI component for ErrorBoundary

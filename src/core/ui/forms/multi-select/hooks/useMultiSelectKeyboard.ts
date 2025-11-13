@@ -1,10 +1,12 @@
+import { useActionHandlers } from '@core/ui/forms/multi-select/hooks/useMultiSelectKeyboard.actions';
+import {
+	createKeyHandlerMap,
+	type KeyboardHandlers,
+} from '@core/ui/forms/multi-select/hooks/useMultiSelectKeyboard.map';
+import { useNavigationHandlers } from '@core/ui/forms/multi-select/hooks/useMultiSelectKeyboard.navigation';
+import { useSelectHandler } from '@core/ui/forms/multi-select/hooks/useMultiSelectKeyboard.select';
+import type { MultiSelectOption, MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
 import { type KeyboardEvent, useCallback } from 'react';
-
-import type { MultiSelectOption, MultiSelectProps } from './MultiSelect';
-import { useActionHandlers } from './useMultiSelectKeyboard.actions';
-import { createKeyHandlerMap, type KeyboardHandlers } from './useMultiSelectKeyboard.map';
-import { useNavigationHandlers } from './useMultiSelectKeyboard.navigation';
-import { useSelectHandler } from './useMultiSelectKeyboard.select';
 
 export interface UseMultiSelectKeyboardParams {
 	readonly isOpen: boolean;

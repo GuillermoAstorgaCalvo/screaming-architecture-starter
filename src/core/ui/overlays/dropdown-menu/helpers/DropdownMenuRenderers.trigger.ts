@@ -1,11 +1,10 @@
-import { cloneElement, type ReactElement } from 'react';
-
 import {
 	createTriggerAriaAttributes,
 	createTriggerHandlers,
 	getOriginalHandlers,
-} from './DropdownMenuHelpers';
-import type { CreateTriggerNodeParams } from './DropdownMenuRenderers.types';
+} from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuTrigger';
+import type { CreateTriggerNodeParams } from '@core/ui/overlays/dropdown-menu/types/DropdownMenuRenderers.types';
+import { cloneElement, type ReactElement } from 'react';
 
 export function createTriggerNode({
 	trigger,

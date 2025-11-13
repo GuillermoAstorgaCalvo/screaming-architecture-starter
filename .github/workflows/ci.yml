@@ -80,6 +80,11 @@ jobs:
         run: pnpm run build
         continue-on-error: false
 
+      - name: Check bundle size
+        id: bundle-size
+        run: pnpm run check:bundle-size
+        continue-on-error: false
+
       - name: CI Summary
         if: always()
         run: |
@@ -91,3 +96,4 @@ jobs:
           echo "| Lint | ${{ steps.lint.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Tests | ${{ steps.test.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build | ${{ steps.build.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Bundle Size | ${{ steps.bundle-size.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

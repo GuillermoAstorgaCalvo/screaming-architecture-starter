@@ -1,9 +1,8 @@
+import { ModalDialog } from '@core/ui/overlays/modal/components/ModalDialog';
+import { useModalSetup } from '@core/ui/overlays/modal/hooks/useModalSetup';
 import type { ModalSize } from '@src-types/ui/base';
 import type { ModalProps } from '@src-types/ui/overlays/panels';
 import type { ReactNode } from 'react';
-
-import { ModalDialog } from './ModalDialog';
-import { useModalSetup } from './useModalSetup';
 
 interface ModalSetupOptions {
 	readonly modalId?: string;

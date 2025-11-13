@@ -1,8 +1,7 @@
+import type { FileUploadFieldState } from '@core/ui/forms/file-upload/helpers/FileUploadContentHelpers';
+import type { FileUploadFile } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { DragEvent } from 'react';
-
-import type { FileUploadFieldState } from './FileUploadContentHelpers';
-import type { FileUploadFile } from './FileUploadTypes';
 
 export interface FileUploadLabelSectionProps {
 	readonly fileUploadId?: string;

@@ -1,11 +1,10 @@
 import SearchIcon from '@core/ui/icons/search-icon/SearchIcon';
+import { CommandPaletteContent } from '@core/ui/overlays/command-palette/components/CommandPaletteContent';
+import { CommandPaletteOverlay } from '@core/ui/overlays/command-palette/components/CommandPaletteOverlay';
+import { useCommandPalette } from '@core/ui/overlays/command-palette/hooks/useCommandPalette';
+import type { UseCommandPaletteReturn } from '@core/ui/overlays/command-palette/types/useCommandPalette.types';
 import { type KeyboardEvent, type MouseEvent, type ReactNode, type RefObject, useId } from 'react';
 import { createPortal } from 'react-dom';
-
-import { CommandPaletteContent } from './CommandPaletteContent';
-import { CommandPaletteOverlay } from './CommandPaletteOverlay';
-import { useCommandPalette } from './useCommandPalette';
-import type { UseCommandPaletteReturn } from './useCommandPalette.types';
 
 export interface CommandPaletteCommand {
 	readonly id: string;

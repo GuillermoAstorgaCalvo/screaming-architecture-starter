@@ -1,13 +1,15 @@
-import { createRef, type KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react';
-
-import type { DropdownMenuItem, DropdownMenuItemOrSeparator } from './DropdownMenu.types';
 import {
 	handleArrowKeyNavigation,
 	handleEndKey,
 	handleEnterOrSpace,
 	handleEscapeKey,
 	handleHomeKey,
-} from './DropdownMenuHelpers';
+} from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuNavigation';
+import type {
+	DropdownMenuItem,
+	DropdownMenuItemOrSeparator,
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
+import { createRef, type KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react';
 
 interface UseDropdownMenuRefsParams {
 	readonly items: DropdownMenuItemOrSeparator[];

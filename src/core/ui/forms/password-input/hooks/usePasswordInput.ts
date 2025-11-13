@@ -1,16 +1,15 @@
-import type { PasswordInputProps } from '@src-types/ui/forms-specialized';
-import { type InputHTMLAttributes, useId, useState } from 'react';
-
 import {
 	generatePasswordInputId,
 	getAriaDescribedBy,
 	getPasswordInputClasses,
-} from './PasswordInputHelpers';
+} from '@core/ui/forms/password-input/helpers/PasswordInputHelpers';
 import type {
 	PasswordInputFieldProps,
 	UsePasswordInputStateOptions,
 	UsePasswordInputStateReturn,
-} from './PasswordInputTypes';
+} from '@core/ui/forms/password-input/types/PasswordInputTypes';
+import type { PasswordInputProps } from '@src-types/ui/forms-specialized';
+import { type InputHTMLAttributes, useId, useState } from 'react';
 
 export interface UsePasswordInputPropsOptions {
 	readonly props: Readonly<PasswordInputProps>;

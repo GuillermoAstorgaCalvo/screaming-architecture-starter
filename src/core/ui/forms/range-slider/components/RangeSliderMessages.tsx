@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { RangeSliderMessagesProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { RangeSliderMessagesProps } from './RangeSliderTypes';
 
 export function RangeSliderMessages({
 	rangeSliderId,

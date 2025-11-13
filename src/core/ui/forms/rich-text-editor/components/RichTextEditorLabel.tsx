@@ -1,4 +1,4 @@
-import type { RichTextEditorLabelProps } from './RichTextEditorTypes';
+import type { RichTextEditorLabelProps } from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
 
 export function RichTextEditorLabel({ id, label, required }: Readonly<RichTextEditorLabelProps>) {
 	return (

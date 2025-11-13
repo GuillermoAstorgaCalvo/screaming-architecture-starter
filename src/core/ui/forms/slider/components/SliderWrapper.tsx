@@ -1,6 +1,5 @@
+import type { SliderWrapperProps } from '@core/ui/forms/slider/types/SliderTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { SliderWrapperProps } from './SliderTypes';
 
 export function SliderWrapper({
 	fullWidth,

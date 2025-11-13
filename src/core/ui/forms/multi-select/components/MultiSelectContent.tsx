@@ -1,15 +1,14 @@
-import { useRef } from 'react';
-
+import { MultiSelectLabel } from '@core/ui/forms/multi-select/components/MultiSelectLabel';
+import { MultiSelectMessages } from '@core/ui/forms/multi-select/components/MultiSelectMessages';
+import { MultiSelectPopover } from '@core/ui/forms/multi-select/components/MultiSelectPopover';
+import { MultiSelectWrapper } from '@core/ui/forms/multi-select/components/MultiSelectWrapper';
 import {
 	buildListboxProps,
 	prepareLabelProps,
 	prepareMessagesProps,
-} from './MultiSelectContentHelpers';
-import { MultiSelectLabel } from './MultiSelectLabel';
-import { MultiSelectMessages } from './MultiSelectMessages';
-import { MultiSelectPopover } from './MultiSelectPopover';
-import type { MultiSelectContentProps } from './MultiSelectTypes';
-import { MultiSelectWrapper } from './MultiSelectWrapper';
+} from '@core/ui/forms/multi-select/helpers/MultiSelectContentHelpers';
+import type { MultiSelectContentProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
+import { useRef } from 'react';
 
 export function MultiSelectContent(props: Readonly<MultiSelectContentProps>) {
 	const triggerRef = useRef<HTMLDivElement | null>(null);

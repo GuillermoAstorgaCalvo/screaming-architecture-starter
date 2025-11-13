@@ -1,4 +1,4 @@
-import type { ComboboxOption } from './Combobox';
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
 
 export function getOptionLabel(option: ComboboxOption): string {
 	if (typeof option.label === 'string') {

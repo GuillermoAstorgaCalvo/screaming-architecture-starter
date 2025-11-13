@@ -1,6 +1,6 @@
+import type { useInlineEditHandlers } from '@core/ui/forms/inline-edit/hooks/useInlineEdit.handlers';
 import { type ChangeEvent, type FocusEvent, type KeyboardEvent, useCallback } from 'react';
 
-import type { useInlineEditHandlers } from './useInlineEdit.handlers';
 import type { UseInlineEditStateReturn } from './useInlineEdit.state';
 
 // Value utility functions

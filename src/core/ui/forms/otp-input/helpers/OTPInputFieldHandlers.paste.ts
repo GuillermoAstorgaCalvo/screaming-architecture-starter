@@ -1,12 +1,11 @@
-import type { ClipboardEvent } from 'react';
-
-import type { HandlerDependencies } from './OTPInputFieldHandlers.types';
+import type { HandlerDependencies } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.types';
 import {
 	checkAndTriggerComplete,
 	extractDigits,
 	fillValueArrayFromDigits,
 	findFirstEmptyIndex,
-} from './OTPInputHelpers';
+} from '@core/ui/forms/otp-input/helpers/OTPInputHelpers';
+import type { ClipboardEvent } from 'react';
 
 export function createPasteHandlers(deps: HandlerDependencies) {
 	const { length, onComplete, getValueArray, updateValue, focusInput } = deps;

@@ -1,6 +1,5 @@
+import type { NumberInputLabelProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { NumberInputLabelProps } from './NumberInputTypes';
 
 export function NumberInputLabel({ id, label, required }: Readonly<NumberInputLabelProps>) {
 	return (

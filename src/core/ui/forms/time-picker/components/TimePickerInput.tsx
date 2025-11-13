@@ -1,4 +1,4 @@
-import type { TimePickerInputProps } from './TimePickerTypes';
+import type { TimePickerInputProps } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 
 interface TimePickerInputComponentProps {
 	readonly id: string | undefined;

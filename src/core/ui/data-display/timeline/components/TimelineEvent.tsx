@@ -1,10 +1,11 @@
-import { HorizontalTimelineEvent } from './HorizontalTimelineEvent';
-import type { TimelineEventProps } from './TimelineEvent.types';
+import { HorizontalTimelineEvent } from '@core/ui/data-display/timeline/components/HorizontalTimelineEvent';
 import {
 	getContentSpacing,
 	getEventContainerClasses,
 	getEventContentClasses,
-} from './TimelineEvent.utils';
+} from '@core/ui/data-display/timeline/helpers/TimelineEvent.utils';
+import type { TimelineEventProps } from '@core/ui/data-display/timeline/types/TimelineEvent.types';
+
 import { VerticalTimelineEvent } from './VerticalTimelineEvent';
 
 export function TimelineEvent({

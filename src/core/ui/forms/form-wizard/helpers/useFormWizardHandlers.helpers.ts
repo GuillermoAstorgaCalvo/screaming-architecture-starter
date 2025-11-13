@@ -1,7 +1,6 @@
 import type { FormControls } from '@core/forms/formAdapter';
+import type { FormWizardStep } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { FieldValues, Path } from 'react-hook-form';
-
-import type { FormWizardStep } from './FormWizardTypes';
 
 interface ValidationContext {
 	readonly stepIndex: number;

@@ -1,7 +1,7 @@
 import type {
 	InfiniteScrollContainerProps,
 	InfiniteScrollProps,
-} from './InfiniteScrollRenderers.types';
+} from '@core/ui/utilities/infinite-scroll/types/InfiniteScrollRenderers.types';
 
 /**
  * Builds the props object for the container element

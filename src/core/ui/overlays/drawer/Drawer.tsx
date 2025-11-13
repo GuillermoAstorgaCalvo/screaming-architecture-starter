@@ -1,11 +1,10 @@
+import { DrawerDialog } from '@core/ui/overlays/drawer/components/DrawerDialog';
+import { DrawerOverlay } from '@core/ui/overlays/drawer/components/DrawerParts';
+import { useDrawerId } from '@core/ui/overlays/drawer/hooks/useDrawer';
+import { useDrawerSetup } from '@core/ui/overlays/drawer/hooks/useDrawerSetup';
 import type { DrawerPosition, DrawerProps, DrawerSize } from '@src-types/ui/overlays/panels';
 import type { MouseEvent, ReactNode, RefObject } from 'react';
 import { createPortal } from 'react-dom';
-
-import { DrawerDialog } from './DrawerDialog';
-import { DrawerOverlay } from './DrawerParts';
-import { useDrawerId } from './useDrawer';
-import { useDrawerSetup } from './useDrawerSetup';
 
 interface DrawerPortalContentProps {
 	readonly id: string;

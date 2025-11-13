@@ -1,8 +1,10 @@
+import { clampValue } from '@core/ui/forms/range-slider/helpers/RangeSliderHelpers';
+import type { UseRangeSliderStateReturn } from '@core/ui/forms/range-slider/hooks/useRangeSliderState';
+import type {
+	UseRangeCalculationsReturn,
+	UseRangeValueReturn,
+} from '@core/ui/forms/range-slider/hooks/useRangeSliderState.hooks';
 import type { ChangeEvent, RefObject } from 'react';
-
-import { clampValue } from './RangeSliderHelpers';
-import type { UseRangeSliderStateReturn } from './useRangeSliderState';
-import type { UseRangeCalculationsReturn, UseRangeValueReturn } from './useRangeSliderState.hooks';
 
 export interface RangeSliderHandlers {
 	readonly handleMinChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -157,10 +159,4 @@ export function buildRangeSliderStateReturn(
 		minInputRef,
 		maxInputRef,
 	};
-}
-
-export function composeRangeSliderState(
-	params: Readonly<BuildRangeSliderStateReturnParams>
-): UseRangeSliderStateReturn {
-	return buildRangeSliderStateReturn(params);
 }

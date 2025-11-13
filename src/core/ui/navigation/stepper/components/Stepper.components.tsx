@@ -1,8 +1,11 @@
+import {
+	getStepElementConfig,
+	getStepStatus,
+	getStepStatusClasses,
+} from '@core/ui/navigation/stepper/helpers/Stepper.helpers';
 import { getStepperStepSizeClasses } from '@core/ui/variants/stepper';
 import type { StepperProps, StepperStepStatus } from '@src-types/ui/navigation/stepper';
 import { useMemo } from 'react';
-
-import { getStepElementConfig, getStepStatus, getStepStatusClasses } from './Stepper.helpers';
 
 /**
  * Check icon component for completed steps

@@ -1,7 +1,6 @@
+import type { DateRangePickerInputProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
+import type { BuildFieldPropsOptions } from '@core/ui/forms/date-range-picker/types/useDateRangePicker.types';
 import type { DateRangePickerProps } from '@src-types/ui/forms-dates';
-
-import type { DateRangePickerInputProps } from './DateRangePickerTypes';
-import type { BuildFieldPropsOptions } from './useDateRangePicker.types';
 
 export function buildFieldProps(options: Readonly<BuildFieldPropsOptions>): {
 	readonly startFieldProps: Readonly<DateRangePickerInputProps>;

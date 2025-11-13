@@ -1,8 +1,8 @@
-import { RichTextEditorField } from './RichTextEditorField';
-import { RichTextEditorLabel } from './RichTextEditorLabel';
-import { RichTextEditorMessages } from './RichTextEditorMessages';
-import type { RichTextEditorContentProps } from './RichTextEditorTypes';
-import { RichTextEditorWrapper } from './RichTextEditorWrapper';
+import { RichTextEditorField } from '@core/ui/forms/rich-text-editor/components/RichTextEditorField';
+import { RichTextEditorLabel } from '@core/ui/forms/rich-text-editor/components/RichTextEditorLabel';
+import { RichTextEditorMessages } from '@core/ui/forms/rich-text-editor/components/RichTextEditorMessages';
+import { RichTextEditorWrapper } from '@core/ui/forms/rich-text-editor/components/RichTextEditorWrapper';
+import type { RichTextEditorContentProps } from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
 
 export function RichTextEditorContent({
 	state,

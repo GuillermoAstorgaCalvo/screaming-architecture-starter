@@ -1,7 +1,6 @@
+import { ToggleGroupContext } from '@core/ui/forms/toggle/components/ToggleGroupContext';
+import type { ToggleGroupContextValue } from '@core/ui/forms/toggle/types/ToggleGroupTypes';
 import { useContext } from 'react';
-
-import { ToggleGroupContext } from './ToggleGroupContext';
-import type { ToggleGroupContextValue } from './ToggleGroupTypes';
 
 export function useToggleGroupContext(): ToggleGroupContextValue {
 	const context = useContext(ToggleGroupContext);

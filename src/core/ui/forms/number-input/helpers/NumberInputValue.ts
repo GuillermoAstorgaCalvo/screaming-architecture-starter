@@ -1,6 +1,19 @@
-import type { NumberInputValue } from './useNumberInput.types';
+import type { NumberInputValue } from '@core/ui/forms/number-input/types/useNumberInput.types';
 
 type OptionalNumber = number | undefined;
+
+/**
+ * Converts a NumberInputValue to an OptionalNumber
+ *
+ * @internal
+ */
+function convertToNumber(input: NumberInputValue | undefined): OptionalNumber {
+	if (input === undefined) return undefined;
+	if (typeof input === 'string') {
+		return input === '' ? undefined : Number.parseFloat(input);
+	}
+	return input;
+}
 
 export interface CalculateCurrentValueOptions {
 	readonly value?: NumberInputValue;
@@ -22,19 +35,7 @@ export function calculateCurrentValue({
 	value,
 	defaultValue,
 }: Readonly<CalculateCurrentValueOptions>): OptionalNumber {
-	if (value !== undefined) {
-		if (typeof value === 'string') {
-			return value === '' ? undefined : Number.parseFloat(value);
-		}
-		return value;
-	}
-	if (defaultValue !== undefined) {
-		if (typeof defaultValue === 'string') {
-			return defaultValue === '' ? undefined : Number.parseFloat(defaultValue);
-		}
-		return defaultValue;
-	}
-	return undefined;
+	return convertToNumber(value) ?? convertToNumber(defaultValue);
 }
 
 export interface CalculateIncrementDecrementCapabilityOptions {

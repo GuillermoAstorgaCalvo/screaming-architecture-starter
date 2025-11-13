@@ -1,10 +1,9 @@
+import { DEFAULT_PLACEHOLDER } from '@core/ui/forms/rich-text-editor/constants/RichTextEditorConstants';
+import { getStarterKitConfig } from '@core/ui/forms/rich-text-editor/helpers/RichTextEditorConfig';
+import type { RichTextEditorFieldProps } from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor } from '@tiptap/react';
 import { useEffect } from 'react';
-
-import { getStarterKitConfig } from './RichTextEditorConfig';
-import { DEFAULT_PLACEHOLDER } from './RichTextEditorConstants';
-import type { RichTextEditorFieldProps } from './RichTextEditorTypes';
 
 export function formatHeight(height: number | string | undefined): string | undefined {
 	if (!height) {

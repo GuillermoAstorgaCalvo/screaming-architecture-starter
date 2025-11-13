@@ -1,7 +1,6 @@
+import { calculateNewIndex } from '@core/ui/media/carousel/helpers/useCarousel.utils';
+import type { CarouselStateParams } from '@core/ui/media/carousel/types/useCarousel.types';
 import { useCallback, useState } from 'react';
-
-import type { CarouselStateParams } from './useCarousel.types';
-import { calculateNewIndex } from './useCarousel.utils';
 
 export interface UseCarouselStateReturn {
 	readonly activeIndex: number;

@@ -1,6 +1,5 @@
+import type { SelectAllHandlersParams } from '@core/ui/forms/transfer/types/useTransfer.types';
 import { useCallback } from 'react';
-
-import type { SelectAllHandlersParams } from './useTransfer.types';
 
 /**
  * Creates select all/none handlers

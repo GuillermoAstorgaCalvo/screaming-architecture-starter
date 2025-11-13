@@ -1,4 +1,4 @@
-import type { PopconfirmHandlers } from './popconfirm.types';
+import type { PopconfirmHandlers } from '@core/ui/overlays/popconfirm/types/popconfirm.types';
 
 /**
  * Creates a confirm handler that executes the onConfirm callback and then closes the popconfirm

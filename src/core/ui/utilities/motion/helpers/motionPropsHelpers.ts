@@ -3,10 +3,9 @@
  * Functions for building motion props configuration
  */
 
+import type { InitialState } from '@core/ui/utilities/motion/helpers/motionStateHelpers';
+import type { BaseMotionProps, MotionBoxProps } from '@core/ui/utilities/motion/types/motionTypes';
 import type { HTMLMotionProps, MotionProps, Variants } from 'framer-motion';
-
-import type { InitialState } from './motionStateHelpers';
-import type { BaseMotionProps, MotionBoxProps } from './motionTypes';
 
 /**
  * Motion props configuration

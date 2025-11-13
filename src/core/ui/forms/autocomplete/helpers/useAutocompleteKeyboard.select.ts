@@ -1,7 +1,6 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
+import { getOptionLabel } from '@core/ui/forms/autocomplete/helpers/useAutocompleteHelpers';
 import { useCallback } from 'react';
-
-import type { AutocompleteOption } from './Autocomplete';
-import { getOptionLabel } from './useAutocompleteHelpers';
 
 export interface UseSelectHandlerParams {
 	setInputValue: (value: string) => void;

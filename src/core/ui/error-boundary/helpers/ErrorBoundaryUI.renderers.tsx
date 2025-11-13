@@ -1,13 +1,15 @@
 import Box from '@core/ui/box/Box';
 import Button from '@core/ui/button/Button';
+import type {
+	ErrorBoundaryUIProps,
+	RenderActionsOptions,
+} from '@core/ui/error-boundary/types/ErrorBoundaryUITypes';
 import Flex from '@core/ui/flex/Flex';
 import Heading from '@core/ui/heading/Heading';
 import Icon from '@core/ui/icons/Icon';
 import Text from '@core/ui/text/Text';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-
-import type { ErrorBoundaryUIProps, RenderActionsOptions } from './ErrorBoundaryUITypes';
 
 /**
  * Render error icon based on variant and custom icon prop

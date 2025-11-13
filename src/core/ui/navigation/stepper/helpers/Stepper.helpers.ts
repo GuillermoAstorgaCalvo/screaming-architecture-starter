@@ -52,6 +52,75 @@ interface StepElementConfig {
 }
 
 /**
+ * Gets the layout classes based on orientation
+ */
+function getLayoutClasses(orientation: StepperProps['orientation']): string {
+	return orientation === 'vertical'
+		? 'flex-row items-start text-left'
+		: 'flex-col items-center text-center';
+}
+
+/**
+ * Gets the interactivity classes for a clickable step
+ */
+function getClickableInteractivityClasses(): string {
+	return 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2';
+}
+
+/**
+ * Gets the interactivity classes for a non-clickable step
+ */
+function getNonClickableInteractivityClasses(): string {
+	return 'cursor-default';
+}
+
+/**
+ * Gets the configuration for a clickable step element
+ */
+function getClickableStepConfig({
+	onClick,
+	stepIndex,
+	status,
+	layout,
+}: {
+	readonly onClick: (stepIndex: number) => void;
+	readonly stepIndex: number;
+	readonly status: StepperStepStatus;
+	readonly layout: string;
+}): Omit<StepElementConfig, 'isClickable'> {
+	const interactivity = getClickableInteractivityClasses();
+	return {
+		Element: 'button',
+		className: `flex ${layout} gap-2 ${interactivity}`,
+		onClick: () => onClick(stepIndex),
+		type: 'button' as const,
+		ariaCurrent: status === 'active' ? ('step' as const) : undefined,
+		ariaDisabled: undefined,
+	};
+}
+
+/**
+ * Gets the configuration for a non-clickable step element
+ */
+function getNonClickableStepConfig({
+	status,
+	layout,
+}: {
+	readonly status: StepperStepStatus;
+	readonly layout: string;
+}): Omit<StepElementConfig, 'isClickable'> {
+	const interactivity = getNonClickableInteractivityClasses();
+	return {
+		Element: 'div',
+		className: `flex ${layout} gap-2 ${interactivity}`,
+		onClick: undefined,
+		type: undefined,
+		ariaCurrent: status === 'active' ? ('step' as const) : undefined,
+		ariaDisabled: true as const,
+	};
+}
+
+/**
  * Gets the configuration for a step element (button or div) based on clickability
  *
  * @param config - Configuration object
@@ -72,23 +141,18 @@ export function getStepElementConfig({
 	readonly status: StepperStepStatus;
 	readonly orientation: StepperProps['orientation'];
 }): StepElementConfig {
+	const layout = getLayoutClasses(orientation);
 	const isClickable = Boolean(onClick);
-	const Element: StepElementConfig['Element'] = isClickable ? 'button' : 'div';
-	const layout =
-		orientation === 'vertical'
-			? 'flex-row items-start text-left'
-			: 'flex-col items-center text-center';
-	const interactivity = isClickable
-		? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
-		: 'cursor-default';
+
+	if (isClickable && onClick) {
+		return {
+			...getClickableStepConfig({ onClick, stepIndex, status, layout }),
+			isClickable: true,
+		};
+	}
 
 	return {
-		Element,
-		isClickable,
-		className: `flex ${layout} gap-2 ${interactivity}`,
-		onClick: isClickable ? () => onClick?.(stepIndex) : undefined,
-		type: isClickable ? ('button' as const) : undefined,
-		ariaCurrent: status === 'active' ? ('step' as const) : undefined,
-		ariaDisabled: isClickable ? undefined : (true as const),
+		...getNonClickableStepConfig({ status, layout }),
+		isClickable: false,
 	};
 }

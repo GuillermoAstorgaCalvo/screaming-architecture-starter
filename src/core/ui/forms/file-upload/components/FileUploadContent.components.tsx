@@ -1,19 +1,18 @@
-import { useRef } from 'react';
-
-import { FileUploadContainer } from './FileUploadContainer';
-import {
-	prepareFieldContentProps,
-	prepareFileUploadFieldProps,
-} from './FileUploadContent.builders';
-import type { FileUploadFieldContentProps } from './FileUploadContent.types';
-import { prepareFileUploadState } from './FileUploadContentHelpers';
+import { FileUploadContainer } from '@core/ui/forms/file-upload/components/FileUploadContainer';
 import {
 	FileUploadDropzoneSection,
 	FileUploadLabelSection,
 	FileUploadPreviewSection,
-} from './FileUploadContentSections';
-import { FileUploadInput } from './FileUploadInput';
-import type { FileUploadContentProps } from './FileUploadTypes';
+} from '@core/ui/forms/file-upload/components/FileUploadContentSections';
+import { FileUploadInput } from '@core/ui/forms/file-upload/components/FileUploadInput';
+import {
+	prepareFieldContentProps,
+	prepareFileUploadFieldProps,
+} from '@core/ui/forms/file-upload/helpers/FileUploadContent.builders';
+import { prepareFileUploadState } from '@core/ui/forms/file-upload/helpers/FileUploadContentHelpers';
+import type { FileUploadFieldContentProps } from '@core/ui/forms/file-upload/types/FileUploadContent.types';
+import type { FileUploadContentProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
+import { useRef } from 'react';
 
 /**
  * FileUploadFieldContent - Internal component that renders the field content

@@ -1,7 +1,6 @@
+import type { ButtonSize } from '@core/ui/forms/transfer/types/TransferActions.types';
 import type { StandardSize } from '@src-types/ui/base';
 import { twMerge } from 'tailwind-merge';
-
-import type { ButtonSize } from './TransferActions.types';
 
 /**
  * Determines the button size based on the transfer size prop

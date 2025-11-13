@@ -1,9 +1,11 @@
+import { useTagInputStateAndHandlers } from '@core/ui/forms/tag-input/hooks/useTagInput.composition';
+import { buildTagInputFieldProps } from '@core/ui/forms/tag-input/hooks/useTagInput.fieldProps';
+import { extractTagInputProps } from '@core/ui/forms/tag-input/hooks/useTagInput.props';
+import type {
+	TagInputFieldProps,
+	UseTagInputStateReturn,
+} from '@core/ui/forms/tag-input/types/TagInputTypes';
 import type { TagInputProps } from '@src-types/ui/forms-inputs';
-
-import type { TagInputFieldProps, UseTagInputStateReturn } from './TagInputTypes';
-import { useTagInputStateAndHandlers } from './useTagInput.composition';
-import { buildTagInputFieldProps } from './useTagInput.fieldProps';
-import { extractTagInputProps } from './useTagInput.props';
 
 export interface UseTagInputPropsOptions {
 	readonly props: Readonly<TagInputProps>;

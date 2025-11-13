@@ -1,6 +1,5 @@
+import type { ColorPickerFieldProps } from '@core/ui/forms/color-picker/types/ColorPickerTypes';
 import type { ChangeEvent } from 'react';
-
-import type { ColorPickerFieldProps } from './ColorPickerTypes';
 
 export function ColorPickerField({
 	id,

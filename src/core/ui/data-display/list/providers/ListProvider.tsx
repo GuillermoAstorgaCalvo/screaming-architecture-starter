@@ -1,7 +1,6 @@
+import { ListContext } from '@core/ui/data-display/list/context/ListContext';
 import type { StandardSize } from '@src-types/ui/base';
 import { type ReactNode, useMemo } from 'react';
-
-import { ListContext } from './ListContext';
 
 interface ListProviderProps {
 	readonly size: StandardSize;

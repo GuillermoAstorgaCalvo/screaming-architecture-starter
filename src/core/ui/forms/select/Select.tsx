@@ -1,7 +1,6 @@
+import { SelectContent } from '@core/ui/forms/select/components/SelectContent';
+import { useSelectProps } from '@core/ui/forms/select/hooks/useSelect';
 import type { SelectProps } from '@src-types/ui/forms';
-
-import { SelectContent } from './SelectContent';
-import { useSelectProps } from './useSelect';
 
 /**
  * Select - Reusable select/dropdown component with label, error, and helper text support

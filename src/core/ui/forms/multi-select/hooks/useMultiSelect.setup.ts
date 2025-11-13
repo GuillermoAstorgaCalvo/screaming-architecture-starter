@@ -1,12 +1,11 @@
-import { useId } from 'react';
-
-import type { MultiSelectOption, MultiSelectProps } from './MultiSelect';
-import { useMultiSelectState } from './MultiSelectHelpers';
+import { useMultiSelectState } from '@core/ui/forms/multi-select/helpers/MultiSelectHelpers';
 import {
 	useMultiSelectInput,
 	useMultiSelectInteractions,
 	useMultiSelectValue,
-} from './useMultiSelectState';
+} from '@core/ui/forms/multi-select/hooks/useMultiSelectState';
+import type { MultiSelectOption, MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
+import { useId } from 'react';
 
 export interface MultiSelectStateSetup {
 	readonly state: ReturnType<typeof useMultiSelectState>;

@@ -1,6 +1,5 @@
+import type { UseDragStateReturn } from '@core/ui/utilities/sortable-list/types/useSortableList.drag.types';
 import { useState } from 'react';
-
-import type { UseDragStateReturn } from './useSortableList.drag.types';
 
 /**
  * Manages drag state (dragged item ID, target index)

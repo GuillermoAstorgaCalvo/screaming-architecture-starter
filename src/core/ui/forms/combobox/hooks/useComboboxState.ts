@@ -1,11 +1,10 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
 import { useDebounce } from '@core/hooks/useDebounce';
+import type { ComboboxOption, ComboboxProps } from '@core/ui/forms/combobox/Combobox';
+import { defaultFilterFn } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
+import { getOptionLabel } from '@core/ui/forms/combobox/helpers/useComboboxHelpers';
+import { useComboboxKeyboard } from '@core/ui/forms/combobox/hooks/useComboboxKeyboard';
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
-
-import type { ComboboxOption, ComboboxProps } from './Combobox';
-import { defaultFilterFn } from './ComboboxHelpers';
-import { getOptionLabel } from './useComboboxHelpers';
-import { useComboboxKeyboard } from './useComboboxKeyboard';
 
 export function useComboboxValue(
 	props: Readonly<Pick<ComboboxProps, 'value' | 'defaultValue' | 'onChange'>>

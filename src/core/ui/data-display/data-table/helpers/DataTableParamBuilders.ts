@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-
 import type {
 	ColumnParams,
 	DataAndDisplayParams,
@@ -7,7 +5,8 @@ import type {
 	PaginationParams,
 	SortAndSelectionParams,
 	StyleParams,
-} from './DataTableTypes';
+} from '@core/ui/data-display/data-table/types/DataTableTypes';
+import type { ReactNode } from 'react';
 
 export function buildDataAndDisplayParams<T>({
 	displayData,

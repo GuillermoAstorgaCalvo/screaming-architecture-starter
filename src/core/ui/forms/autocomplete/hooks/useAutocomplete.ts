@@ -1,15 +1,14 @@
-import { useId } from 'react';
-
-import type { AutocompleteProps } from './Autocomplete';
-import { useAutocompleteState } from './AutocompleteHelpers';
-import type { AutocompleteContentProps } from './AutocompleteTypes';
-import { createFieldProps } from './useAutocompleteField';
-import { buildAutocompleteReturn } from './useAutocompleteReturn';
+import type { AutocompleteProps } from '@core/ui/forms/autocomplete/Autocomplete';
+import { useAutocompleteState } from '@core/ui/forms/autocomplete/helpers/AutocompleteHelpers';
+import { createFieldProps } from '@core/ui/forms/autocomplete/hooks/useAutocompleteField';
+import { buildAutocompleteReturn } from '@core/ui/forms/autocomplete/hooks/useAutocompleteReturn';
 import {
 	useAutocompleteInput,
 	useAutocompleteInteractions,
 	useAutocompleteValue,
-} from './useAutocompleteState';
+} from '@core/ui/forms/autocomplete/hooks/useAutocompleteState';
+import type { AutocompleteContentProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
+import { useId } from 'react';
 
 function useAutocompleteStateSetup(props: Readonly<AutocompleteProps>) {
 	const { autocompleteId, label, error, helperText, size = 'md', className } = props;

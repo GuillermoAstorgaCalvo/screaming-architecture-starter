@@ -3,8 +3,12 @@
  * Helper functions for working with Framer Motion animations
  */
 
-import { motionDurations, motionEasing } from './motionConstants';
-import type { MotionDuration, MotionEasing, MotionVariant } from './motionTypes';
+import { motionDurations, motionEasing } from '@core/ui/utilities/motion/constants/motionConstants';
+import type {
+	MotionDuration,
+	MotionEasing,
+	MotionVariant,
+} from '@core/ui/utilities/motion/types/motionTypes';
 
 /**
  * Get animation duration in seconds from duration token

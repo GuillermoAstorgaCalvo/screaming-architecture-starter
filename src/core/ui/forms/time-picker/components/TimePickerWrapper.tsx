@@ -1,6 +1,5 @@
+import type { TimePickerWrapperProps } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { TimePickerWrapperProps } from './TimePickerTypes';
 
 export function TimePickerWrapper({
 	fullWidth,

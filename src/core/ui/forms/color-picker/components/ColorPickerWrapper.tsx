@@ -1,6 +1,5 @@
+import type { ColorPickerWrapperProps } from '@core/ui/forms/color-picker/types/ColorPickerTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { ColorPickerWrapperProps } from './ColorPickerTypes';
 
 export function ColorPickerWrapper({
 	fullWidth,

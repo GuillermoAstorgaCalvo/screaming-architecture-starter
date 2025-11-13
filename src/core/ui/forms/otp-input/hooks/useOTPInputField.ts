@@ -1,11 +1,10 @@
+import { createFocusHandlers } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.focus';
+import { createInputHandlers } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.input';
+import { createKeyboardHandlers } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.keyboard';
+import { createPasteHandlers } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.paste';
+import type { HandlerDependencies } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.types';
+import type { OTPInputFieldProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import { type RefObject, useMemo } from 'react';
-
-import { createFocusHandlers } from './OTPInputFieldHandlers.focus';
-import { createInputHandlers } from './OTPInputFieldHandlers.input';
-import { createKeyboardHandlers } from './OTPInputFieldHandlers.keyboard';
-import { createPasteHandlers } from './OTPInputFieldHandlers.paste';
-import type { HandlerDependencies } from './OTPInputFieldHandlers.types';
-import type { OTPInputFieldProps } from './OTPInputTypes';
 
 interface UtilityFunctionsOptions {
 	length: number;

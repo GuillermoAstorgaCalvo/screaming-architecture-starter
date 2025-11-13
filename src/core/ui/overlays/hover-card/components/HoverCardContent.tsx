@@ -1,9 +1,11 @@
+import {
+	getArrowClasses,
+	getPositionClasses,
+} from '@core/ui/overlays/hover-card/helpers/hoverCardUtils';
 import { componentZIndex } from '@core/ui/theme/tokens';
 import type { HoverCardProps } from '@src-types/ui/overlays/floating';
 import type { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { getArrowClasses, getPositionClasses } from './hoverCardUtils';
 
 interface HoverCardContentProps {
 	readonly hoverCardId: string;

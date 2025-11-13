@@ -1,7 +1,3 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { RangeSliderProps } from '@src-types/ui/forms-advanced';
-import { useId } from 'react';
-
 import {
 	generateRangeSliderId,
 	getAriaDescribedBy,
@@ -9,8 +5,14 @@ import {
 	getRangeSliderClasses,
 	getRangeSliderThumbClasses,
 	getRangeSliderTrackClasses,
-} from './RangeSliderHelpers';
-import type { RangeSliderContentProps, RangeSliderInputProps } from './RangeSliderTypes';
+} from '@core/ui/forms/range-slider/helpers/RangeSliderHelpers';
+import type {
+	RangeSliderContentProps,
+	RangeSliderInputProps,
+} from '@core/ui/forms/range-slider/types/RangeSliderTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { RangeSliderProps } from '@src-types/ui/forms-advanced';
+import { useId } from 'react';
 
 export interface UseRangeSliderPropsOptions {
 	readonly props: Readonly<RangeSliderProps>;

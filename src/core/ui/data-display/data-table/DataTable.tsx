@@ -1,10 +1,9 @@
+import { DataTableRenderer } from '@core/ui/data-display/data-table/components/DataTableRenderer';
+import { buildRendererParams } from '@core/ui/data-display/data-table/helpers/DataTableRendererParamBuilders';
+import { buildRendererProps } from '@core/ui/data-display/data-table/helpers/DataTableRendererPropsBuilders';
+import { buildStateOptions } from '@core/ui/data-display/data-table/helpers/DataTableStateBuilders';
+import { useDataTableState } from '@core/ui/data-display/data-table/hooks/useDataTableState';
 import type { DataTableProps } from '@src-types/ui/dataTable';
-
-import { DataTableRenderer } from './DataTableRenderer';
-import { buildRendererParams } from './DataTableRendererParamBuilders';
-import { buildRendererProps } from './DataTableRendererPropsBuilders';
-import { buildStateOptions } from './DataTableStateBuilders';
-import { useDataTableState } from './useDataTableState';
 
 /**
  * DataTable - Enhanced data table component with sorting, filtering, pagination, selection, and column management

@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { SearchInputMessagesProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { SearchInputMessagesProps } from './SearchInputTypes';
 
 export function SearchInputMessages({
 	inputId,

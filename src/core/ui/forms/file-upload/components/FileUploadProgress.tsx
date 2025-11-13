@@ -1,6 +1,5 @@
+import type { FileUploadProgressProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import Progress from '@core/ui/progress/Progress';
-
-import type { FileUploadProgressProps } from './FileUploadTypes';
 
 export function FileUploadProgress({ progress, size }: Readonly<FileUploadProgressProps>) {
 	return (

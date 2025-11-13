@@ -1,9 +1,8 @@
+import { DataTableContent } from '@core/ui/data-display/data-table/components/DataTableContent';
+import { DataTableNoResults } from '@core/ui/data-display/data-table/components/DataTableNoResults';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn } from '@src-types/ui/dataTable';
 import type { ReactNode } from 'react';
-
-import { DataTableContent } from './DataTableContent';
-import { DataTableNoResults } from './DataTableNoResults';
 
 interface DataTableRendererProps<T> {
 	displayData: T[];

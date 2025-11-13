@@ -1,4 +1,4 @@
-import type { UseWizardStateReturn } from './useWizard.state.types';
+import type { UseWizardStateReturn } from '@core/ui/forms/wizard/types/useWizard.state.types';
 
 /**
  * Navigate to a step and trigger the step change callback

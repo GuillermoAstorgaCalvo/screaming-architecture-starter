@@ -1,10 +1,15 @@
-import { getTableClasses } from '@core/ui/data-display/table/TableHelpers';
+import {
+	DataTableBody,
+	type DataTableBodyProps,
+} from '@core/ui/data-display/data-table/components/DataTableBody';
+import {
+	DataTableHeader,
+	type DataTableHeaderProps,
+} from '@core/ui/data-display/data-table/components/DataTableHeader';
+import { getTableClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn, DataTableProps } from '@src-types/ui/dataTable';
 import type { ReactElement } from 'react';
-
-import { DataTableBody, type DataTableBodyProps } from './DataTableBody';
-import { DataTableHeader, type DataTableHeaderProps } from './DataTableHeader';
 
 interface DataTableTableProps<T> {
 	className: string | undefined;

@@ -1,7 +1,6 @@
+import { ContextMenuContent } from '@core/ui/overlays/context-menu/components/ContextMenuContent';
+import { useContextMenu } from '@core/ui/overlays/context-menu/hooks/useContextMenu';
 import type { ReactElement, ReactNode } from 'react';
-
-import { ContextMenuContent } from './ContextMenuContent';
-import { useContextMenu } from './useContextMenu';
 
 export type ContextMenuPosition = 'start' | 'center' | 'end';
 

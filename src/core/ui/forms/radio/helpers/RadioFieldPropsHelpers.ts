@@ -1,4 +1,7 @@
-import type { RadioContentProps, RadioFieldWithLabelProps } from './RadioTypes';
+import type {
+	RadioContentProps,
+	RadioFieldWithLabelProps,
+} from '@core/ui/forms/radio/types/RadioTypes';
 
 function extractRadioFieldWithLabelProperties(props: Readonly<RadioFieldWithLabelProps>) {
 	return {

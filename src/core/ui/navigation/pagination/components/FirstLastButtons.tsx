@@ -1,7 +1,6 @@
+import { PaginationButton } from '@core/ui/navigation/pagination/components/PaginationButton';
+import { createPageChangeHandler } from '@core/ui/navigation/pagination/helpers/PaginationHandlers';
 import type { StandardSize } from '@src-types/ui/base';
-
-import { PaginationButton } from './PaginationButton';
-import { createPageChangeHandler } from './PaginationHandlers';
 
 // ============================================================================
 // First/Last Button Components

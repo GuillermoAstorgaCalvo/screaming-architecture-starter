@@ -1,6 +1,5 @@
+import type { SwitchFieldStateConfig } from '@core/ui/forms/switch/types/SwitchTypes';
 import { useEffect, useRef } from 'react';
-
-import type { SwitchFieldStateConfig } from './SwitchTypes';
 
 export function useSwitchFieldState(config: Readonly<SwitchFieldStateConfig>) {
 	const { checked, defaultChecked, disabled } = config;

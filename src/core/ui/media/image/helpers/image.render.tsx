@@ -1,12 +1,11 @@
-import Skeleton from '@core/ui/skeleton/Skeleton';
-import type { ReactElement } from 'react';
-
-import { createImageClasses, createImageStyle } from './image.styles';
+import { createImageClasses, createImageStyle } from '@core/ui/media/image/helpers/image.styles';
 import type {
 	LoadingPlaceholderParams,
 	RenderImageParams,
 	RenderReadyImageParams,
-} from './image.types';
+} from '@core/ui/media/image/types/image.types';
+import Skeleton from '@core/ui/skeleton/Skeleton';
+import type { ReactElement } from 'react';
 
 export function renderImage(params: RenderImageParams): ReactElement {
 	if (shouldShowErrorPlaceholder(params)) {

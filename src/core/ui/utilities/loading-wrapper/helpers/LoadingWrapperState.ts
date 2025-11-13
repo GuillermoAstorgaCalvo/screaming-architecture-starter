@@ -1,17 +1,21 @@
-import type { ReactNode } from 'react';
-
-import { renderEmptyState } from './LoadingWrapperHelpers.empty';
-import { renderErrorState } from './LoadingWrapperHelpers.error';
-import { buildEmptyStateParams } from './LoadingWrapperHelpers.state.empty';
-import { buildErrorStateParams } from './LoadingWrapperHelpers.state.error';
-import { buildLoadingStateParams, renderLoadingState } from './LoadingWrapperHelpers.state.loading';
-import { buildSuccessStateParams, renderSuccessState } from './LoadingWrapperHelpers.state.success';
+import { renderEmptyState } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.empty';
+import { renderErrorState } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.error';
+import { buildEmptyStateParams } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state.empty';
+import { buildErrorStateParams } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state.error';
+import {
+	buildLoadingStateParams,
+	renderLoadingState,
+} from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state.loading';
+import {
+	buildSuccessStateParams,
+	renderSuccessState,
+} from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state.success';
 import type {
 	EmptyStateParams,
 	ErrorStateParams,
 	LoadingStateParams,
 	LoadingWrapperStateParams,
-} from './LoadingWrapperHelpers.state.types';
+} from '@core/ui/utilities/loading-wrapper/types/LoadingWrapperHelpers.state.types';
 
 /** Render error state if error exists */
 export function renderErrorStateIfPresent(params: LoadingWrapperStateParams) {
@@ -54,10 +58,9 @@ export function renderLoadingStateIfPresent(params: LoadingWrapperStateParams) {
 	return null;
 }
 
-/** Render empty state if empty */
-export function renderEmptyStateIfPresent(params: LoadingWrapperStateParams) {
+/** Build empty state params from loading wrapper params */
+function buildEmptyParamsFromWrapper(params: LoadingWrapperStateParams): EmptyStateParams {
 	const {
-		isEmpty,
 		emptyMessage,
 		emptyTitle,
 		emptyDescription,
@@ -66,19 +69,21 @@ export function renderEmptyStateIfPresent(params: LoadingWrapperStateParams) {
 		className,
 		props,
 	} = params;
-	if (isEmpty) {
-		const emptyParams: EmptyStateParams = {
-			emptyTitle,
-			props,
-			...(emptyMessage !== undefined && { emptyMessage }),
-			...(emptyDescription !== undefined && { emptyDescription }),
-			...(emptyActionLabel !== undefined && { emptyActionLabel }),
-			...(onEmptyAction !== undefined && { onEmptyAction }),
-			...(className !== undefined && { className }),
-		};
-		return renderEmptyState(buildEmptyStateParams(emptyParams));
-	}
-	return null;
+	return {
+		emptyTitle,
+		props,
+		...(emptyMessage !== undefined && { emptyMessage }),
+		...(emptyDescription !== undefined && { emptyDescription }),
+		...(emptyActionLabel !== undefined && { emptyActionLabel }),
+		...(onEmptyAction !== undefined && { onEmptyAction }),
+		...(className !== undefined && { className }),
+	};
+}
+
+/** Render empty state if empty */
+export function renderEmptyStateIfPresent(params: LoadingWrapperStateParams) {
+	if (!params.isEmpty) return null;
+	return renderEmptyState(buildEmptyStateParams(buildEmptyParamsFromWrapper(params)));
 }
 
 /** Determine and render the appropriate state based on props */
@@ -93,99 +98,4 @@ export function renderState(params: LoadingWrapperStateParams) {
 	if (emptyState) return emptyState;
 
 	return renderSuccessState(buildSuccessStateParams(params));
-}
-
-interface OptionalProps {
-	onRetry?: (() => void) | undefined;
-	emptyMessage?: string | ReactNode;
-	loadingComponent?: ReactNode;
-	skeletonComponent?: ReactNode;
-	errorComponent?: ReactNode;
-	loadingText?: string;
-	emptyDescription?: string;
-	emptyActionLabel?: string;
-	onEmptyAction?: (() => void) | undefined;
-	children?: ReactNode;
-	className?: string;
-}
-
-/** Build optional properties object for state params */
-export function buildOptionalStateProps(
-	props: Readonly<{
-		onRetry?: (() => void) | undefined;
-		emptyMessage?: string | ReactNode;
-		loadingComponent?: ReactNode;
-		skeletonComponent?: ReactNode;
-		errorComponent?: ReactNode;
-		loadingText?: string;
-		emptyDescription?: string;
-		emptyActionLabel?: string;
-		onEmptyAction?: (() => void) | undefined;
-		children?: ReactNode;
-		className?: string | undefined;
-	}>
-): OptionalProps {
-	const result: OptionalProps = {};
-	const keys: Array<keyof OptionalProps> = [
-		'onRetry',
-		'emptyMessage',
-		'loadingComponent',
-		'skeletonComponent',
-		'errorComponent',
-		'loadingText',
-		'emptyDescription',
-		'emptyActionLabel',
-		'onEmptyAction',
-		'children',
-		'className',
-	];
-	for (const key of keys) {
-		const value = props[key];
-		if (value !== undefined) {
-			(result as Record<string, unknown>)[key] = value;
-		}
-	}
-	return result;
-}
-
-/** Build state params from component props */
-export function buildStateParams(
-	props: Readonly<{
-		isLoading?: boolean;
-		error?: Error | string | ReactNode | null;
-		isEmpty?: boolean;
-		useSkeleton?: boolean;
-		emptyTitle?: string;
-		onRetry?: (() => void) | undefined;
-		emptyMessage?: string | ReactNode;
-		loadingComponent?: ReactNode;
-		skeletonComponent?: ReactNode;
-		errorComponent?: ReactNode;
-		loadingText?: string;
-		emptyDescription?: string;
-		emptyActionLabel?: string;
-		onEmptyAction?: (() => void) | undefined;
-		children?: ReactNode;
-		className?: string | undefined;
-		[key: string]: unknown;
-	}>
-): LoadingWrapperStateParams {
-	const {
-		isLoading = false,
-		error = null,
-		isEmpty = false,
-		useSkeleton = false,
-		emptyTitle = 'No data available',
-		...restProps
-	} = props;
-
-	return {
-		isLoading,
-		error: error ?? null,
-		isEmpty,
-		useSkeleton,
-		emptyTitle,
-		props: restProps,
-		...buildOptionalStateProps(props),
-	};
 }

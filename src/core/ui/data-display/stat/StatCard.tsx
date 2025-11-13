@@ -1,4 +1,9 @@
-import Card from '@core/ui/card/Card';
+import Card from '@core/ui/data-display/card/Card';
+import {
+	formatTrendValue,
+	getTrendColorClasses,
+	getTrendIconName,
+} from '@core/ui/data-display/stat/helpers/StatCardHelpers';
 import Icon from '@core/ui/icons/Icon';
 import {
 	getStatCardIconSizeClasses,
@@ -11,8 +16,6 @@ import type { StandardSize } from '@src-types/ui/base';
 import type { StatCardProps } from '@src-types/ui/layout/card';
 import type { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { formatTrendValue, getTrendColorClasses, getTrendIconName } from './StatCardHelpers';
 
 interface TrendIndicatorProps {
 	trend: NonNullable<StatCardProps['trend']>;

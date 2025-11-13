@@ -1,7 +1,6 @@
+import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
 import type { RefObject } from 'react';
 import { createPortal } from 'react-dom';
-
-import type { PopoverPositionState } from './popoverPosition';
 
 export interface UsePopoverReturn {
 	readonly triggerRef: RefObject<HTMLElement | null>;

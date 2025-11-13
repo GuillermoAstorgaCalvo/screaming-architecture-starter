@@ -3,10 +3,12 @@
  * Type definitions for reusable motion components
  */
 
+import type {
+	MotionDurationToken,
+	MotionEasingToken,
+} from '@core/ui/utilities/motion/constants/motionConstants';
 import type { HTMLMotionProps, MotionProps } from 'framer-motion';
 import type { JSX, ReactNode } from 'react';
-
-import type { MotionDurationToken, MotionEasingToken } from './motionConstants';
 
 /**
  * Animation duration type

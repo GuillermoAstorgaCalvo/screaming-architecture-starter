@@ -1,7 +1,6 @@
+import { renderState } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state';
+import { buildStateParams } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state.build';
 import type { HTMLAttributes, ReactNode } from 'react';
-
-import { renderState } from './LoadingWrapperHelpers.state';
-import { buildStateParams } from './LoadingWrapperHelpers.state.build';
 
 export interface LoadingWrapperProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 	/** Whether the content is currently loading */

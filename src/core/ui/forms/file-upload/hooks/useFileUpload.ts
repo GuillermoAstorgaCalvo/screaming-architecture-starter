@@ -1,11 +1,17 @@
+import { generateFileUploadId } from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import { useFileHandlers } from '@core/ui/forms/file-upload/hooks/useFileUpload.handlers';
+import {
+	useDragHandlers,
+	useFileState,
+	useValidationWrappers,
+} from '@core/ui/forms/file-upload/hooks/useFileUpload.hooks';
+import { buildContentProps } from '@core/ui/forms/file-upload/hooks/useFileUpload.props';
+import type {
+	FileUploadContentProps,
+	FileUploadFile,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import type { FileUploadProps } from '@src-types/ui/forms-inputs';
 import { useId, useState } from 'react';
-
-import { generateFileUploadId } from './FileUploadHelpers';
-import type { FileUploadContentProps, FileUploadFile } from './FileUploadTypes';
-import { useFileHandlers } from './useFileUpload.handlers';
-import { useDragHandlers, useFileState, useValidationWrappers } from './useFileUpload.hooks';
-import { buildContentProps } from './useFileUpload.props';
 
 export interface UseFileUploadPropsOptions {
 	readonly props: Readonly<FileUploadProps>;

@@ -1,7 +1,6 @@
+import { AutocompleteContent } from '@core/ui/forms/autocomplete/components/AutocompleteContent';
+import { useAutocomplete } from '@core/ui/forms/autocomplete/hooks/useAutocomplete';
 import type { ReactNode } from 'react';
-
-import { AutocompleteContent } from './AutocompleteContent';
-import { useAutocomplete } from './useAutocomplete';
 
 export interface AutocompleteOption {
 	readonly value: string;

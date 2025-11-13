@@ -1,9 +1,11 @@
+import {
+	getInfiniteScrollClasses,
+	getSentinelClasses,
+} from '@core/ui/utilities/infinite-scroll/helpers/InfiniteScrollHelpers';
+import { renderInfiniteScroll } from '@core/ui/utilities/infinite-scroll/helpers/InfiniteScrollRenderers';
+import { useInfiniteScroll } from '@core/ui/utilities/infinite-scroll/hooks/useInfiniteScroll';
 import type { InfiniteScrollProps } from '@src-types/ui/data/infinite-scroll';
 import { useId } from 'react';
-
-import { getInfiniteScrollClasses, getSentinelClasses } from './InfiniteScrollHelpers';
-import { renderInfiniteScroll } from './InfiniteScrollRenderers';
-import { useInfiniteScroll } from './useInfiniteScroll';
 
 /**
  * Normalizes and extracts props with default values

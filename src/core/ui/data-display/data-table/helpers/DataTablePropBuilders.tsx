@@ -1,5 +1,3 @@
-import { TableEmptyState } from '@core/ui/data-display/table/TableEmptyState';
-
 import type {
 	BasePropsParams,
 	ColumnProps,
@@ -7,7 +5,8 @@ import type {
 	PaginationProps,
 	SortAndSelectionProps,
 	StylePropsParams,
-} from './DataTableTypes';
+} from '@core/ui/data-display/data-table/types/DataTableTypes';
+import { TableEmptyState } from '@core/ui/data-display/table/components/TableEmptyState';
 
 export function buildFilterProps({
 	filter,

@@ -1,7 +1,7 @@
-import { SignaturePadCanvasContent } from './SignaturePadCanvasContent';
-import { normalizeProps } from './SignaturePadCanvasHelpers';
-import type { SignaturePadCanvasProps } from './SignaturePadTypes';
-import { useSignaturePadSetup } from './useSignaturePadSetup';
+import { SignaturePadCanvasContent } from '@core/ui/media/signature-pad/components/SignaturePadCanvasContent';
+import { normalizeProps } from '@core/ui/media/signature-pad/helpers/SignaturePadCanvasHelpers';
+import { useSignaturePadSetup } from '@core/ui/media/signature-pad/hooks/useSignaturePadSetup';
+import type { SignaturePadCanvasProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 
 /**
  * SignaturePadCanvas - Canvas component for capturing signatures

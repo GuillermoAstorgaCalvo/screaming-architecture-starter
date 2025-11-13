@@ -1,7 +1,6 @@
+import { createNumberInputHandlers } from '@core/ui/forms/number-input/helpers/NumberInputHandlers';
+import type { UseNumberInputHandlersOptions } from '@core/ui/forms/number-input/types/useNumberInput.types';
 import { useMemo } from 'react';
-
-import { createNumberInputHandlers } from './NumberInputHandlers';
-import type { UseNumberInputHandlersOptions } from './useNumberInput.types';
 
 /**
  * Hook to create memoized handlers for number input

@@ -1,9 +1,8 @@
 import Button from '@core/ui/button/Button';
+import type { useFormWizardHandlers } from '@core/ui/forms/form-wizard/hooks/useFormWizardHandlers';
+import type { FormWizardState } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardState } from './FormWizardTypes';
-import type { useFormWizardHandlers } from './useFormWizardHandlers';
 
 interface PreviousButtonProps {
 	readonly size: StandardSize;

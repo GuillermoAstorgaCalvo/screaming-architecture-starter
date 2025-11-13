@@ -1,9 +1,8 @@
 import { ARIA_LABELS } from '@core/constants/aria';
 import { BREADCRUMBS_BASE_CLASSES } from '@core/constants/ui/navigation';
+import { BreadcrumbItemComponent } from '@core/ui/navigation/breadcrumbs/components/BreadcrumbItem';
 import type { BreadcrumbItem, BreadcrumbsProps } from '@src-types/ui/navigation/breadcrumbs';
 import { twMerge } from 'tailwind-merge';
-
-import { BreadcrumbItemComponent } from './BreadcrumbItem';
 
 /**
  * Breadcrumbs - Navigation breadcrumb component
@@ -34,7 +33,15 @@ import { BreadcrumbItemComponent } from './BreadcrumbItem';
  * ```
  */
 function getItemKey(item: BreadcrumbItem, index: number): string {
-	return item.to ? `${item.to}-${index}` : `${item.label}-${index}`;
+	if (item.to) {
+		return `${item.to}-${index}`;
+	}
+	// Only use label if it's a string or number
+	if (typeof item.label === 'string' || typeof item.label === 'number') {
+		return `${item.label}-${index}`;
+	}
+	// Fallback to index for React nodes/objects
+	return `item-${index}`;
 }
 
 export default function Breadcrumbs({

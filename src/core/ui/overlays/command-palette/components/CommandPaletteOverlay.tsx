@@ -1,6 +1,5 @@
+import type { CommandPaletteOverlayProps } from '@core/ui/overlays/command-palette/types/CommandPaletteParts.types';
 import { twMerge } from 'tailwind-merge';
-
-import type { CommandPaletteOverlayProps } from './CommandPaletteParts.types';
 
 export function CommandPaletteOverlay({
 	isOpen,

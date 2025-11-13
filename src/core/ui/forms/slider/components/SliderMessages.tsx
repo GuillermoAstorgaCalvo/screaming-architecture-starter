@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { SliderMessagesProps } from '@core/ui/forms/slider/types/SliderTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { SliderMessagesProps } from './SliderTypes';
 
 export function SliderMessages({ sliderId, error, helperText }: Readonly<SliderMessagesProps>) {
 	if (!error && !helperText) return null;

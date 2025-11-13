@@ -1,10 +1,15 @@
+import type {
+	AutocompleteOption,
+	AutocompleteProps,
+} from '@core/ui/forms/autocomplete/Autocomplete';
+import { useActionHandlers } from '@core/ui/forms/autocomplete/helpers/useAutocompleteKeyboard.actions';
+import {
+	createKeyHandlerMap,
+	type KeyboardHandlers,
+} from '@core/ui/forms/autocomplete/helpers/useAutocompleteKeyboard.map';
+import { useNavigationHandlers } from '@core/ui/forms/autocomplete/helpers/useAutocompleteKeyboard.navigation';
+import { useSelectHandler } from '@core/ui/forms/autocomplete/helpers/useAutocompleteKeyboard.select';
 import { type KeyboardEvent, useCallback } from 'react';
-
-import type { AutocompleteOption, AutocompleteProps } from './Autocomplete';
-import { useActionHandlers } from './useAutocompleteKeyboard.actions';
-import { createKeyHandlerMap, type KeyboardHandlers } from './useAutocompleteKeyboard.map';
-import { useNavigationHandlers } from './useAutocompleteKeyboard.navigation';
-import { useSelectHandler } from './useAutocompleteKeyboard.select';
 
 interface UseKeyboardHandlersParams {
 	isOpen: boolean;

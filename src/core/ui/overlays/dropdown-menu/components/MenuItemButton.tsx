@@ -1,7 +1,6 @@
+import type { DropdownMenuItem } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import { classNames } from '@core/utils/classNames';
 import type { RefObject } from 'react';
-
-import type { DropdownMenuItem } from './DropdownMenu.types';
 
 interface MenuItemButtonProps {
 	readonly item: DropdownMenuItem;

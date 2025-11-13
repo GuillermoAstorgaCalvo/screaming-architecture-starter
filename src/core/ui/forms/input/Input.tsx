@@ -1,7 +1,6 @@
+import { InputContent } from '@core/ui/forms/input/components/InputContent';
+import { useInputProps } from '@core/ui/forms/input/hooks/useInput';
 import type { InputProps } from '@src-types/ui/forms';
-
-import { InputContent } from './InputContent';
-import { useInputProps } from './useInput';
 
 /**
  * Input - Reusable input component with label, error, and helper text support

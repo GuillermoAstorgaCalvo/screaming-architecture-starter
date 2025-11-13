@@ -1,13 +1,15 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { TimePickerProps } from '@src-types/ui/forms-dates';
-import { useId } from 'react';
-
 import {
 	generateTimePickerId,
 	getAriaDescribedBy,
 	getTimePickerClasses,
-} from './TimePickerHelpers';
-import type { TimePickerContentProps, TimePickerInputProps } from './TimePickerTypes';
+} from '@core/ui/forms/time-picker/helpers/TimePickerHelpers';
+import type {
+	TimePickerContentProps,
+	TimePickerInputProps,
+} from '@core/ui/forms/time-picker/types/TimePickerTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { TimePickerProps } from '@src-types/ui/forms-dates';
+import { useId } from 'react';
 
 export interface UseTimePickerPropsOptions {
 	readonly props: Readonly<TimePickerProps>;

@@ -1,6 +1,5 @@
+import type { CurrencyInputLabelProps } from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { CurrencyInputLabelProps } from './CurrencyInputTypes';
 
 export function CurrencyInputLabel({ id, label, required }: Readonly<CurrencyInputLabelProps>) {
 	return (

@@ -1,7 +1,7 @@
 import type {
 	LoadingWrapperStateParams,
 	SuccessStateParams,
-} from './LoadingWrapperHelpers.state.types';
+} from '@core/ui/utilities/loading-wrapper/types/LoadingWrapperHelpers.state.types';
 
 /** Render success state (content) */
 export function renderSuccessState({ children, className, props }: SuccessStateParams) {

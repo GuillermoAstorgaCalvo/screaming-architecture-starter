@@ -1,6 +1,6 @@
-import { getListboxStyles } from './MultiSelectContentHelpers';
-import { renderOptions } from './MultiSelectOptionItemRenderers';
-import type { MultiSelectContentProps } from './MultiSelectTypes';
+import { renderOptions } from '@core/ui/forms/multi-select/components/MultiSelectOptionItemRenderers';
+import { getListboxStyles } from '@core/ui/forms/multi-select/helpers/MultiSelectContentHelpers';
+import type { MultiSelectContentProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 
 type MultiSelectOptionsListProps = Readonly<
 	Pick<

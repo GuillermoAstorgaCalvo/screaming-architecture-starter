@@ -1,8 +1,7 @@
+import { ResizableContainer } from '@core/ui/utilities/resizable/components/ResizableContainer';
+import { useResizable } from '@core/ui/utilities/resizable/hooks/useResizable';
 import type { ResizableProps } from '@src-types/ui/overlays/containers';
 import { type MouseEvent, type RefObject, useId, useRef, useState } from 'react';
-
-import { ResizableContainer } from './ResizableContainer';
-import { useResizable } from './useResizable';
 
 type SizeValue = string | number;
 

@@ -1,4 +1,4 @@
-import type { SignaturePadMessagesProps } from './SignaturePadTypes';
+import type { SignaturePadMessagesProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 
 export function SignaturePadMessages({
 	signaturePadId,

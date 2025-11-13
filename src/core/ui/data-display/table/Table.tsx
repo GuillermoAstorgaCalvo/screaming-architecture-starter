@@ -1,7 +1,6 @@
+import { TableElement } from '@core/ui/data-display/table/components/TableElement';
+import { TableEmptyState } from '@core/ui/data-display/table/components/TableEmptyState';
 import type { TableProps } from '@src-types/ui/data/table';
-
-import { TableElement } from './TableElement';
-import { TableEmptyState } from './TableEmptyState';
 
 /**
  * Table - Data table component

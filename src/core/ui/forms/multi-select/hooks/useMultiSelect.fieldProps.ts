@@ -1,11 +1,10 @@
+import type { useMultiSelectState } from '@core/ui/forms/multi-select/helpers/MultiSelectHelpers';
+import { createInputEventHandlers } from '@core/ui/forms/multi-select/hooks/useMultiSelect.handlers';
+import type { MultiSelectStateSetup } from '@core/ui/forms/multi-select/hooks/useMultiSelect.setup';
+import type { useMultiSelectInteractions } from '@core/ui/forms/multi-select/hooks/useMultiSelectState';
+import type { MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
+import type { MultiSelectFieldProps } from '@core/ui/forms/multi-select/types/MultiSelectTypes';
 import type { KeyboardEvent } from 'react';
-
-import type { MultiSelectProps } from './MultiSelect';
-import type { useMultiSelectState } from './MultiSelectHelpers';
-import type { MultiSelectFieldProps } from './MultiSelectTypes';
-import { createInputEventHandlers } from './useMultiSelect.handlers';
-import type { MultiSelectStateSetup } from './useMultiSelect.setup';
-import type { useMultiSelectInteractions } from './useMultiSelectState';
 
 interface CreateMultiSelectFieldPropsParams {
 	readonly state: ReturnType<typeof useMultiSelectState>;

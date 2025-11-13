@@ -1,13 +1,12 @@
 import type { FormControls } from '@core/forms/formAdapter';
-import { convertStepsToStepperSteps } from '@core/ui/forms/wizard/wizardUtils';
+import { renderStepContent } from '@core/ui/forms/form-wizard/components/FormWizardView.content';
+import type { StepMetadata } from '@core/ui/forms/form-wizard/components/FormWizardView.helpers';
+import { getStepMetadata } from '@core/ui/forms/form-wizard/components/FormWizardView.metadata';
+import type { FormWizardStep } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
+import { convertStepsToStepperSteps } from '@core/ui/forms/wizard/helpers/wizardUtils';
 import type { StepperStep } from '@src-types/ui/navigation/stepper';
 import type { ReactNode } from 'react';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardStep } from './FormWizardTypes';
-import { renderStepContent } from './FormWizardView.content';
-import type { StepMetadata } from './FormWizardView.helpers';
-import { getStepMetadata } from './FormWizardView.metadata';
 
 export interface WizardViewData<T extends FieldValues> {
 	readonly stepperSteps: StepperStep[];

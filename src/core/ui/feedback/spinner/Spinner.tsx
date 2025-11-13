@@ -1,9 +1,11 @@
 import { ARIA_LABELS, ARIA_LIVE, ARIA_ROLES } from '@core/constants/aria';
+import { SpinnerContent } from '@core/ui/feedback/spinner/components/SpinnerParts';
+import {
+	filterSpinnerSvgProps,
+	getSpinnerSvgProps,
+} from '@core/ui/feedback/spinner/helpers/SpinnerHelpers';
 import { getSpinnerVariantClasses } from '@core/ui/variants/spinner';
 import type { SpinnerProps } from '@src-types/ui/feedback';
-
-import { filterSpinnerSvgProps, getSpinnerSvgProps } from './SpinnerHelpers';
-import { SpinnerContent } from './SpinnerParts';
 
 /**
  * Render spinner SVG element

@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { TagInputMessagesProps } from '@core/ui/forms/tag-input/types/TagInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { TagInputMessagesProps } from './TagInputTypes';
 
 export function TagInputMessages({ inputId, error, helperText }: Readonly<TagInputMessagesProps>) {
 	const hasError = Boolean(error);

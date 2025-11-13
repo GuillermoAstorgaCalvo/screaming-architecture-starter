@@ -1,4 +1,4 @@
-import type { NumberInputWrapperProps } from './NumberInputTypes';
+import type { NumberInputWrapperProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 
 export function NumberInputWrapper({
 	fullWidth,

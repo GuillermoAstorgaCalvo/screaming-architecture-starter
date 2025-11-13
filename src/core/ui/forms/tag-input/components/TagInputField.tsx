@@ -1,8 +1,7 @@
+import { TagInputFieldContainer } from '@core/ui/forms/tag-input/components/TagInputFieldContainer';
+import type { TagInputFieldProps } from '@core/ui/forms/tag-input/types/TagInputTypes';
 import { classNames } from '@core/utils/classNames';
 import type { InputHTMLAttributes, KeyboardEvent } from 'react';
-
-import { TagInputFieldContainer } from './TagInputFieldContainer';
-import type { TagInputFieldProps } from './TagInputTypes';
 
 /**
  * Checks if the maximum number of tags has been reached

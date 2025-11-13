@@ -1,12 +1,14 @@
-import Popover from '@core/ui/popover/Popover';
-import { classNames } from '@core/utils/classNames';
-
-import { getDropdownPosition, MENU_STYLES } from './DropdownMenuHelpers';
-import { renderDropdownMenuContent } from './DropdownMenuRenderers.content';
+import { renderDropdownMenuContent } from '@core/ui/overlays/dropdown-menu/components/DropdownMenuRenderers.content';
+import {
+	getDropdownPosition,
+	MENU_STYLES,
+} from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuHelpers';
 import type {
 	RenderDropdownMenuContentParams,
 	RenderDropdownPopoverParams,
-} from './DropdownMenuRenderers.types';
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenuRenderers.types';
+import Popover from '@core/ui/popover/Popover';
+import { classNames } from '@core/utils/classNames';
 
 export function renderDropdownPopover({
 	open,

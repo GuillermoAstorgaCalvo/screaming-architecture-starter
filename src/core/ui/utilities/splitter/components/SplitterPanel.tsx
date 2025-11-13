@@ -1,12 +1,11 @@
+import { useSplitterContext } from '@core/ui/utilities/splitter/components/SplitterContext';
+import { calculatePanelStyle } from '@core/ui/utilities/splitter/helpers/useSplitter.helpers';
+import type { PanelState } from '@core/ui/utilities/splitter/hooks/useSplitter.state';
+import { useSplitterPanelRegistration } from '@core/ui/utilities/splitter/hooks/useSplitterPanelRegistration';
+import { useSplitterPanelSize } from '@core/ui/utilities/splitter/hooks/useSplitterPanelSize';
 import type { SplitterPanelProps } from '@src-types/ui/layout/splitter';
 import { type ForwardedRef, forwardRef, type RefObject, useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { useSplitterContext } from './SplitterContext';
-import { calculatePanelStyle } from './useSplitter.helpers';
-import type { PanelState } from './useSplitter.state';
-import { useSplitterPanelRegistration } from './useSplitterPanelRegistration';
-import { useSplitterPanelSize } from './useSplitterPanelSize';
 
 function usePanelRef(ref: ForwardedRef<HTMLDivElement>) {
 	const internalRef = useRef<HTMLDivElement>(null);

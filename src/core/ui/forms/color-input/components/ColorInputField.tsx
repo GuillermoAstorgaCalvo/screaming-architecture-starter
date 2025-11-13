@@ -1,6 +1,5 @@
+import type { ColorInputFieldProps } from '@core/ui/forms/color-input/types/ColorInputTypes';
 import type { ChangeEvent } from 'react';
-
-import type { ColorInputFieldProps } from './ColorInputTypes';
 
 export function ColorInputField({
 	id,

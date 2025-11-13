@@ -1,9 +1,11 @@
 import { ARIA_LABELS } from '@core/constants/aria';
+import { PaginationButtons } from '@core/ui/navigation/pagination/components/PaginationButtons';
+import { getPaginationClasses } from '@core/ui/navigation/pagination/helpers/PaginationHelpers';
+import {
+	usePaginationButtonProps,
+	usePaginationSetup,
+} from '@core/ui/navigation/pagination/hooks/usePagination';
 import type { PaginationProps } from '@src-types/ui/data/pagination';
-
-import { PaginationButtons } from './PaginationButtons';
-import { getPaginationClasses } from './PaginationHelpers';
-import { usePaginationButtonProps, usePaginationSetup } from './usePagination';
 
 interface UsePaginationContentOptions {
 	currentPage: number;

@@ -1,9 +1,8 @@
+import { generateRadioId, getAriaDescribedBy } from '@core/ui/forms/radio/helpers/RadioA11yHelpers';
+import { getRadioClasses } from '@core/ui/forms/radio/helpers/RadioClassHelpers';
+import type { RadioContentProps } from '@core/ui/forms/radio/types/RadioTypes';
 import type { RadioProps } from '@src-types/ui/forms';
 import { type InputHTMLAttributes, useId } from 'react';
-
-import { generateRadioId, getAriaDescribedBy } from './RadioA11yHelpers';
-import { getRadioClasses } from './RadioClassHelpers';
-import type { RadioContentProps } from './RadioTypes';
 
 export interface UseRadioPropsOptions {
 	readonly props: Readonly<RadioProps>;

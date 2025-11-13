@@ -1,8 +1,7 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import { ComboboxEmptyState } from '@core/ui/forms/combobox/components/ComboboxEmptyState';
+import { ComboboxOptionsList } from '@core/ui/forms/combobox/components/ComboboxOptionsList';
 import type { ReactNode, RefObject } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import { ComboboxEmptyState } from './ComboboxEmptyState';
-import { ComboboxOptionsList } from './ComboboxOptionsList';
 
 interface ComboboxListboxProps {
 	readonly isOpen: boolean;

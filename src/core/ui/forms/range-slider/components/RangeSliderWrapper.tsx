@@ -1,6 +1,5 @@
+import type { RangeSliderWrapperProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { RangeSliderWrapperProps } from './RangeSliderTypes';
 
 export function RangeSliderWrapper({
 	fullWidth,

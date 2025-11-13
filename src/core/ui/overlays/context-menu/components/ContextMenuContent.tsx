@@ -1,5 +1,8 @@
-import { renderMenuContent, renderPopover } from './ContextMenuContent.renderers';
-import type { ContextMenuContentProps } from './ContextMenuContent.types';
+import {
+	renderMenuContent,
+	renderPopover,
+} from '@core/ui/overlays/context-menu/components/ContextMenuContent.renderers';
+import type { ContextMenuContentProps } from '@core/ui/overlays/context-menu/types/ContextMenuContent.types';
 
 export function ContextMenuContent(props: Readonly<ContextMenuContentProps>) {
 	const menuContent = renderMenuContent({

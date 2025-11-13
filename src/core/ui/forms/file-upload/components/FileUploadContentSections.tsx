@@ -1,15 +1,14 @@
 import Button from '@core/ui/button/Button';
-import type { StandardSize } from '@src-types/ui/base';
-import type { DragEvent } from 'react';
-
+import { FileUploadDropzone } from '@core/ui/forms/file-upload/components/FileUploadDropzone';
+import { FileUploadLabel } from '@core/ui/forms/file-upload/components/FileUploadLabel';
+import { FileUploadPreview } from '@core/ui/forms/file-upload/components/FileUploadPreview';
 import type {
 	FileUploadDropzoneSectionProps,
 	FileUploadLabelSectionProps,
 	FileUploadPreviewSectionProps,
-} from './FileUploadContentSections.types';
-import { FileUploadDropzone } from './FileUploadDropzone';
-import { FileUploadLabel } from './FileUploadLabel';
-import { FileUploadPreview } from './FileUploadPreview';
+} from '@core/ui/forms/file-upload/helpers/FileUploadContentSections.types';
+import type { StandardSize } from '@src-types/ui/base';
+import type { DragEvent } from 'react';
 
 export interface FileUploadDropzoneContentProps {
 	readonly dragActive: boolean;

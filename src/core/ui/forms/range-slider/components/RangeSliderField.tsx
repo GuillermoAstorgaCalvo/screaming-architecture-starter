@@ -1,5 +1,5 @@
-import { RangeSliderInput } from './RangeSliderInput';
-import type { RangeSliderFieldProps } from './RangeSliderTypes';
+import { RangeSliderInput } from '@core/ui/forms/range-slider/components/RangeSliderInput';
+import type { RangeSliderFieldProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 
 export interface RangeSliderFieldPropsWithOnChange extends RangeSliderFieldProps {
 	readonly onChange?: ((value: [number, number]) => void) | undefined;

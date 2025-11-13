@@ -1,5 +1,5 @@
-import { MoveButton } from './TransferActions.button';
-import type { ButtonConfig, ButtonSize } from './TransferActions.types';
+import { MoveButton } from '@core/ui/forms/transfer/components/TransferActions.button';
+import type { ButtonConfig, ButtonSize } from '@core/ui/forms/transfer/types/TransferActions.types';
 
 /**
  * Renders the action buttons for the transfer component

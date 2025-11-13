@@ -1,5 +1,5 @@
-import { CommandPaletteItem } from './CommandPaletteItem';
-import type { CommandPaletteListProps } from './CommandPaletteParts.types';
+import { CommandPaletteItem } from '@core/ui/overlays/command-palette/components/CommandPaletteItem';
+import type { CommandPaletteListProps } from '@core/ui/overlays/command-palette/types/CommandPaletteParts.types';
 
 export function CommandPaletteList({
 	commands,

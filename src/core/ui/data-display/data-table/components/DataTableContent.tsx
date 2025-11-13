@@ -1,9 +1,8 @@
+import { DataTableFilterSection } from '@core/ui/data-display/data-table/components/DataTableFilterSection';
+import { DataTablePaginationSection } from '@core/ui/data-display/data-table/components/DataTablePaginationSection';
+import { DataTableTable } from '@core/ui/data-display/data-table/components/DataTableTable';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn, DataTableProps } from '@src-types/ui/dataTable';
-
-import { DataTableFilterSection } from './DataTableFilterSection';
-import { DataTablePaginationSection } from './DataTablePaginationSection';
-import { DataTableTable } from './DataTableTable';
 
 interface DataTableContentProps<T> {
 	dataTableId: string | undefined;

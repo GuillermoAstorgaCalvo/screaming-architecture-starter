@@ -1,7 +1,7 @@
 import { ErrorBoundary } from '@core/lib/ErrorBoundary';
 import { useLogger } from '@core/providers/useLogger';
 import ErrorBoundaryUI from '@core/ui/error-boundary/ErrorBoundaryUI';
-import type { ErrorBoundaryUIProps } from '@core/ui/error-boundary/ErrorBoundaryUITypes';
+import type { ErrorBoundaryUIProps } from '@core/ui/error-boundary/types/ErrorBoundaryUITypes';
 import { type ReactNode, useMemo } from 'react';
 
 interface ErrorBoundaryWrapperProps {

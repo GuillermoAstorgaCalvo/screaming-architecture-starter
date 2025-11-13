@@ -1,9 +1,14 @@
+import { extractSearchInputProps } from '@core/ui/forms/search-input/hooks/useSearchInputProps.extract';
+import {
+	buildFieldProps,
+	shouldShowClearButton,
+} from '@core/ui/forms/search-input/hooks/useSearchInputProps.helpers';
+import { useSearchInputState } from '@core/ui/forms/search-input/hooks/useSearchInputState';
+import type {
+	SearchInputFieldProps,
+	UseSearchInputStateReturn,
+} from '@core/ui/forms/search-input/types/SearchInputTypes';
 import type { SearchInputProps } from '@src-types/ui/forms-inputs';
-
-import type { SearchInputFieldProps, UseSearchInputStateReturn } from './SearchInputTypes';
-import { extractSearchInputProps } from './useSearchInputProps.extract';
-import { buildFieldProps, shouldShowClearButton } from './useSearchInputProps.helpers';
-import { useSearchInputState } from './useSearchInputState';
 
 export interface UseSearchInputPropsOptions {
 	readonly props: Readonly<SearchInputProps>;

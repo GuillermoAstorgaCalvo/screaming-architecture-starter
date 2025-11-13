@@ -1,7 +1,6 @@
+import { SliderContent } from '@core/ui/forms/slider/components/SliderContent';
+import { useSliderProps } from '@core/ui/forms/slider/hooks/useSlider';
 import type { SliderProps } from '@src-types/ui/forms-advanced';
-
-import { SliderContent } from './SliderContent';
-import { useSliderProps } from './useSlider';
 
 /**
  * Slider - Reusable range input component with label, error, and helper text support

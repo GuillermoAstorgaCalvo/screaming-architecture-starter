@@ -1,9 +1,11 @@
+import { SegmentedControlItemButton } from '@core/ui/forms/segmented-control/components/SegmentedControlItemButton';
+import { handleKeyDown } from '@core/ui/forms/segmented-control/helpers/SegmentedControlHandlers';
+import {
+	getContainerClasses,
+	useSegmentedControlId,
+} from '@core/ui/forms/segmented-control/helpers/SegmentedControlHelpers';
 import type { SegmentedControlProps } from '@src-types/ui/navigation/segmentedControl';
 import type { KeyboardEvent } from 'react';
-
-import { handleKeyDown } from './SegmentedControlHandlers';
-import { getContainerClasses, useSegmentedControlId } from './SegmentedControlHelpers';
-import { SegmentedControlItemButton } from './SegmentedControlItemButton';
 
 /**
  * SegmentedControl - iOS-style segmented control component

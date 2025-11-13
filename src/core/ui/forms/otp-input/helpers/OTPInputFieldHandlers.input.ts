@@ -1,10 +1,10 @@
-import type { HandlerDependencies } from './OTPInputFieldHandlers.types';
+import type { HandlerDependencies } from '@core/ui/forms/otp-input/helpers/OTPInputFieldHandlers.types';
 import {
 	checkAndTriggerComplete,
 	extractDigits,
 	fillValueArrayFromDigits,
 	isValidOTPCharacter,
-} from './OTPInputHelpers';
+} from '@core/ui/forms/otp-input/helpers/OTPInputHelpers';
 
 function createMultipleCharacterHandler(
 	length: number,

@@ -1,7 +1,10 @@
+import {
+	generateFileId,
+	normalizeValueToFileArray,
+	processFiles,
+} from '@core/ui/forms/file-upload/helpers/useFileUpload.utils';
+import type { FileUploadFile } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import { type DragEvent, useCallback, useEffect, useState } from 'react';
-
-import type { FileUploadFile } from './FileUploadTypes';
-import { generateFileId, normalizeValueToFileArray, processFiles } from './useFileUpload.utils';
 
 export function useFileState(value: File | File[] | null | undefined) {
 	const [files, setFiles] = useState<readonly FileUploadFile[]>(() => {

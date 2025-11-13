@@ -1,13 +1,15 @@
-import { useMemo } from 'react';
-
-import { useTransferHandlers } from './useTransfer.handlers';
+import {
+	computeSourceAndTargetOptions,
+	filterOptions,
+} from '@core/ui/forms/transfer/helpers/useTransfer.utils';
+import { useTransferHandlers } from '@core/ui/forms/transfer/hooks/useTransfer.handlers';
 import type {
 	ComputedDisabledStatesParams,
 	FilteredOptionsParams,
 	TransferComputationParams,
 	TransferComputationResult,
-} from './useTransfer.types';
-import { computeSourceAndTargetOptions, filterOptions } from './useTransfer.utils';
+} from '@core/ui/forms/transfer/types/useTransfer.types';
+import { useMemo } from 'react';
 
 /**
  * Computes disabled states for move buttons

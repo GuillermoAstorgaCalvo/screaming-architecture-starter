@@ -1,6 +1,5 @@
+import type { MoveHandlersParams } from '@core/ui/forms/transfer/types/useTransfer.types';
 import { useCallback } from 'react';
-
-import type { MoveHandlersParams } from './useTransfer.types';
 
 interface MoveToTargetParams {
 	readonly disabled: boolean;

@@ -1,7 +1,9 @@
+import {
+	buildContentClasses,
+	renderPopoverPortal,
+} from '@core/ui/overlays/popover/helpers/PopoverHelpers';
+import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
 import type { ReactNode, RefObject } from 'react';
-
-import { buildContentClasses, renderPopoverPortal } from './PopoverHelpers';
-import type { PopoverPositionState } from './popoverPosition';
 
 interface BuildPopoverContentSetupOptions {
 	readonly className?: string | undefined;

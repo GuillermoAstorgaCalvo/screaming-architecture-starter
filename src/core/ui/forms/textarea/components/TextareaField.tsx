@@ -1,4 +1,4 @@
-import type { TextareaFieldProps } from './TextareaTypes';
+import type { TextareaFieldProps } from '@core/ui/forms/textarea/types/TextareaTypes';
 
 export function TextareaField({
 	id,

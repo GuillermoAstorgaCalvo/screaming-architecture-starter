@@ -1,11 +1,14 @@
+import type { ComboboxProps } from '@core/ui/forms/combobox/Combobox';
+import { useComboboxState } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
+import { createFieldProps } from '@core/ui/forms/combobox/hooks/useComboboxField';
+import { buildComboboxReturn } from '@core/ui/forms/combobox/hooks/useComboboxReturn';
+import {
+	useComboboxInput,
+	useComboboxInteractions,
+	useComboboxValue,
+} from '@core/ui/forms/combobox/hooks/useComboboxState';
+import type { ComboboxContentProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
 import { useId } from 'react';
-
-import type { ComboboxProps } from './Combobox';
-import { useComboboxState } from './ComboboxHelpers';
-import type { ComboboxContentProps } from './ComboboxTypes';
-import { createFieldProps } from './useComboboxField';
-import { buildComboboxReturn } from './useComboboxReturn';
-import { useComboboxInput, useComboboxInteractions, useComboboxValue } from './useComboboxState';
 
 function useComboboxStateSetup(props: Readonly<ComboboxProps>) {
 	const { comboboxId, label, error, helperText, size = 'md', className } = props;

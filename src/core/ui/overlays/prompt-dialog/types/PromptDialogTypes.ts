@@ -1,7 +1,9 @@
+import type {
+	PromptDialogInputType,
+	PromptDialogVariant,
+} from '@core/ui/overlays/prompt-dialog/PromptDialog';
 import type { ModalSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import type { PromptDialogInputType, PromptDialogVariant } from './PromptDialog';
 
 export interface DialogContentOptions {
 	label: string;

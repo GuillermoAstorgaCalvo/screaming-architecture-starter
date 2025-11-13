@@ -1,4 +1,4 @@
-import type { MultiSelectOption } from './MultiSelect';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
 
 export function isOptionSelected(option: MultiSelectOption, selectedValues: string[]): boolean {
 	return selectedValues.includes(option.value);

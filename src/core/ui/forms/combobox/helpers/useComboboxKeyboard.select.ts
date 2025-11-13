@@ -1,7 +1,6 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import { getOptionLabel } from '@core/ui/forms/combobox/helpers/useComboboxHelpers';
 import { useCallback } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import { getOptionLabel } from './useComboboxHelpers';
 
 export interface UseSelectHandlerParams {
 	setInputValue: (value: string) => void;

@@ -1,8 +1,8 @@
-import { PhoneInputField } from './PhoneInputField';
-import { PhoneInputLabel } from './PhoneInputLabel';
-import { PhoneInputMessages } from './PhoneInputMessages';
-import type { PhoneInputContentProps } from './PhoneInputTypes';
-import { PhoneInputWrapper } from './PhoneInputWrapper';
+import { PhoneInputField } from '@core/ui/forms/phone-input/components/PhoneInputField';
+import { PhoneInputLabel } from '@core/ui/forms/phone-input/components/PhoneInputLabel';
+import { PhoneInputMessages } from '@core/ui/forms/phone-input/components/PhoneInputMessages';
+import { PhoneInputWrapper } from '@core/ui/forms/phone-input/components/PhoneInputWrapper';
+import type { PhoneInputContentProps } from '@core/ui/forms/phone-input/types/PhoneInputTypes';
 
 export function PhoneInputContent({
 	state,

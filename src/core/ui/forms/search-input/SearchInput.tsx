@@ -1,7 +1,6 @@
+import { SearchInputContent } from '@core/ui/forms/search-input/components/SearchInputContent';
+import { useSearchInputProps } from '@core/ui/forms/search-input/hooks/useSearchInput';
 import type { SearchInputProps } from '@src-types/ui/forms-inputs';
-
-import { SearchInputContent } from './SearchInputContent';
-import { useSearchInputProps } from './useSearchInput';
 
 /**
  * SearchInput - Search input with search icon and clear button

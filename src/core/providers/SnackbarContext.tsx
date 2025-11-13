@@ -1,4 +1,4 @@
-import type { SnackbarItem } from '@core/ui/snackbar/snackbar.types';
+import type { SnackbarItem } from '@core/ui/feedback/snackbar/types/snackbar.types';
 import { createContext } from 'react';
 
 export interface SnackbarContextValue {

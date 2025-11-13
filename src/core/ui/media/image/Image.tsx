@@ -1,9 +1,11 @@
+import { getImageConfig } from '@core/ui/media/image/helpers/image.config';
+import { renderImage } from '@core/ui/media/image/helpers/image.render';
+import type {
+	ImageLifecycleState,
+	UseImageLifecycleParams,
+} from '@core/ui/media/image/types/image.types';
 import type { ImageProps } from '@src-types/ui/feedback';
 import { type ReactElement, useCallback, useState } from 'react';
-
-import { getImageConfig } from './image.config';
-import { renderImage } from './image.render';
-import type { ImageLifecycleState, UseImageLifecycleParams } from './image.types';
 
 /**
  * Image - Optimized image display component with lazy loading, fallback handling, placeholders, and accessible alt text.

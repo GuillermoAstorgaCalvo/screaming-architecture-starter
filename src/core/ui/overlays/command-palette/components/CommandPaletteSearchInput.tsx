@@ -1,4 +1,4 @@
-import type { CommandPaletteSearchInputProps } from './CommandPaletteParts.types';
+import type { CommandPaletteSearchInputProps } from '@core/ui/overlays/command-palette/types/CommandPaletteParts.types';
 
 export function CommandPaletteSearchInput({
 	searchQuery,

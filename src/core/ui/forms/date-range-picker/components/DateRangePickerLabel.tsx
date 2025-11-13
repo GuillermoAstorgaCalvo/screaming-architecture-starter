@@ -1,6 +1,5 @@
+import type { DateRangePickerLabelProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 import Label from '@core/ui/label/Label';
-
-import type { DateRangePickerLabelProps } from './DateRangePickerTypes';
 
 export function DateRangePickerLabel({
 	id,

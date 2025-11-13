@@ -1,13 +1,12 @@
-import { type RefObject, type TouchEvent, useCallback } from 'react';
-
 import {
 	calculatePullDistance,
 	getFirstTouch,
 	getPullState,
 	isContainerAtTop,
 	resetPullState,
-} from './PullToRefreshHelpers';
-import { usePullToRefreshState } from './usePullToRefreshState';
+} from '@core/ui/utilities/pull-to-refresh/helpers/PullToRefreshHelpers';
+import { usePullToRefreshState } from '@core/ui/utilities/pull-to-refresh/hooks/usePullToRefreshState';
+import { type RefObject, type TouchEvent, useCallback } from 'react';
 
 /**
  * Options for pull-to-refresh handlers hook

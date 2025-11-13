@@ -1,6 +1,5 @@
+import type { InputLabelProps } from '@core/ui/forms/input/types/InputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { InputLabelProps } from './InputTypes';
 
 export function InputLabel({ id, label, required }: Readonly<InputLabelProps>) {
 	return (

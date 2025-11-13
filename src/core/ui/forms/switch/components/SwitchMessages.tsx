@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { SwitchMessagesProps } from '@core/ui/forms/switch/types/SwitchTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { SwitchMessagesProps } from './SwitchTypes';
 
 export function SwitchMessages({ switchId, error, helperText }: Readonly<SwitchMessagesProps>) {
 	if (!error && !helperText) return null;

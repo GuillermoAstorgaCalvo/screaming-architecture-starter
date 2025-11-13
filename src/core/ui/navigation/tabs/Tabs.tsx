@@ -1,10 +1,9 @@
+import { TabsList } from '@core/ui/navigation/tabs/components/TabsList';
+import { TabsPanel } from '@core/ui/navigation/tabs/components/TabsPanel';
+import { getTabsClasses } from '@core/ui/navigation/tabs/helpers/TabsHelpers';
+import { useTabs, type UseTabsReturn } from '@core/ui/navigation/tabs/hooks/useTabs';
 import type { TabsProps } from '@src-types/ui/navigation/tabs';
 import { useId } from 'react';
-
-import { getTabsClasses } from './TabsHelpers';
-import { TabsList } from './TabsList';
-import { TabsPanel } from './TabsPanel';
-import { useTabs, type UseTabsReturn } from './useTabs';
 
 interface UseTabsSetupOptions {
 	readonly items: TabsProps['items'];

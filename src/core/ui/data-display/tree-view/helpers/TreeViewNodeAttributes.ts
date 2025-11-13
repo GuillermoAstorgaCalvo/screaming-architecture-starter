@@ -3,7 +3,7 @@ import type {
 	GetTreeNodeElementAttributesParams,
 	TreeItemAriaAttributes,
 	TreeNodeElementAttributes,
-} from './TreeViewNodeTypes';
+} from '@core/ui/data-display/tree-view/types/TreeViewNodeTypes';
 
 // ============================================================================
 // ARIA Attributes

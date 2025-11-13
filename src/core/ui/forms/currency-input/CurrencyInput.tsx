@@ -1,7 +1,6 @@
+import { CurrencyInputContent } from '@core/ui/forms/currency-input/components/CurrencyInputContent';
+import { useCurrencyInputProps } from '@core/ui/forms/currency-input/hooks/useCurrencyInput';
 import type { CurrencyInputProps } from '@src-types/ui/forms-specialized';
-
-import { CurrencyInputContent } from './CurrencyInputContent';
-import { useCurrencyInputProps } from './useCurrencyInput';
 
 /**
  * CurrencyInput - Currency/money input with formatting and currency symbol

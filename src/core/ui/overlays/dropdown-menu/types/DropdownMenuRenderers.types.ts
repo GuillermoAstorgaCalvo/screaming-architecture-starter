@@ -1,10 +1,9 @@
-import type { KeyboardEvent, ReactElement, ReactNode, RefObject } from 'react';
-
 import type {
 	DropdownMenuItem,
 	DropdownMenuItemOrSeparator,
 	DropdownMenuProps,
-} from './DropdownMenu.types';
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
+import type { KeyboardEvent, ReactElement, ReactNode, RefObject } from 'react';
 
 export interface CreateTriggerNodeParams {
 	readonly trigger: ReactElement;

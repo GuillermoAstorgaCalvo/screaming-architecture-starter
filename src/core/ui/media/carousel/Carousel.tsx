@@ -1,10 +1,12 @@
 import { ARIA_LABELS } from '@core/constants/aria';
+import {
+	CarouselContainer,
+	CarouselContent,
+} from '@core/ui/media/carousel/components/CarouselComponents';
+import { filterCarouselProps } from '@core/ui/media/carousel/helpers/useCarousel.utils';
+import { useCarouselSetup } from '@core/ui/media/carousel/hooks/useCarousel';
 import type { CarouselProps } from '@src-types/ui/layout/carousel';
 import type { KeyboardEvent, ReactNode } from 'react';
-
-import { CarouselContainer, CarouselContent } from './CarouselComponents';
-import { useCarouselSetup } from './useCarousel';
-import { filterCarouselProps } from './useCarousel.utils';
 
 const DEFAULT_AUTO_PLAY_INTERVAL = 3000;
 

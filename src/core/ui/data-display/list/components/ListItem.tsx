@@ -1,8 +1,7 @@
+import { useListContext } from '@core/ui/data-display/list/hooks/useListContext';
 import { getListItemSizeClasses } from '@core/ui/variants/list';
 import type { ListItemProps } from '@src-types/ui/layout/list';
 import type { MouseEvent, ReactNode } from 'react';
-
-import { useListContext } from './useListContext';
 
 interface ListItemContentProps {
 	readonly leading?: ReactNode;

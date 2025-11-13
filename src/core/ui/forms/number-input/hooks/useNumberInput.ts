@@ -1,13 +1,15 @@
+import { calculateNumberInputValueAndCapability } from '@core/ui/forms/number-input/helpers/NumberInputValue';
+import { extractNumberInputProps } from '@core/ui/forms/number-input/helpers/useNumberInput.utils';
+import { useNumberInputFieldProps } from '@core/ui/forms/number-input/hooks/useNumberInputFieldProps';
+import { useNumberInputHandlers } from '@core/ui/forms/number-input/hooks/useNumberInputHandlers';
+import { useNumberInputState } from '@core/ui/forms/number-input/hooks/useNumberInputState';
+import type {
+	NumberInputFieldProps,
+	UseNumberInputStateReturn,
+} from '@core/ui/forms/number-input/types/NumberInputTypes';
+import type { ExtractedNumberInputProps } from '@core/ui/forms/number-input/types/useNumberInput.types';
 import type { NumberInputProps } from '@src-types/ui/forms-inputs';
 import { useMemo } from 'react';
-
-import type { NumberInputFieldProps, UseNumberInputStateReturn } from './NumberInputTypes';
-import { calculateNumberInputValueAndCapability } from './NumberInputValue';
-import type { ExtractedNumberInputProps } from './useNumberInput.types';
-import { extractNumberInputProps } from './useNumberInput.utils';
-import { useNumberInputFieldProps } from './useNumberInputFieldProps';
-import { useNumberInputHandlers } from './useNumberInputHandlers';
-import { useNumberInputState } from './useNumberInputState';
 
 export interface UseNumberInputPropsOptions {
 	readonly props: Readonly<NumberInputProps>;

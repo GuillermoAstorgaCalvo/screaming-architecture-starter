@@ -1,9 +1,8 @@
+import { buildPopoverContentSetup } from '@core/ui/overlays/popover/helpers/PopoverContentSetup';
+import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
+import { usePopoverComponentSetup } from '@core/ui/overlays/popover/hooks/PopoverSetup';
 import type { PopoverProps } from '@src-types/ui/overlays/floating';
 import type { ReactNode, RefObject } from 'react';
-
-import { buildPopoverContentSetup } from './PopoverContentSetup';
-import type { PopoverPositionState } from './popoverPosition';
-import { usePopoverComponentSetup } from './PopoverSetup';
 
 interface PopoverTriggerProps {
 	readonly triggerWrapperRef: RefObject<HTMLDivElement | null>;

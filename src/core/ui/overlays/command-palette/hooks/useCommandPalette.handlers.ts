@@ -1,3 +1,4 @@
+import type { CommandPaletteHandlersParams } from '@core/ui/overlays/command-palette/types/useCommandPalette.types';
 import { type KeyboardEvent, type MouseEvent, useCallback } from 'react';
 
 import {
@@ -7,7 +8,6 @@ import {
 	handleSelectionKey,
 	type KeyboardNavigationParams,
 } from './useCommandPalette.keyboard';
-import type { CommandPaletteHandlersParams } from './useCommandPalette.types';
 
 export function useKeyboardNavigation(params: KeyboardNavigationParams) {
 	return useCallback(

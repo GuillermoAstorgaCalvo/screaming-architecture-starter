@@ -1,11 +1,10 @@
-import type { RefObject } from 'react';
-
-import type { AutocompleteOption } from './Autocomplete';
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 import {
 	createOptionHandlers,
 	getOptionClassName,
 	renderHighlightedLabel,
-} from './AutocompleteContentHelpers';
+} from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import type { RefObject } from 'react';
 
 interface AutocompleteOptionItemProps {
 	readonly option: AutocompleteOption;

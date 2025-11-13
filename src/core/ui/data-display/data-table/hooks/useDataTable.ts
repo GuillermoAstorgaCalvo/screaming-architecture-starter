@@ -1,8 +1,7 @@
+import { useDataTablePagination } from '@core/ui/data-display/data-table/hooks/useDataTablePagination';
+import { useDataTableSelection } from '@core/ui/data-display/data-table/hooks/useDataTableSelection';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import { useMemo } from 'react';
-
-import { useDataTablePagination } from './useDataTablePagination';
-import { useDataTableSelection } from './useDataTableSelection';
 
 interface UseDataTableOptions<T> {
 	initialData: T[];

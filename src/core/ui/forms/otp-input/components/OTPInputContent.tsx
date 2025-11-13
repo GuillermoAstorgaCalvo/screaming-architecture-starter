@@ -1,8 +1,8 @@
-import { OTPInputField } from './OTPInputField';
-import { OTPInputLabel } from './OTPInputLabel';
-import { OTPInputMessages } from './OTPInputMessages';
-import type { OTPInputContentProps } from './OTPInputTypes';
-import { OTPInputWrapper } from './OTPInputWrapper';
+import { OTPInputField } from '@core/ui/forms/otp-input/components/OTPInputField';
+import { OTPInputLabel } from '@core/ui/forms/otp-input/components/OTPInputLabel';
+import { OTPInputMessages } from '@core/ui/forms/otp-input/components/OTPInputMessages';
+import { OTPInputWrapper } from '@core/ui/forms/otp-input/components/OTPInputWrapper';
+import type { OTPInputContentProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 
 export function OTPInputContent({
 	state,

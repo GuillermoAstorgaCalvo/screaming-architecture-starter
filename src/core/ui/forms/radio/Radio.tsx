@@ -1,7 +1,6 @@
+import { RadioContent } from '@core/ui/forms/radio/components/RadioParts';
+import { useRadioProps } from '@core/ui/forms/radio/hooks/useRadio';
 import type { RadioProps } from '@src-types/ui/forms';
-
-import { RadioContent } from './RadioParts';
-import { useRadioProps } from './useRadio';
 
 /**
  * Radio - Reusable radio button component with label, error, and helper text support

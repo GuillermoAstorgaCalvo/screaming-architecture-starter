@@ -1,6 +1,5 @@
+import type { UseColumnStateOptions } from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
-
-import type { UseColumnStateOptions } from './useDataTableStateBuilders.types';
 
 /**
  * Builds options for column state hook

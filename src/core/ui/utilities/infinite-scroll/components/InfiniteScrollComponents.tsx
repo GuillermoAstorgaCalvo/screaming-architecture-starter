@@ -2,13 +2,12 @@ import { ARIA_LABELS, ARIA_LIVE } from '@core/constants/aria';
 import Button from '@core/ui/button/Button';
 import Spinner from '@core/ui/spinner/Spinner';
 import Text from '@core/ui/text/Text';
-import type { ReactNode } from 'react';
-
 import {
 	getEndMessageClasses,
 	getErrorContainerClasses,
 	getLoadingContainerClasses,
-} from './InfiniteScrollHelpers';
+} from '@core/ui/utilities/infinite-scroll/helpers/InfiniteScrollHelpers';
+import type { ReactNode } from 'react';
 
 /**
  * Default loading component

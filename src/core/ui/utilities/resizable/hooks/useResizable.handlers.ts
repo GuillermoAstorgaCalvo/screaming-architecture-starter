@@ -1,12 +1,11 @@
-import type { ResizableDirection } from '@src-types/ui/overlays/containers';
-import { type MouseEvent as ReactMouseEvent, type RefObject, useCallback, useEffect } from 'react';
-
 import {
 	handleMouseDownLogic,
 	handleMouseMoveLogic,
 	handleMouseUpLogic,
 	isHorizontal,
-} from './useResizable.helpers';
+} from '@core/ui/utilities/resizable/helpers/useResizable.helpers';
+import type { ResizableDirection } from '@src-types/ui/overlays/containers';
+import { type MouseEvent as ReactMouseEvent, type RefObject, useCallback, useEffect } from 'react';
 
 interface MutableRef<T> {
 	current: T;

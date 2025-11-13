@@ -1,8 +1,8 @@
-import { TextareaField } from './TextareaField';
-import { TextareaLabel } from './TextareaLabel';
-import { TextareaMessages } from './TextareaMessages';
-import type { TextareaContentProps } from './TextareaTypes';
-import { TextareaWrapper } from './TextareaWrapper';
+import { TextareaField } from '@core/ui/forms/textarea/components/TextareaField';
+import { TextareaLabel } from '@core/ui/forms/textarea/components/TextareaLabel';
+import { TextareaMessages } from '@core/ui/forms/textarea/components/TextareaMessages';
+import { TextareaWrapper } from '@core/ui/forms/textarea/components/TextareaWrapper';
+import type { TextareaContentProps } from '@core/ui/forms/textarea/types/TextareaTypes';
 
 export function TextareaContent({
 	state,

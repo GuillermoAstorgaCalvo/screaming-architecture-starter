@@ -1,4 +1,4 @@
-import type { TagInputWrapperProps } from './TagInputTypes';
+import type { TagInputWrapperProps } from '@core/ui/forms/tag-input/types/TagInputTypes';
 
 export function TagInputWrapper({ fullWidth, children, ...props }: Readonly<TagInputWrapperProps>) {
 	return (

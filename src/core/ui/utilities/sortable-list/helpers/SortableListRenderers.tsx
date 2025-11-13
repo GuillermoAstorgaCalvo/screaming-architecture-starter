@@ -1,13 +1,12 @@
-import type { DragEvent, KeyboardEvent, ReactNode } from 'react';
-
-import SortableListItem from './SortableListItem';
+import SortableListItem from '@core/ui/utilities/sortable-list/components/SortableListItem';
 import type {
 	GetItemDragStateParams,
 	ItemDragState,
 	ItemEventHandlers,
 	RenderItemParams,
 	RenderItemsParams,
-} from './SortableListTypes';
+} from '@core/ui/utilities/sortable-list/types/SortableListTypes';
+import type { DragEvent, KeyboardEvent, ReactNode } from 'react';
 
 /**
  * Determines the drag state for a specific item

@@ -1,12 +1,14 @@
-import type { SignaturePadProps } from '@src-types/ui/media';
-import { useId } from 'react';
-
-import { generateSignaturePadId, getAriaDescribedBy } from './SignaturePadHelpers';
+import {
+	generateSignaturePadId,
+	getAriaDescribedBy,
+} from '@core/ui/media/signature-pad/helpers/SignaturePadHelpers';
 import type {
 	SignaturePadCanvasProps,
 	UseSignaturePadStateOptions,
 	UseSignaturePadStateReturn,
-} from './SignaturePadTypes';
+} from '@core/ui/media/signature-pad/types/SignaturePadTypes';
+import type { SignaturePadProps } from '@src-types/ui/media';
+import { useId } from 'react';
 
 export interface UseSignaturePadPropsOptions {
 	readonly props: Readonly<SignaturePadProps>;

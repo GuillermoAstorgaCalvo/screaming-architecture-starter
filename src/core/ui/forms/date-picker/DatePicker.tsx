@@ -1,7 +1,6 @@
+import { DatePickerContent } from '@core/ui/forms/date-picker/components/DatePickerContent';
+import { useDatePickerProps } from '@core/ui/forms/date-picker/hooks/useDatePicker';
 import type { DatePickerProps } from '@src-types/ui/forms-dates';
-
-import { DatePickerContent } from './DatePickerContent';
-import { useDatePickerProps } from './useDatePicker';
 
 /**
  * DatePicker - Reusable date input component with label, error, and helper text support

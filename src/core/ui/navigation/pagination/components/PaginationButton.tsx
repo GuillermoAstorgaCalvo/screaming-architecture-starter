@@ -1,7 +1,6 @@
+import { getButtonClasses } from '@core/ui/navigation/pagination/helpers/PaginationHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import { getButtonClasses } from './PaginationHelpers';
 
 // ============================================================================
 // Base Button Component

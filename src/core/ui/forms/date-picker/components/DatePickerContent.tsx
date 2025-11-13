@@ -1,9 +1,12 @@
-import { DatePickerContainer } from './DatePickerContainer';
-import { DatePickerField } from './DatePickerField';
-import { DatePickerLabel } from './DatePickerLabel';
-import { DatePickerMessages } from './DatePickerMessages';
-import type { DatePickerContentProps, DatePickerFieldWithLabelProps } from './DatePickerTypes';
-import { DatePickerWrapper } from './DatePickerWrapper';
+import { DatePickerContainer } from '@core/ui/forms/date-picker/components/DatePickerContainer';
+import { DatePickerField } from '@core/ui/forms/date-picker/components/DatePickerField';
+import { DatePickerLabel } from '@core/ui/forms/date-picker/components/DatePickerLabel';
+import { DatePickerMessages } from '@core/ui/forms/date-picker/components/DatePickerMessages';
+import { DatePickerWrapper } from '@core/ui/forms/date-picker/components/DatePickerWrapper';
+import type {
+	DatePickerContentProps,
+	DatePickerFieldWithLabelProps,
+} from '@core/ui/forms/date-picker/types/DatePickerTypes';
 
 function buildDatePickerFieldPropsFromLabelProps(props: Readonly<DatePickerFieldWithLabelProps>) {
 	const { datePickerId, datePickerClasses, ariaDescribedBy, disabled, required, fieldProps } =

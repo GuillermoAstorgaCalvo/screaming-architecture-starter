@@ -1,5 +1,6 @@
+import type { FileUploadPreviewProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
+
 import { FileUploadPreviewItem } from './FileUploadPreviewItem';
-import type { FileUploadPreviewProps } from './FileUploadTypes';
 
 export function FileUploadPreview({
 	files,

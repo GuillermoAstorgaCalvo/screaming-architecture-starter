@@ -1,11 +1,13 @@
+import {
+	ChildNodesContainer,
+	TreeNodeElement,
+} from '@core/ui/data-display/tree-view/components/TreeViewNodeComponents';
+import { getTreeNodeIds } from '@core/ui/data-display/tree-view/helpers/TreeViewHelpers';
+import { createSharedProps } from '@core/ui/data-display/tree-view/helpers/TreeViewNodeData';
+import { createNodeHandlers } from '@core/ui/data-display/tree-view/helpers/TreeViewNodeHandlers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TreeNode, TreeViewSelectionMode } from '@src-types/ui/navigation/treeView';
 import { type KeyboardEvent, useEffect, useRef } from 'react';
-
-import { getTreeNodeIds } from './TreeViewHelpers';
-import { ChildNodesContainer, TreeNodeElement } from './TreeViewNodeComponents';
-import { createSharedProps } from './TreeViewNodeData';
-import { createNodeHandlers } from './TreeViewNodeHandlers';
 
 export interface TreeViewNodeProps {
 	readonly node: TreeNode;

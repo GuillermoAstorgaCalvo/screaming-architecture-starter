@@ -1,9 +1,11 @@
 import { focusFirstElement } from '@core/a11y/focus';
+import {
+	buildUsePopoverReturn,
+	type UsePopoverReturn,
+} from '@core/ui/overlays/popover/helpers/usePopoverHelpers';
+import { usePopoverPosition } from '@core/ui/overlays/popover/hooks/usePopoverPosition';
 import type { PopoverPosition } from '@src-types/ui/overlays/floating';
 import { type RefObject, useEffect, useId, useRef } from 'react';
-
-import { buildUsePopoverReturn, type UsePopoverReturn } from './usePopoverHelpers';
-import { usePopoverPosition } from './usePopoverPosition';
 
 // ============================================================================
 // Types

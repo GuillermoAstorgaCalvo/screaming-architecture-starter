@@ -1,7 +1,6 @@
+import { findNextEnabledItemIndex } from '@core/ui/navigation/navigation-menu/helpers/navigationMenuUtils';
 import type { NavigationMenuItem } from '@src-types/ui/navigation/navigationMenu';
 import type { KeyboardEvent, RefObject } from 'react';
-
-import { findNextEnabledItemIndex } from './navigationMenuUtils';
 
 interface HandleNavigationKeyDownParams {
 	readonly event: KeyboardEvent<HTMLElement>;
@@ -116,26 +115,15 @@ function processNavigationKey({
 	itemRefs,
 }: ProcessNavigationKeyParams): void {
 	const params = { event, items, currentIndex, onItemChange, itemRefs };
-	switch (key) {
-		case 'ArrowRight':
-		case 'ArrowDown': {
-			handleForwardKey(params);
-			break;
-		}
-		case 'ArrowLeft':
-		case 'ArrowUp': {
-			handleBackwardKey(params);
-			break;
-		}
-		case 'Home': {
-			handleHomeKey({ event, items, onItemChange, itemRefs });
-			break;
-		}
-		case 'End': {
-			handleEndKey({ event, items, onItemChange, itemRefs });
-			break;
-		}
-	}
+	const keyHandlers: Record<string, () => void> = {
+		ArrowRight: () => handleForwardKey(params),
+		ArrowDown: () => handleForwardKey(params),
+		ArrowLeft: () => handleBackwardKey(params),
+		ArrowUp: () => handleBackwardKey(params),
+		Home: () => handleHomeKey({ event, items, onItemChange, itemRefs }),
+		End: () => handleEndKey({ event, items, onItemChange, itemRefs }),
+	};
+	keyHandlers[key]?.();
 }
 
 export function handleNavigationKeyDown({

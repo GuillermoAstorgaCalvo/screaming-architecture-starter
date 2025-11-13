@@ -1,6 +1,5 @@
+import type { SwitchHandlers, SwitchInputProps } from '@core/ui/forms/switch/types/SwitchTypes';
 import type { RefCallback } from 'react';
-
-import type { SwitchHandlers, SwitchInputProps } from './SwitchTypes';
 
 interface SwitchInputComponentProps {
 	readonly id: string | undefined;

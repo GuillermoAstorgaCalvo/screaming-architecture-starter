@@ -1,6 +1,5 @@
+import type { FieldInputProps } from '@core/ui/forms/multi-select/types/MultiSelectField.types';
 import { forwardRef } from 'react';
-
-import type { FieldInputProps } from './MultiSelectField.types';
 
 export const FieldInput = forwardRef<HTMLInputElement, FieldInputProps>(
 	({ id, disabled, required, hasError, ariaDescribedBy, props, onKeyDown }, ref) => {

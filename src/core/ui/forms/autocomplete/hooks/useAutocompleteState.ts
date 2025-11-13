@@ -1,10 +1,12 @@
 import { useDebounce } from '@core/hooks/useDebounce';
+import type {
+	AutocompleteOption,
+	AutocompleteProps,
+} from '@core/ui/forms/autocomplete/Autocomplete';
+import { defaultFilterFn } from '@core/ui/forms/autocomplete/helpers/AutocompleteHelpers';
+import { getOptionLabel } from '@core/ui/forms/autocomplete/helpers/useAutocompleteHelpers';
+import { useAutocompleteKeyboard } from '@core/ui/forms/autocomplete/hooks/useAutocompleteKeyboard';
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
-
-import type { AutocompleteOption, AutocompleteProps } from './Autocomplete';
-import { defaultFilterFn } from './AutocompleteHelpers';
-import { getOptionLabel } from './useAutocompleteHelpers';
-import { useAutocompleteKeyboard } from './useAutocompleteKeyboard';
 
 export function useAutocompleteValue(
 	props: Readonly<Pick<AutocompleteProps, 'value' | 'defaultValue' | 'onChange'>>

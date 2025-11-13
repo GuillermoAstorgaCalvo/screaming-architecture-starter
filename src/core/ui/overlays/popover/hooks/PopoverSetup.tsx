@@ -1,8 +1,7 @@
+import type { UsePopoverReturn } from '@core/ui/overlays/popover/helpers/usePopoverHelpers';
+import { usePopoverSetup, useTriggerRef } from '@core/ui/overlays/popover/hooks/PopoverHooks';
 import type { PopoverPosition } from '@src-types/ui/overlays/floating';
 import { type RefObject, useRef } from 'react';
-
-import { usePopoverSetup, useTriggerRef } from './PopoverHooks';
-import type { UsePopoverReturn } from './usePopoverHelpers';
 
 interface UsePopoverComponentSetupOptions {
 	readonly isOpen: boolean;

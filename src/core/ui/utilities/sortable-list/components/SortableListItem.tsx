@@ -1,9 +1,11 @@
-import { useListContext } from '@core/ui/list/useListContext';
+import { useListContext } from '@core/ui/data-display/list/hooks/useListContext';
+import {
+	getDragHandleClasses,
+	getSortableListItemClasses,
+} from '@core/ui/utilities/sortable-list/helpers/SortableListHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { SortableListItemProps } from '@src-types/ui/layout/list';
 import { GripVertical } from 'lucide-react';
-
-import { getDragHandleClasses, getSortableListItemClasses } from './SortableListHelpers';
 
 interface DefaultDragHandleProps {
 	size: StandardSize;

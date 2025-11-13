@@ -1,5 +1,3 @@
-import type { DataTableProps } from '@src-types/ui/dataTable';
-
 import {
 	buildColumnParams,
 	buildDataAndDisplayParams,
@@ -7,10 +5,14 @@ import {
 	buildPaginationParams,
 	buildSortAndSelectionParams,
 	buildStyleParams,
-} from './DataTableParamBuilders';
-import { extractTableProps } from './DataTableStateBuilders';
-import type { DataTableStateOptions, RendererPropsParams } from './DataTableTypes';
-import type { useDataTableState } from './useDataTableState';
+} from '@core/ui/data-display/data-table/helpers/DataTableParamBuilders';
+import { extractTableProps } from '@core/ui/data-display/data-table/helpers/DataTableStateBuilders';
+import type { useDataTableState } from '@core/ui/data-display/data-table/hooks/useDataTableState';
+import type {
+	DataTableStateOptions,
+	RendererPropsParams,
+} from '@core/ui/data-display/data-table/types/DataTableTypes';
+import type { DataTableProps } from '@src-types/ui/dataTable';
 
 function buildDataAndDisplayParamsForRenderer<T>(
 	props: Readonly<DataTableProps<T>>,

@@ -1,13 +1,18 @@
-import type { DataTableProps } from '@src-types/ui/dataTable';
-
-import { buildStateHooksOptions } from './useDataTableStateBuilders.hooks';
-import { buildTableStateOptions, buildTableStateParams } from './useDataTableStateBuilders.table';
+import { createDataTableHandlers } from '@core/ui/data-display/data-table/helpers/useDataTableStateHelpers';
+import {
+	useDataTableStateHooks,
+	useTableState,
+} from '@core/ui/data-display/data-table/hooks/useDataTableStateHooks';
+import { buildStateHooksOptions } from '@core/ui/data-display/data-table/state/useDataTableStateBuilders.hooks';
+import {
+	buildTableStateOptions,
+	buildTableStateParams,
+} from '@core/ui/data-display/data-table/state/useDataTableStateBuilders.table';
 import type {
 	BuildStateHooksOptionsParams,
 	BuildTableStateParamsOptions,
-} from './useDataTableStateBuilders.types';
-import { createDataTableHandlers } from './useDataTableStateHelpers';
-import { useDataTableStateHooks, useTableState } from './useDataTableStateHooks';
+} from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
+import type { DataTableProps } from '@src-types/ui/dataTable';
 
 interface UseDataTableStateOptions<T> {
 	columns: DataTableProps<T>['columns'];

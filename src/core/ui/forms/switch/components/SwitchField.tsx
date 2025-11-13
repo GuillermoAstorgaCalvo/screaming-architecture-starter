@@ -1,6 +1,6 @@
-import { SwitchInput } from './SwitchInput';
-import type { SwitchFieldProps } from './SwitchTypes';
-import { useSwitchField } from './useSwitchField';
+import { SwitchInput } from '@core/ui/forms/switch/components/SwitchInput';
+import { useSwitchField } from '@core/ui/forms/switch/hooks/useSwitchField';
+import type { SwitchFieldProps } from '@core/ui/forms/switch/types/SwitchTypes';
 
 export function SwitchField(props: Readonly<SwitchFieldProps>) {
 	const fieldState = useSwitchField(props);

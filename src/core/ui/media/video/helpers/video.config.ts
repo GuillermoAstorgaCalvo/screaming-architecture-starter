@@ -1,11 +1,10 @@
-import type { VideoProps } from '@src-types/ui/feedback';
-
 import type {
 	ForwardedVideoProps,
 	RenderVideoProps,
 	UseVideoLifecycleParams,
 	VideoConfig,
-} from './video.types';
+} from '@core/ui/media/video/types/video.types';
+import type { VideoProps } from '@src-types/ui/feedback';
 
 export function getVideoConfig(props: Readonly<VideoProps>): VideoConfig {
 	return {

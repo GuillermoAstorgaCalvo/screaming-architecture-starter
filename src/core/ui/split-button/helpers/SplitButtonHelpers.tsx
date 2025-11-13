@@ -1,5 +1,5 @@
-import type { DropdownMenuItemOrSeparator } from '@core/ui/dropdown-menu/DropdownMenu.types';
 import Icon from '@core/ui/icons/Icon';
+import type { DropdownMenuItemOrSeparator } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import { getButtonVariantClasses } from '@core/ui/variants/button';
 import { classNames } from '@core/utils/classNames';
 import type { ButtonVariant, SplitButtonProps } from '@src-types/ui/buttons';

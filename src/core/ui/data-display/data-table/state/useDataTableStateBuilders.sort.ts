@@ -1,6 +1,5 @@
+import type { UseSortStateOptions } from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
 import type { ColumnSort } from '@src-types/ui/dataTable';
-
-import type { UseSortStateOptions } from './useDataTableStateBuilders.types';
 
 /**
  * Builds options for sort state hook

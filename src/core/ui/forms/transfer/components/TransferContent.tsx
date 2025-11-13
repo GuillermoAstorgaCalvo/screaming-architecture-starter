@@ -2,15 +2,19 @@ import {
 	buildActionsProps,
 	buildSourceListProps,
 	buildTargetListProps,
-} from './TransferContent.builders';
+} from '@core/ui/forms/transfer/helpers/TransferContent.builders';
 import {
 	extractTransferProps,
 	getActionLabels,
 	getContainerClasses,
 	getListLabels,
-} from './TransferContent.helpers';
-import { renderActions, renderSourceList, renderTargetList } from './TransferContent.renderers';
-import type { TransferContentProps } from './TransferContent.types';
+} from '@core/ui/forms/transfer/helpers/TransferContent.helpers';
+import {
+	renderActions,
+	renderSourceList,
+	renderTargetList,
+} from '@core/ui/forms/transfer/helpers/TransferContent.renderers';
+import type { TransferContentProps } from '@core/ui/forms/transfer/types/TransferContent.types';
 
 /**
  * TransferContent - Main content component for Transfer

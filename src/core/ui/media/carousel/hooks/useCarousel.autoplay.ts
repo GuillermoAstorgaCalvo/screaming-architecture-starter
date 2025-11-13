@@ -1,6 +1,5 @@
+import type { CarouselAutoPlayParams } from '@core/ui/media/carousel/types/useCarousel.types';
 import { useEffect, useRef } from 'react';
-
-import type { CarouselAutoPlayParams } from './useCarousel.types';
 
 export function useCarouselAutoPlay({
 	autoPlay,

@@ -1,7 +1,9 @@
+import type {
+	ButtonConfig,
+	ButtonConfigOptions,
+} from '@core/ui/forms/transfer/types/TransferActions.types';
 import ArrowLeftIcon from '@core/ui/icons/arrow-left-icon/ArrowLeftIcon';
 import ArrowRightIcon from '@core/ui/icons/arrow-right-icon/ArrowRightIcon';
-
-import type { ButtonConfig, ButtonConfigOptions } from './TransferActions.types';
 
 /**
  * Creates the configuration for the move to target button

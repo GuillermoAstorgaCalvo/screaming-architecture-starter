@@ -1,8 +1,8 @@
-import { CurrencyInputField } from './CurrencyInputField';
-import { CurrencyInputLabel } from './CurrencyInputLabel';
-import { CurrencyInputMessages } from './CurrencyInputMessages';
-import type { CurrencyInputContentProps } from './CurrencyInputTypes';
-import { CurrencyInputWrapper } from './CurrencyInputWrapper';
+import { CurrencyInputField } from '@core/ui/forms/currency-input/components/CurrencyInputField';
+import { CurrencyInputLabel } from '@core/ui/forms/currency-input/components/CurrencyInputLabel';
+import { CurrencyInputMessages } from '@core/ui/forms/currency-input/components/CurrencyInputMessages';
+import { CurrencyInputWrapper } from '@core/ui/forms/currency-input/components/CurrencyInputWrapper';
+import type { CurrencyInputContentProps } from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
 
 export function CurrencyInputContent({
 	state,

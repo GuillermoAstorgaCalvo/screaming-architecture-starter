@@ -1,3 +1,4 @@
+import { useSwipeable } from '@core/ui/utilities/swipeable/hooks/useSwipeable';
 import type { SwipeableAction, SwipeableProps } from '@src-types/ui/overlays/interactions';
 import {
 	type CSSProperties,
@@ -8,8 +9,6 @@ import {
 	useRef,
 } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { useSwipeable } from './useSwipeable';
 
 /**
  * Render action buttons

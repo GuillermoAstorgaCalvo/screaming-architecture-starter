@@ -1,15 +1,15 @@
-import type {
-	FileUploadFieldContentProps,
-	PreparedFieldContentProps,
-	PrepareFieldPropsParams,
-} from './FileUploadContent.types';
 import {
 	buildDropzoneParamsFromProps,
 	buildInputProps,
 	buildLabelSectionProps,
 	buildPreviewPropsFromState,
 	type DropzoneSectionParams,
-} from './FileUploadContentHelpers';
+} from '@core/ui/forms/file-upload/helpers/FileUploadContentHelpers';
+import type {
+	FileUploadFieldContentProps,
+	PreparedFieldContentProps,
+	PrepareFieldPropsParams,
+} from '@core/ui/forms/file-upload/types/FileUploadContent.types';
 
 /**
  * Builds conditional field props based on optional values

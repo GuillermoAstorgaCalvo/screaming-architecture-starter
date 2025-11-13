@@ -54,7 +54,7 @@ export function renderAreaChartContent({
 	areaProps,
 }: ChartContentProps) {
 	return (
-		<ResponsiveContainer width={width} height={height}>
+		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
 			<RechartsAreaChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 				<ChartAxes showGrid={showGrid} isHorizontal={false} />
 				<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />

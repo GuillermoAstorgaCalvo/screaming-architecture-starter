@@ -1,4 +1,4 @@
-import type { CombineHandlersParams } from './useWizard.handlers.groups.types';
+import type { CombineHandlersParams } from '@core/ui/forms/wizard/types/useWizard.handlers.groups.types';
 
 /**
  * Combine all wizard handlers into a single object

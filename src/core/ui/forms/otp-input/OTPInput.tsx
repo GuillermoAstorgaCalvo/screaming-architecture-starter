@@ -1,6 +1,6 @@
-import { OTPInputContent } from './OTPInputContent';
-import { useOTPInputProps } from './useOTPInput';
-import type { OTPInputProps } from './useOTPInput.types';
+import { OTPInputContent } from '@core/ui/forms/otp-input/components/OTPInputContent';
+import { useOTPInputProps } from '@core/ui/forms/otp-input/hooks/useOTPInput';
+import type { OTPInputProps } from '@core/ui/forms/otp-input/hooks/useOTPInput.types';
 
 /**
  * OTPInput - One-time password input component for authentication flows

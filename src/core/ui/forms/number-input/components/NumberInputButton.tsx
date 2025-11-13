@@ -1,7 +1,6 @@
+import type { NumberInputButtonProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 import { classNames } from '@core/utils/classNames';
 import type { MouseEvent } from 'react';
-
-import type { NumberInputButtonProps } from './NumberInputTypes';
 
 export function NumberInputButton({
 	onClick,

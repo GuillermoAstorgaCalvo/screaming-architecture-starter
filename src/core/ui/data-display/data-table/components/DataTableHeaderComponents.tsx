@@ -1,4 +1,4 @@
-import { getHeaderClasses } from '@core/ui/data-display/table/TableHelpers';
+import { getHeaderClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import type { MouseEvent as ReactMouseEvent } from 'react';

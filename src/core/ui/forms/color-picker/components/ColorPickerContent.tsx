@@ -1,10 +1,10 @@
-import { ColorPickerContainer } from './ColorPickerContainer';
-import { ColorPickerField } from './ColorPickerField';
-import { ColorPickerLabel } from './ColorPickerLabel';
-import { ColorPickerMessages } from './ColorPickerMessages';
-import { ColorPickerSwatches } from './ColorPickerSwatches';
-import type { ColorPickerContentProps } from './ColorPickerTypes';
-import { ColorPickerWrapper } from './ColorPickerWrapper';
+import { ColorPickerContainer } from '@core/ui/forms/color-picker/components/ColorPickerContainer';
+import { ColorPickerField } from '@core/ui/forms/color-picker/components/ColorPickerField';
+import { ColorPickerLabel } from '@core/ui/forms/color-picker/components/ColorPickerLabel';
+import { ColorPickerMessages } from '@core/ui/forms/color-picker/components/ColorPickerMessages';
+import { ColorPickerSwatches } from '@core/ui/forms/color-picker/components/ColorPickerSwatches';
+import { ColorPickerWrapper } from '@core/ui/forms/color-picker/components/ColorPickerWrapper';
+import type { ColorPickerContentProps } from '@core/ui/forms/color-picker/types/ColorPickerTypes';
 
 function buildColorPickerFieldPropsFromLabelProps(props: Readonly<ColorPickerContentProps>) {
 	const {

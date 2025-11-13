@@ -1,7 +1,6 @@
+import { ColorInputContent } from '@core/ui/forms/color-input/components/ColorInputContent';
+import { useColorInputProps } from '@core/ui/forms/color-input/hooks/useColorInput';
 import type { ColorInputProps } from '@src-types/ui/forms';
-
-import { ColorInputContent } from './ColorInputContent';
-import { useColorInputProps } from './useColorInput';
 
 /**
  * ColorInput - Simple native color input wrapper

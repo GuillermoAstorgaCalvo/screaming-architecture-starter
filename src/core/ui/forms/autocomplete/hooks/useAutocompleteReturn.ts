@@ -1,8 +1,8 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
+import type { useAutocompleteState } from '@core/ui/forms/autocomplete/helpers/AutocompleteHelpers';
+import type { AutocompleteContentProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
 import type { ReactNode } from 'react';
 
-import type { AutocompleteOption } from './Autocomplete';
-import type { useAutocompleteState } from './AutocompleteHelpers';
-import type { AutocompleteContentProps } from './AutocompleteTypes';
 import type { createFieldProps } from './useAutocompleteField';
 import type { useAutocompleteInteractions } from './useAutocompleteState';
 

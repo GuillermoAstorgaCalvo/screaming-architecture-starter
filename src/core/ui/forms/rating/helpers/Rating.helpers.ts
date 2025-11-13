@@ -5,18 +5,19 @@ import {
 	RATING_STAR_FILLED_CLASSES,
 	RATING_STAR_INTERACTIVE_CLASSES,
 } from '@core/constants/ui/rating';
+import type {
+	NormalizedRatingProps,
+	RatingContainerPropsParams,
+	RatingStylesParams,
+	StarButtonPropsParams,
+	StarClassesParams,
+	StarFillParams,
+} from '@core/ui/forms/rating/types/Rating.helpers.types';
 import { getRatingVariantClasses } from '@core/ui/variants/rating';
 import { classNames } from '@core/utils/classNames';
 import type { RatingProps } from '@src-types/ui/forms-advanced';
-import type { ReactNode } from 'react';
 
 export const HALF_STAR_VALUE = 0.5;
-
-export interface StarFillParams {
-	displayValue: number;
-	starIndex: number;
-	allowHalf: boolean;
-}
 
 export const getStarFill = ({ displayValue, starIndex, allowHalf }: StarFillParams): number => {
 	const starValue = starIndex + 1;
@@ -27,11 +28,6 @@ export const getStarFill = ({ displayValue, starIndex, allowHalf }: StarFillPara
 	}
 	return 0;
 };
-
-export interface StarClassesParams {
-	readOnly: boolean;
-	disabled: boolean;
-}
 
 export const getStarClasses = ({ readOnly, disabled }: StarClassesParams): string => {
 	return classNames(
@@ -48,13 +44,6 @@ export const getEmptyStarClasses = ({ readOnly, disabled }: StarClassesParams): 
 		disabled && RATING_STAR_DISABLED_CLASSES
 	);
 };
-
-export interface StarButtonPropsParams {
-	starIndex: number;
-	fill: number;
-	readOnly: boolean;
-	disabled: boolean;
-}
 
 export const getStarButtonProps = ({
 	starIndex,
@@ -77,15 +66,6 @@ export const getStarButtonProps = ({
 	};
 };
 
-export interface RatingContainerPropsParams {
-	readOnly: boolean;
-	currentValue: number;
-	max: number;
-	ariaLabel: string;
-	classes: string;
-	handleMouseLeave?: () => void;
-}
-
 export const getRatingContainerProps = ({
 	readOnly,
 	currentValue,
@@ -105,13 +85,6 @@ export const getRatingContainerProps = ({
 	};
 };
 
-export interface RatingStylesParams {
-	size: RatingProps['size'];
-	className?: string | undefined;
-	readOnly: boolean;
-	disabled: boolean;
-}
-
 export const getRatingStyles = ({ size, className, readOnly, disabled }: RatingStylesParams) => {
 	return {
 		classes: getRatingVariantClasses({ size, className }),
@@ -120,38 +93,31 @@ export const getRatingStyles = ({ size, className, readOnly, disabled }: RatingS
 	};
 };
 
-export interface NormalizedRatingProps {
-	controlledValue?: number | undefined;
-	defaultValue?: number | undefined;
-	max: number;
-	size: RatingProps['size'];
-	readOnly: boolean;
-	disabled: boolean;
-	onChange?: ((value: number) => void) | undefined;
-	ariaLabel: string;
-	allowHalf: boolean;
-	emptyIcon?: ReactNode | undefined;
-	filledIcon?: ReactNode | undefined;
-	className?: string | undefined;
-	restProps: Record<string, unknown>;
-}
+const DEFAULT_RATING_PROPS = {
+	max: 5,
+	size: 'md' as const,
+	readOnly: false,
+	disabled: false,
+	'aria-label': ARIA_LABELS.RATING,
+	allowHalf: false,
+} as const;
 
 export const normalizeRatingProps = (props: Readonly<RatingProps>): NormalizedRatingProps => {
 	const {
 		value: controlledValue,
 		defaultValue,
-		max = 5,
-		size = 'md',
-		readOnly = false,
-		disabled = false,
+		max,
+		size,
+		readOnly,
+		disabled,
 		onChange,
-		'aria-label': ariaLabel = ARIA_LABELS.RATING,
-		allowHalf = false,
+		'aria-label': ariaLabel,
+		allowHalf,
 		emptyIcon,
 		filledIcon,
 		className,
 		...restProps
-	} = props;
+	} = { ...DEFAULT_RATING_PROPS, ...props };
 
 	return {
 		controlledValue,

@@ -1,15 +1,15 @@
-import { createKeyboardHandler } from './useTreeViewKeyboard.handlers';
+import { createKeyboardHandler } from '@core/ui/data-display/tree-view/helpers/useTreeViewKeyboard.handlers';
 import {
 	getFirstVisibleNodeId,
 	getLastVisibleNodeId,
 	getNextVisibleNodeId,
 	getVisibleNodeIds,
-} from './useTreeViewKeyboard.helpers';
+} from '@core/ui/data-display/tree-view/helpers/useTreeViewKeyboard.helpers';
 import type {
 	KeyHandlerContext,
 	UseTreeViewKeyboardOptions,
 	UseTreeViewKeyboardReturn,
-} from './useTreeViewKeyboard.types';
+} from '@core/ui/data-display/tree-view/types/useTreeViewKeyboard.types';
 
 /**
  * Creates key handler functions based on visible node IDs

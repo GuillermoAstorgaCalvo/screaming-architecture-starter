@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react-swc';
-import { defineConfig, loadEnv } from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { sourceTagger } from './vite-plugin-source-tagger';
@@ -32,6 +33,18 @@ function getCoreLibrariesChunks() {
 		ui: ['@radix-ui/react-slot'],
 		// Query and state management
 		query: ['@tanstack/react-query'],
+		// Virtualization library (used in virtualized list components)
+		virtual: ['@tanstack/react-virtual'],
+		// Animation library (large, used in motion components)
+		motion: ['framer-motion'],
+		// Chart library (large, used in chart components)
+		charts: ['recharts'],
+		// Rich text editor (large, used in editor components)
+		editor: ['@tiptap/react', '@tiptap/starter-kit', '@tiptap/extension-placeholder'],
+		// Form libraries
+		forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
+		// I18n libraries
+		i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
 	};
 }
 
@@ -103,21 +116,50 @@ function getEsbuildConfig() {
 	};
 }
 
+/**
+ * Get bundle visualizer plugin configuration
+ * Only enabled in production builds or when VITE_ANALYZE is set to 'true'
+ */
+function getVisualizerPlugin(env: Record<string, string>, mode: string) {
+	const shouldAnalyze =
+		env['VITE_ANALYZE'] === 'true' || (mode === 'production' && env['VITE_ANALYZE'] !== 'false');
+
+	if (!shouldAnalyze) {
+		return null;
+	}
+
+	return visualizer({
+		filename: 'dist/stats.html',
+		open: env['VITE_ANALYZE_OPEN'] === 'true',
+		gzipSize: true,
+		brotliSize: true,
+		template: 'treemap', // 'sunburst' | 'treemap' | 'network'
+	});
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
 	// Load environment variables
 	// Note: Vite automatically sets NODE_ENV based on mode, so no manual setting needed
 	const env = loadEnv(mode, process.cwd(), '');
 
+	const plugins = [
+		sourceTagger(), // Add source file tags in development
+		react(),
+		tsconfigPaths({
+			projects: ['./tsconfig.app.json'],
+		}),
+	];
+
+	const visualizerPlugin = getVisualizerPlugin(env, mode);
+	if (visualizerPlugin) {
+		// Type assertion needed due to Rollup/Vite plugin type incompatibility
+		plugins.push(visualizerPlugin as Plugin);
+	}
+
 	return {
 		server: getServerConfig(env),
-		plugins: [
-			sourceTagger(), // Add source file tags in development
-			react(),
-			tsconfigPaths({
-				projects: ['./tsconfig.app.json'],
-			}),
-		],
+		plugins,
 		build: getBuildConfig(env, mode),
 		optimizeDeps: getOptimizeDepsConfig(),
 		esbuild: getEsbuildConfig(),

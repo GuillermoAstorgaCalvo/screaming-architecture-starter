@@ -1,8 +1,7 @@
+import { FilterBuilder } from '@core/ui/data-display/data-table/components/FilterBuilder';
+import { FilterChips } from '@core/ui/data-display/data-table/components/FilterChips';
+import { FilterInputsGrid } from '@core/ui/data-display/data-table/components/FilterInputsGrid';
 import type { ActiveFilterValue, AdvancedFilterConfig } from '@src-types/ui/advancedFilter';
-
-import { FilterBuilder } from './FilterBuilder';
-import { FilterChips } from './FilterChips';
-import { FilterInputsGrid } from './FilterInputsGrid';
 
 export interface AdvancedFilterBarContentProps {
 	filters: AdvancedFilterConfig['filters'];

@@ -1,12 +1,14 @@
-import type { ColorPickerProps } from '@src-types/ui/forms-advanced';
-import { useId } from 'react';
-
 import {
 	generateColorPickerId,
 	getAriaDescribedBy,
 	getColorPickerClasses,
-} from './ColorPickerHelpers';
-import type { ColorPickerContentProps, ColorPickerInputProps } from './ColorPickerTypes';
+} from '@core/ui/forms/color-picker/helpers/ColorPickerHelpers';
+import type {
+	ColorPickerContentProps,
+	ColorPickerInputProps,
+} from '@core/ui/forms/color-picker/types/ColorPickerTypes';
+import type { ColorPickerProps } from '@src-types/ui/forms-advanced';
+import { useId } from 'react';
 
 export interface UseColorPickerPropsOptions {
 	readonly props: Readonly<ColorPickerProps>;

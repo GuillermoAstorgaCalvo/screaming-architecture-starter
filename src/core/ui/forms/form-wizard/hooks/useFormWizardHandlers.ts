@@ -1,10 +1,15 @@
 import type { FormControls } from '@core/forms/formAdapter';
-import { canNavigateToStep } from '@core/ui/forms/wizard/wizardUtils';
+import {
+	runCustomValidation,
+	validateStepFields,
+} from '@core/ui/forms/form-wizard/helpers/useFormWizardHandlers.helpers';
+import type {
+	FormWizardProps,
+	FormWizardState,
+} from '@core/ui/forms/form-wizard/types/FormWizardTypes';
+import { canNavigateToStep } from '@core/ui/forms/wizard/helpers/wizardUtils';
 import { useCallback } from 'react';
 import type { FieldValues } from 'react-hook-form';
-
-import type { FormWizardProps, FormWizardState } from './FormWizardTypes';
-import { runCustomValidation, validateStepFields } from './useFormWizardHandlers.helpers';
 
 interface HandlerDependencies<T extends FieldValues> {
 	readonly state: FormWizardState<T>;

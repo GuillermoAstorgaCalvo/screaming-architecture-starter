@@ -1,8 +1,8 @@
 /**
  * Formats the label for pie chart segments
  */
-export function formatPieLabel({ name, percent }: { name: string; percent: number }): string {
-	return `${name}: ${(percent * 100).toFixed(0)}%`;
+export function formatPieLabel({ name, percent }: { name?: string; percent?: number }): string {
+	return `${name ?? 'Unknown'}: ${((percent ?? 0) * 100).toFixed(0)}%`;
 }
 
 /**

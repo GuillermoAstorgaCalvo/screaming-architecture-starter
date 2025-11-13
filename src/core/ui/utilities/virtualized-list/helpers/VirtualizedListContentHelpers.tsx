@@ -1,7 +1,6 @@
+import { VirtualItem } from '@core/ui/utilities/virtualized-list/components/VirtualItem';
 import type { useVirtualizer } from '@tanstack/react-virtual';
 import type { CSSProperties, ReactNode } from 'react';
-
-import { VirtualItem } from './VirtualItem';
 
 interface GetVirtualItemsStyleParams {
 	readonly orientation: 'vertical' | 'horizontal';

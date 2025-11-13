@@ -1,6 +1,5 @@
+import type { SwitchWrapperProps } from '@core/ui/forms/switch/types/SwitchTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { SwitchWrapperProps } from './SwitchTypes';
 
 export function SwitchWrapper({
 	fullWidth,

@@ -1,9 +1,12 @@
-import { TimePickerContainer } from './TimePickerContainer';
-import { TimePickerField } from './TimePickerField';
-import { TimePickerLabel } from './TimePickerLabel';
-import { TimePickerMessages } from './TimePickerMessages';
-import type { TimePickerContentProps, TimePickerFieldWithLabelProps } from './TimePickerTypes';
-import { TimePickerWrapper } from './TimePickerWrapper';
+import { TimePickerContainer } from '@core/ui/forms/time-picker/components/TimePickerContainer';
+import { TimePickerField } from '@core/ui/forms/time-picker/components/TimePickerField';
+import { TimePickerLabel } from '@core/ui/forms/time-picker/components/TimePickerLabel';
+import { TimePickerMessages } from '@core/ui/forms/time-picker/components/TimePickerMessages';
+import { TimePickerWrapper } from '@core/ui/forms/time-picker/components/TimePickerWrapper';
+import type {
+	TimePickerContentProps,
+	TimePickerFieldWithLabelProps,
+} from '@core/ui/forms/time-picker/types/TimePickerTypes';
 
 function buildTimePickerFieldPropsFromLabelProps(props: Readonly<TimePickerFieldWithLabelProps>) {
 	const { timePickerId, timePickerClasses, ariaDescribedBy, disabled, required, fieldProps } =

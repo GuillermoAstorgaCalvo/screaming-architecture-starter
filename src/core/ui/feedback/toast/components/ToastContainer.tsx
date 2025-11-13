@@ -1,10 +1,9 @@
 import type { ToastItem } from '@core/providers/ToastContext';
 import { useToast } from '@core/providers/useToast';
-import type { ToastAction } from '@core/ui/toast/toast.types';
+import Toast from '@core/ui/feedback/toast/Toast';
+import type { ToastAction } from '@core/ui/feedback/toast/types/toast.types';
 import { classNames } from '@core/utils/classNames';
 import { type ReactNode, useEffect, useState } from 'react';
-
-import Toast from './Toast';
 
 export interface ToastContainerProps {
 	readonly position?:

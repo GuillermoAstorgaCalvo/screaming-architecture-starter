@@ -1,6 +1,5 @@
+import type { TimePickerLabelProps } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 import Label from '@core/ui/label/Label';
-
-import type { TimePickerLabelProps } from './TimePickerTypes';
 
 export function TimePickerLabel({
 	id,

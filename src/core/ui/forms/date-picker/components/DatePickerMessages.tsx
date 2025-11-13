@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { DatePickerMessagesProps } from '@core/ui/forms/date-picker/types/DatePickerTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { DatePickerMessagesProps } from './DatePickerTypes';
 
 export function DatePickerMessages({
 	datePickerId,

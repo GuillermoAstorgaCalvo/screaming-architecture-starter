@@ -1,9 +1,11 @@
+import { FirstLastButtons } from '@core/ui/navigation/pagination/components/FirstLastButtons';
+import { PageNumberButtons } from '@core/ui/navigation/pagination/components/PageNumberButtons';
+import { PrevNextButtons } from '@core/ui/navigation/pagination/components/PrevNextButtons';
+import {
+	useCommonPaginationProps,
+	usePaginationHandlers,
+} from '@core/ui/navigation/pagination/hooks/usePagination';
 import type { StandardSize } from '@src-types/ui/base';
-
-import { FirstLastButtons } from './FirstLastButtons';
-import { PageNumberButtons } from './PageNumberButtons';
-import { PrevNextButtons } from './PrevNextButtons';
-import { useCommonPaginationProps, usePaginationHandlers } from './usePagination';
 
 // ============================================================================
 // Composite Button Components

@@ -1,6 +1,5 @@
+import type { PasswordInputLabelProps } from '@core/ui/forms/password-input/types/PasswordInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { PasswordInputLabelProps } from './PasswordInputTypes';
 
 export function PasswordInputLabel({ id, label, required }: Readonly<PasswordInputLabelProps>) {
 	return (

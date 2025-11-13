@@ -1,6 +1,5 @@
+import type { UseFilterStateOptions } from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
 import type { DataTableFilter } from '@src-types/ui/dataTable';
-
-import type { UseFilterStateOptions } from './useDataTableStateBuilders.types';
 
 /**
  * Builds options for filter state hook

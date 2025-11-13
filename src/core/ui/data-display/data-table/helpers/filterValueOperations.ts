@@ -7,6 +7,44 @@ const FILTER_TYPE_DATE = 'date';
 const FILTER_TYPE_MULTI_SELECT = 'multi-select';
 const FILTER_TYPE_DATE_RANGE = 'date-range';
 
+type SimpleValueFilter = Extract<AdvancedFilter, { type: 'text' | 'select' | 'date' }>;
+type MultiSelectFilter = Extract<AdvancedFilter, { type: 'multi-select' }>;
+type DateRangeFilter = Extract<AdvancedFilter, { type: 'date-range' }>;
+
+interface DateRangeValue {
+	start?: string | null;
+	end?: string | null;
+}
+
+/**
+ * Simple string type guard
+ */
+function isString(value: unknown): value is string {
+	return typeof value === 'string';
+}
+
+/**
+ * Resolve a date part to a usable string
+ */
+function resolveDatePart(next: string | null | undefined, current: string | undefined): string {
+	if (typeof next === 'string') {
+		return next;
+	}
+
+	if (typeof current === 'string') {
+		return current;
+	}
+
+	return EMPTY_STRING;
+}
+
+/**
+ * Type guard for a valid date range payload
+ */
+function isDateRangeValue(value: unknown): value is DateRangeValue {
+	return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
 /**
  * Resets a filter to its default empty state
  */
@@ -30,6 +68,36 @@ export function resetFilter(filter: AdvancedFilter): AdvancedFilter {
 }
 
 /**
+ * Update helper for text/select/date filters
+ */
+function updateSimpleFilterValue(filter: SimpleValueFilter, newValue: unknown): SimpleValueFilter {
+	const value = typeof newValue === 'string' ? newValue : (filter.value ?? EMPTY_STRING);
+	return { ...filter, value };
+}
+
+/**
+ * Update helper for multi-select filters
+ */
+function updateMultiSelectFilter(filter: MultiSelectFilter, newValue: unknown): MultiSelectFilter {
+	const value = Array.isArray(newValue)
+		? newValue.filter(item => isString(item))
+		: (filter.value ?? []);
+	return { ...filter, value };
+}
+
+/**
+ * Update helper for date-range filters
+ */
+function updateDateRangeFilter(filter: DateRangeFilter, newValue: unknown): DateRangeFilter {
+	const range = isDateRangeValue(newValue) ? newValue : undefined;
+	return {
+		...filter,
+		startValue: resolveDatePart(range?.start ?? undefined, filter.startValue),
+		endValue: resolveDatePart(range?.end ?? undefined, filter.endValue),
+	};
+}
+
+/**
  * Updates a filter with a new value
  */
 export function updateFilterValue(filter: AdvancedFilter, newValue: unknown): AdvancedFilter {
@@ -37,18 +105,13 @@ export function updateFilterValue(filter: AdvancedFilter, newValue: unknown): Ad
 		case FILTER_TYPE_TEXT:
 		case FILTER_TYPE_SELECT:
 		case FILTER_TYPE_DATE: {
-			return { ...filter, value: newValue as string };
+			return updateSimpleFilterValue(filter, newValue);
 		}
 		case FILTER_TYPE_MULTI_SELECT: {
-			return { ...filter, value: newValue as string[] };
+			return updateMultiSelectFilter(filter, newValue);
 		}
 		case FILTER_TYPE_DATE_RANGE: {
-			const range = newValue as { start?: string; end?: string };
-			return {
-				...filter,
-				startValue: range.start ?? filter.startValue ?? EMPTY_STRING,
-				endValue: range.end ?? filter.endValue ?? EMPTY_STRING,
-			};
+			return updateDateRangeFilter(filter, newValue);
 		}
 		default: {
 			return filter;

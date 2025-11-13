@@ -1,9 +1,11 @@
+import { TableBody } from '@core/ui/data-display/table/components/TableBody';
+import { TableHeader } from '@core/ui/data-display/table/components/TableHeader';
+import {
+	getTableClasses,
+	type RowClassName,
+} from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TableColumn } from '@src-types/ui/data/table';
-
-import { TableBody } from './TableBody';
-import { TableHeader } from './TableHeader';
-import { getTableClasses, type RowClassName } from './TableHelpers';
 
 // ============================================================================
 // Table Element Component

@@ -1,7 +1,9 @@
+import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/CommandPalette';
+import {
+	filterCommands,
+	findNextEnabledIndex,
+} from '@core/ui/overlays/command-palette/helpers/CommandPaletteHelpers';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
-
-import type { CommandPaletteCommand } from './CommandPalette';
-import { filterCommands, findNextEnabledIndex } from './CommandPaletteHelpers';
 
 export function useSearchState(isOpen: boolean) {
 	const [searchQuery, setSearchQuery] = useState('');

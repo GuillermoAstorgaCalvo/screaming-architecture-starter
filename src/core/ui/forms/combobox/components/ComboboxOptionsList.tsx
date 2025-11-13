@@ -1,8 +1,7 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import { ComboboxOptionItem } from '@core/ui/forms/combobox/components/ComboboxOptionItem';
+import { getListboxStyles } from '@core/ui/forms/combobox/helpers/ComboboxContentHelpers';
 import type { RefObject } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import { getListboxStyles } from './ComboboxContentHelpers';
-import { ComboboxOptionItem } from './ComboboxOptionItem';
 
 interface ComboboxOptionsListProps {
 	readonly filteredOptions: ComboboxOption[];

@@ -1,12 +1,11 @@
-import type { DateRangePickerProps } from '@src-types/ui/forms-dates';
-
-import type { DateRangePickerContentProps } from './DateRangePickerTypes';
-import { buildFieldProps } from './useDateRangePicker.fieldProps';
+import { buildFieldProps } from '@core/ui/forms/date-range-picker/hooks/useDateRangePicker.fieldProps';
+import type { DateRangePickerContentProps } from '@core/ui/forms/date-range-picker/types/DateRangePickerTypes';
 import type {
 	BuildDateRangePickerContentPropsOptions,
 	BuildFieldPropsOptions,
 	UseDateRangePickerStateReturn,
-} from './useDateRangePicker.types';
+} from '@core/ui/forms/date-range-picker/types/useDateRangePicker.types';
+import type { DateRangePickerProps } from '@src-types/ui/forms-dates';
 
 export function buildDateRangePickerContentProps(
 	options: Readonly<BuildDateRangePickerContentPropsOptions>

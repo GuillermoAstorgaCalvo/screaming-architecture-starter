@@ -1,7 +1,7 @@
-import { calculateStepMetadata } from '@core/ui/forms/wizard/wizardUtils';
+import type { FormWizardStep } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
+import { calculateStepMetadata } from '@core/ui/forms/wizard/helpers/wizardUtils';
 import type { FieldValues } from 'react-hook-form';
 
-import type { FormWizardStep } from './FormWizardTypes';
 import type { StepMetadata } from './FormWizardView.helpers';
 
 /**

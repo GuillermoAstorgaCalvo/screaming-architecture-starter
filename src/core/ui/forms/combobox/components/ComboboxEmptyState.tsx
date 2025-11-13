@@ -1,6 +1,5 @@
+import { MENU_STYLES } from '@core/ui/forms/combobox/helpers/ComboboxContentHelpers';
 import type { ReactNode } from 'react';
-
-import { MENU_STYLES } from './ComboboxContentHelpers';
 
 interface ComboboxEmptyStateProps {
 	readonly emptyState: ReactNode;

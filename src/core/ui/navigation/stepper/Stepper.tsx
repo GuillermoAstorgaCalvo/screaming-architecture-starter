@@ -1,8 +1,7 @@
+import { StepperSteps } from '@core/ui/navigation/stepper/components/Stepper.components';
 import { getStepperVariantClasses } from '@core/ui/variants/stepper';
 import type { StepperProps } from '@src-types/ui/navigation/stepper';
 import { useMemo } from 'react';
-
-import { StepperSteps } from './Stepper.components';
 
 /**
  * Stepper - Multi-step progress indicator component

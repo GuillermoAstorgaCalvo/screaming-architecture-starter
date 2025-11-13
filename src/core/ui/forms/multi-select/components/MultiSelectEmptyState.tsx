@@ -1,6 +1,5 @@
+import { MENU_STYLES } from '@core/ui/forms/multi-select/helpers/MultiSelectContentHelpers';
 import type { ReactNode } from 'react';
-
-import { MENU_STYLES } from './MultiSelectContentHelpers';
 
 export function MultiSelectEmptyState({ emptyState }: Readonly<{ emptyState: ReactNode }>) {
 	return (

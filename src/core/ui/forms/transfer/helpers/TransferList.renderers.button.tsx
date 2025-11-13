@@ -1,6 +1,21 @@
+import type { RenderSelectAllButtonProps } from '@core/ui/forms/transfer/types/TransferList.types';
 import { twMerge } from 'tailwind-merge';
 
-import type { RenderSelectAllButtonProps } from './TransferList.types';
+function getSelectAllLabel(labels: RenderSelectAllButtonProps['labels']): string {
+	return labels?.selectAll ?? 'Select all';
+}
+
+function getSelectNoneLabel(labels: RenderSelectAllButtonProps['labels']): string {
+	return labels?.selectNone ?? 'Deselect all';
+}
+
+function getSelectAllAriaLabel(labels: RenderSelectAllButtonProps['labels']): string | undefined {
+	return labels?.selectAll;
+}
+
+function getSelectNoneAriaLabel(labels: RenderSelectAllButtonProps['labels']): string | undefined {
+	return labels?.selectNone;
+}
 
 /**
  * Renders the select all/none button
@@ -11,10 +26,8 @@ export function renderSelectAllButton({
 	labels,
 	onSelectAllToggle,
 }: RenderSelectAllButtonProps) {
-	const label = allSelected
-		? (labels?.selectNone ?? 'Deselect all')
-		: (labels?.selectAll ?? 'Select all');
-	const ariaLabel = allSelected ? labels?.selectNone : labels?.selectAll;
+	const label = allSelected ? getSelectNoneLabel(labels) : getSelectAllLabel(labels);
+	const ariaLabel = allSelected ? getSelectNoneAriaLabel(labels) : getSelectAllAriaLabel(labels);
 
 	return (
 		<button

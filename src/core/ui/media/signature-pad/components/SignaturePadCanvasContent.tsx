@@ -1,8 +1,7 @@
+import { SignaturePadClearButton } from '@core/ui/media/signature-pad/components/SignaturePadClearButton';
+import type { getCanvasProps } from '@core/ui/media/signature-pad/helpers/SignaturePadCanvasHelpers';
 import type { RefObject } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
-
-import type { getCanvasProps } from './SignaturePadCanvasHelpers';
-import { SignaturePadClearButton } from './SignaturePadClearButton';
 
 export interface SignaturePadCanvasContentProps {
 	readonly canvasRef: RefObject<SignatureCanvas | null>;

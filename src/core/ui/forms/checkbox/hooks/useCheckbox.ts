@@ -1,8 +1,11 @@
+import {
+	generateCheckboxId,
+	getAriaDescribedBy,
+	getCheckboxClasses,
+} from '@core/ui/forms/checkbox/helpers/CheckboxHelpers';
+import type { CheckboxContentProps } from '@core/ui/forms/checkbox/types/CheckboxTypes';
 import type { CheckboxProps } from '@src-types/ui/forms';
 import { type InputHTMLAttributes, useId } from 'react';
-
-import { generateCheckboxId, getAriaDescribedBy, getCheckboxClasses } from './CheckboxHelpers';
-import type { CheckboxContentProps } from './CheckboxTypes';
 
 export interface UseCheckboxPropsOptions {
 	readonly props: Readonly<CheckboxProps>;

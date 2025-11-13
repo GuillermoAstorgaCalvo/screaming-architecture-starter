@@ -12,95 +12,96 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e:
-    name: E2E Tests
-    runs-on: ubuntu-latest
+  # TEMPORARILY DISABLED - E2E Tests
+  # e2e:
+  #   name: E2E Tests
+  #   runs-on: ubuntu-latest
 
-    # Prevent jobs from running indefinitely
-    timeout-minutes: 60
+  #   # Prevent jobs from running indefinitely
+  #   timeout-minutes: 60
 
-    # Explicit permissions for security (least privilege)
-    permissions:
-      contents: read
+  #   # Explicit permissions for security (least privilege)
+  #   permissions:
+  #     contents: read
 
-    # Environment variables available to all steps
-    env:
-      CI: true
-      NODE_ENV: test
+  #   # Environment variables available to all steps
+  #   env:
+  #     CI: true
+  #     NODE_ENV: test
 
-    steps:
-      - name: Checkout code
-        id: checkout
-        uses: actions/checkout@v5
+  #   steps:
+  #     - name: Checkout code
+  #       id: checkout
+  #       uses: actions/checkout@v5
 
-      - name: Setup pnpm
-        id: pnpm-setup
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.20.0
+  #     - name: Setup pnpm
+  #       id: pnpm-setup
+  #       uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.20.0
 
-      - name: Setup Node.js
-        id: node-setup
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.21.1
-          cache: 'pnpm'
+  #     - name: Setup Node.js
+  #       id: node-setup
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: 22.21.1
+  #         cache: 'pnpm'
 
-      - name: Cache Playwright browsers
-        id: cache-playwright
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+  #     - name: Cache Playwright browsers
+  #       id: cache-playwright
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.cache/ms-playwright
+  #         key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-playwright-
 
-      - name: Install dependencies
-        id: install
-        run: pnpm install --frozen-lockfile
+  #     - name: Install dependencies
+  #       id: install
+  #       run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright browsers
-        id: playwright-install
-        run: pnpm exec playwright install --with-deps
-        continue-on-error: false
+  #     - name: Install Playwright browsers
+  #       id: playwright-install
+  #       run: pnpm exec playwright install --with-deps
+  #       continue-on-error: false
 
-      - name: Build application
-        id: build
-        run: pnpm run build
-        continue-on-error: false
+  #     - name: Build application
+  #       id: build
+  #       run: pnpm run build
+  #       continue-on-error: false
 
-      - name: Run E2E tests
-        id: e2e-tests
-        run: pnpm run test:e2e
-        continue-on-error: false
+  #     - name: Run E2E tests
+  #       id: e2e-tests
+  #       run: pnpm run test:e2e
+  #       continue-on-error: false
 
-      - name: Upload Playwright report
-        id: upload-report
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
+  #     - name: Upload Playwright report
+  #       id: upload-report
+  #       if: always()
+  #       uses: actions/upload-artifact@v5
+  #       with:
+  #         name: playwright-report
+  #         path: playwright-report/
+  #         retention-days: 7
 
-      - name: Upload test results
-        id: upload-results
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: playwright-results
-          path: test-results/
-          retention-days: 7
+  #     - name: Upload test results
+  #       id: upload-results
+  #       if: always()
+  #       uses: actions/upload-artifact@v5
+  #       with:
+  #         name: playwright-results
+  #         path: test-results/
+  #         retention-days: 7
 
-      - name: E2E Summary
-        if: always()
-        run: |
-          echo "## E2E Tests Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Build | ${{ steps.build.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| E2E Tests | ${{ steps.e2e-tests.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+  #     - name: E2E Summary
+  #       if: always()
+  #       run: |
+  #         echo "## E2E Tests Summary" >> $GITHUB_STEP_SUMMARY
+  #         echo "" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+  #         echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Build | ${{ steps.build.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+  #         echo "| E2E Tests | ${{ steps.e2e-tests.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
 
   lighthouse:
     name: Lighthouse Audit

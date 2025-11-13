@@ -1,6 +1,5 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
 import type { InputHTMLAttributes, KeyboardEvent, ReactNode, RefObject } from 'react';
-
-import type { ComboboxOption } from './Combobox';
 
 export interface UseComboboxStateOptions {
 	readonly comboboxId?: string | undefined;

@@ -1,5 +1,8 @@
-import type { ValidationHandlersParams } from './useWizard.handlers.groups.types';
-import { useStepSkippingHandler, useValidationHandler } from './useWizard.handlers.validation.impl';
+import {
+	useStepSkippingHandler,
+	useValidationHandler,
+} from '@core/ui/forms/wizard/hooks/useWizard.handlers.validation.impl';
+import type { ValidationHandlersParams } from '@core/ui/forms/wizard/types/useWizard.handlers.groups.types';
 
 /**
  * Hook to create validation-related handlers

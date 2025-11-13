@@ -1,7 +1,6 @@
+import { TooltipContent } from '@core/ui/overlays/tooltip/components/TooltipContent';
 import type { TooltipProps } from '@src-types/ui/overlays/floating';
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
-
-import { TooltipContent } from './TooltipContent';
 
 interface AttachHandlersOptions {
 	readonly children: ReactNode;

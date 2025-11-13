@@ -34,59 +34,6 @@ export interface QRCodeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
 }
 
 /**
- * Barcode format types
- */
-export type BarcodeFormat =
-	| 'CODE128'
-	| 'CODE39'
-	| 'EAN13'
-	| 'EAN8'
-	| 'ITF14'
-	| 'MSI'
-	| 'pharmacode'
-	| 'codabar'
-	| 'upc'
-	| 'upce';
-
-/**
- * Barcode component props - Barcode display component
- */
-export interface BarcodeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-	/** The value/data to encode in the barcode */
-	value: string;
-	/** Barcode format @default 'CODE128' */
-	format?: BarcodeFormat;
-	/** Width of a single bar in pixels @default 2 */
-	width?: number;
-	/** Height of the barcode in pixels @default 100 */
-	height?: number;
-	/** Display the value as text below the barcode @default true */
-	displayValue?: boolean;
-	/** Font size for the text @default 20 */
-	fontSize?: number;
-	/** Font options for the text */
-	fontOptions?: string;
-	/** Font family for the text @default 'monospace' */
-	font?: string;
-	/** Text alignment @default 'center' */
-	textAlign?: 'left' | 'center' | 'right';
-	/** Text position @default 'bottom' */
-	textPosition?: 'bottom' | 'top';
-	/** Text margin in pixels @default 2 */
-	textMargin?: number;
-	/** Background color (hex format) @default '#FFFFFF' */
-	background?: string;
-	/** Foreground color (hex format) @default '#000000' */
-	lineColor?: string;
-	/** Margin around the barcode in pixels */
-	margin?: number;
-	/** Size variant for styling @default 'md' */
-	sizeVariant?: StandardSize;
-	/** Custom class name for the container */
-	className?: string;
-}
-
-/**
  * SignaturePad component props - Signature capture component
  */
 export interface SignaturePadProps

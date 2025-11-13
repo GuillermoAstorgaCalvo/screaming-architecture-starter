@@ -1,6 +1,5 @@
+import type { MoveButtonProps } from '@core/ui/forms/transfer/types/TransferActions.types';
 import IconButton from '@core/ui/icon-button/IconButton';
-
-import type { MoveButtonProps } from './TransferActions.types';
 
 /**
  * Renders a move button for the transfer actions

@@ -1,14 +1,13 @@
-import { useId } from 'react';
-
 import {
 	generateCurrencyInputId,
 	getAriaDescribedBy,
 	getCurrencyInputClasses,
-} from './CurrencyInputHelpers';
+} from '@core/ui/forms/currency-input/helpers/CurrencyInputHelpers';
 import type {
 	UseCurrencyInputStateOptions,
 	UseCurrencyInputStateReturn,
-} from './CurrencyInputTypes';
+} from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
+import { useId } from 'react';
 
 /**
  * Hook to compute currency input state (ID, error state, ARIA attributes, and classes)

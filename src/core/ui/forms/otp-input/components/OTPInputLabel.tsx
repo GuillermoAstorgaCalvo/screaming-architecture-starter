@@ -1,6 +1,5 @@
+import type { OTPInputLabelProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import Label from '@core/ui/label/Label';
-
-import type { OTPInputLabelProps } from './OTPInputTypes';
 
 export function OTPInputLabel({ id, label, required }: Readonly<OTPInputLabelProps>) {
 	return (

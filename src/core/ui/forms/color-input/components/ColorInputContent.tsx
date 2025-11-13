@@ -1,8 +1,8 @@
-import { ColorInputField } from './ColorInputField';
-import { ColorInputLabel } from './ColorInputLabel';
-import { ColorInputMessages } from './ColorInputMessages';
-import type { ColorInputContentProps } from './ColorInputTypes';
-import { ColorInputWrapper } from './ColorInputWrapper';
+import { ColorInputField } from '@core/ui/forms/color-input/components/ColorInputField';
+import { ColorInputLabel } from '@core/ui/forms/color-input/components/ColorInputLabel';
+import { ColorInputMessages } from '@core/ui/forms/color-input/components/ColorInputMessages';
+import { ColorInputWrapper } from '@core/ui/forms/color-input/components/ColorInputWrapper';
+import type { ColorInputContentProps } from '@core/ui/forms/color-input/types/ColorInputTypes';
 
 export function ColorInputContent({
 	state,

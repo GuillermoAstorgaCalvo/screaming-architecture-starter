@@ -1,4 +1,4 @@
-import type { PasswordInputWrapperProps } from './PasswordInputTypes';
+import type { PasswordInputWrapperProps } from '@core/ui/forms/password-input/types/PasswordInputTypes';
 
 export function PasswordInputWrapper({
 	fullWidth,

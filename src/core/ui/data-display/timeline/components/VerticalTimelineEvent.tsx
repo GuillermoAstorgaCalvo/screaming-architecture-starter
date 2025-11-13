@@ -1,7 +1,7 @@
-import type { VerticalTimelineEventProps } from './TimelineEvent.types';
-import { EventContent } from './TimelineEventContent';
-import { renderEventContent } from './TimelineEventContent.render';
-import { TimelineMarker } from './TimelineMarker';
+import { EventContent } from '@core/ui/data-display/timeline/components/TimelineEventContent';
+import { TimelineMarker } from '@core/ui/data-display/timeline/components/TimelineMarker';
+import { renderEventContent } from '@core/ui/data-display/timeline/helpers/TimelineEventContent.render';
+import type { VerticalTimelineEventProps } from '@core/ui/data-display/timeline/types/TimelineEvent.types';
 
 export function VerticalTimelineEvent({
 	event,

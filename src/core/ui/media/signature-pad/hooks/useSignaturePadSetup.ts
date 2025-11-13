@@ -1,9 +1,8 @@
+import { getCanvasProps } from '@core/ui/media/signature-pad/helpers/SignaturePadCanvasHelpers';
+import { useSignaturePadHandlers } from '@core/ui/media/signature-pad/hooks/useSignaturePadHandlers';
+import { useSignaturePadValue } from '@core/ui/media/signature-pad/hooks/useSignaturePadValue';
 import { type RefObject, useRef } from 'react';
 import type SignatureCanvas from 'react-signature-canvas';
-
-import { getCanvasProps } from './SignaturePadCanvasHelpers';
-import { useSignaturePadHandlers } from './useSignaturePadHandlers';
-import { useSignaturePadValue } from './useSignaturePadValue';
 
 export interface UseSignaturePadSetupOptions {
 	readonly id: string | undefined;

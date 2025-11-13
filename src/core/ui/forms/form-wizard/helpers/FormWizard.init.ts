@@ -1,12 +1,17 @@
 import type { FormControls } from '@core/forms/formAdapter';
+import { buildCallbacks } from '@core/ui/forms/form-wizard/helpers/FormWizard.callbacks';
+import { useFormWizardForm } from '@core/ui/forms/form-wizard/helpers/FormWizard.form';
+import {
+	createStateHandlers,
+	useFormWizardStateManagement,
+} from '@core/ui/forms/form-wizard/helpers/FormWizard.state';
+import { useWizardStateSync } from '@core/ui/forms/form-wizard/helpers/FormWizard.sync';
+import { useFormWizardHandlers } from '@core/ui/forms/form-wizard/hooks/useFormWizardHandlers';
+import type {
+	FormWizardProps,
+	FormWizardState,
+} from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { FieldValues } from 'react-hook-form';
-
-import { buildCallbacks } from './FormWizard.callbacks';
-import { useFormWizardForm } from './FormWizard.form';
-import { createStateHandlers, useFormWizardStateManagement } from './FormWizard.state';
-import { useWizardStateSync } from './FormWizard.sync';
-import type { FormWizardProps, FormWizardState } from './FormWizardTypes';
-import { useFormWizardHandlers } from './useFormWizardHandlers';
 
 /**
  * Initialize form wizard handlers with all dependencies

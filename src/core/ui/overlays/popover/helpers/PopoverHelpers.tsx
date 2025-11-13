@@ -1,7 +1,6 @@
+import { PopoverContent } from '@core/ui/overlays/popover/components/PopoverParts';
+import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
 import type { ReactNode, RefObject } from 'react';
-
-import { PopoverContent } from './PopoverParts';
-import type { PopoverPositionState } from './popoverPosition';
 
 interface BuildPopoverContentOptions {
 	readonly isOpen: boolean;

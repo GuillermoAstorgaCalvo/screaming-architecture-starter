@@ -1,11 +1,10 @@
+import { SheetDialog } from '@core/ui/overlays/sheet/components/SheetDialog';
+import { SheetOverlay } from '@core/ui/overlays/sheet/components/SheetParts';
+import { useSheetId } from '@core/ui/overlays/sheet/hooks/useSheet';
+import { useSheetSetup } from '@core/ui/overlays/sheet/hooks/useSheetSetup';
 import type { SheetPosition, SheetProps, SheetSize } from '@src-types/ui/overlays/panels';
 import type { MouseEvent, ReactNode, RefObject } from 'react';
 import { createPortal } from 'react-dom';
-
-import { SheetDialog } from './SheetDialog';
-import { SheetOverlay } from './SheetParts';
-import { useSheetId } from './useSheet';
-import { useSheetSetup } from './useSheetSetup';
 
 interface SheetPortalContentProps {
 	readonly id: string;

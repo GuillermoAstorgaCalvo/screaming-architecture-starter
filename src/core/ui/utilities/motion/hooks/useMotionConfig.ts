@@ -6,8 +6,6 @@
  * motion strategies.
  */
 
-import { useCallback, useMemo } from 'react';
-
 import {
 	motionDurations,
 	type MotionDurationToken,
@@ -15,10 +13,14 @@ import {
 	motionEasing,
 	type MotionEasingToken,
 	motionEasingTokens,
-} from './motionConstants';
-import type { ReducedMotionStrategy } from './motionTypes';
-import { createTransition, type MotionTransitionOptions } from './motionUtils';
-import { useReducedMotion } from './useReducedMotion';
+} from '@core/ui/utilities/motion/constants/motionConstants';
+import {
+	createTransition,
+	type MotionTransitionOptions,
+} from '@core/ui/utilities/motion/helpers/motionUtils';
+import { useReducedMotion } from '@core/ui/utilities/motion/hooks/useReducedMotion';
+import type { ReducedMotionStrategy } from '@core/ui/utilities/motion/types/motionTypes';
+import { useCallback, useMemo } from 'react';
 
 /**
  * Effective reduced motion strategy values

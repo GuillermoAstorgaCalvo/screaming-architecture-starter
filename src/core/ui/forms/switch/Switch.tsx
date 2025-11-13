@@ -1,7 +1,6 @@
+import { SwitchContent } from '@core/ui/forms/switch/components/SwitchContent';
+import { useSwitchProps } from '@core/ui/forms/switch/hooks/useSwitch';
 import type { SwitchProps } from '@src-types/ui/forms';
-
-import { SwitchContent } from './SwitchContent';
-import { useSwitchProps } from './useSwitch';
 
 /**
  * Switch - Reusable toggle switch component with label, error, and helper text support

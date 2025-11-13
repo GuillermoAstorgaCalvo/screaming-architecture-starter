@@ -1,10 +1,13 @@
-import { getTreeItemAriaAttributes, getTreeNodeElementAttributes } from './TreeViewNodeAttributes';
-import { getTreeNodeElementClasses } from './TreeViewNodeStyles';
+import {
+	getTreeItemAriaAttributes,
+	getTreeNodeElementAttributes,
+} from '@core/ui/data-display/tree-view/helpers/TreeViewNodeAttributes';
+import { getTreeNodeElementClasses } from '@core/ui/data-display/tree-view/helpers/TreeViewNodeStyles';
 import type {
 	TreeNodeElementData,
 	TreeNodeElementProps,
 	TreeViewNodeSharedProps,
-} from './TreeViewNodeTypes';
+} from '@core/ui/data-display/tree-view/types/TreeViewNodeTypes';
 
 // ============================================================================
 // Shared Props

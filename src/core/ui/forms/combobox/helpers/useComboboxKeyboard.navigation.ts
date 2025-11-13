@@ -1,7 +1,6 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import { findNextEnabledIndex } from '@core/ui/forms/combobox/helpers/useComboboxHelpers';
 import { useCallback } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import { findNextEnabledIndex } from './useComboboxHelpers';
 
 export interface UseArrowHandlersParams {
 	isOpen: boolean;

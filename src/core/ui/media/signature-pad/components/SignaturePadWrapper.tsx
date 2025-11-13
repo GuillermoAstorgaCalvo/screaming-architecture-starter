@@ -1,4 +1,4 @@
-import type { SignaturePadWrapperProps } from './SignaturePadTypes';
+import type { SignaturePadWrapperProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 
 export function SignaturePadWrapper({
 	fullWidth,

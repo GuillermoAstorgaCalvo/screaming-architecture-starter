@@ -1,7 +1,6 @@
+import { nodeHasChildren } from '@core/ui/data-display/tree-view/helpers/useTreeViewKeyboard.helpers';
+import type { KeyHandlerContext } from '@core/ui/data-display/tree-view/types/useTreeViewKeyboard.types';
 import type { KeyboardEvent } from 'react';
-
-import { nodeHasChildren } from './useTreeViewKeyboard.helpers';
-import type { KeyHandlerContext } from './useTreeViewKeyboard.types';
 
 /**
  * Handles ArrowRight key: expand node or move to first child
@@ -93,42 +92,23 @@ export function handleToggle(currentNodeId: string, context: KeyHandlerContext):
  * Creates the keyboard event handler
  */
 export function createKeyboardHandler(context: KeyHandlerContext) {
+	const keyHandlers: Record<string, (currentNodeId: string) => void> = {
+		ArrowRight: nodeId => handleArrowRight(nodeId, context),
+		ArrowLeft: nodeId => handleArrowLeft(nodeId, context),
+		ArrowDown: nodeId => handleArrowDown(nodeId, context),
+		ArrowUp: nodeId => handleArrowUp(nodeId, context),
+		Home: () => handleHome(context),
+		End: () => handleEnd(context),
+		Enter: nodeId => handleToggle(nodeId, context),
+		' ': nodeId => handleToggle(nodeId, context),
+	};
+
 	return (event: KeyboardEvent<HTMLDivElement>, currentNodeId: string): void => {
-		event.preventDefault();
-		switch (event.key) {
-			case 'ArrowRight': {
-				handleArrowRight(currentNodeId, context);
-				break;
-			}
-			case 'ArrowLeft': {
-				handleArrowLeft(currentNodeId, context);
-				break;
-			}
-			case 'ArrowDown': {
-				handleArrowDown(currentNodeId, context);
-				break;
-			}
-			case 'ArrowUp': {
-				handleArrowUp(currentNodeId, context);
-				break;
-			}
-			case 'Home': {
-				handleHome(context);
-				break;
-			}
-			case 'End': {
-				handleEnd(context);
-				break;
-			}
-			case 'Enter':
-			case ' ': {
-				handleToggle(currentNodeId, context);
-				break;
-			}
-			default: {
-				// No action for other keys
-				break;
-			}
+		const handler = keyHandlers[event.key];
+		if (!handler) {
+			return;
 		}
+		event.preventDefault();
+		handler(currentNodeId);
 	};
 }

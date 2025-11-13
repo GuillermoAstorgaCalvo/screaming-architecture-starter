@@ -1,8 +1,7 @@
 import Button from '@core/ui/button/Button';
+import { PromptDialogInput } from '@core/ui/overlays/prompt-dialog/components/PromptDialogInput';
+import type { PromptDialogInputType } from '@core/ui/overlays/prompt-dialog/PromptDialog';
 import type { ReactNode } from 'react';
-
-import type { PromptDialogInputType } from './PromptDialog';
-import { PromptDialogInput } from './PromptDialogInput';
 
 export const DEFAULT_CONFIRM_LABEL = 'Confirm';
 export const DEFAULT_CANCEL_LABEL = 'Cancel';

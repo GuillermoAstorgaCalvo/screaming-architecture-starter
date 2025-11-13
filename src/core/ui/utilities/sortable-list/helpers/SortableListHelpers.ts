@@ -1,9 +1,14 @@
 import { LIST_ITEM_SIZE_CLASSES } from '@core/constants/ui/display/list';
+import {
+	useSortableList,
+	type UseSortableListReturn,
+} from '@core/ui/utilities/sortable-list/hooks/useSortableList';
+import type {
+	ItemEventHandlers,
+	UseSortableListConfig,
+} from '@core/ui/utilities/sortable-list/types/SortableListTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import { twMerge } from 'tailwind-merge';
-
-import type { ItemEventHandlers, UseSortableListConfig } from './SortableListTypes';
-import { useSortableList, type UseSortableListReturn } from './useSortableList';
 
 /**
  * Get sortable list item classes

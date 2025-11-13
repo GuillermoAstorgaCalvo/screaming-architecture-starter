@@ -1,8 +1,15 @@
+import {
+	generateSelectId,
+	getAriaDescribedBy,
+	getSelectClasses,
+} from '@core/ui/forms/select/helpers/SelectHelpers';
+import type {
+	SelectFieldProps,
+	UseSelectStateOptions,
+	UseSelectStateReturn,
+} from '@core/ui/forms/select/types/SelectTypes';
 import type { SelectProps } from '@src-types/ui/forms';
 import { type ReactNode, type SelectHTMLAttributes, useId } from 'react';
-
-import { generateSelectId, getAriaDescribedBy, getSelectClasses } from './SelectHelpers';
-import type { SelectFieldProps, UseSelectStateOptions, UseSelectStateReturn } from './SelectTypes';
 
 export interface UseSelectPropsOptions {
 	readonly props: Readonly<SelectProps>;

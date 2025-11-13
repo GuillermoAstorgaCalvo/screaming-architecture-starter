@@ -1,6 +1,6 @@
+import type { AutocompleteListboxProps } from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
 import type { ReactNode } from 'react';
 
-import type { AutocompleteListboxProps } from './AutocompleteContentHelpers';
 import { AutocompleteEmptyState } from './AutocompleteEmptyState';
 import { AutocompleteOptionsList } from './AutocompleteOptionsList';
 

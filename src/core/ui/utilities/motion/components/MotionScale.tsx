@@ -22,12 +22,11 @@
  * ```
  */
 
+import { buildGestureLayoutProps } from '@core/ui/utilities/motion/helpers/motionPropsHelpers';
+import { getMotionDuration, getMotionEasing } from '@core/ui/utilities/motion/helpers/motionUtils';
+import type { MotionScaleProps } from '@core/ui/utilities/motion/types/motionTypes';
 import { motion } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
-
-import { buildGestureLayoutProps } from './motionPropsHelpers';
-import type { MotionScaleProps } from './motionTypes';
-import { getMotionDuration, getMotionEasing } from './motionUtils';
 
 /**
  * Get initial state for scale animation

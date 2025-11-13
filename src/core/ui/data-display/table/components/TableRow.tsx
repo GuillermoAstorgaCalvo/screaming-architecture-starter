@@ -1,8 +1,7 @@
+import { TableCell } from '@core/ui/data-display/table/components/TableCell';
+import { getRowClasses, type RowClassName } from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TableColumn } from '@src-types/ui/data/table';
-
-import { TableCell } from './TableCell';
-import { getRowClasses, type RowClassName } from './TableHelpers';
 
 // ============================================================================
 // Row Component

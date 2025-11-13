@@ -1,7 +1,6 @@
+import { RangeSliderContent } from '@core/ui/forms/range-slider/components/RangeSliderContent';
+import { useRangeSliderProps } from '@core/ui/forms/range-slider/hooks/useRangeSlider';
 import type { RangeSliderProps } from '@src-types/ui/forms-advanced';
-
-import { RangeSliderContent } from './RangeSliderContent';
-import { useRangeSliderProps } from './useRangeSlider';
 
 /**
  * RangeSlider - Dual-handle range input component for min/max selection

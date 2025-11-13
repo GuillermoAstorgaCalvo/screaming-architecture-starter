@@ -1,6 +1,5 @@
+import type { UseOTPInputValueReturn } from '@core/ui/forms/otp-input/hooks/useOTPInput.types';
 import { useState } from 'react';
-
-import type { UseOTPInputValueReturn } from './useOTPInput.types';
 
 /**
  * Manages OTP input value state (controlled or uncontrolled)

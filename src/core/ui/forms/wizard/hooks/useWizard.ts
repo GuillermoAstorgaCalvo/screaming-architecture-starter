@@ -1,10 +1,9 @@
+import { useWizardHandlers } from '@core/ui/forms/wizard/hooks/useWizard.handlers';
+import { extractWizardProps } from '@core/ui/forms/wizard/hooks/useWizard.props';
+import { useWizardState } from '@core/ui/forms/wizard/hooks/useWizard.state';
+import type { UseWizardHandlersReturn } from '@core/ui/forms/wizard/types/useWizard.handlers.types';
+import type { UseWizardStateReturn } from '@core/ui/forms/wizard/types/useWizard.state.types';
 import type { WizardProps } from '@src-types/ui/navigation/wizard';
-
-import { useWizardHandlers } from './useWizard.handlers';
-import type { UseWizardHandlersReturn } from './useWizard.handlers.types';
-import { extractWizardProps } from './useWizard.props';
-import { useWizardState } from './useWizard.state';
-import type { UseWizardStateReturn } from './useWizard.state.types';
 
 /**
  * Return type for useWizard hook

@@ -1,8 +1,10 @@
+import { useSplitterHandlers } from '@core/ui/utilities/splitter/hooks/useSplitter.handlers';
+import {
+	type PanelState,
+	useSplitterState,
+} from '@core/ui/utilities/splitter/hooks/useSplitter.state';
 import type { SplitterOrientation, SplitterPanelConfig } from '@src-types/ui/layout/splitter';
 import { type MouseEvent, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
-
-import { useSplitterHandlers } from './useSplitter.handlers';
-import { type PanelState, useSplitterState } from './useSplitter.state';
 
 interface PanelRef {
 	readonly id: string;

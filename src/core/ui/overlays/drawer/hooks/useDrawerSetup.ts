@@ -1,7 +1,6 @@
-import { useEscapeKey } from '@core/ui/modal/useModal';
+import { useBodyOverflow } from '@core/ui/overlays/drawer/hooks/useDrawer';
+import { useEscapeKey } from '@core/ui/overlays/modal/hooks/useModal';
 import { type MouseEvent, type RefObject, useRef } from 'react';
-
-import { useBodyOverflow } from './useDrawer';
 
 export interface DrawerSetupResult {
 	readonly drawerRef: RefObject<HTMLDivElement | null>;

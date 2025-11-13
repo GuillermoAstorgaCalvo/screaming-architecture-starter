@@ -1,7 +1,6 @@
+import type { RefString } from '@core/ui/forms/inline-edit/hooks/useInlineEdit.state';
+import { shouldSaveOnBlur, trimValue } from '@core/ui/forms/inline-edit/hooks/useInlineEdit.utils';
 import { type ChangeEvent, type FocusEvent, type KeyboardEvent, useCallback } from 'react';
-
-import type { RefString } from './useInlineEdit.state';
-import { shouldSaveOnBlur, trimValue } from './useInlineEdit.utils';
 
 interface StartEditingParams {
 	readonly getCurrentValueFn: () => string;

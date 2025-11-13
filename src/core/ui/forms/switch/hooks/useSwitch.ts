@@ -1,14 +1,13 @@
-import type { StandardSize } from '@src-types/ui/base';
-import type { SwitchProps } from '@src-types/ui/forms';
-import { useId } from 'react';
-
 import {
 	generateSwitchId,
 	getAriaDescribedBy,
 	getSwitchClasses,
 	getSwitchThumbClasses,
-} from './SwitchHelpers';
-import type { SwitchContentProps, SwitchInputProps } from './SwitchTypes';
+} from '@core/ui/forms/switch/helpers/SwitchHelpers';
+import type { SwitchContentProps, SwitchInputProps } from '@core/ui/forms/switch/types/SwitchTypes';
+import type { StandardSize } from '@src-types/ui/base';
+import type { SwitchProps } from '@src-types/ui/forms';
+import { useId } from 'react';
 
 export interface UseSwitchPropsOptions {
 	readonly props: Readonly<SwitchProps>;

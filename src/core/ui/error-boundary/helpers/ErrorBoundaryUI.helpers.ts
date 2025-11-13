@@ -1,6 +1,8 @@
 import { ROUTES } from '@core/config/routes';
-
-import type { ErrorBoundaryUIProps, RenderActionsOptions } from './ErrorBoundaryUITypes';
+import type {
+	ErrorBoundaryUIProps,
+	RenderActionsOptions,
+} from '@core/ui/error-boundary/types/ErrorBoundaryUITypes';
 
 /**
  * Get display text for error boundary UI

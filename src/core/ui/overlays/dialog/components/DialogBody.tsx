@@ -1,10 +1,13 @@
 import { ARIA_LABELS } from '@core/constants/aria';
+import {
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+} from '@core/ui/overlays/dialog/components/DialogParts';
+import type { DialogVariant } from '@core/ui/overlays/dialog/types/dialog.types';
 import { getDialogBodyVariantClasses } from '@core/ui/variants/dialog';
 import type { ModalSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
-
-import type { DialogVariant } from './dialog.types';
-import { DialogContent, DialogFooter, DialogHeader } from './DialogParts';
 
 interface RenderDialogContentProps {
 	readonly titleId: string;

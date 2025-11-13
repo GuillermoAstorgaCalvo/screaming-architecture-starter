@@ -1,11 +1,13 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import { ComboboxField } from '@core/ui/forms/combobox/components/ComboboxField';
+import { ComboboxListbox } from '@core/ui/forms/combobox/components/ComboboxListbox';
+import {
+	type ComboboxListboxProps,
+	MENU_STYLES,
+} from '@core/ui/forms/combobox/helpers/ComboboxContentHelpers';
+import type { ComboboxContentProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
 import Popover from '@core/ui/popover/Popover';
 import type { Ref, RefObject } from 'react';
-
-import type { ComboboxOption } from './Combobox';
-import { type ComboboxListboxProps, MENU_STYLES } from './ComboboxContentHelpers';
-import { ComboboxField } from './ComboboxField';
-import { ComboboxListbox } from './ComboboxListbox';
-import type { ComboboxContentProps } from './ComboboxTypes';
 
 interface ComboboxPopoverTriggerProps {
 	readonly triggerRef: RefObject<HTMLDivElement | null>;

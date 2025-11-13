@@ -1,8 +1,10 @@
+import { useFocusedNodeState } from '@core/ui/data-display/tree-view/hooks/useTreeViewFocus';
+import { useTreeViewHandlersFromState } from '@core/ui/data-display/tree-view/hooks/useTreeViewHandlers';
+import {
+	extractSetupProps,
+	useTreeViewState,
+} from '@core/ui/data-display/tree-view/hooks/useTreeViewOptions';
 import type { TreeViewProps } from '@src-types/ui/navigation/treeView';
-
-import { useFocusedNodeState } from './useTreeViewFocus';
-import { useTreeViewHandlersFromState } from './useTreeViewHandlers';
-import { extractSetupProps, useTreeViewState } from './useTreeViewOptions';
 
 /**
  * Custom hook that sets up all TreeView state and handlers

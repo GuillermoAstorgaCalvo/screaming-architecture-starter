@@ -1,6 +1,5 @@
+import type { CommandPaletteItemProps } from '@core/ui/overlays/command-palette/types/CommandPaletteParts.types';
 import { twMerge } from 'tailwind-merge';
-
-import type { CommandPaletteItemProps } from './CommandPaletteParts.types';
 
 function getButtonClassName(isHighlighted: boolean, disabled?: boolean): string {
 	return twMerge(

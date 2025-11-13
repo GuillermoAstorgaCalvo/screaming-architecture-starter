@@ -1,8 +1,11 @@
+import {
+	SheetFooter,
+	SheetHeader,
+	SheetMainContent,
+} from '@core/ui/overlays/sheet/components/SheetParts';
+import { getSheetClasses } from '@core/ui/overlays/sheet/helpers/SheetHelpers';
 import type { SheetPosition, SheetSize } from '@src-types/ui/overlays/panels';
 import type { ReactNode, RefObject } from 'react';
-
-import { getSheetClasses } from './SheetHelpers';
-import { SheetFooter, SheetHeader, SheetMainContent } from './SheetParts';
 
 interface SheetDialogProps {
 	readonly id: string;

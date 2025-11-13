@@ -1,7 +1,7 @@
 import type {
 	BuildStateHooksOptionsParams,
 	UseDataTableStateHooksOptions,
-} from './useDataTableStateBuilders.types';
+} from '@core/ui/data-display/data-table/types/useDataTableStateBuilders.types';
 
 /**
  * Builds options for state hooks initialization

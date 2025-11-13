@@ -19,8 +19,8 @@
  * ```
  */
 
-import { MotionBox } from './MotionBox';
-import type { MotionFadeProps } from './motionTypes';
+import { MotionBox } from '@core/ui/utilities/motion/MotionBox';
+import type { MotionFadeProps } from '@core/ui/utilities/motion/types/motionTypes';
 
 /**
  * MotionFade component

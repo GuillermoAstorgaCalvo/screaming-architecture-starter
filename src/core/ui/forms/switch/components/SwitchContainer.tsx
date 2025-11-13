@@ -1,6 +1,5 @@
+import type { SwitchContainerProps } from '@core/ui/forms/switch/types/SwitchTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { SwitchContainerProps } from './SwitchTypes';
 
 export function SwitchContainer({
 	children,

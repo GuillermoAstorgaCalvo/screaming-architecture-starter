@@ -1,13 +1,15 @@
-import { type RefObject, useCallback, useEffect, useId, useRef, useState } from 'react';
-
-import type { ContextMenuItem, ContextMenuItemOrSeparator } from './ContextMenu';
-import { findNextEnabledIndex } from './ContextMenuHelpers';
+import type {
+	ContextMenuItem,
+	ContextMenuItemOrSeparator,
+} from '@core/ui/overlays/context-menu/ContextMenu';
+import { findNextEnabledIndex } from '@core/ui/overlays/context-menu/helpers/ContextMenuHelpers';
 import {
 	useContextMenuKeyboard,
 	useContextMenuRefs,
 	useContextMenuSelection,
 	useHighlightedIndex,
-} from './useContextMenuHooks';
+} from '@core/ui/overlays/context-menu/hooks/useContextMenuHooks';
+import { type RefObject, useCallback, useEffect, useId, useRef, useState } from 'react';
 
 interface UseContextMenuParams {
 	readonly items: ContextMenuItemOrSeparator[];

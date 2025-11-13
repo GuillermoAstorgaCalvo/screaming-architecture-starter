@@ -1,8 +1,10 @@
 import { SIDEBAR_DEFAULT_WIDTH } from '@core/constants/ui/navigation';
+import {
+	getSidebarClasses,
+	getSidebarWidth,
+} from '@core/ui/navigation/sidebar/helpers/SidebarHelpers';
 import type { SidebarProps } from '@src-types/ui/overlays/panels';
 import type { ReactNode } from 'react';
-
-import { getSidebarClasses, getSidebarWidth } from './SidebarHelpers';
 
 interface SidebarContentProps {
 	readonly children: ReactNode;

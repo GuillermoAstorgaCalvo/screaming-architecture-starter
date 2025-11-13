@@ -1,7 +1,6 @@
+import { useResizeHandlers } from '@core/ui/utilities/resizable/hooks/useResizable.handlers';
 import type { ResizableDirection } from '@src-types/ui/overlays/containers';
 import { type MouseEvent as ReactMouseEvent, type RefObject, useRef, useState } from 'react';
-
-import { useResizeHandlers } from './useResizable.handlers';
 
 export interface UseResizableOptions {
 	readonly containerRef: RefObject<HTMLDivElement>;

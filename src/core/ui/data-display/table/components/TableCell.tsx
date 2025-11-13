@@ -1,7 +1,6 @@
+import { getCellClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TableColumn } from '@src-types/ui/data/table';
-
-import { getCellClasses } from './TableHelpers';
 
 // ============================================================================
 // Cell Component

@@ -69,28 +69,18 @@ export function handleKeyDown({
 	const itemIndex = items.findIndex(item => item.id === itemId);
 	const navParams = { items, itemIndex, onValueChange };
 
-	switch (event.key) {
-		case 'ArrowLeft':
-		case 'ArrowUp': {
-			event.preventDefault();
-			handlePreviousItem(navParams);
-			break;
-		}
-		case 'ArrowRight':
-		case 'ArrowDown': {
-			event.preventDefault();
-			handleNextItem(navParams);
-			break;
-		}
-		case 'Home': {
-			event.preventDefault();
-			handleFirstItem({ items, onValueChange });
-			break;
-		}
-		case 'End': {
-			event.preventDefault();
-			handleLastItem({ items, onValueChange });
-			break;
-		}
+	const keyHandlers: Record<string, () => void> = {
+		ArrowLeft: () => handlePreviousItem(navParams),
+		ArrowUp: () => handlePreviousItem(navParams),
+		ArrowRight: () => handleNextItem(navParams),
+		ArrowDown: () => handleNextItem(navParams),
+		Home: () => handleFirstItem({ items, onValueChange }),
+		End: () => handleLastItem({ items, onValueChange }),
+	};
+
+	const handler = keyHandlers[event.key];
+	if (handler) {
+		event.preventDefault();
+		handler();
 	}
 }

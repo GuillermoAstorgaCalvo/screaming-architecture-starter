@@ -1,6 +1,9 @@
-import { computeWizardHandlerValues } from './useWizard.handlers.computed';
-import { useWizardHandlersCreation } from './useWizard.handlers.creation';
-import type { UseWizardHandlersOptions, UseWizardHandlersReturn } from './useWizard.handlers.types';
+import { computeWizardHandlerValues } from '@core/ui/forms/wizard/hooks/useWizard.handlers.computed';
+import { useWizardHandlersCreation } from '@core/ui/forms/wizard/hooks/useWizard.handlers.creation';
+import type {
+	UseWizardHandlersOptions,
+	UseWizardHandlersReturn,
+} from '@core/ui/forms/wizard/types/useWizard.handlers.types';
 
 /**
  * Hook to manage wizard navigation and validation handlers

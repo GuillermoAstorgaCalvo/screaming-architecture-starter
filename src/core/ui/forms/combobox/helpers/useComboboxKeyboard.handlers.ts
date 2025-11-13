@@ -1,7 +1,7 @@
-import type { ComboboxOption } from './Combobox';
-import { useActionHandlers } from './useComboboxKeyboard.actions';
-import { useNavigationHandlers } from './useComboboxKeyboard.navigation';
-import { useSelectHandler } from './useComboboxKeyboard.select';
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import { useActionHandlers } from '@core/ui/forms/combobox/helpers/useComboboxKeyboard.actions';
+import { useNavigationHandlers } from '@core/ui/forms/combobox/helpers/useComboboxKeyboard.navigation';
+import { useSelectHandler } from '@core/ui/forms/combobox/helpers/useComboboxKeyboard.select';
 
 export interface UseKeyboardHandlersParams {
 	isOpen: boolean;

@@ -1,8 +1,7 @@
+import type { AutocompleteProps } from '@core/ui/forms/autocomplete/Autocomplete';
+import type { useAutocompleteState } from '@core/ui/forms/autocomplete/helpers/AutocompleteHelpers';
+import type { AutocompleteFieldProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
 import type { ChangeEvent } from 'react';
-
-import type { AutocompleteProps } from './Autocomplete';
-import type { useAutocompleteState } from './AutocompleteHelpers';
-import type { AutocompleteFieldProps } from './AutocompleteTypes';
 
 const BLUR_DELAY_MS = 200;
 

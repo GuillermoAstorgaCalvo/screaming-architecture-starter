@@ -1,7 +1,9 @@
+import type { useDropdownMenu } from '@core/ui/overlays/dropdown-menu/hooks/useDropdownMenu';
+import type {
+	DropdownMenuItemOrSeparator,
+	DropdownPosition,
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import type { ReactElement, ReactNode } from 'react';
-
-import type { DropdownMenuItemOrSeparator, DropdownPosition } from './DropdownMenu.types';
-import type { useDropdownMenu } from './useDropdownMenu';
 
 export interface PrepareContentParams {
 	readonly menuData: ReturnType<typeof useDropdownMenu>;

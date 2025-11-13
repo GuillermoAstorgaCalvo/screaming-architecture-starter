@@ -1,8 +1,7 @@
 import { METER_BAR_BASE_CLASSES, METER_VARIANT_CLASSES } from '@core/constants/ui/display/progress';
+import { formatValue } from '@core/ui/data-display/meter/utils/Meter.utils';
 import type { MeterVariant } from '@src-types/ui/feedback';
 import { twMerge } from 'tailwind-merge';
-
-import { formatValue } from './Meter.utils';
 
 /**
  * Meter bar component

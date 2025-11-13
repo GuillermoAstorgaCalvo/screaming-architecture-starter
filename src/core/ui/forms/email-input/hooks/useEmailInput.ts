@@ -1,16 +1,15 @@
-import type { EmailInputProps } from '@src-types/ui/forms-specialized';
-import { type InputHTMLAttributes, useId } from 'react';
-
 import {
 	generateEmailInputId,
 	getAriaDescribedBy,
 	getEmailInputClasses,
-} from './EmailInputHelpers';
+} from '@core/ui/forms/email-input/helpers/EmailInputHelpers';
 import type {
 	EmailInputFieldProps,
 	UseEmailInputStateOptions,
 	UseEmailInputStateReturn,
-} from './EmailInputTypes';
+} from '@core/ui/forms/email-input/types/EmailInputTypes';
+import type { EmailInputProps } from '@src-types/ui/forms-specialized';
+import { type InputHTMLAttributes, useId } from 'react';
 
 export interface UseEmailInputPropsOptions {
 	readonly props: Readonly<EmailInputProps>;

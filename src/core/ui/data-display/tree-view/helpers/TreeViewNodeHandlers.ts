@@ -1,12 +1,11 @@
-import type { TreeNode } from '@src-types/ui/navigation/treeView';
-import type { KeyboardEvent, MouseEvent } from 'react';
-
 import type {
 	CreateClickHandlerParams,
 	CreateNodeHandlersParams,
 	KeyboardEventHandler,
 	MouseEventHandler,
-} from './TreeViewNodeTypes';
+} from '@core/ui/data-display/tree-view/types/TreeViewNodeTypes';
+import type { TreeNode } from '@src-types/ui/navigation/treeView';
+import type { KeyboardEvent, MouseEvent } from 'react';
 
 // ============================================================================
 // Helpers

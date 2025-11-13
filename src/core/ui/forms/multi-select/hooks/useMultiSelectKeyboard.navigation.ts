@@ -1,7 +1,6 @@
+import { findNextEnabledIndex } from '@core/ui/forms/multi-select/helpers/useMultiSelectHelpers';
+import type { MultiSelectOption } from '@core/ui/forms/multi-select/MultiSelect';
 import { useCallback } from 'react';
-
-import type { MultiSelectOption } from './MultiSelect';
-import { findNextEnabledIndex } from './useMultiSelectHelpers';
 
 export interface ArrowHandlersParams {
 	readonly isOpen: boolean;

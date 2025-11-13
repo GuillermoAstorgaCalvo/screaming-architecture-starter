@@ -1,7 +1,6 @@
+import { ColumnResizer } from '@core/ui/data-display/data-table/components/DataTableHeaderComponents';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import type { CSSProperties } from 'react';
-
-import { ColumnResizer } from './DataTableHeaderComponents';
 
 export function getColumnStyle<T>(
 	column: DataTableColumn<T>,

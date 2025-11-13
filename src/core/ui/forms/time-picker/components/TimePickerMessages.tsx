@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { TimePickerMessagesProps } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { TimePickerMessagesProps } from './TimePickerTypes';
 
 export function TimePickerMessages({
 	timePickerId,

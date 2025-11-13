@@ -1,6 +1,8 @@
+import {
+	getRatingContainerProps,
+	getRatingStyles,
+} from '@core/ui/forms/rating/helpers/Rating.helpers';
 import type { RatingProps } from '@src-types/ui/forms-advanced';
-
-import { getRatingContainerProps, getRatingStyles } from './Rating.helpers';
 
 export interface UseRatingStylesAndContainerParams {
 	readOnly: boolean;

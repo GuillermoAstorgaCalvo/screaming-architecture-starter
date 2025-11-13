@@ -1,6 +1,5 @@
+import type { CommandPaletteDialogProps } from '@core/ui/overlays/command-palette/types/CommandPaletteParts.types';
 import { twMerge } from 'tailwind-merge';
-
-import type { CommandPaletteDialogProps } from './CommandPaletteParts.types';
 
 export function CommandPaletteDialog({
 	id,

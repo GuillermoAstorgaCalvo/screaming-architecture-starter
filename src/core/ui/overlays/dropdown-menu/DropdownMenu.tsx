@@ -1,8 +1,11 @@
-import { prepareContentParams, prepareRenderParams } from './DropdownMenu.helpers';
-import { usePrepareDropdownMenuContent } from './DropdownMenu.hooks';
-import { renderDropdownMenu } from './DropdownMenu.renderers';
-import type { DropdownMenuProps } from './DropdownMenu.types';
-import { useDropdownMenu } from './useDropdownMenu';
+import {
+	prepareContentParams,
+	prepareRenderParams,
+} from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenu.helpers';
+import { renderDropdownMenu } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenu.renderers';
+import { usePrepareDropdownMenuContent } from '@core/ui/overlays/dropdown-menu/hooks/DropdownMenu.hooks';
+import { useDropdownMenu } from '@core/ui/overlays/dropdown-menu/hooks/useDropdownMenu';
+import type { DropdownMenuProps } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 
 export default function DropdownMenu({
 	trigger,

@@ -1,7 +1,6 @@
+import { ListProvider } from '@core/ui/data-display/list/providers/ListProvider';
 import { getListVariantClasses } from '@core/ui/variants/list';
 import type { ListProps } from '@src-types/ui/layout/list';
-
-import { ListProvider } from './ListProvider';
 
 /**
  * List - Structured list component

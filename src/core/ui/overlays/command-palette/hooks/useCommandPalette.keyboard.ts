@@ -1,7 +1,6 @@
+import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/CommandPalette';
+import { findNextEnabledIndex } from '@core/ui/overlays/command-palette/helpers/CommandPaletteHelpers';
 import type { KeyboardEvent } from 'react';
-
-import type { CommandPaletteCommand } from './CommandPalette';
-import { findNextEnabledIndex } from './CommandPaletteHelpers';
 
 interface NavigationParams {
 	readonly filteredCommands: CommandPaletteCommand[];

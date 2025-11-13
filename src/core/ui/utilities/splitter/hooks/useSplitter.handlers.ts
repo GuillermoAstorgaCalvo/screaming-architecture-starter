@@ -1,14 +1,16 @@
-import { type MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
-
-import { INITIAL_RESIZE_STATE } from './useSplitter.handlers.constants';
-import { useResizeEffect } from './useSplitter.handlers.effects';
-import { processMouseDown, processMouseMove } from './useSplitter.handlers.processors';
+import { INITIAL_RESIZE_STATE } from '@core/ui/utilities/splitter/helpers/useSplitter.handlers.constants';
+import {
+	processMouseDown,
+	processMouseMove,
+} from '@core/ui/utilities/splitter/helpers/useSplitter.handlers.processors';
+import { useResizeEffect } from '@core/ui/utilities/splitter/hooks/useSplitter.handlers.effects';
 import type {
 	MouseDownContext,
 	MouseMoveContext,
 	ResizeState,
 	UseSplitterHandlersParams,
-} from './useSplitter.handlers.types';
+} from '@core/ui/utilities/splitter/types/useSplitter.handlers.types';
+import { type MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 
 export function useSplitterHandlers({
 	panelRefs,

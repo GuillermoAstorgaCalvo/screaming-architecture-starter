@@ -1,7 +1,13 @@
-import { type EditorConfigOptions, useRichTextEditor } from './RichTextEditorEditor';
-import { RichTextEditorEditorContent } from './RichTextEditorEditorContent';
-import { getContainerStyle, getContentProps } from './RichTextEditorFieldUtils';
-import type { RichTextEditorFieldProps } from './RichTextEditorTypes';
+import { RichTextEditorEditorContent } from '@core/ui/forms/rich-text-editor/components/RichTextEditorEditorContent';
+import {
+	type EditorConfigOptions,
+	useRichTextEditor,
+} from '@core/ui/forms/rich-text-editor/helpers/RichTextEditorEditor';
+import {
+	getContainerStyle,
+	getContentProps,
+} from '@core/ui/forms/rich-text-editor/helpers/RichTextEditorFieldUtils';
+import type { RichTextEditorFieldProps } from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
 
 export function RichTextEditorField({
 	id: _id,

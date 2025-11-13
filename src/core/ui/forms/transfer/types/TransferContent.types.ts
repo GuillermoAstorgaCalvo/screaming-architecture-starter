@@ -1,8 +1,7 @@
+import type { UseTransferReturn } from '@core/ui/forms/transfer/types/useTransfer.types';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TransferOption } from '@src-types/ui/data/transfer';
 import type { ReactNode } from 'react';
-
-import type { UseTransferReturn } from './useTransfer.types';
 
 export interface TransferContentProps<T = unknown> extends UseTransferReturn<T> {}
 

@@ -1,15 +1,14 @@
-import { useRef } from 'react';
-
+import { ComboboxLabel } from '@core/ui/forms/combobox/components/ComboboxLabel';
+import { ComboboxMessages } from '@core/ui/forms/combobox/components/ComboboxMessages';
+import { ComboboxPopover } from '@core/ui/forms/combobox/components/ComboboxPopover';
+import { ComboboxWrapper } from '@core/ui/forms/combobox/components/ComboboxWrapper';
 import {
 	buildListboxProps,
 	prepareLabelProps,
 	prepareMessagesProps,
-} from './ComboboxContentHelpers';
-import { ComboboxLabel } from './ComboboxLabel';
-import { ComboboxMessages } from './ComboboxMessages';
-import { ComboboxPopover } from './ComboboxPopover';
-import type { ComboboxContentProps } from './ComboboxTypes';
-import { ComboboxWrapper } from './ComboboxWrapper';
+} from '@core/ui/forms/combobox/helpers/ComboboxContentHelpers';
+import type { ComboboxContentProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
+import { useRef } from 'react';
 
 export function ComboboxContent(props: Readonly<ComboboxContentProps>) {
 	const triggerRef = useRef<HTMLDivElement | null>(null);

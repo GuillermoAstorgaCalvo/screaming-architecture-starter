@@ -1,7 +1,9 @@
 import Button from '@core/ui/button/Button';
+import type {
+	PopconfirmContentProps,
+	PopconfirmFooterProps,
+} from '@core/ui/overlays/popconfirm/types/popconfirm.types';
 import type { ReactNode } from 'react';
-
-import type { PopconfirmContentProps, PopconfirmFooterProps } from './popconfirm.types';
 
 /**
  * Renders the footer with cancel and confirm buttons

@@ -1,6 +1,8 @@
+import type {
+	FileUploadFile,
+	FileUploadValidation,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import type { StandardSize } from '@src-types/ui/base';
-
-import type { FileUploadFile, FileUploadValidation } from './FileUploadTypes';
 
 export interface GetFileUploadDropzoneClassesOptions {
 	size: StandardSize;
@@ -90,33 +92,66 @@ export function createFilePreview(file: File): Promise<string> {
 	});
 }
 
-export function validateFile(file: File, validation?: FileUploadValidation): string | undefined {
-	if (!validation) return undefined;
-
-	// Check file size
+function validateFileSize(file: File, validation: FileUploadValidation): string | undefined {
 	if (validation.maxSize && file.size > validation.maxSize) {
 		return `File size exceeds maximum of ${formatFileSize(validation.maxSize)}`;
 	}
 	if (validation.minSize && file.size < validation.minSize) {
 		return `File size is below minimum of ${formatFileSize(validation.minSize)}`;
 	}
+	return undefined;
+}
 
-	// Check file type
-	if (validation.acceptedTypes && validation.acceptedTypes.length > 0) {
-		const fileExtension = getFileExtension(file.name);
-		const fileType = file.type;
-		const isAccepted = validation.acceptedTypes.some(type => {
-			if (type.startsWith('.')) {
-				return `.${fileExtension}` === type.toLowerCase();
-			}
-			return fileType === type || fileType.startsWith(`${type}/`);
-		});
-
-		if (!isAccepted) {
-			return `File type not accepted. Accepted types: ${validation.acceptedTypes.join(', ')}`;
-		}
+function validateFileType(file: File, validation: FileUploadValidation): string | undefined {
+	if (!validation.acceptedTypes || validation.acceptedTypes.length === 0) {
+		return undefined;
 	}
 
+	const fileExtension = getFileExtension(file.name);
+	const fileType = file.type;
+	const isAccepted = validation.acceptedTypes.some(type => {
+		if (type.startsWith('.')) {
+			return `.${fileExtension}` === type.toLowerCase();
+		}
+		return fileType === type || fileType.startsWith(`${type}/`);
+	});
+
+	if (!isAccepted) {
+		return `File type not accepted. Accepted types: ${validation.acceptedTypes.join(', ')}`;
+	}
+
+	return undefined;
+}
+
+export function validateFile(file: File, validation?: FileUploadValidation): string | undefined {
+	if (!validation) return undefined;
+
+	const sizeError = validateFileSize(file, validation);
+	if (sizeError) return sizeError;
+
+	const typeError = validateFileType(file, validation);
+	if (typeError) return typeError;
+
+	return undefined;
+}
+
+function getFileCountMessage(count: number, isMax: boolean): string {
+	const plural = count > 1 ? 's' : '';
+	const limit = isMax ? 'Maximum' : 'Minimum';
+	const action = isMax ? 'allowed' : 'required';
+	return `${limit} ${count} file${plural} ${action}`;
+}
+
+function validateFileCount(
+	files: readonly FileUploadFile[],
+	validation: FileUploadValidation
+): string | undefined {
+	if (validation.maxFiles && files.length > validation.maxFiles) {
+		return getFileCountMessage(validation.maxFiles, true);
+	}
+	if (validation.minFiles && files.length < validation.minFiles) {
+		return getFileCountMessage(validation.minFiles, false);
+	}
 	return undefined;
 }
 
@@ -126,13 +161,5 @@ export function validateFiles(
 ): string | undefined {
 	if (!validation) return undefined;
 
-	// Check file count
-	if (validation.maxFiles && files.length > validation.maxFiles) {
-		return `Maximum ${validation.maxFiles} file${validation.maxFiles > 1 ? 's' : ''} allowed`;
-	}
-	if (validation.minFiles && files.length < validation.minFiles) {
-		return `Minimum ${validation.minFiles} file${validation.minFiles > 1 ? 's' : ''} required`;
-	}
-
-	return undefined;
+	return validateFileCount(files, validation);
 }

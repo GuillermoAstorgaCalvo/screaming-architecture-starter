@@ -1,8 +1,7 @@
+import { defaultFilterFn } from '@core/ui/forms/multi-select/helpers/MultiSelectHelpers';
+import { useMultiSelectKeyboard } from '@core/ui/forms/multi-select/hooks/useMultiSelectKeyboard';
+import type { MultiSelectOption, MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
-
-import type { MultiSelectOption, MultiSelectProps } from './MultiSelect';
-import { defaultFilterFn } from './MultiSelectHelpers';
-import { useMultiSelectKeyboard } from './useMultiSelectKeyboard';
 
 export function useMultiSelectValue(
 	props: Readonly<Pick<MultiSelectProps, 'value' | 'defaultValue' | 'onChange'>>

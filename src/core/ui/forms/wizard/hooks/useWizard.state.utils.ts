@@ -1,11 +1,10 @@
-import { useCallback, useMemo } from 'react';
-
+import { calculateWizardProgressByCompletion } from '@core/ui/forms/wizard/helpers/wizardUtils';
 import type {
 	ResetHandlerParams,
 	WizardState,
 	WizardStateMemoParams,
-} from './useWizard.state.types';
-import { calculateWizardProgressByCompletion } from './wizardUtils';
+} from '@core/ui/forms/wizard/types/useWizard.state.types';
+import { useCallback, useMemo } from 'react';
 
 /**
  * Hook to create reset handler for wizard state

@@ -1,7 +1,6 @@
+import type { NumberInputFieldProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
+import type { UseNumberInputFieldPropsOptions } from '@core/ui/forms/number-input/types/useNumberInput.types';
 import { useMemo } from 'react';
-
-import type { NumberInputFieldProps } from './NumberInputTypes';
-import type { UseNumberInputFieldPropsOptions } from './useNumberInput.types';
 
 /**
  * Hook to build memoized field props for the NumberInputField component

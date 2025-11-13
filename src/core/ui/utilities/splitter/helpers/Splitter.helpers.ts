@@ -1,8 +1,7 @@
+import { SplitterPanel } from '@core/ui/utilities/splitter/components/SplitterPanel';
 import type { SplitterOrientation, SplitterPanelConfig } from '@src-types/ui/layout/splitter';
 import { Children, type ComponentProps, isValidElement, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import { SplitterPanel } from './SplitterPanel';
 
 /**
  * Conditionally include property if value is defined

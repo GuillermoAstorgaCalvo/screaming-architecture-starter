@@ -1,4 +1,4 @@
-import type { ColorInputWrapperProps } from './ColorInputTypes';
+import type { ColorInputWrapperProps } from '@core/ui/forms/color-input/types/ColorInputTypes';
 
 export function ColorInputWrapper({
 	fullWidth,

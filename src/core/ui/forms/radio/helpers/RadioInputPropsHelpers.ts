@@ -1,7 +1,6 @@
+import type { RadioHandlers } from '@core/ui/forms/radio/helpers/RadioHandlers';
+import type { RadioFieldProps } from '@core/ui/forms/radio/types/RadioTypes';
 import type { RefObject } from 'react';
-
-import type { RadioHandlers } from './RadioHandlers';
-import type { RadioFieldProps } from './RadioTypes';
 
 function extractRadioFieldProperties(props: Readonly<RadioFieldProps>) {
 	return {

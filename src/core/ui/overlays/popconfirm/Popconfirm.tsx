@@ -1,8 +1,10 @@
+import { buildPopconfirmSetup } from '@core/ui/overlays/popconfirm/helpers/Popconfirm.builders';
+import {
+	DEFAULT_CANCEL_LABEL,
+	DEFAULT_CONFIRM_LABEL,
+} from '@core/ui/overlays/popconfirm/helpers/popconfirm.constants';
+import type { PopconfirmProps } from '@core/ui/overlays/popconfirm/types/popconfirm.types';
 import Popover from '@core/ui/popover/Popover';
-
-import { buildPopconfirmSetup } from './Popconfirm.builders';
-import { DEFAULT_CANCEL_LABEL, DEFAULT_CONFIRM_LABEL } from './popconfirm.constants';
-import type { PopconfirmProps } from './popconfirm.types';
 
 /**
  * Popconfirm - Lightweight confirmation popover (not a modal)

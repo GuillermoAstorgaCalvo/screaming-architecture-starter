@@ -1,7 +1,11 @@
+import { createModalEventHandlers } from '@core/ui/overlays/modal/helpers/ModalHelpers';
+import {
+	useEscapeKey,
+	useFocusTrap,
+	useModalFocus,
+	useModalId,
+} from '@core/ui/overlays/modal/hooks/useModal';
 import { type KeyboardEvent, type MouseEvent, type RefObject, useRef } from 'react';
-
-import { createModalEventHandlers } from './ModalHelpers';
-import { useEscapeKey, useFocusTrap, useModalFocus, useModalId } from './useModal';
 
 export interface ModalSetupResult {
 	readonly modalRef: RefObject<HTMLDialogElement | null>;

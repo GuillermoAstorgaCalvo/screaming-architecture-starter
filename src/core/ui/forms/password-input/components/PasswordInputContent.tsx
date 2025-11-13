@@ -1,8 +1,8 @@
-import { PasswordInputField } from './PasswordInputField';
-import { PasswordInputLabel } from './PasswordInputLabel';
-import { PasswordInputMessages } from './PasswordInputMessages';
-import type { PasswordInputContentProps } from './PasswordInputTypes';
-import { PasswordInputWrapper } from './PasswordInputWrapper';
+import { PasswordInputField } from '@core/ui/forms/password-input/components/PasswordInputField';
+import { PasswordInputLabel } from '@core/ui/forms/password-input/components/PasswordInputLabel';
+import { PasswordInputMessages } from '@core/ui/forms/password-input/components/PasswordInputMessages';
+import { PasswordInputWrapper } from '@core/ui/forms/password-input/components/PasswordInputWrapper';
+import type { PasswordInputContentProps } from '@core/ui/forms/password-input/types/PasswordInputTypes';
 
 export function PasswordInputContent({
 	state,

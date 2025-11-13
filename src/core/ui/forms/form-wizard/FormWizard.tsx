@@ -1,8 +1,7 @@
+import FormWizardView from '@core/ui/forms/form-wizard/components/FormWizardView';
+import { useFormWizardInit } from '@core/ui/forms/form-wizard/helpers/FormWizard.init';
+import type { FormWizardProps } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { FieldValues } from 'react-hook-form';
-
-import { useFormWizardInit } from './FormWizard.init';
-import type { FormWizardProps } from './FormWizardTypes';
-import FormWizardView from './FormWizardView';
 
 /**
  * FormWizard - Multi-step form component with validation and data persistence

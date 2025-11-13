@@ -1,7 +1,6 @@
+import { TransferContent } from '@core/ui/forms/transfer/components/TransferContent';
+import { useTransfer } from '@core/ui/forms/transfer/hooks/useTransfer';
 import type { TransferProps } from '@src-types/ui/data/transfer';
-
-import { TransferContent } from './TransferContent';
-import { useTransfer } from './useTransfer';
 
 /**
  * Transfer - Component for moving items between two lists

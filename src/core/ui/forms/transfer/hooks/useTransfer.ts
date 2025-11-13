@@ -1,9 +1,11 @@
+import { buildTransferReturn } from '@core/ui/forms/transfer/helpers/useTransfer.helpers';
+import { useTransferComputation } from '@core/ui/forms/transfer/hooks/useTransfer.computation';
+import {
+	useControlledValue,
+	useTransferState,
+} from '@core/ui/forms/transfer/hooks/useTransfer.state';
+import type { UseTransferReturn } from '@core/ui/forms/transfer/types/useTransfer.types';
 import type { TransferProps } from '@src-types/ui/data/transfer';
-
-import { useTransferComputation } from './useTransfer.computation';
-import { buildTransferReturn } from './useTransfer.helpers';
-import { useControlledValue, useTransferState } from './useTransfer.state';
-import type { UseTransferReturn } from './useTransfer.types';
 
 /**
  * Hook for managing Transfer component state and interactions

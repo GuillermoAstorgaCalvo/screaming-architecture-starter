@@ -18,9 +18,9 @@
  * ```
  */
 
-import { MotionBox } from './MotionBox';
-import type { MotionSlideProps } from './motionTypes';
-import { getSlideVariant } from './motionUtils';
+import { getSlideVariant } from '@core/ui/utilities/motion/helpers/motionUtils';
+import { MotionBox } from '@core/ui/utilities/motion/MotionBox';
+import type { MotionSlideProps } from '@core/ui/utilities/motion/types/motionTypes';
 
 /**
  * MotionSlide component

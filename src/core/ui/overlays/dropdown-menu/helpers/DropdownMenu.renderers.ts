@@ -1,7 +1,6 @@
+import { renderDropdownPopover } from '@core/ui/overlays/dropdown-menu/components/DropdownMenuRenderers.popover';
+import type { DropdownPosition } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import type { KeyboardEvent, ReactElement, ReactNode, RefObject } from 'react';
-
-import type { DropdownPosition } from './DropdownMenu.types';
-import { renderDropdownPopover } from './DropdownMenuRenderers.popover';
 
 export interface RenderDropdownMenuParams {
 	readonly open: boolean;

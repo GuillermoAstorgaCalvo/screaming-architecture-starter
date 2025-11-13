@@ -1,13 +1,15 @@
 import Divider from '@core/ui/divider/Divider';
+import { MenubarSubmenuItem } from '@core/ui/navigation/menubar/components/MenubarSubmenuItem';
+import {
+	getMenubarItemClasses,
+	getMenubarSubmenuClasses,
+} from '@core/ui/navigation/menubar/helpers/MenubarHelpers';
 import Popover from '@core/ui/popover/Popover';
 import type {
 	MenubarItem as MenubarItemType,
 	MenubarSubmenuItemOrSeparator,
 } from '@src-types/ui/navigation/menubar';
 import type { ReactNode, RefObject } from 'react';
-
-import { getMenubarItemClasses, getMenubarSubmenuClasses } from './MenubarHelpers';
-import { MenubarSubmenuItem } from './MenubarSubmenuItem';
 
 interface MenubarSubmenuProps {
 	readonly item: MenubarItemType;

@@ -1,10 +1,9 @@
+import { useMapInitialization } from '@core/ui/media/map/hooks/useMapInitialization';
+import { useMapMarkers } from '@core/ui/media/map/hooks/useMapMarkers';
+import { useMapOptionsUpdate } from '@core/ui/media/map/hooks/useMapOptionsUpdate';
+import { useResolvedApiKey } from '@core/ui/media/map/hooks/useResolvedApiKey';
 import type { MapProps } from '@src-types/ui/maps';
 import { type RefObject, useRef } from 'react';
-
-import { useMapInitialization } from './useMapInitialization';
-import { useMapMarkers } from './useMapMarkers';
-import { useMapOptionsUpdate } from './useMapOptionsUpdate';
-import { useResolvedApiKey } from './useResolvedApiKey';
 
 interface UseMapStateParams {
 	options: MapProps['options'];

@@ -1,6 +1,5 @@
+import type { FileUploadContainerProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { FileUploadContainerProps } from './FileUploadTypes';
 
 export function FileUploadContainer({
 	children,

@@ -1,13 +1,13 @@
 import Divider from '@core/ui/divider/Divider';
-import { createRef, type ReactNode } from 'react';
-
-import { ARIA_ATTRIBUTES, MENU_STYLES } from './DropdownMenuHelpers';
+import { MenuItemButton } from '@core/ui/overlays/dropdown-menu/components/MenuItemButton';
+import { MENU_STYLES } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuHelpers';
+import { ARIA_ATTRIBUTES } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuTrigger';
 import {
 	isSeparator,
 	type RenderMenuContentParams,
 	type RenderMenuItemParams,
-} from './DropdownMenuRenderers.types';
-import { MenuItemButton } from './MenuItemButton';
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenuRenderers.types';
+import { createRef, type ReactNode } from 'react';
 
 export function renderMenuItem({
 	item,

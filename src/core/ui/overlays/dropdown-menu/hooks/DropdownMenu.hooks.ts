@@ -1,8 +1,10 @@
+import { renderMenuContent } from '@core/ui/overlays/dropdown-menu/components/DropdownMenuRenderers.items';
+import { createTriggerNode } from '@core/ui/overlays/dropdown-menu/helpers/DropdownMenuRenderers.trigger';
+import type {
+	DropdownMenuItem,
+	DropdownMenuItemOrSeparator,
+} from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import { type ReactElement, type ReactNode, type RefObject, useMemo } from 'react';
-
-import type { DropdownMenuItem, DropdownMenuItemOrSeparator } from './DropdownMenu.types';
-import { renderMenuContent } from './DropdownMenuRenderers.items';
-import { createTriggerNode } from './DropdownMenuRenderers.trigger';
 
 export interface UsePrepareDropdownMenuContentParams {
 	readonly trigger: ReactElement;

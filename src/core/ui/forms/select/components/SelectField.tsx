@@ -1,6 +1,5 @@
+import type { SelectFieldProps } from '@core/ui/forms/select/types/SelectTypes';
 import { classNames } from '@core/utils/classNames';
-
-import type { SelectFieldProps } from './SelectTypes';
 
 // ============================================================================
 // Arrow Icon Component

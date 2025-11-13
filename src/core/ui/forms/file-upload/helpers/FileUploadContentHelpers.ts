@@ -1,7 +1,9 @@
+import type {
+	FileUploadContentProps,
+	FileUploadFile,
+} from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ChangeEvent, DragEvent, RefObject } from 'react';
-
-import type { FileUploadContentProps, FileUploadFile } from './FileUploadTypes';
 
 export interface FileUploadFieldState {
 	readonly acceptString?: string;
@@ -41,32 +43,47 @@ export interface FileUploadDropzoneSectionProps {
 	readonly onClick: () => void;
 }
 
-export interface DropzoneSectionParams {
-	readonly fileUploadId?: string;
-	readonly inputId: string;
-	readonly size: StandardSize;
-	readonly dragActive: boolean;
-	readonly state: FileUploadFieldState;
-	readonly onDragEnter: (e: DragEvent<HTMLDivElement>) => void;
-	readonly onDragLeave: (e: DragEvent<HTMLDivElement>) => void;
-	readonly onDragOver: (e: DragEvent<HTMLDivElement>) => void;
-	readonly onDrop: (e: DragEvent<HTMLDivElement>) => void;
-	readonly onClick: () => void;
-}
-
-export interface PreviewPropsParams {
-	readonly hasPreview: boolean;
-	readonly files: readonly FileUploadFile[];
-	readonly size: StandardSize;
-	readonly previewProps: Readonly<{ showProgress?: boolean }>;
-	readonly onFileRemove: (fileId: string) => void;
-}
+export type DropzoneSectionParams = FileUploadDropzoneSectionProps;
 
 export interface PreviewPropsFromStateParams {
 	readonly state: FileUploadFieldState;
 	readonly files: readonly FileUploadFile[];
 	readonly size: StandardSize;
 	readonly onFileRemove: (fileId: string) => void;
+}
+
+function normalizeAcceptString(accept?: string | string[]): string | undefined {
+	return Array.isArray(accept) ? accept.join(',') : accept;
+}
+
+interface BuildInputBasePropsParams {
+	readonly inputId: string;
+	readonly multiple: boolean;
+	readonly acceptString: string | undefined;
+	readonly isDisabled: boolean;
+	readonly required: boolean | undefined;
+	readonly fileUploadId: string | undefined;
+	readonly onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+function buildInputBaseProps(
+	params: Readonly<BuildInputBasePropsParams>
+): Omit<Readonly<FileUploadInputProps>, 'inputRef'> {
+	return {
+		inputId: params.inputId,
+		multiple: params.multiple,
+		...(params.acceptString && { accept: params.acceptString }),
+		disabled: params.isDisabled,
+		...(params.required !== undefined && { required: params.required }),
+		...(params.fileUploadId && { fileUploadId: params.fileUploadId }),
+		onChange: params.onInputChange,
+	} as const;
+}
+
+function buildPreviewPropsFromShowProgress(
+	showProgress: boolean | undefined
+): Readonly<{ showProgress?: boolean }> {
+	return showProgress === undefined ? {} : { showProgress };
 }
 
 export function prepareFileUploadState(
@@ -84,21 +101,21 @@ export function prepareFileUploadState(
 		showPreview,
 		showProgress,
 	} = props;
-	const acceptString = Array.isArray(accept) ? accept.join(',') : accept;
+	const acceptString = normalizeAcceptString(accept);
 	const isDisabled = disabled ?? false;
 	const hasPreview = Boolean(showPreview && files.length > 0);
-	const previewProps = showProgress === undefined ? {} : { showProgress };
-	const inputBaseProps = {
+	const previewProps = buildPreviewPropsFromShowProgress(showProgress);
+	const inputBaseProps = buildInputBaseProps({
 		inputId,
 		multiple,
-		...(acceptString ? { accept: acceptString } : {}),
-		disabled: isDisabled,
-		...(required !== undefined && { required }),
-		...(fileUploadId ? { fileUploadId } : {}),
-		onChange: onInputChange,
-	} as const;
+		acceptString,
+		isDisabled,
+		required,
+		fileUploadId,
+		onInputChange,
+	});
 	return {
-		...(acceptString ? { acceptString } : {}),
+		...(acceptString && { acceptString }),
 		hasPreview,
 		inputBaseProps,
 		isDisabled,
@@ -112,44 +129,19 @@ export function buildLabelSectionProps(
 	required?: boolean
 ): Readonly<FileUploadLabelSectionProps> {
 	return {
-		...(fileUploadId ? { fileUploadId } : {}),
-		...(label ? { label } : {}),
-		...(required === undefined ? {} : { required }),
+		...(fileUploadId && { fileUploadId }),
+		...(label && { label }),
+		...(required !== undefined && { required }),
 	};
 }
 
 export function buildDropzoneSectionProps(
 	params: Readonly<DropzoneSectionParams>
 ): Readonly<FileUploadDropzoneSectionProps> {
-	return {
-		...(params.fileUploadId ? { fileUploadId: params.fileUploadId } : {}),
-		inputId: params.inputId,
-		size: params.size,
-		dragActive: params.dragActive,
-		state: params.state,
-		onDragEnter: params.onDragEnter,
-		onDragLeave: params.onDragLeave,
-		onDragOver: params.onDragOver,
-		onDrop: params.onDrop,
-		onClick: params.onClick,
-	};
+	return params;
 }
 
-export function buildPreviewProps(params: Readonly<PreviewPropsParams>) {
-	return {
-		hasPreview: params.hasPreview,
-		files: params.files,
-		size: params.size,
-		previewProps: params.previewProps,
-		onFileRemove: params.onFileRemove,
-	};
-}
-
-export function buildDropzoneParamsFromProps(
-	params: Readonly<DropzoneSectionParams>
-): Readonly<FileUploadDropzoneSectionProps> {
-	return buildDropzoneSectionProps(params);
-}
+export const buildDropzoneParamsFromProps = buildDropzoneSectionProps;
 
 export function buildInputProps(
 	state: FileUploadFieldState,
@@ -159,11 +151,11 @@ export function buildInputProps(
 }
 
 export function buildPreviewPropsFromState(params: Readonly<PreviewPropsFromStateParams>) {
-	return buildPreviewProps({
+	return {
 		hasPreview: params.state.hasPreview,
 		files: params.files,
 		size: params.size,
 		previewProps: params.state.previewProps,
 		onFileRemove: params.onFileRemove,
-	});
+	};
 }

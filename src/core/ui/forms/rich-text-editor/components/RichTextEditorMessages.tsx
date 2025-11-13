@@ -1,4 +1,4 @@
-import type { RichTextEditorMessagesProps } from './RichTextEditorTypes';
+import type { RichTextEditorMessagesProps } from '@core/ui/forms/rich-text-editor/types/RichTextEditorTypes';
 
 export function RichTextEditorMessages({
 	editorId,

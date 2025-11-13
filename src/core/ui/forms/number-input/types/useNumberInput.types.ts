@@ -1,9 +1,8 @@
+import type { NumberInputHandlers } from '@core/ui/forms/number-input/helpers/NumberInputHandlers';
+import type { NumberInputValueAndCapability } from '@core/ui/forms/number-input/helpers/NumberInputValue';
+import type { UseNumberInputStateReturn } from '@core/ui/forms/number-input/types/NumberInputTypes';
 import type { StandardSize } from '@src-types/ui/base';
 import type { InputHTMLAttributes } from 'react';
-
-import type { NumberInputHandlers } from './NumberInputHandlers';
-import type { UseNumberInputStateReturn } from './NumberInputTypes';
-import type { NumberInputValueAndCapability } from './NumberInputValue';
 
 export type NumberInputValue = number | string | undefined;
 

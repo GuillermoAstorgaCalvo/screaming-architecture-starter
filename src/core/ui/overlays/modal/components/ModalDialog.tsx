@@ -1,9 +1,8 @@
+import { ModalBody } from '@core/ui/overlays/modal/components/ModalBody';
+import { createDialogCancelHandler } from '@core/ui/overlays/modal/helpers/ModalHelpers';
 import { getModalDialogVariantClasses } from '@core/ui/variants/modal';
 import type { ModalSize } from '@src-types/ui/base';
 import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from 'react';
-
-import { ModalBody } from './ModalBody';
-import { createDialogCancelHandler } from './ModalHelpers';
 
 interface ModalDialogProps {
 	readonly modalRef: RefObject<HTMLDialogElement | null>;

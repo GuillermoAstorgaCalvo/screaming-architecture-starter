@@ -1,7 +1,6 @@
+import type { VideoDimension } from '@core/ui/media/video/helpers/video.styles';
 import type { VideoProps } from '@src-types/ui/feedback';
 import type { CSSProperties, ReactNode, SyntheticEvent } from 'react';
-
-import type { VideoDimension } from './video.styles';
 
 export interface UseVideoLifecycleParams {
 	src: VideoProps['src'];

@@ -1,7 +1,13 @@
+import {
+	generateTagInputId,
+	getAriaDescribedBy,
+	getTagInputClasses,
+} from '@core/ui/forms/tag-input/helpers/TagInputHelpers';
+import type {
+	UseTagInputStateOptions,
+	UseTagInputStateReturn,
+} from '@core/ui/forms/tag-input/types/TagInputTypes';
 import { useId } from 'react';
-
-import { generateTagInputId, getAriaDescribedBy, getTagInputClasses } from './TagInputHelpers';
-import type { UseTagInputStateOptions, UseTagInputStateReturn } from './TagInputTypes';
 
 /**
  * Hook to compute tag input state (ID, error state, ARIA attributes, and classes)

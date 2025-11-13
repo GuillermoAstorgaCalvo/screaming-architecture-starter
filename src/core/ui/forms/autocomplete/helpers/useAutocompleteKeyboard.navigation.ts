@@ -1,7 +1,6 @@
+import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
+import { findNextEnabledIndex } from '@core/ui/forms/autocomplete/helpers/useAutocompleteHelpers';
 import { useCallback } from 'react';
-
-import type { AutocompleteOption } from './Autocomplete';
-import { findNextEnabledIndex } from './useAutocompleteHelpers';
 
 export interface UseArrowHandlersParams {
 	isOpen: boolean;

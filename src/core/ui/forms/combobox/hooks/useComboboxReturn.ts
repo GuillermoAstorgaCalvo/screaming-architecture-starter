@@ -1,8 +1,8 @@
+import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
+import type { useComboboxState } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
+import type { ComboboxContentProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
 import type { ReactNode } from 'react';
 
-import type { ComboboxOption } from './Combobox';
-import type { useComboboxState } from './ComboboxHelpers';
-import type { ComboboxContentProps } from './ComboboxTypes';
 import type { createFieldProps } from './useComboboxField';
 import type { useComboboxInteractions } from './useComboboxState';
 

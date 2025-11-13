@@ -1,12 +1,11 @@
-import type { VideoProps } from '@src-types/ui/feedback';
-import type { CSSProperties, ReactElement } from 'react';
-
-import { createVideoClasses, createVideoStyle } from './video.styles';
+import { createVideoClasses, createVideoStyle } from '@core/ui/media/video/helpers/video.styles';
 import type {
 	ForwardedVideoProps,
 	RenderReadyVideoParams,
 	VideoLifecycleState,
-} from './video.types';
+} from '@core/ui/media/video/types/video.types';
+import type { VideoProps } from '@src-types/ui/feedback';
+import type { CSSProperties, ReactElement } from 'react';
 
 interface ParsedVideoSource {
 	videoSrc: string | undefined;

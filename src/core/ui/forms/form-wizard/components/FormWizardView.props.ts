@@ -1,6 +1,6 @@
+import type { FormWizardProps } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
 import type { FieldValues } from 'react-hook-form';
 
-import type { FormWizardProps } from './FormWizardTypes';
 import type { ExtractedWizardProps } from './FormWizardView.helpers';
 
 /**

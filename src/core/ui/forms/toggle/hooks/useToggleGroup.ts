@@ -1,6 +1,8 @@
+import type {
+	ToggleGroupContextValue,
+	ToggleGroupProps,
+} from '@core/ui/forms/toggle/types/ToggleGroupTypes';
 import { useCallback, useMemo, useState } from 'react';
-
-import type { ToggleGroupContextValue, ToggleGroupProps } from './ToggleGroupTypes';
 
 function createSelectedValues(currentValue: string | string[]): string[] {
 	if (Array.isArray(currentValue)) {

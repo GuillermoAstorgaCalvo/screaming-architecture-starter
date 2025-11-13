@@ -1,6 +1,5 @@
+import type { OTPInputFieldProps } from '@core/ui/forms/otp-input/types/OTPInputTypes';
 import type { ChangeEvent, ClipboardEvent, FocusEvent, KeyboardEvent } from 'react';
-
-import type { OTPInputFieldProps } from './OTPInputTypes';
 
 interface CreateRefCallbackParams {
 	readonly index: number;

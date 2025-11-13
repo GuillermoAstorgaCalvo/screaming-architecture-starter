@@ -1,10 +1,9 @@
+import { DialogBody } from '@core/ui/overlays/dialog/components/DialogBody';
+import { createDialogCancelHandler } from '@core/ui/overlays/dialog/helpers/DialogHelpers';
+import type { DialogVariant } from '@core/ui/overlays/dialog/types/dialog.types';
 import { getDialogDialogVariantClasses } from '@core/ui/variants/dialog';
 import type { ModalSize } from '@src-types/ui/base';
 import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from 'react';
-
-import type { DialogVariant } from './dialog.types';
-import { DialogBody } from './DialogBody';
-import { createDialogCancelHandler } from './DialogHelpers';
 
 interface DialogDialogProps {
 	readonly dialogRef: RefObject<HTMLDialogElement | null>;

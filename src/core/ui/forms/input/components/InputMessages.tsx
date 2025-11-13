@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { InputMessagesProps } from '@core/ui/forms/input/types/InputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { InputMessagesProps } from './InputTypes';
 
 export function InputMessages({ inputId, error, helperText }: Readonly<InputMessagesProps>) {
 	const hasError = Boolean(error);

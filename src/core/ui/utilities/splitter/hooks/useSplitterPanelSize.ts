@@ -1,8 +1,10 @@
+import {
+	parseDefaultSize,
+	setDimension,
+} from '@core/ui/utilities/splitter/helpers/useSplitter.helpers';
+import type { PanelState } from '@core/ui/utilities/splitter/hooks/useSplitter.state';
 import type { SplitterOrientation, SplitterSize } from '@src-types/ui/layout/splitter';
 import { type RefObject, useEffect } from 'react';
-
-import { parseDefaultSize, setDimension } from './useSplitter.helpers';
-import type { PanelState } from './useSplitter.state';
 
 interface UseSplitterPanelSizeParams {
 	readonly panelRef: RefObject<HTMLDivElement | null>;

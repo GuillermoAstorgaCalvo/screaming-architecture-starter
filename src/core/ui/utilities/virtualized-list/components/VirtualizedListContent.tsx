@@ -1,7 +1,9 @@
+import {
+	getVirtualItemsStyle,
+	mapVirtualItems,
+} from '@core/ui/utilities/virtualized-list/helpers/VirtualizedListContentHelpers';
+import type { VirtualizedListContentProps } from '@core/ui/utilities/virtualized-list/types/VirtualizedListContentTypes';
 import { useMemo } from 'react';
-
-import { getVirtualItemsStyle, mapVirtualItems } from './VirtualizedListContentHelpers';
-import type { VirtualizedListContentProps } from './VirtualizedListContentTypes';
 
 /**
  * Content component for virtualized list

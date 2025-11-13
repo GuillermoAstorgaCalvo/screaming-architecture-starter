@@ -1,6 +1,5 @@
+import type { LoadingWrapperStateParams } from '@core/ui/utilities/loading-wrapper/types/LoadingWrapperHelpers.state.types';
 import type { ReactNode } from 'react';
-
-import type { LoadingWrapperStateParams } from './LoadingWrapperHelpers.state.types';
 
 type OptionalStateProps = Readonly<{
 	onRetry?: (() => void) | undefined;

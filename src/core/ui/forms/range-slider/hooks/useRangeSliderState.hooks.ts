@@ -1,6 +1,8 @@
+import {
+	calculatePercentage,
+	getThumbOffset,
+} from '@core/ui/forms/range-slider/helpers/RangeSliderHelpers';
 import { type RefObject, useEffect, useRef, useState } from 'react';
-
-import { calculatePercentage, getThumbOffset } from './RangeSliderHelpers';
 
 export interface UseRangeValueReturn {
 	readonly isControlled: boolean;

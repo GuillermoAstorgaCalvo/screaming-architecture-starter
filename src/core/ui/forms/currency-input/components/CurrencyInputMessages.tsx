@@ -1,7 +1,6 @@
 import ErrorText from '@core/ui/error-text/ErrorText';
+import type { CurrencyInputMessagesProps } from '@core/ui/forms/currency-input/types/CurrencyInputTypes';
 import HelperText from '@core/ui/helper-text/HelperText';
-
-import type { CurrencyInputMessagesProps } from './CurrencyInputTypes';
 
 export function CurrencyInputMessages({
 	inputId,
