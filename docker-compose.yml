@@ -10,7 +10,7 @@ services:
         VCS_REF: ${VCS_REF:-unknown}
         VERSION: ${VERSION:-dev}
         NODE_VERSION: ${NODE_VERSION:-22.21.1}
-        PNPM_VERSION: ${PNPM_VERSION:-10.20.0}
+        PNPM_VERSION: ${PNPM_VERSION:-10.22.0}
     container_name: screaming-architecture-starter
     image: screaming-architecture-starter:latest
     # Restart policy for development

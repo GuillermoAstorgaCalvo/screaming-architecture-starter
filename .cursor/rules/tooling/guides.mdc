@@ -13,7 +13,7 @@ alwaysApply: false
 
 ### Setup
 
-0. Enable pnpm (recommended): `corepack enable && corepack prepare pnpm@10.20.0 --activate`
+0. Enable pnpm (recommended): `corepack enable && corepack prepare pnpm@10.22.0 --activate`
 1. Install deps: `pnpm install`
 2. Start dev server: `pnpm dev`
 3. Run tests: `pnpm test`

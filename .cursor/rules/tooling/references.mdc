@@ -17,7 +17,7 @@ Use these as references when bootstrapping a new repo from this template.
 	"name": "app-name",
 	"private": true,
 	"type": "module",
-	"packageManager": "pnpm@10.20.0",
+	"packageManager": "pnpm@10.22.0",
 	"engines": { "node": ">=22.21.1" },
 	"scripts": {
 		"dev": "vite",
@@ -577,7 +577,7 @@ Short description of the app.
 
 ## Getting Started
 
-1. corepack enable && corepack prepare pnpm@10.20.0 --activate
+1. corepack enable && corepack prepare pnpm@10.22.0 --activate
 2. pnpm install
 3. pnpm dev
 

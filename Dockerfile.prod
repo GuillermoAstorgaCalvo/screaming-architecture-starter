@@ -10,7 +10,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION=latest
 ARG NODE_VERSION=22.21.1
-ARG PNPM_VERSION=10.20.0
+ARG PNPM_VERSION=10.22.0
 
 # ============================================================================
 # Stage 1: Dependencies

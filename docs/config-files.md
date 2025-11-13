@@ -325,7 +325,7 @@ Ensures consistent LF line endings across platforms.
 
 Project dependencies and scripts:
 
-- **Package Manager**: pnpm 10.20.0 (via Corepack)
+- **Package Manager**: pnpm 10.22.0 (via Corepack)
 - **Node Version**: >=22.21.1
 - **Scripts**: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `clean`, `typecheck`, `test`, `test:watch`, `test:ui`, `test:coverage`, `test:e2e`, `test:e2e:ui`
 

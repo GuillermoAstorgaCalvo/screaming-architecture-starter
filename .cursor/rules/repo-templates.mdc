@@ -15,7 +15,7 @@ Use these baselines to bootstrap new repos consistently. Prefer keeping these up
 	"name": "app-name",
 	"private": true,
 	"type": "module",
-	"packageManager": "pnpm@10.20.0",
+	"packageManager": "pnpm@10.22.0",
 	"engines": { "node": ">=22.21.1" },
 	"scripts": {
 		"dev": "vite",
