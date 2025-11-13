@@ -6,6 +6,7 @@
  */
 
 import type { HttpClientError, HttpClientResponse } from '@core/ports/HttpPort';
+import type { Result } from '@src-types/result';
 
 /**
  * Standard API response structure
@@ -51,6 +52,10 @@ export interface ApiResponseWithMeta<T = unknown> extends HttpClientResponse<T> 
 		/** Timestamp of the response */
 		timestamp?: string;
 	};
+	/** Optional success message from API */
+	message?: string;
+	/** Optional metadata wrapper from API */
+	metadata?: Record<string, unknown>;
 }
 
 /**
@@ -101,7 +106,18 @@ export interface ApiRequestOptions {
 /**
  * Generic API service interface
  */
-export interface ApiService<TRequest = unknown, TResponse = unknown> {
+export type ApiServiceResult<TResponse, TError = unknown> = Result<
+	ApiResponseWithMeta<TResponse>,
+	TError
+>;
+
+/**
+ * Generic API service interface
+ */
+export interface ApiService<TRequest = unknown, TResponse = unknown, TError = unknown> {
 	/** Execute the API request */
-	execute(request: TRequest, options?: ApiRequestOptions): Promise<ApiResponseWithMeta<TResponse>>;
+	execute(
+		request: TRequest,
+		options?: ApiRequestOptions
+	): Promise<ApiServiceResult<TResponse, TError>>;
 }

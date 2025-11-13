@@ -8,6 +8,7 @@
 		"noUnusedLocals": false,
 		"noUnusedParameters": false
 	},
-	"include": ["tests", "src"],
+	"references": [{ "path": "./tsconfig.app.json" }],
+	"include": ["tests"],
 	"exclude": ["node_modules", "dist", "build", "e2e"]
 }

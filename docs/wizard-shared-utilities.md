@@ -6,94 +6,70 @@ This document outlines the shared utilities extracted from `Wizard` and `FormWiz
 
 ### 1. Progress Calculation
 
-**Location:** `src/core/ui/wizard/wizardUtils.ts`
+**Location:** `src/core/ui/forms/wizard/wizardUtils.ts`
 
-Two variants for different progress calculation strategies:
+Two variants support different progress strategies:
 
 #### `calculateWizardProgress(activeStep, totalSteps)`
 
-- **Used by:** `FormWizard`
+- **Used by:** `FormWizardView.metadata.ts` through `calculateStepMetadata`
 - **Logic:** `(activeStep + 1) / totalSteps * 100`
-- **Use case:** Simple progress based on current step position
+- **Use case:** Step-based progress indicator
 
 #### `calculateWizardProgressByCompletion(totalSteps, completedSteps, skippedSteps)`
 
-- **Used by:** `Wizard`
+- **Used by:** `useWizard.state.utils.ts`
 - **Logic:** `(completedSteps.size + skippedSteps.size) / totalSteps * 100`
-- **Use case:** Progress based on actual step completion status
+- **Use case:** Completion-based progress tracking
 
 ### 2. Step Conversion
 
 **Function:** `convertStepsToStepperSteps(steps)`
 
-Converts wizard step configurations to `StepperStep[]` format used by the `Stepper` component.
+Converts wizard step definitions into the shared `StepperStep[]` shape used by the Stepper component.
 
 **Used by:**
 
-- `FormWizard`: `convertStepsToStepperSteps()` in `FormWizardView.tsx`
+- `FormWizard`: `prepareWizardViewData()` in `FormWizardView.data.ts`
 - `Wizard`: `useStepperSteps()` in `WizardHelpers.ts`
 
 ### 3. Step Metadata
 
 **Function:** `calculateStepMetadata(activeStep, totalSteps)`
 
-Calculates common step metadata:
+Calculates reusable step metadata:
 
-- `isFirstStep`: Whether current step is the first
-- `isLastStep`: Whether current step is the last
-- `progress`: Progress percentage
+- `isFirstStep`: Whether the current step is the first
+- `isLastStep`: Whether the current step is the last
+- `progress`: Calculated via `calculateWizardProgress`
 
 **Used by:**
 
-- `FormWizard`: `getStepMetadata()` in `FormWizardView.tsx`
+- `FormWizard`: `getStepMetadata()` in `FormWizardView.metadata.ts`
 
 ### 4. Navigation Validation
 
 **Function:** `canNavigateToStep(targetStep, currentStep, allowBackNavigation)`
 
-Validates if navigation to a target step is allowed based on:
+Validates whether navigation to a target step is allowed based on:
 
-- Current step position
-- Back navigation settings
+- Current and target step positions
+- Back-navigation settings
 
-**Used by:** Both components for step click validation
+**Used by:** `useFormWizardHandlers.ts` and wizard handler utilities to gate step changes
 
-## Refactoring Opportunities
+## Current State
 
-### High Priority (Clear Duplication)
+- ✅ Shared helpers live in `@core/ui/forms/wizard/wizardUtils`
+- ✅ Both `FormWizard` and `Wizard` import from the same utility file
+- ✅ Stepper integration flows through the shared conversion helper
+- ✅ Navigation logic is centralized to avoid duplicated conditionals
 
-1. ✅ **Progress Calculation** - Extracted
-2. ✅ **Step to Stepper Conversion** - Extracted
-3. ✅ **Step Metadata** - Extracted
-4. ✅ **Navigation Validation** - Extracted
+## Maintenance Notes
 
-### Medium Priority (Similar Patterns)
-
-1. **Props Extraction with Defaults**
-   - `FormWizard`: `extractWizardProps()` in `FormWizardView.tsx`
-   - `Wizard`: `extractWizardConfig()` in `WizardHelpers.ts`
-   - **Note:** Different prop structures, but similar pattern
-
-2. **Step Status Determination**
-   - `Wizard`: `getStepStatus()` in `useWizard.ts`
-   - `Stepper`: `getStepStatus()` in `Stepper.tsx`
-   - **Note:** Different logic (Wizard has validation state, Stepper is simpler)
-
-### Low Priority (Different Implementations)
-
-1. **State Management**
-   - Different state structures (`FormWizardState` vs `WizardState`)
-   - Different persistence strategies
-   - **Recommendation:** Keep separate
-
-2. **Validation Logic**
-   - `FormWizard`: React Hook Form integration
-   - `Wizard`: Custom validator functions
-   - **Recommendation:** Keep separate
-
-3. **Handlers**
-   - Different handler signatures and dependencies
-   - **Recommendation:** Keep separate
+- Add new shared helpers to `wizardUtils.ts` so both implementations stay aligned.
+- Prefer updating `wizardUtils.ts` before duplicating behaviour inside either wizard.
+- If a helper becomes implementation-specific, move it back into that implementation to keep the shared module focused.
 
 ## Usage Example
 
@@ -103,27 +79,24 @@ import {
 	convertStepsToStepperSteps,
 	calculateStepMetadata,
 	canNavigateToStep,
-} from '@core/ui/wizard/wizardUtils';
+} from '@core/ui/forms/wizard/wizardUtils';
 
-// Calculate progress
 const progress = calculateWizardProgress(activeStep, totalSteps);
-
-// Convert steps
 const stepperSteps = convertStepsToStepperSteps(wizardSteps);
+const {
+	isFirstStep,
+	isLastStep,
+	progress: percentage,
+} = calculateStepMetadata(activeStep, totalSteps);
 
-// Get metadata
-const { isFirstStep, isLastStep, progress } = calculateStepMetadata(activeStep, totalSteps);
-
-// Validate navigation
 if (canNavigateToStep(targetStep, currentStep, allowBackNavigation)) {
-	// Navigate
+	// Navigate to the requested step
 }
 ```
 
-## Next Steps
+## Related Files
 
-1. Refactor `FormWizard` to use `calculateWizardProgress` instead of local `calculateProgress`
-2. Refactor `FormWizard` to use `convertStepsToStepperSteps` instead of local function
-3. Refactor `FormWizard` to use `calculateStepMetadata` instead of local `getStepMetadata`
-4. Refactor both components to use `canNavigateToStep` for navigation validation
-5. Consider extracting `calculateWizardProgressByCompletion` usage in `Wizard`
+- `src/core/ui/forms/form-wizard/FormWizardView.data.ts`
+- `src/core/ui/forms/form-wizard/FormWizardView.metadata.ts`
+- `src/core/ui/forms/form-wizard/useFormWizardHandlers.ts`
+- `src/core/ui/forms/wizard/useWizard.state.utils.ts`

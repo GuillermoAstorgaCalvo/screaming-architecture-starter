@@ -6,29 +6,49 @@ import Router from '@app/router';
 import { env } from '@core/config/env.client';
 import { getCachedRuntimeConfig } from '@core/config/runtime';
 import { ErrorBoundaryWrapper } from '@core/lib/ErrorBoundaryWrapper';
+import { createAuthTokenRequestInterceptor } from '@core/lib/httpAuthInterceptor';
 import { httpClient } from '@core/lib/httpClient';
 import type { AnalyticsInitOptions } from '@core/ports/AnalyticsPort';
 import { AnalyticsProvider } from '@core/providers/AnalyticsProvider';
+import { AuthProvider } from '@core/providers/AuthProvider';
 import { HttpProvider } from '@core/providers/HttpProvider';
 import { LoggerProvider } from '@core/providers/LoggerProvider';
 import { StorageProvider } from '@core/providers/StorageProvider';
 import { ToastProvider } from '@core/providers/ToastProvider';
+import { LayoutGroup } from '@core/ui/motion/LayoutGroup';
+import { MotionProvider } from '@core/ui/motion/MotionProvider';
 import ToastContainer from '@core/ui/toast/ToastContainer';
 import {
 	googleAnalyticsAdapter,
 	noopAnalyticsAdapter,
 } from '@infra/analytics/googleAnalyticsAdapter';
+import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
 import { BrowserRouter } from 'react-router-dom';
 
+const authAdapter = new JwtAuthAdapter({
+	storage: localStorageAdapter,
+});
+
+const httpClientWithAuthFlag = httpClient as typeof httpClient & {
+	__authInterceptorAttached?: boolean;
+};
+
+if (!httpClientWithAuthFlag.__authInterceptorAttached) {
+	httpClientWithAuthFlag.addRequestInterceptor(createAuthTokenRequestInterceptor(authAdapter));
+	httpClientWithAuthFlag.__authInterceptorAttached = true;
+}
+
 /**
  * App component - Root composition
- * Composition order: LoggerProvider > ErrorBoundary > HttpProvider > StorageProvider > ThemeProvider >
- * I18nProvider > QueryProvider > AnalyticsProvider > ToastProvider > BrowserRouter > Router > ToastContainer
+ * Composition order: LoggerProvider > ErrorBoundary > HttpProvider > AuthProvider >
+ * StorageProvider > ThemeProvider > I18nProvider > QueryProvider > AnalyticsProvider >
+ * MotionProvider > ToastProvider > BrowserRouter > LayoutGroup > Router > ToastContainer
  * - LoggerProvider must be outermost to provide logger to all components including ErrorBoundary
  * - ErrorBoundaryWrapper uses logger from context and wraps the rest of the app with Error500 as fallback UI
  * - HttpProvider provides HTTP client for domain services and hooks
+ * - AuthProvider exposes authentication state and adapters for downstream consumers
  * - StorageProvider must be before ThemeProvider since ThemeProvider uses storage via useStorage hook
  * - I18nProvider provides i18next instance for translations
  * - AnalyticsProvider exposes analytics port implementations while keeping domains decoupled from adapters
@@ -45,22 +65,28 @@ export default function App() {
 		<LoggerProvider logger={loggerAdapter}>
 			<ErrorBoundaryWrapper fallback={<Error500 />}>
 				<HttpProvider http={httpClient}>
-					<StorageProvider storage={localStorageAdapter}>
-						<ThemeProvider>
-							<I18nProvider>
-								<QueryProvider>
-									<AnalyticsProvider analytics={analyticsAdapter} config={analyticsConfig}>
-										<ToastProvider>
-											<BrowserRouter>
-												<Router />
-											</BrowserRouter>
-											<ToastContainer />
-										</ToastProvider>
-									</AnalyticsProvider>
-								</QueryProvider>
-							</I18nProvider>
-						</ThemeProvider>
-					</StorageProvider>
+					<AuthProvider auth={authAdapter}>
+						<StorageProvider storage={localStorageAdapter}>
+							<ThemeProvider>
+								<I18nProvider>
+									<QueryProvider>
+										<AnalyticsProvider analytics={analyticsAdapter} config={analyticsConfig}>
+											<MotionProvider reducedMotion="user">
+												<ToastProvider>
+													<BrowserRouter>
+														<LayoutGroup id="app-route-transitions">
+															<Router />
+														</LayoutGroup>
+													</BrowserRouter>
+													<ToastContainer />
+												</ToastProvider>
+											</MotionProvider>
+										</AnalyticsProvider>
+									</QueryProvider>
+								</I18nProvider>
+							</ThemeProvider>
+						</StorageProvider>
+					</AuthProvider>
 				</HttpProvider>
 			</ErrorBoundaryWrapper>
 		</LoggerProvider>

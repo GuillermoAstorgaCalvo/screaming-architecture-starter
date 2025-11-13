@@ -1,4 +1,4 @@
-import type { CalendarEvent, CalendarProps } from '@src-types/ui/data';
+import type { CalendarEvent, CalendarProps } from '@src-types/ui/data/calendar';
 
 import { renderCalendarWeeks, renderWeekdayHeaders } from './CalendarGridHelpers';
 import type { WeekRowOptions } from './CalendarGridTypes';

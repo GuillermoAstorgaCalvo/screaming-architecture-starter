@@ -4,18 +4,16 @@
  */
 
 import type { StandardSize } from '@src-types/ui/base';
-import type {
-	AccordionVariant,
-	SegmentedControlVariant,
-	TabsVariant,
-} from '@src-types/ui/navigation';
+import type { AccordionVariant } from '@src-types/ui/navigation/accordion';
+import type { SegmentedControlVariant } from '@src-types/ui/navigation/segmentedControl';
+import type { TabsVariant } from '@src-types/ui/navigation/tabs';
 import type {
 	DrawerPosition,
 	DrawerSize,
 	SheetPosition,
 	SheetSize,
 	SidebarPosition,
-} from '@src-types/ui/overlays';
+} from '@src-types/ui/overlays/panels';
 
 /**
  * Breadcrumbs base classes

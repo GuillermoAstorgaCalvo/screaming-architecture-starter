@@ -2,9 +2,9 @@ import {
 	STEPPER_BASE_CLASSES,
 	STEPPER_ORIENTATION_CLASSES,
 	STEPPER_STEP_SIZE_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/stepper';
 import type { StandardSize } from '@src-types/ui/base';
-import type { StepperOrientation } from '@src-types/ui/navigation';
+import type { StepperOrientation } from '@src-types/ui/navigation/stepper';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 

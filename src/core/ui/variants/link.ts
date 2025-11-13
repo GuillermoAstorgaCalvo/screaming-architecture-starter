@@ -2,9 +2,9 @@ import {
 	LINK_BASE_CLASSES,
 	LINK_SIZE_CLASSES,
 	LINK_VARIANT_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/link';
 import type { StandardSize } from '@src-types/ui/base';
-import type { LinkVariant } from '@src-types/ui/navigation';
+import type { LinkVariant } from '@src-types/ui/navigation/link';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 

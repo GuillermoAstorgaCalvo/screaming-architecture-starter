@@ -12,7 +12,7 @@ import type { StoragePort } from '@core/ports/StoragePort';
  * Note: This is different from MockStorageAdapter (used in tests) as this is
  * a production-ready adapter that can be used in SSR contexts.
  */
-class MemoryStorageAdapter implements StoragePort {
+export class MemoryStorageAdapter implements StoragePort {
 	private readonly storage = new Map<string, string>();
 
 	getItem(key: string): string | null {
@@ -59,6 +59,3 @@ class MemoryStorageAdapter implements StoragePort {
  * Use this instance throughout the application when in-memory storage is needed
  */
 export const memoryStorageAdapter = new MemoryStorageAdapter();
-
-// Export class for testing
-export { MemoryStorageAdapter };

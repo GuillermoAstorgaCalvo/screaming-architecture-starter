@@ -41,7 +41,7 @@ import {
 } from './httpClientRequest';
 import { processHttpResponse } from './httpClientResponse';
 
-class HttpClient implements HttpPort {
+export class HttpClient implements HttpPort {
 	private readonly requestInterceptors: RequestInterceptor[] = [];
 	private readonly responseInterceptors: ResponseInterceptor[] = [];
 	private readonly errorInterceptors: ErrorInterceptor[] = [];
@@ -178,17 +178,6 @@ class HttpClient implements HttpPort {
 		return createOptionsMethod(this.request.bind(this))<T>(url, config);
 	}
 }
-
-/**
- * HttpClient class - Implementation of HttpPort interface
- *
- * Provides a fetch-based HTTP client with interceptor support.
- * Implements the HttpPort contract to ensure type safety and architectural compliance.
- *
- * Most use cases should use the default `httpClient` instance, but the class is exported
- * for cases where multiple client instances are needed (e.g., different base URLs or configs).
- */
-export { HttpClient };
 
 /**
  * Default HTTP client instance

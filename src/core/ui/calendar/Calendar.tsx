@@ -1,4 +1,4 @@
-import type { CalendarProps } from '@src-types/ui/data';
+import type { CalendarProps } from '@src-types/ui/data/calendar';
 
 import { toDate } from './CalendarHelpers';
 import { CalendarView } from './CalendarView';

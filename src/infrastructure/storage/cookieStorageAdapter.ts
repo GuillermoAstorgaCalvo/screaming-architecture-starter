@@ -25,7 +25,7 @@ import { serializeCookieOptions } from './cookieStorageAdapter.serialization';
  * - Domains/services should NOT access cookies directly; use this adapter
  * - Uses console.warn for error logging (SSR-safe) to avoid circular dependencies with logger adapter
  */
-class CookieStorageAdapter implements StoragePort {
+export class CookieStorageAdapter implements StoragePort {
 	private readonly isAvailable: boolean;
 
 	constructor() {
@@ -157,6 +157,3 @@ class CookieStorageAdapter implements StoragePort {
  * Use this instance throughout the application to ensure consistent cookie access
  */
 export const cookieStorageAdapter = new CookieStorageAdapter();
-
-// Export class for testing
-export { CookieStorageAdapter };

@@ -1,12 +1,14 @@
 // This file exports utility functions and testing library utilities,
 // not just React components. The component (TestProviders) is in a separate file.
 import type { AnalyticsInitOptions, AnalyticsPort } from '@core/ports/AnalyticsPort';
+import type { AuthPort } from '@core/ports/AuthPort';
 import type { HttpPort } from '@core/ports/HttpPort';
 import type { LoggerPort } from '@core/ports/LoggerPort';
 import type { StoragePort } from '@core/ports/StoragePort';
 import { render, type RenderOptions } from '@testing-library/react';
-// Import mock adapters directly to avoid module resolution issues
 import { MockAnalyticsAdapter } from '@tests/utils/mocks/MockAnalyticsAdapter';
+// Import mock adapters directly to avoid module resolution issues
+import { MockAuthAdapter } from '@tests/utils/mocks/MockAuthAdapter';
 import { MockHttpAdapter } from '@tests/utils/mocks/MockHttpAdapter';
 import { MockLoggerAdapter } from '@tests/utils/mocks/MockLoggerAdapter';
 import { MockStorageAdapter } from '@tests/utils/mocks/MockStorageAdapter';
@@ -37,6 +39,7 @@ import type { ReactElement, ReactNode } from 'react';
  */
 function getDefaultTestProviders() {
 	return {
+		auth: new MockAuthAdapter(),
 		storage: new MockStorageAdapter(),
 		logger: new MockLoggerAdapter(),
 		http: new MockHttpAdapter(),
@@ -50,6 +53,11 @@ function getDefaultTestProviders() {
  * Allows overriding default providers for specific test scenarios
  */
 export interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+	/**
+	 * Custom auth adapter (defaults to MockAuthAdapter)
+	 */
+	auth?: AuthPort;
+
 	/**
 	 * Custom storage adapter (defaults to MockStorageAdapter)
 	 */
@@ -113,6 +121,7 @@ export function renderWithProviders(
 ): ReturnType<typeof render> {
 	const defaultProviders = getDefaultTestProviders();
 	const {
+		auth = defaultProviders.auth,
 		storage = defaultProviders.storage,
 		logger = defaultProviders.logger,
 		http = defaultProviders.http,
@@ -125,6 +134,7 @@ export function renderWithProviders(
 	const wrapper = ({ children }: { children: ReactNode }): ReactElement => {
 		return (
 			<TestProviders
+				auth={auth}
 				storage={storage}
 				logger={logger}
 				http={http}

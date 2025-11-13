@@ -1,4 +1,4 @@
-import type { CalendarEvent } from '@src-types/ui/data';
+import type { CalendarEvent } from '@src-types/ui/data/calendar';
 
 import type { DayState, DayStateOptions, SelectionStateOptions } from './CalendarGridTypes';
 import {

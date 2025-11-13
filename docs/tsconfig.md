@@ -20,14 +20,14 @@ This repo follows a two-level `tsconfig` setup tuned for React + Vite, strict ty
 
 #### Config Files Overview
 
-| File                   | Purpose                                                           | Extends                | Includes                     |
-| ---------------------- | ----------------------------------------------------------------- | ---------------------- | ---------------------------- |
-| `tsconfig.base.json`   | Core compiler settings shared across all configs                  | —                      | —                            |
-| `tsconfig.json`        | Project references orchestrator                                   | —                      | References app, node, vitest |
-| `tsconfig.app.json`    | Main app config (used by Vite & IDE)                              | `./tsconfig.base.json` | `src/`                       |
-| `tsconfig.node.json`   | TypeScript for Node/Vite config files (`vite.config.ts`, scripts) | `./tsconfig.base.json` | Config files, scripts        |
-| `tsconfig.vitest.json` | Unit test environment config (Vitest + jsdom)                     | `./tsconfig.base.json` | `tests/`, `src/`             |
-| `tsconfig.build.json`  | Used only for production builds / CI (emits declarations)         | `./tsconfig.base.json` | `src/` (excludes tests)      |
+| File                   | Purpose                                                           | Extends                | Includes                                        |
+| ---------------------- | ----------------------------------------------------------------- | ---------------------- | ----------------------------------------------- |
+| `tsconfig.base.json`   | Core compiler settings shared across all configs                  | —                      | —                                               |
+| `tsconfig.json`        | Project references orchestrator                                   | —                      | References app, node, vitest                    |
+| `tsconfig.app.json`    | Main app config (used by Vite & IDE)                              | `./tsconfig.base.json` | `src/`                                          |
+| `tsconfig.node.json`   | TypeScript for Node/Vite config files (`vite.config.ts`, scripts) | `./tsconfig.base.json` | Config files, scripts                           |
+| `tsconfig.vitest.json` | Unit test environment config (Vitest + jsdom)                     | `./tsconfig.base.json` | `tests/` (Vitest include patterns cover `src/`) |
+| `tsconfig.build.json`  | Used only for production builds / CI (emits declarations)         | `./tsconfig.base.json` | `src/` (excludes tests)                         |
 
 #### Baseline: tsconfig.base.json
 
@@ -66,6 +66,7 @@ This repo follows a two-level `tsconfig` setup tuned for React + Vite, strict ty
 			"@app/*": ["src/app/*"],
 			"@core/*": ["src/core/*"],
 			"@domains/*": ["src/domains/*"],
+			"@e2e/*": ["e2e/*"],
 			"@infra/*": ["src/infrastructure/*"],
 			"@shared/*": ["src/shared/*"],
 			"@styles/*": ["src/styles/*"],
@@ -99,7 +100,12 @@ This repo follows a two-level `tsconfig` setup tuned for React + Vite, strict ty
 	"compilerOptions": {
 		"composite": true,
 		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-		"types": ["node"],
+		"types": ["node", "google.maps"],
+		"noEmit": false,
+		"emitDeclarationOnly": true,
+		"declaration": true,
+		"declarationMap": true,
+		"declarationDir": "./node_modules/.tmp/types/app",
 		"allowImportingTsExtensions": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
@@ -120,10 +126,10 @@ This repo follows a two-level `tsconfig` setup tuned for React + Vite, strict ty
 - **moduleResolution: "bundler"**: Matches Vite's ESM resolver; prevents CJS/ESM edge cases.
 - **verbatimModuleSyntax**: Preserves `import type` and side effects; improves tree-shaking and correctness.
 - **strict + exactOptionalPropertyTypes + noUncheckedIndexedAccess**: Safer, more explicit domain models.
-- **isolatedModules + noEmit**: Optimized for Vite; TS only type-checks, Vite emits.
+- **isolatedModules**: Optimized for Vite’s single-file transpilation; the base config keeps `noEmit: true` while downstream configs opt in when declaration output is needed.
 - **skipLibCheck: true**: Faster type checking; libraries are assumed correct (can toggle to `false` for comprehensive dependency type checking if issues arise).
 - **composite**: Enables project references for incremental builds and faster IDE feedback.
-- **paths/baseUrl**: Enforces clear boundaries via aliases (`@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@tests`). Coordinate with ESLint boundaries rules.
+- **paths/baseUrl**: Enforces clear boundaries via aliases (`@app`, `@core`, `@domains`, `@infra`, `@shared`, `@styles`, `@tests`, `@e2e`). Coordinate with ESLint boundaries rules.
 - **erasableSyntaxOnly**: Ensures code can be erased to JavaScript (no runtime TypeScript features).
 - **noUncheckedSideEffectImports**: Requires explicit side-effect imports (`import "./file"`).
 
@@ -152,6 +158,7 @@ For Node/Vite config files and scripts:
 	},
 	"include": [
 		"vite.config.ts",
+		"vite-plugin-*.ts",
 		"vitest.config.ts",
 		"playwright.config.ts",
 		"eslint.config.js",
@@ -180,10 +187,13 @@ For unit tests with Vitest globals:
 		"noUnusedLocals": false, // Relaxed for tests (mocks, test utilities may appear unused)
 		"noUnusedParameters": false // Relaxed for tests (test helpers may have unused params)
 	},
-	"include": ["tests", "src"],
+	"references": [{ "path": "./tsconfig.app.json" }],
+	"include": ["tests"],
 	"exclude": ["node_modules", "dist", "build", "e2e"]
 }
 ```
+
+`tsconfig.vitest.json` keeps the project reference to `tsconfig.app.json` so path aliases and shared settings stay consistent. Source files under `src/` are discovered via the Vitest include patterns defined in `vitest.config.ts`, so the TypeScript config only needs to include the `tests/` directory explicitly.
 
 **Build Config: tsconfig.build.json**
 

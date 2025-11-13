@@ -2,7 +2,7 @@ import {
 	BADGE_BASE_CLASSES,
 	BADGE_SIZE_CLASSES,
 	BADGE_VARIANT_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/badge';
 import type { StandardSize } from '@src-types/ui/base';
 import type { BadgeVariant } from '@src-types/ui/feedback';
 import { cva, type VariantProps } from 'class-variance-authority';

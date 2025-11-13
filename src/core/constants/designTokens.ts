@@ -208,10 +208,14 @@ export const designTokens = {
 	// Transition tokens
 	transition: {
 		duration: {
+			instant: '0ms',
+			micro: '100ms',
 			fast: '150ms',
 			normal: '200ms',
 			slow: '300ms',
 			slower: '500ms',
+			lazy: '700ms',
+			extended: '1000ms',
 		},
 		timing: {
 			ease: 'ease',

@@ -2,7 +2,7 @@ import {
 	LIST_BASE_CLASSES,
 	LIST_ITEM_SIZE_CLASSES,
 	LIST_VARIANT_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/list';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ListVariant } from '@src-types/ui/layout/list';
 import { cva, type VariantProps } from 'class-variance-authority';

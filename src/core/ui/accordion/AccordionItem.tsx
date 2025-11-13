@@ -1,5 +1,5 @@
 import type { StandardSize } from '@src-types/ui/base';
-import type { AccordionProps, AccordionVariant } from '@src-types/ui/navigation';
+import type { AccordionProps, AccordionVariant } from '@src-types/ui/navigation/accordion';
 import { useMemo } from 'react';
 
 import { AccordionContent } from './AccordionContent';

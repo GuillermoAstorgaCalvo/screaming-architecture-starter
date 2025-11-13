@@ -1,4 +1,4 @@
-import type { AccordionProps } from '@src-types/ui/navigation';
+import type { AccordionProps } from '@src-types/ui/navigation/accordion';
 import { useCallback, useMemo, useState } from 'react';
 
 function updateExpandedItems(

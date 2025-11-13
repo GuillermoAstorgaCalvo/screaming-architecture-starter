@@ -2,7 +2,7 @@ import {
 	CARD_BASE_CLASSES,
 	CARD_PADDING_CLASSES,
 	CARD_VARIANT_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/card';
 import type { StandardSize } from '@src-types/ui/base';
 import type { CardVariant } from '@src-types/ui/layout/card';
 import { cva, type VariantProps } from 'class-variance-authority';

@@ -1,4 +1,4 @@
-import { TEXT_TYPOGRAPHY_SIZE_CLASSES } from '@core/constants/ui/display';
+import { TEXT_TYPOGRAPHY_SIZE_CLASSES } from '@core/constants/ui/display/typography';
 import type { StandardSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';

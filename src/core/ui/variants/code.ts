@@ -3,7 +3,7 @@ import {
 	CODE_BLOCK_BASE_CLASSES,
 	CODE_BLOCK_SIZE_CLASSES,
 	CODE_SIZE_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/typography';
 import type { StandardSize } from '@src-types/ui/base';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';

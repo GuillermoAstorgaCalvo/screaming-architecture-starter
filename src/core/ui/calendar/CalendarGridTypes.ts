@@ -1,4 +1,4 @@
-import type { CalendarEvent, CalendarProps } from '@src-types/ui/data';
+import type { CalendarEvent, CalendarProps } from '@src-types/ui/data/calendar';
 import type { ReactNode } from 'react';
 
 export interface DayState {

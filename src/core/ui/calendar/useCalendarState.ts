@@ -1,4 +1,4 @@
-import type { CalendarProps } from '@src-types/ui/data';
+import type { CalendarProps } from '@src-types/ui/data/calendar';
 import { useId, useMemo, useState } from 'react';
 
 import { getCalendarDays, getWeekdayNames, toDate } from './CalendarHelpers';

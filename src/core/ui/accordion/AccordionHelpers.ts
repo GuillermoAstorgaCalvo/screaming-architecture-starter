@@ -8,7 +8,7 @@ import {
 	ACCORDION_VARIANT_CLASSES,
 } from '@core/constants/ui/navigation';
 import type { StandardSize } from '@src-types/ui/base';
-import type { AccordionVariant } from '@src-types/ui/navigation';
+import type { AccordionVariant } from '@src-types/ui/navigation/accordion';
 import { twMerge } from 'tailwind-merge';
 
 export function getAccordionClasses(variant: AccordionVariant, className?: string): string {

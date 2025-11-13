@@ -26,7 +26,7 @@ function isBrowserEnvironment(): boolean {
  * Google Analytics adapter implementing the AnalyticsPort interface.
  * Uses gtag.js (GA4) under the hood.
  */
-class GoogleAnalyticsAdapter implements AnalyticsPort {
+export class GoogleAnalyticsAdapter implements AnalyticsPort {
 	private measurementId: string | null = null;
 	private dataLayerName: string = DEFAULT_DATALAYER_NAME;
 	private initialized = false;
@@ -189,8 +189,6 @@ class GoogleAnalyticsAdapter implements AnalyticsPort {
 }
 
 export const googleAnalyticsAdapter = new GoogleAnalyticsAdapter();
-
-export type { GoogleAnalyticsAdapter };
 
 export const noopAnalyticsAdapter: AnalyticsPort = {
 	initialize: () => undefined,

@@ -11,7 +11,7 @@ import type { StoragePort } from '@core/ports/StoragePort';
  * - Domains/services should NOT access storage directly; use this adapter
  * - Uses console.warn for error logging (SSR-safe) to avoid circular dependencies with logger adapter
  */
-class SessionStorageAdapter implements StoragePort {
+export class SessionStorageAdapter implements StoragePort {
 	private readonly isAvailable: boolean;
 
 	constructor() {
@@ -166,6 +166,3 @@ class SessionStorageAdapter implements StoragePort {
  * Use this instance throughout the application to ensure consistent storage access
  */
 export const sessionStorageAdapter = new SessionStorageAdapter();
-
-// Export class for testing
-export { SessionStorageAdapter };

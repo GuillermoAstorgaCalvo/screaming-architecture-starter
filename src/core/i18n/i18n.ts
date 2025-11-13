@@ -176,12 +176,10 @@ async function initializeI18n(): Promise<void> {
 
 // Initialize i18n and export the promise
 // Using top-level await pattern - initialize immediately and export promise
-const i18nInitPromise = (async () => {
+
+export const i18nInitPromise = (async () => {
 	await initializeI18n();
 })();
-
-// Export the configured i18n instance and initialization promise
-export { i18nInitPromise };
 
 // Export our configured i18n instance (direct export, not from i18next)
 // eslint-disable-next-line unicorn/prefer-export-from

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import type { StandardSize } from './base';
-import type { TableColumn, TableProps } from './data';
+import type { TableColumn, TableProps } from './data/table';
 
 /**
  * Sort direction

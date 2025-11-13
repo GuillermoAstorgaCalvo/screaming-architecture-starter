@@ -5,7 +5,7 @@ import {
 	TIMELINE_MARKER_ICON_SIZE_CLASSES,
 	TIMELINE_MARKER_SIZE_CLASSES,
 	TIMELINE_ORIENTATION_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/timeline';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TimelineOrientation } from '@src-types/ui/layout/timeline';
 import { cva, type VariantProps } from 'class-variance-authority';

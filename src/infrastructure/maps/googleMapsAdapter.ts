@@ -24,7 +24,7 @@ function isBrowserEnvironment(): boolean {
 /**
  * Google Maps adapter for script loading and initialization
  */
-class GoogleMapsAdapter {
+export class GoogleMapsAdapter {
 	private apiKey: string | null = null;
 	private scriptLoaded = false;
 	private scriptLoading = false;
@@ -229,5 +229,3 @@ class GoogleMapsAdapter {
 }
 
 export const googleMapsAdapter = new GoogleMapsAdapter();
-
-export type { GoogleMapsAdapter };

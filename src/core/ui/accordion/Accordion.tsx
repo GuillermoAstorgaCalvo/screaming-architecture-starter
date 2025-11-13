@@ -1,4 +1,4 @@
-import type { AccordionProps } from '@src-types/ui/navigation';
+import type { AccordionProps } from '@src-types/ui/navigation/accordion';
 import { useId } from 'react';
 
 import { getAccordionClasses } from './AccordionHelpers';

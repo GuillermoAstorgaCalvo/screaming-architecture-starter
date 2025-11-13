@@ -1,4 +1,4 @@
-import { SKELETON_BASE_CLASSES } from '@core/constants/ui/display';
+import { SKELETON_BASE_CLASSES } from '@core/constants/ui/display/skeleton';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 

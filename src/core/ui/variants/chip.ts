@@ -2,7 +2,7 @@ import {
 	CHIP_BASE_CLASSES,
 	CHIP_SIZE_CLASSES,
 	CHIP_VARIANT_CLASSES,
-} from '@core/constants/ui/display';
+} from '@core/constants/ui/display/badge';
 import type { StandardSize } from '@src-types/ui/base';
 import type { BadgeVariant } from '@src-types/ui/feedback';
 import { cva, type VariantProps } from 'class-variance-authority';

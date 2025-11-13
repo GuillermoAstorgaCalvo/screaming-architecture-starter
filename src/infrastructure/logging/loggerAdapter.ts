@@ -12,7 +12,7 @@ import type { LogContext, LoggerPort, LogLevel } from '@core/ports/LoggerPort';
  * - Domains/services should NOT access console directly; use this adapter
  * - Production environments should integrate with proper error reporting services
  */
-class LoggerAdapter implements LoggerPort {
+export class LoggerAdapter implements LoggerPort {
 	private readonly isAvailable: boolean;
 	private readonly minLevel: LogLevel;
 
@@ -116,6 +116,3 @@ class LoggerAdapter implements LoggerPort {
  * - Adding log aggregation and filtering
  */
 export const loggerAdapter = new LoggerAdapter();
-
-// Export class for testing
-export { LoggerAdapter };

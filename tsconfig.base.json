@@ -27,6 +27,17 @@
 		"paths": {
 			"@app/*": ["src/app/*"],
 			"@core/*": ["src/core/*"],
+			"@core/ui/*": [
+				"src/core/ui/*",
+				"src/core/ui/forms/*",
+				"src/core/ui/navigation/*",
+				"src/core/ui/data-display/*",
+				"src/core/ui/feedback/*",
+				"src/core/ui/overlays/*",
+				"src/core/ui/layout/*",
+				"src/core/ui/media/*",
+				"src/core/ui/utilities/*"
+			],
 			"@domains/*": ["src/domains/*"],
 			"@e2e/*": ["e2e/*"],
 			"@infra/*": ["src/infrastructure/*"],
