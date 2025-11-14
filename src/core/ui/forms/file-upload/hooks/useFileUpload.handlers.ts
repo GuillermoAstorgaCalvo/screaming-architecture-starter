@@ -1,7 +1,5 @@
-import {
-	createFilePreview,
-	validateFiles,
-} from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import { createFilePreview } from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import { validateFiles } from '@core/ui/forms/file-upload/helpers/FileUploadValidation';
 import {
 	createFileUploadFile,
 	processFiles,

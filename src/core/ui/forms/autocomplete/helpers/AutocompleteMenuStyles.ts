@@ -9,7 +9,7 @@ export const MENU_STYLES = {
 		'w-full rounded-lg border border-border bg-popover shadow-lg ring-1 ring-black/5 focus-visible:outline-none',
 	OPTION: 'px-4 py-2 text-sm cursor-pointer hover:bg-accent focus:bg-accent focus:outline-none',
 	OPTION_HIGHLIGHTED: 'bg-accent',
-	OPTION_DISABLED: 'opacity-50 cursor-not-allowed',
+	OPTION_DISABLED: 'opacity-disabled cursor-not-allowed',
 	MATCH_HIGHLIGHT: 'font-semibold bg-primary/20 text-primary',
 } as const;
 

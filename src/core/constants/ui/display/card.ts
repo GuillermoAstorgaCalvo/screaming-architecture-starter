@@ -1,20 +1,21 @@
 /**
  * Card display constants
+ * Uses design tokens for colors, spacing, and shadows
  */
 import type { StandardSize } from '@src-types/ui/base';
 import type { CardVariant } from '@src-types/ui/layout/card';
 
-export const CARD_BASE_CLASSES = 'rounded-lg border bg-white transition-shadow dark:bg-gray-800';
+export const CARD_BASE_CLASSES =
+	'rounded-lg border bg-surface transition-shadow dark:bg-surface-dark';
 
 export const CARD_VARIANT_CLASSES: Record<CardVariant, string> = {
-	elevated:
-		'border-gray-200 shadow-md hover:shadow-lg dark:border-gray-700 dark:shadow-gray-900/50',
-	outlined: 'border-gray-300 dark:border-gray-600',
-	flat: 'border-transparent shadow-sm dark:shadow-gray-900/30',
+	elevated: 'border-border shadow-md hover:shadow-lg dark:border-border-dark dark:shadow-lg',
+	outlined: 'border-border dark:border-border-dark',
+	flat: 'border-transparent shadow-sm dark:shadow-sm',
 } as const;
 
 export const CARD_PADDING_CLASSES: Record<StandardSize, string> = {
-	sm: 'p-3',
-	md: 'p-4',
-	lg: 'p-6',
+	sm: 'p-sm',
+	md: 'p-md',
+	lg: 'p-lg',
 } as const;

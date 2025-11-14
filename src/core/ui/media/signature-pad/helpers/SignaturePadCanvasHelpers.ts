@@ -1,3 +1,4 @@
+import { designTokens } from '@core/constants/designTokens';
 import type { SignaturePadCanvasProps } from '@core/ui/media/signature-pad/types/SignaturePadTypes';
 import type { CSSProperties } from 'react';
 
@@ -8,8 +9,9 @@ export const DEFAULT_VELOCITY_FILTER_WEIGHT = 0.7;
 export const DEFAULT_MIN_WIDTH = 0.5;
 export const DEFAULT_MAX_WIDTH = 2.5;
 export const DEFAULT_THROTTLE = 16;
-export const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
-export const DEFAULT_PEN_COLOR = '#000000';
+// Use design tokens for default colors - these can be customized via CSS variables
+export const DEFAULT_BACKGROUND_COLOR = designTokens.color.surface.DEFAULT;
+export const DEFAULT_PEN_COLOR = designTokens.color.text.primary;
 export const DEFAULT_CLEAR_BUTTON_TEXT = 'Clear';
 
 export interface GetCanvasStyleOptions {
@@ -27,7 +29,7 @@ export function getCanvasStyle({
 	return {
 		border: '1px solid',
 		borderColor: 'currentColor',
-		borderRadius: '0.375rem',
+		borderRadius: designTokens.radius.md,
 		backgroundColor,
 		cursor: disabled ? 'not-allowed' : 'crosshair',
 		opacity: disabled ? DISABLED_OPACITY : 1,

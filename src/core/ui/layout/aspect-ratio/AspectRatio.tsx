@@ -35,7 +35,7 @@ const DEFAULT_ASPECT_RATIO = DEFAULT_ASPECT_RATIO_WIDTH / DEFAULT_ASPECT_RATIO_H
  * @example
  * ```tsx
  * <AspectRatio ratio={1}>
- *   <div className="flex items-center justify-center bg-gray-100">
+ *   <div className="flex items-center justify-center bg-muted">
  *     Square content
  *   </div>
  * </AspectRatio>

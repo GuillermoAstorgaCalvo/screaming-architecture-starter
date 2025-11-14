@@ -10,10 +10,12 @@ interface FilterListItemProps {
 
 export function FilterListItem({ filter, onRemove, disabled }: FilterListItemProps) {
 	return (
-		<div className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+		<div className="flex items-center justify-between rounded-md border border-border bg-muted px-3 py-2 dark:border-border dark:bg-muted">
 			<div className="flex items-center gap-2">
-				<span className="text-sm font-medium text-gray-900 dark:text-gray-100">{filter.label}</span>
-				<span className="text-xs text-gray-500 dark:text-gray-400">({filter.type})</span>
+				<span className="text-sm font-medium text-text-primary dark:text-text-primary">
+					{filter.label}
+				</span>
+				<span className="text-xs text-text-muted dark:text-text-muted">({filter.type})</span>
 			</div>
 			<IconButton
 				icon={<CloseIcon />}
@@ -40,7 +42,9 @@ export function FilterList({ filters, onRemoveFilter, disabled }: FilterListProp
 
 	return (
 		<div className="mb-4">
-			<h4 className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Current Filters</h4>
+			<h4 className="mb-2 text-sm font-medium text-text-secondary dark:text-text-secondary">
+				Current Filters
+			</h4>
 			<div className="space-y-2">
 				{filters.map(filter => (
 					<FilterListItem

@@ -10,9 +10,8 @@ export interface SplitterHandleProps {
 }
 
 function getHandleClasses(orientation: SplitterOrientation, disabled: boolean): string {
-	const baseClasses =
-		'bg-gray-300 dark:bg-gray-600 transition-colors flex items-center justify-center';
-	const hoverClasses = disabled ? '' : 'hover:bg-gray-400 dark:hover:bg-gray-500 cursor-ew-resize';
+	const baseClasses = 'bg-border transition-colors flex items-center justify-center';
+	const hoverClasses = disabled ? '' : 'hover:bg-muted cursor-ew-resize';
 	const verticalClasses = 'cursor-ns-resize';
 
 	if (orientation === 'horizontal') {

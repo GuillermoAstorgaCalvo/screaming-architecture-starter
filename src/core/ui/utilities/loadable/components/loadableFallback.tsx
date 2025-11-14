@@ -15,7 +15,7 @@ export function DefaultLoadingFallback(): ReactNode {
 			aria-live={ARIA_LIVE.POLITE}
 			aria-label={ARIA_LABELS.LOADING}
 		>
-			<p className="text-gray-600 dark:text-gray-400">Loading...</p>
+			<p className="text-text-muted dark:text-text-muted">Loading...</p>
 		</div>
 	);
 }

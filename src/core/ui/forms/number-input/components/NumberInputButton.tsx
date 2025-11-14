@@ -24,7 +24,7 @@ export function NumberInputButton({
 			className={classNames(
 				'flex items-center justify-center',
 				'text-text-muted hover:text-text-primary',
-				'disabled:cursor-not-allowed disabled:opacity-50',
+				'disabled:cursor-not-allowed disabled:opacity-disabled',
 				'transition-colors'
 			)}
 		>

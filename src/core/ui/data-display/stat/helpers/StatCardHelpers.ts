@@ -9,16 +9,16 @@ import type { StatTrendDirection } from '@src-types/ui/layout/card';
 export function getTrendColorClasses(direction: StatTrendDirection): string {
 	switch (direction) {
 		case 'up': {
-			return 'text-green-600 dark:text-green-400';
+			return 'text-success';
 		}
 		case 'down': {
-			return 'text-red-600 dark:text-red-400';
+			return 'text-destructive';
 		}
 		case 'neutral': {
-			return 'text-gray-600 dark:text-gray-400';
+			return 'text-text-secondary';
 		}
 		default: {
-			return 'text-gray-600 dark:text-gray-400';
+			return 'text-text-secondary';
 		}
 	}
 }

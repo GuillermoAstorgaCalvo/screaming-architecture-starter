@@ -2,20 +2,20 @@ import type { AlertIntent } from '@core/ui/feedback/alert/types/Alert.types';
 import type { ReactNode } from 'react';
 
 export const ALERT_INTENT_STYLES: Record<AlertIntent, string> = {
-	info: 'border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-300/40 dark:bg-sky-950/60 dark:text-sky-100',
+	info: 'border-info/20 bg-info-light text-info-dark dark:border-info/40 dark:bg-info/10 dark:text-info',
 	success:
-		'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-300/40 dark:bg-emerald-950/60 dark:text-emerald-100',
+		'border-success/20 bg-success-light text-success-dark dark:border-success/40 dark:bg-success/10 dark:text-success',
 	warning:
-		'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-300/40 dark:bg-amber-950/60 dark:text-amber-100',
+		'border-warning/20 bg-warning-light text-warning-dark dark:border-warning/40 dark:bg-warning/10 dark:text-warning',
 	error:
-		'border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-300/40 dark:bg-rose-950/60 dark:text-rose-100',
+		'border-destructive/20 bg-destructive-light text-destructive-dark dark:border-destructive/40 dark:bg-destructive/10 dark:text-destructive',
 };
 
 export const ALERT_INTENT_ICON_STYLES: Record<AlertIntent, string> = {
-	info: 'text-sky-500 dark:text-sky-300',
-	success: 'text-emerald-500 dark:text-emerald-300',
-	warning: 'text-amber-500 dark:text-amber-300',
-	error: 'text-rose-500 dark:text-rose-300',
+	info: 'text-info dark:text-info',
+	success: 'text-success dark:text-success',
+	warning: 'text-warning dark:text-warning',
+	error: 'text-destructive dark:text-destructive',
 };
 
 export const ALERT_ICON_PATHS: Record<AlertIntent, ReactNode> = {
@@ -30,7 +30,7 @@ export const ALERT_ICON_PATHS: Record<AlertIntent, ReactNode> = {
 		<>
 			<path d="M9.04 3.163a1.5 1.5 0 012.92 0l6.112 12.223A1.5 1.5 0 0116.722 17H3.278a1.5 1.5 0 01-1.35-1.614L9.04 3.163z" />
 			<path
-				fill="#0f172a"
+				fill="currentColor"
 				d="M10 12.5a.75.75 0 01.743.648l.007.102v1a.75.75 0 01-1.493.102L9.25 14.25v-1a.75.75 0 01.75-.75zm0-5a.75.75 0 01.743.648L10.75 8.25v3a.75.75 0 01-1.493.102L9.25 11.25v-3a.75.75 0 01.75-.75z"
 			/>
 		</>
@@ -61,5 +61,9 @@ export const DISMISS_ICON = (
 	</svg>
 );
 
+/**
+ * Alert base classes
+ * Uses design tokens for spacing
+ */
 export const ALERT_BASE_CLASSES =
-	'flex w-full items-start gap-3 rounded-lg border px-4 py-3 shadow-sm transition-shadow duration-200 focus-within:ring-2 focus-within:ring-offset-2';
+	'flex w-full items-start gap-md rounded-lg border px-md py-md shadow-sm transition-shadow duration-normal focus-within:ring-2 focus-within:ring-offset-2';

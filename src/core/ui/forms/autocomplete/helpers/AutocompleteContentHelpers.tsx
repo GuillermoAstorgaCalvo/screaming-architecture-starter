@@ -5,8 +5,6 @@ import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from 'react';
 
 import { MENU_STYLES } from './AutocompleteMenuStyles';
 
-export { getListboxStyles, getOptionClassName, MENU_STYLES } from './AutocompleteMenuStyles';
-
 export function createOptionHandlers(
 	option: AutocompleteOption,
 	isDisabled: boolean,

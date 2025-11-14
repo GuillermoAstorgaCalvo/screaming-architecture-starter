@@ -4,6 +4,7 @@
  * Error handling methods for different error types.
  */
 
+import i18n from '@core/i18n/i18n';
 import type { HttpClientError } from '@core/ports/HttpPort';
 import type { ApiErrorResponse } from '@src-types/api';
 
@@ -33,7 +34,8 @@ export function getErrorMessage(
 		return error.message;
 	}
 	if (error.status) {
-		const statusText = error.response?.statusText ?? 'Request failed';
+		const statusText =
+			error.response?.statusText ?? i18n.t('errors.requestFailed', { ns: 'common' });
 		return `HTTP ${error.status}: ${statusText}`;
 	}
 	return ERROR_MESSAGES.UNKNOWN;

@@ -94,6 +94,17 @@ export function resetTheme(): void {
 		'--shadow-',
 		'--z-index-',
 		'--transition-',
+		'--animation-',
+		'--font-',
+		'--line-height-',
+		'--font-weight-',
+		'--letter-spacing-',
+		'--opacity-',
+		'--border-width-',
+		'--backdrop-blur-',
+		'--filter-blur-',
+		'--component-size-',
+		'--breakpoint-',
 	];
 
 	const cssVariables = getAllCSSVariables();

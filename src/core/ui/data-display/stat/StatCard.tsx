@@ -1,70 +1,13 @@
 import Card from '@core/ui/data-display/card/Card';
+import { StatIcon } from '@core/ui/data-display/stat/components/StatIcon';
+import { TrendIndicator } from '@core/ui/data-display/stat/components/TrendIndicator';
 import {
-	formatTrendValue,
-	getTrendColorClasses,
-	getTrendIconName,
-} from '@core/ui/data-display/stat/helpers/StatCardHelpers';
-import Icon from '@core/ui/icons/Icon';
-import {
-	getStatCardIconSizeClasses,
 	getStatCardLabelSizeClasses,
-	getStatCardTrendSizeClasses,
 	getStatCardValueSizeClasses,
 	getStatCardVariantClasses,
 } from '@core/ui/variants/stat';
-import type { StandardSize } from '@src-types/ui/base';
 import type { StatCardProps } from '@src-types/ui/layout/card';
-import type { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-interface TrendIndicatorProps {
-	trend: NonNullable<StatCardProps['trend']>;
-	size: StandardSize;
-}
-
-function TrendIndicator({ trend, size }: Readonly<TrendIndicatorProps>) {
-	const trendIconName = getTrendIconName(trend.direction);
-	const trendColorClasses = getTrendColorClasses(trend.direction);
-	const trendSizeClasses = getStatCardTrendSizeClasses(size);
-
-	return (
-		<div
-			className={twMerge(
-				trendSizeClasses,
-				trendColorClasses,
-				'flex items-center gap-1 font-medium'
-			)}
-			aria-label={`Trend: ${trend.direction} ${formatTrendValue(trend.value)}`}
-		>
-			{trendIconName ? (
-				<Icon name={trendIconName} size="sm" className="shrink-0" aria-hidden="true" />
-			) : null}
-			<span>{formatTrendValue(trend.value)}</span>
-			{trend.label ? <span className="text-text-muted font-normal">{trend.label}</span> : null}
-		</div>
-	);
-}
-
-interface StatIconProps {
-	icon: ReactNode;
-	size: StandardSize;
-}
-
-function StatIcon({ icon, size }: Readonly<StatIconProps>) {
-	const iconSizeClasses = getStatCardIconSizeClasses(size);
-
-	return (
-		<div
-			className={twMerge(
-				iconSizeClasses,
-				'flex shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20'
-			)}
-			aria-hidden="true"
-		>
-			{icon}
-		</div>
-	);
-}
 
 /**
  * StatCard - Metrics/statistics display component for dashboards and analytics
@@ -116,8 +59,8 @@ export default function StatCard({
 
 	return (
 		<Card variant={variant} padding={padding} className={cardClasses} {...props}>
-			<div className="flex items-start justify-between gap-4">
-				<div className="flex flex-1 flex-col gap-2">
+			<div className="flex items-start justify-between gap-md">
+				<div className="flex flex-1 flex-col gap-sm">
 					<div className={twMerge(labelClasses, 'text-text-muted font-medium')}>{label}</div>
 					<div className={twMerge(valueClasses, 'text-text-primary')}>{value}</div>
 					{trend ? <TrendIndicator trend={trend} size={size} /> : null}

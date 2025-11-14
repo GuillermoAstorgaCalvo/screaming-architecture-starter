@@ -1,4 +1,4 @@
-import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/CommandPalette';
+import type { CommandPaletteCommand } from '@core/ui/overlays/command-palette/types/CommandPalette.types';
 
 /**
  * Normalizes a string for search comparison

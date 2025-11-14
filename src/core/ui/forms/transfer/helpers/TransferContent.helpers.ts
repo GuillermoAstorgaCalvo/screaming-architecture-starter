@@ -1,18 +1,20 @@
+import i18n from '@core/i18n/i18n';
 import type { StandardSize } from '@src-types/ui/base';
 import type { TransferProps } from '@src-types/ui/data/transfer';
 import { twMerge } from 'tailwind-merge';
 
 /**
  * Gets the gap class based on the size prop
+ * Uses design tokens for spacing (gap-sm = 8px, gap-md = 12px, gap-xl = 24px)
  */
 export function getGapClass(size: StandardSize): string {
 	if (size === 'sm') {
-		return 'gap-2';
+		return 'gap-sm';
 	}
 	if (size === 'lg') {
-		return 'gap-6';
+		return 'gap-xl';
 	}
-	return 'gap-4';
+	return 'gap-md';
 }
 
 /**
@@ -74,9 +76,9 @@ export function getActionLabels(labels?: TransferProps<unknown>['labels']):
 }
 
 const DEFAULT_TRANSFER_PROPS = {
-	sourceTitle: 'Available',
-	targetTitle: 'Selected',
-	searchPlaceholder: 'Search...',
+	sourceTitle: i18n.t('transfer.sourceTitle', { ns: 'common' }),
+	targetTitle: i18n.t('transfer.targetTitle', { ns: 'common' }),
+	searchPlaceholder: i18n.t('common.searchPlaceholder', { ns: 'common' }),
 	showSearch: true,
 	size: 'md' as const,
 	disabled: false,

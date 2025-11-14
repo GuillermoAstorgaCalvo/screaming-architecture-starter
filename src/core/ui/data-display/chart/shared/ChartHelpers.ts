@@ -1,25 +1,104 @@
+import { designTokens } from '@core/constants/designTokens';
 import type { ChartColorScheme } from '@src-types/ui/data/chart';
+
+// Color manipulation constants
+const HEX_BASE = 16;
+const MAX_RGB_VALUE = 255;
+const PERCENT_TO_RGB_FACTOR = 2.55;
+const RED_CHANNEL_SHIFT = 16;
+const GREEN_CHANNEL_SHIFT = 8;
+const GREEN_CHANNEL_MASK = 0x00ff;
+const BLUE_CHANNEL_MASK = 0x0000ff;
+const FULL_COLOR_SHIFT = 24;
+const COLOR_COMPONENT_SHIFT = 16;
+
+// Darkening percentage constants
+const DARKEN_PERCENT_20 = 20;
+const DARKEN_PERCENT_25 = 25;
+const DARKEN_PERCENT_30 = 30;
+const DARKEN_PERCENT_35 = 35;
+const DARKEN_PERCENT_40 = 40;
+const DARKEN_PERCENT_45 = 45;
+const DARKEN_PERCENT_50 = 50;
+const DARKEN_PERCENT_55 = 55;
+const DARKEN_PERCENT_60 = 60;
+const DARKEN_PERCENT_65 = 65;
+const DARKEN_PERCENT_70 = 70;
+
+/**
+ * Helper function to darken a hex color by a percentage
+ * Used to generate color shades from design tokens
+ */
+function darkenColor(hex: string, percent: number): string {
+	const num = Number.parseInt(hex.replace('#', ''), HEX_BASE);
+	const amt = Math.round(PERCENT_TO_RGB_FACTOR * percent);
+	const R = Math.max(0, Math.min(MAX_RGB_VALUE, (num >> RED_CHANNEL_SHIFT) - amt));
+	const G = Math.max(
+		0,
+		Math.min(MAX_RGB_VALUE, ((num >> GREEN_CHANNEL_SHIFT) & GREEN_CHANNEL_MASK) - amt)
+	);
+	const B = Math.max(0, Math.min(MAX_RGB_VALUE, (num & BLUE_CHANNEL_MASK) - amt));
+	return `#${((1 << FULL_COLOR_SHIFT) | (R << COLOR_COMPONENT_SHIFT) | (G << GREEN_CHANNEL_SHIFT) | B).toString(HEX_BASE).slice(1)}`;
+}
 
 /**
  * Default color schemes for charts
+ * Uses design tokens for semantic color mapping
+ * All colors are derived from design tokens for full customization
  */
 const DEFAULT_COLOR_SCHEMES: Record<string, string[]> = {
 	default: [
-		'#3b82f6', // blue-500
-		'#10b981', // emerald-500
-		'#f59e0b', // amber-500
-		'#ef4444', // red-500
-		'#8b5cf6', // violet-500
-		'#ec4899', // pink-500
-		'#06b6d4', // cyan-500
-		'#84cc16', // lime-500
+		designTokens.color.info.DEFAULT, // info
+		designTokens.color.success.DEFAULT, // success
+		designTokens.color.warning.DEFAULT, // warning
+		designTokens.color.destructive.DEFAULT, // destructive
+		designTokens.color.accent.DEFAULT, // accent
+		designTokens.color.primary.DEFAULT, // primary
+		designTokens.color.secondary.DEFAULT, // secondary
+		designTokens.color.muted.DEFAULT, // muted
 	],
-	primary: ['#3b82f6', '#2563eb', '#1d4ed8', '#1e40af', '#1e3a8a'],
-	secondary: ['#8b5cf6', '#7c3aed', '#6d28d9', '#5b21b6', '#4c1d95'],
-	success: ['#10b981', '#059669', '#047857', '#065f46', '#064e3b'],
-	warning: ['#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f'],
-	error: ['#ef4444', '#dc2626', '#b91c1c', '#991b1b', '#7f1d1d'],
-	info: ['#06b6d4', '#0891b2', '#0e7490', '#155e75', '#164e63'],
+	primary: [
+		designTokens.color.primary.DEFAULT,
+		darkenColor(designTokens.color.primary.DEFAULT, DARKEN_PERCENT_20), // 20% darker
+		darkenColor(designTokens.color.primary.DEFAULT, DARKEN_PERCENT_35), // 35% darker
+		darkenColor(designTokens.color.primary.DEFAULT, DARKEN_PERCENT_50), // 50% darker
+		darkenColor(designTokens.color.primary.DEFAULT, DARKEN_PERCENT_65), // 65% darker
+	],
+	secondary: [
+		designTokens.color.secondary.DEFAULT,
+		designTokens.color.secondary.dark,
+		darkenColor(designTokens.color.secondary.DEFAULT, DARKEN_PERCENT_30), // 30% darker
+		darkenColor(designTokens.color.secondary.DEFAULT, DARKEN_PERCENT_50), // 50% darker
+		darkenColor(designTokens.color.secondary.DEFAULT, DARKEN_PERCENT_70), // 70% darker
+	],
+	success: [
+		designTokens.color.success.DEFAULT,
+		designTokens.color.success.dark,
+		darkenColor(designTokens.color.success.DEFAULT, DARKEN_PERCENT_30), // 30% darker
+		darkenColor(designTokens.color.success.DEFAULT, DARKEN_PERCENT_45), // 45% darker
+		darkenColor(designTokens.color.success.DEFAULT, DARKEN_PERCENT_60), // 60% darker
+	],
+	warning: [
+		designTokens.color.warning.DEFAULT,
+		designTokens.color.warning.dark,
+		darkenColor(designTokens.color.warning.DEFAULT, DARKEN_PERCENT_25), // 25% darker
+		darkenColor(designTokens.color.warning.DEFAULT, DARKEN_PERCENT_40), // 40% darker
+		darkenColor(designTokens.color.warning.DEFAULT, DARKEN_PERCENT_55), // 55% darker
+	],
+	error: [
+		designTokens.color.destructive.DEFAULT,
+		designTokens.color.destructive.dark,
+		darkenColor(designTokens.color.destructive.DEFAULT, DARKEN_PERCENT_20), // 20% darker
+		darkenColor(designTokens.color.destructive.DEFAULT, DARKEN_PERCENT_35), // 35% darker
+		darkenColor(designTokens.color.destructive.DEFAULT, DARKEN_PERCENT_50), // 50% darker
+	],
+	info: [
+		designTokens.color.info.DEFAULT,
+		designTokens.color.info.dark,
+		darkenColor(designTokens.color.info.DEFAULT, DARKEN_PERCENT_30), // 30% darker
+		darkenColor(designTokens.color.info.DEFAULT, DARKEN_PERCENT_45), // 45% darker
+		darkenColor(designTokens.color.info.DEFAULT, DARKEN_PERCENT_60), // 60% darker
+	],
 };
 
 /**
@@ -50,5 +129,5 @@ export function getChartColors(colorScheme: ChartColorScheme = 'default'): strin
 export function getChartColor(index: number, colorScheme: ChartColorScheme = 'default'): string {
 	const colors = getChartColors(colorScheme);
 	const color = colors[index % colors.length];
-	return color ?? colors[0] ?? '#3b82f6';
+	return color ?? colors[0] ?? designTokens.color.info.DEFAULT;
 }

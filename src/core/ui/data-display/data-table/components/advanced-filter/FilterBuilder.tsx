@@ -1,9 +1,9 @@
 import {
 	FilterBuilderClosed,
 	FilterBuilderHeader,
-} from '@core/ui/data-display/data-table/components/FilterBuilderHeader';
-import { AddFilterForm } from '@core/ui/data-display/data-table/components/FilterFormComponents';
-import { FilterList } from '@core/ui/data-display/data-table/components/FilterList';
+} from '@core/ui/data-display/data-table/components/advanced-filter/FilterBuilderHeader';
+import { AddFilterForm } from '@core/ui/data-display/data-table/components/advanced-filter/FilterFormComponents';
+import { FilterList } from '@core/ui/data-display/data-table/components/advanced-filter/FilterList';
 import { useFilterBuilder } from '@core/ui/data-display/data-table/hooks/useFilterBuilder';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 
@@ -59,7 +59,7 @@ export function FilterBuilder({
 	}
 
 	return (
-		<div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+		<div className="rounded-lg border border-border bg-surface p-4 dark:border-border dark:bg-surface">
 			<FilterBuilderHeader onClose={onToggle} />
 			<FilterList filters={filters} onRemoveFilter={handleRemoveFilter} disabled={disabled} />
 			<AddFilterForm

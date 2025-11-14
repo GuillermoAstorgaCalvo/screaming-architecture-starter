@@ -3,6 +3,7 @@ import {
 	TREE_VIEW_CHILDREN_COLLAPSED_CLASSES,
 	TREE_VIEW_CHILDREN_CONTAINER_CLASSES,
 	TREE_VIEW_CHILDREN_EXPANDED_CLASSES,
+	TREE_VIEW_CHILDREN_EXPANDED_STYLE,
 	TREE_VIEW_EXPAND_ICON_CLASSES,
 	TREE_VIEW_EXPAND_ICON_EXPANDED_CLASSES,
 	TREE_VIEW_NODE_BASE_CLASSES,
@@ -13,6 +14,7 @@ import {
 	TREE_VIEW_NODE_SIZE_CLASSES,
 } from '@core/constants/ui/navigation';
 import type { StandardSize } from '@src-types/ui/base';
+import type React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 /**
@@ -73,6 +75,13 @@ export function getTreeChildrenClasses(isExpanded: boolean, className?: string):
 		isExpanded ? TREE_VIEW_CHILDREN_EXPANDED_CLASSES : TREE_VIEW_CHILDREN_COLLAPSED_CLASSES,
 		className
 	);
+}
+
+/**
+ * Gets CSS style for TreeView children container when expanded
+ */
+export function getTreeChildrenStyle(isExpanded: boolean): React.CSSProperties | undefined {
+	return isExpanded ? TREE_VIEW_CHILDREN_EXPANDED_STYLE : undefined;
 }
 
 /**

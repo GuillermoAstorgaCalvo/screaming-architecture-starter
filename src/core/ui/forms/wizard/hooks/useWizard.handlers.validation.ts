@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type { UseWizardStateReturn } from '@core/ui/forms/wizard/types/useWizard.state.types';
 import type { WizardStepConfig } from '@src-types/ui/navigation/wizard';
 
@@ -25,12 +26,13 @@ export async function validateStep(
 		const result = await step.validate(data);
 		return {
 			isValid: result,
-			error: result ? undefined : 'Validation failed',
+			error: result ? undefined : i18n.t('wizard.validationFailed', { ns: 'common' }),
 		};
 	} catch (error) {
 		return {
 			isValid: false,
-			error: error instanceof Error ? error.message : 'Validation error',
+			error:
+				error instanceof Error ? error.message : i18n.t('wizard.validationError', { ns: 'common' }),
 		};
 	}
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	renderOTPInput,
 	type RenderOTPInputProps,
@@ -69,13 +70,14 @@ function useOTPInputFieldSetup(props: Readonly<OTPInputFieldProps>) {
 }
 
 export function OTPInputField(props: Readonly<OTPInputFieldProps>) {
+	const { t } = useTranslation('common');
 	const { className, hasError, ariaDescribedBy, disabled, required, length, value, inputRefs } =
 		props;
 	const { getInputId, handleInput, handleKeyDown, handlePaste, handleFocus } =
 		useOTPInputFieldSetup(props);
 
 	return (
-		<div className="flex gap-2" aria-label="One-time password input">
+		<div className="flex gap-sm" aria-label={t('a11y.oneTimePasswordInput')}>
 			{renderInputs({
 				length,
 				value,

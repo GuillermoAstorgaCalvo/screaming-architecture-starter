@@ -1,4 +1,4 @@
-import { validateFile } from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
+import { validateFile } from '@core/ui/forms/file-upload/helpers/FileUploadValidation';
 import type {
 	FileUploadContentProps,
 	FileUploadFile,

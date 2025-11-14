@@ -33,7 +33,7 @@ export function StepperStepNumber(props: StepperStepNumberProps) {
 	}
 
 	const statusClasses = getStepStatusClasses(props.status);
-	const numberClasses = `flex items-center justify-center w-8 h-8 rounded-full border-2 font-semibold transition-colors ${statusClasses} ${
+	const numberClasses = `flex items-center justify-center w-8 h-8 rounded-full border-medium font-semibold transition-colors ${statusClasses} ${
 		props.isClickable ? 'cursor-pointer' : ''
 	}`;
 	const label = `Step ${props.stepIndex + 1}: ${props.stepLabel}`;
@@ -59,7 +59,7 @@ export const StepperStepContent = ({ step, size }: StepperStepContentProps) => {
 		<div className={`flex flex-col ${sizeClasses}`}>
 			<span className="font-medium">{step.label}</span>
 			{step.description ? (
-				<span className="text-sm text-gray-600 dark:text-gray-400">{step.description}</span>
+				<span className="text-sm text-text-muted dark:text-text-muted">{step.description}</span>
 			) : null}
 		</div>
 	);
@@ -110,7 +110,7 @@ interface StepperConnectorProps {
  */
 export const StepperConnector = ({ status, orientation }: StepperConnectorProps) => {
 	const connectorClasses = useMemo(
-		() => (status === 'completed' ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'),
+		() => (status === 'completed' ? 'bg-primary' : 'bg-muted dark:bg-muted'),
 		[status]
 	);
 	return orientation === 'vertical' ? (

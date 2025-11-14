@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import type { PasswordInputFieldProps } from '@core/ui/forms/password-input/types/PasswordInputTypes';
 import { classNames } from '@core/utils/classNames';
 import { Eye, EyeOff } from 'lucide-react';
@@ -35,6 +36,7 @@ function VisibilityToggleButton({
 	onToggle: () => void;
 	disabled?: boolean;
 }>) {
+	const { t } = useTranslation('common');
 	const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -49,11 +51,11 @@ function VisibilityToggleButton({
 				type="button"
 				onClick={handleClick}
 				disabled={disabled}
-				aria-label={showPassword ? 'Hide password' : 'Show password'}
+				aria-label={showPassword ? t('password.hidePassword') : t('password.showPassword')}
 				className={classNames(
 					'flex items-center justify-center',
 					'text-text-muted hover:text-text-primary',
-					'disabled:cursor-not-allowed disabled:opacity-50',
+					'disabled:cursor-not-allowed disabled:opacity-disabled',
 					'transition-colors',
 					'rounded-sm focus:outline-none focus:ring-2 focus:ring-primary/20'
 				)}

@@ -22,7 +22,7 @@ export function getPositionClasses(position: HoverCardProps['position']): string
 
 export function getArrowClasses(position: HoverCardProps['position']): string {
 	const baseClasses =
-		'absolute w-2 h-2 border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800';
+		'absolute w-2 h-2 border border-border bg-surface dark:border-border-dark dark:bg-surface-dark';
 	switch (position) {
 		case 'top': {
 			return `${baseClasses} top-full left-1/2 -translate-x-1/2 -mt-1 rotate-45 border-t-0 border-l-0`;

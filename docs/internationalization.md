@@ -14,23 +14,27 @@ The i18n system is designed to be scalable and maintainable:
 ## Structure
 
 - `i18n.ts` - Core i18next instance configuration
-- `types.ts` - TypeScript types for translation keys (type-safe access)
 - `useTranslation.ts` - Custom hook wrapper with automatic resource loading
 - `useRtl.ts` - Hook to check if current language is RTL (Right-to-Left)
 - `resourceLoader.ts` - Dynamic resource loading system (main export, imports from sub-modules)
-- `resourceLoader.cache.ts` - Resource caching utilities (clearResourceCacheFor, isResourceCached, isResourceLoading)
-- `resourceLoader.i18n.ts` - i18next integration functions (addResourceToI18n, loadAndAddResource)
-- `resourceLoader.load.ts` - Resource loading functions (loadResource)
-- `resourceLoader.registry.ts` - Resource loader registry (registerResourceLoader, getRegisteredNamespaces, clearResourceLoaders)
-- `resourceLoader.types.ts` - Type definitions for resource loading (ResourceLoader, TranslationResource, AddResourceOptions, etc.)
-- `resourceLoader.validation.ts` - Resource validation utilities
+- `resourceLoader/` - Resource loading sub-modules:
+  - `cache.ts` - Resource caching utilities (clearResourceCacheFor, isResourceCached, isResourceLoading)
+  - `i18n.ts` - i18next integration functions (addResourceToI18n, loadAndAddResource)
+  - `load.ts` - Resource loading functions (loadResource)
+  - `registry.ts` - Resource loader registry (registerResourceLoader, getRegisteredNamespaces, clearResourceLoaders)
+  - `types.ts` - Type definitions for resource loading (ResourceLoader, TranslationResource, AddResourceOptions, etc.)
+  - `validation.ts` - Resource validation utilities
 - `registry.ts` - Domain translation registration system
-- `constants.ts` - Centralized i18n constants (supported languages, RTL languages, default namespace, etc.)
+- `constants/` - Centralized i18n constants:
+  - `constants.ts` - Supported languages, RTL languages, default namespace, helper functions (isSupportedLanguage, isRtlLanguage, normalizeLanguage)
 - `errors.ts` - Custom error classes for i18n resource loading
+- `hooks/` - Internal hooks for resource loading state management:
+  - `useTranslationHelpers.ts` - Internal helper functions for resource loading state management
+  - `useTranslationLoader.ts` - Internal hook for managing resource loading effects
+  - `useTranslationState.ts` - Internal hook for managing translation loading state
+- `types/` - TypeScript types for translation keys:
+  - `types.ts` - Type definitions for translation interfaces (type-safe access)
 - `locales/` - Common/shared translations (e.g., `en.json`, `es.json`, `ar.json`)
-- `useTranslationHelpers.ts` - Internal helper functions for resource loading state management
-- `useTranslationLoader.ts` - Internal hook for managing resource loading effects
-- `useTranslationState.ts` - Internal hook for managing translation loading state
 
 ## Domain Translations
 
@@ -163,12 +167,12 @@ import {
 	isSupportedLanguage,
 	isRtlLanguage,
 	normalizeLanguage,
-} from '@core/i18n/constants';
+} from '@core/i18n/constants/constants';
 
 import { ResourceLoaderNotFoundError, InvalidResourceFormatError } from '@core/i18n/errors';
 ```
 
-**Constants (`constants.ts`):**
+**Constants (`constants/constants.ts`):**
 
 - `SUPPORTED_LANGUAGES` - Array of supported language codes
 - `DEFAULT_LANGUAGE` - Default/fallback language ('en')
@@ -207,8 +211,8 @@ Currently supported languages are defined in `constants.ts`:
 
 To add more languages:
 
-1. Update `SUPPORTED_LANGUAGES` in `core/i18n/constants.ts`
-2. Update `RTL_LANGUAGES` in `core/i18n/constants.ts` if the language is RTL
+1. Update `SUPPORTED_LANGUAGES` in `core/i18n/constants/constants.ts`
+2. Update `RTL_LANGUAGES` in `core/i18n/constants/constants.ts` if the language is RTL
 3. Add translation files for each locale in each domain
 4. Update the loader factory in each domain's `i18n/index.ts`
 
@@ -220,7 +224,7 @@ To add more languages:
    - `domains/<domain>/i18n/en.json`
    - `domains/<domain>/i18n/es.json`
 
-2. Update TypeScript types in `core/i18n/types.ts`:
+2. Update TypeScript types in `core/i18n/types/types.ts`:
    ```typescript
    export interface MyDomainTranslations {
    	'new.key': string;
@@ -265,7 +269,7 @@ To add more languages:
    import '@domains/<new-domain>/i18n';
    ```
 
-4. Add TypeScript types in `core/i18n/types.ts`:
+4. Add TypeScript types in `core/i18n/types/types.ts`:
 
    ```typescript
    export interface NewDomainTranslations {
@@ -283,7 +287,7 @@ To add more languages:
 
 1. Remove the domain's `i18n/` directory
 2. Remove the import from `app/main.tsx`
-3. Remove the type definition from `core/i18n/types.ts`
+3. Remove the type definition from `core/i18n/types/types.ts`
 
 ## Type Safety
 

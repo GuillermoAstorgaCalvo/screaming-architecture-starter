@@ -1,5 +1,6 @@
-import { designTokens } from '@core/constants/designTokens';
 import type { Config } from 'tailwindcss';
+
+import { designTokens } from './src/core/constants/designTokens';
 
 /**
  * Tailwind CSS Configuration
@@ -27,9 +28,10 @@ export default {
 				primary: {
 					DEFAULT: 'var(--color-primary)',
 					foreground: 'var(--color-primary-foreground)',
-					// Additional shades derived from tokens
-					500: designTokens.color.primary.DEFAULT,
-					600: '#1d4ed8', // Slightly darker shade for hover states
+					// Additional shades use CSS variables for full customization
+					500: 'var(--color-primary)',
+					// 600 shade uses CSS variable for full customization
+					600: 'var(--color-primary-600)',
 				},
 				// Secondary colors
 				secondary: {
@@ -87,6 +89,17 @@ export default {
 					elevated: 'var(--color-surface-elevated)',
 					'elevated-dark': 'var(--color-surface-elevated-dark)',
 				},
+				// Overlay/backdrop colors
+				overlay: {
+					DEFAULT: 'var(--color-overlay)',
+					light: 'var(--color-overlay-light)',
+					'light-dark': 'var(--color-overlay-light-dark)',
+					medium: 'var(--color-overlay-medium)',
+					'medium-dark': 'var(--color-overlay-medium-dark)',
+					dark: 'var(--color-overlay-dark)',
+					'dark-dark': 'var(--color-overlay-dark-dark)',
+					'default-dark': 'var(--color-overlay-default-dark)',
+				},
 				// Border colors
 				border: {
 					DEFAULT: 'var(--color-border)',
@@ -110,66 +123,191 @@ export default {
 				},
 			},
 			borderRadius: {
-				none: designTokens.radius.none,
-				sm: designTokens.radius.sm,
-				md: designTokens.radius.md,
-				lg: designTokens.radius.lg,
-				xl: designTokens.radius.xl,
-				'2xl': designTokens.radius['2xl'],
-				full: designTokens.radius.full,
+				// Using CSS variables for full runtime customization
+				none: 'var(--radius-none)',
+				sm: 'var(--radius-sm)',
+				md: 'var(--radius-md)',
+				lg: 'var(--radius-lg)',
+				xl: 'var(--radius-xl)',
+				'2xl': 'var(--radius-2xl)',
+				full: 'var(--radius-full)',
 			},
 			spacing: {
-				xs: `${designTokens.spacing.xs}px`,
-				sm: `${designTokens.spacing.sm}px`,
-				md: `${designTokens.spacing.md}px`,
-				lg: `${designTokens.spacing.lg}px`,
-				xl: `${designTokens.spacing.xl}px`,
-				'2xl': `${designTokens.spacing['2xl']}px`,
-				'3xl': `${designTokens.spacing['3xl']}px`,
-				'4xl': `${designTokens.spacing['4xl']}px`,
+				// Using CSS variables for full runtime customization
+				xs: 'var(--spacing-xs)',
+				sm: 'var(--spacing-sm)',
+				md: 'var(--spacing-md)',
+				lg: 'var(--spacing-lg)',
+				xl: 'var(--spacing-xl)',
+				'2xl': 'var(--spacing-2xl)',
+				'3xl': 'var(--spacing-3xl)',
+				'4xl': 'var(--spacing-4xl)',
 			},
 			boxShadow: {
-				none: designTokens.shadow.none,
-				sm: designTokens.shadow.sm,
-				md: designTokens.shadow.md,
-				lg: designTokens.shadow.lg,
-				xl: designTokens.shadow.xl,
-				'2xl': designTokens.shadow['2xl'],
-				inner: designTokens.shadow.inner,
+				// Using CSS variables for full runtime customization
+				none: 'var(--shadow-none)',
+				sm: 'var(--shadow-sm)',
+				md: 'var(--shadow-md)',
+				lg: 'var(--shadow-lg)',
+				xl: 'var(--shadow-xl)',
+				'2xl': 'var(--shadow-2xl)',
+				inner: 'var(--shadow-inner)',
 			},
 			fontFamily: {
-				sans: [designTokens.typography.fontFamily.sans],
-				mono: [designTokens.typography.fontFamily.mono],
+				// Using CSS variables for full runtime customization
+				sans: ['var(--font-family-sans)'],
+				mono: ['var(--font-family-mono)'],
 			},
-			fontSize: designTokens.typography.fontSize,
+			fontSize: {
+				// Using CSS variables for full runtime customization
+				xs: ['var(--font-size-xs)', { lineHeight: 'var(--line-height-xs)' }],
+				sm: ['var(--font-size-sm)', { lineHeight: 'var(--line-height-sm)' }],
+				base: ['var(--font-size-base)', { lineHeight: 'var(--line-height-base)' }],
+				lg: ['var(--font-size-lg)', { lineHeight: 'var(--line-height-lg)' }],
+				xl: ['var(--font-size-xl)', { lineHeight: 'var(--line-height-xl)' }],
+				'2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-2xl)' }],
+				'3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-3xl)' }],
+				'4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-4xl)' }],
+				'5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-5xl)' }],
+				'6xl': ['var(--font-size-6xl)', { lineHeight: 'var(--line-height-6xl)' }],
+			},
 			fontWeight: {
-				normal: designTokens.typography.fontWeight.normal,
-				medium: designTokens.typography.fontWeight.medium,
-				semibold: designTokens.typography.fontWeight.semibold,
-				bold: designTokens.typography.fontWeight.bold,
+				// Using CSS variables for full runtime customization
+				normal: 'var(--font-weight-normal)',
+				medium: 'var(--font-weight-medium)',
+				semibold: 'var(--font-weight-semibold)',
+				bold: 'var(--font-weight-bold)',
 			},
-			letterSpacing: designTokens.typography.letterSpacing,
+			letterSpacing: {
+				// Using CSS variables for full runtime customization
+				tighter: 'var(--letter-spacing-tighter)',
+				tight: 'var(--letter-spacing-tight)',
+				normal: 'var(--letter-spacing-normal)',
+				wide: 'var(--letter-spacing-wide)',
+				wider: 'var(--letter-spacing-wider)',
+				widest: 'var(--letter-spacing-widest)',
+			},
 			zIndex: {
-				base: designTokens.zIndex.base,
-				dropdown: designTokens.zIndex.dropdown,
-				sticky: designTokens.zIndex.sticky,
-				fixed: designTokens.zIndex.fixed,
-				'modal-backdrop': designTokens.zIndex.modalBackdrop,
-				modal: designTokens.zIndex.modal,
-				popover: designTokens.zIndex.popover,
-				tooltip: designTokens.zIndex.tooltip,
+				// Using CSS variables for full runtime customization
+				base: 'var(--z-index-base)',
+				dropdown: 'var(--z-index-dropdown)',
+				sticky: 'var(--z-index-sticky)',
+				fixed: 'var(--z-index-fixed)',
+				'modal-backdrop': 'var(--z-index-modal-backdrop)',
+				modal: 'var(--z-index-modal)',
+				popover: 'var(--z-index-popover)',
+				tooltip: 'var(--z-index-tooltip)',
 			},
 			transitionDuration: {
-				fast: designTokens.transition.duration.fast,
-				normal: designTokens.transition.duration.normal,
-				slow: designTokens.transition.duration.slow,
-				slower: designTokens.transition.duration.slower,
+				// Using CSS variables for full runtime customization
+				instant: 'var(--transition-duration-instant)',
+				micro: 'var(--transition-duration-micro)',
+				fast: 'var(--transition-duration-fast)',
+				normal: 'var(--transition-duration-normal)',
+				slow: 'var(--transition-duration-slow)',
+				slower: 'var(--transition-duration-slower)',
+				lazy: 'var(--transition-duration-lazy)',
+				extended: 'var(--transition-duration-extended)',
 			},
 			transitionTimingFunction: {
-				ease: designTokens.transition.timing.ease,
-				'ease-in': designTokens.transition.timing['ease-in'],
-				'ease-out': designTokens.transition.timing['ease-out'],
-				'ease-in-out': designTokens.transition.timing['ease-in-out'],
+				// Using CSS variables for full runtime customization
+				ease: 'var(--transition-timing-ease)',
+				'ease-in': 'var(--transition-timing-ease-in)',
+				'ease-out': 'var(--transition-timing-ease-out)',
+				'ease-in-out': 'var(--transition-timing-ease-in-out)',
+			},
+			opacity: {
+				// Using CSS variables for full runtime customization
+				transparent: 'var(--opacity-transparent)',
+				disabled: 'var(--opacity-disabled)',
+				hover: 'var(--opacity-hover)',
+				focus: 'var(--opacity-focus)',
+				'overlay-light': 'var(--opacity-overlay-light)',
+				'overlay-medium': 'var(--opacity-overlay-medium)',
+				'overlay-dark': 'var(--opacity-overlay-dark)',
+			},
+			borderWidth: {
+				// Using CSS variables for full runtime customization
+				none: 'var(--border-width-none)',
+				thin: 'var(--border-width-thin)',
+				medium: 'var(--border-width-medium)',
+				thick: 'var(--border-width-thick)',
+			},
+			backdropBlur: {
+				// Using CSS variables for full runtime customization
+				none: 'var(--backdrop-blur-none)',
+				sm: 'var(--backdrop-blur-sm)',
+				md: 'var(--backdrop-blur-md)',
+				lg: 'var(--backdrop-blur-lg)',
+				xl: 'var(--backdrop-blur-xl)',
+				'2xl': 'var(--backdrop-blur-2xl)',
+			},
+			blur: {
+				// Filter blur tokens for CSS filter: blur() - using CSS variables for full runtime customization
+				none: 'var(--filter-blur-none)',
+				sm: 'var(--filter-blur-sm)',
+				md: 'var(--filter-blur-md)',
+				lg: 'var(--filter-blur-lg)',
+				xl: 'var(--filter-blur-xl)',
+				'2xl': 'var(--filter-blur-2xl)',
+				animation: 'var(--filter-blur-animation)',
+			},
+			animation: {
+				duration: {
+					// Using CSS variables for full runtime customization
+					fast: 'var(--animation-duration-fast)',
+					normal: 'var(--animation-duration-normal)',
+					slow: 'var(--animation-duration-slow)',
+					slower: 'var(--animation-duration-slower)',
+				},
+				timingFunction: {
+					// Using CSS variables for full runtime customization
+					linear: 'var(--animation-easing-linear)',
+					ease: 'var(--animation-easing-ease)',
+					'ease-in': 'var(--animation-easing-ease-in)',
+					'ease-out': 'var(--animation-easing-ease-out)',
+					'ease-in-out': 'var(--animation-easing-ease-in-out)',
+					'bounce-in': 'var(--animation-easing-bounce-in)',
+					'bounce-out': 'var(--animation-easing-bounce-out)',
+					spring: 'var(--animation-easing-spring)',
+				},
+			},
+			screens: {
+				// Using design tokens directly (Tailwind needs pixel values at build time for media queries)
+				// CSS variables are available for runtime customization via --breakpoint-* variables
+				xs: designTokens.breakpoint.xs,
+				sm: designTokens.breakpoint.sm,
+				md: designTokens.breakpoint.md,
+				lg: designTokens.breakpoint.lg,
+				xl: designTokens.breakpoint.xl,
+				'2xl': designTokens.breakpoint['2xl'],
+			},
+			// Component size tokens for consistent component dimensions
+			// Using CSS variables for full runtime customization
+			componentSize: {
+				button: {
+					sm: 'var(--component-size-button-sm)',
+					md: 'var(--component-size-button-md)',
+					lg: 'var(--component-size-button-lg)',
+				},
+				input: {
+					sm: 'var(--component-size-input-sm)',
+					md: 'var(--component-size-input-md)',
+					lg: 'var(--component-size-input-lg)',
+				},
+				icon: {
+					xs: 'var(--component-size-icon-xs)',
+					sm: 'var(--component-size-icon-sm)',
+					md: 'var(--component-size-icon-md)',
+					lg: 'var(--component-size-icon-lg)',
+					xl: 'var(--component-size-icon-xl)',
+				},
+				avatar: {
+					sm: 'var(--component-size-avatar-sm)',
+					md: 'var(--component-size-avatar-md)',
+					lg: 'var(--component-size-avatar-lg)',
+					xl: 'var(--component-size-avatar-xl)',
+				},
 			},
 		},
 	},

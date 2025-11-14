@@ -1,5 +1,6 @@
 /**
  * Timeline display constants
+ * Uses design tokens for spacing
  */
 import type { StandardSize } from '@src-types/ui/base';
 import type { TimelineOrientation } from '@src-types/ui/layout/timeline';
@@ -12,9 +13,9 @@ export const TIMELINE_ORIENTATION_CLASSES: Record<TimelineOrientation, string> =
 } as const;
 
 export const TIMELINE_EVENT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'text-sm gap-2',
-	md: 'text-base gap-3',
-	lg: 'text-lg gap-4',
+	sm: 'text-sm gap-sm',
+	md: 'text-base gap-md',
+	lg: 'text-lg gap-lg',
 } as const;
 
 export const TIMELINE_MARKER_SIZE_CLASSES: Record<StandardSize, string> = {

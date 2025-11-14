@@ -13,7 +13,7 @@ export function HorizontalTimelineEvent({
 	onClick,
 }: Readonly<HorizontalTimelineEventProps>) {
 	const isClickable = Boolean(onClick);
-	const clickableClasses = `${containerClasses} cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50`;
+	const clickableClasses = `${containerClasses} cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-colors hover:bg-muted dark:hover:bg-muted`;
 
 	if (isClickable) {
 		return (

@@ -48,7 +48,7 @@ const ChipRemoveButton = ({ onRemove, size, label }: ChipRemoveButtonProps) => {
 		<button
 			type="button"
 			onClick={handleRemove}
-			className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-1 dark:hover:bg-white/10"
+			className="ml-xs rounded-full p-xs transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary dark:hover:bg-muted-dark"
 			aria-label={label}
 			title={label}
 		>

@@ -48,7 +48,7 @@ export function renderSpinnerState({ loadingText, className, props }: SpinnerSta
 		>
 			<Spinner size="md" />
 			{loadingText ? (
-				<Text size="sm" className="ml-2 text-gray-500 dark:text-gray-400">
+				<Text size="sm" className="ml-2 text-text-muted dark:text-text-muted-dark">
 					{loadingText}
 				</Text>
 			) : null}

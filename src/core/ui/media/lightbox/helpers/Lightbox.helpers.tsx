@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type Dialog from '@core/ui/dialog/Dialog';
 import {
 	LightboxHeader,
@@ -91,9 +92,9 @@ export function buildLightboxContent(params: LightboxContentParams) {
 	return (
 		<button
 			type="button"
-			className="relative flex h-full w-full flex-col bg-black focus:outline-none"
+			className="relative flex h-full w-full flex-col bg-surface-dark focus:outline-none"
 			onKeyDown={handleKeyDown as (e: KeyboardEvent<HTMLButtonElement>) => void}
-			aria-label="Image gallery"
+			aria-label={i18n.t('a11y.imageGallery', { ns: 'common' })}
 		>
 			<LightboxHeader
 				onClose={extractedProps.onClose}

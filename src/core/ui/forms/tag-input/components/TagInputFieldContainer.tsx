@@ -30,13 +30,14 @@ export function TagInputFieldContainer({
 	return (
 		<div
 			className={classNames(
-				'flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2',
+				'flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-border bg-surface px-3 py-2',
 				'transition-colors',
 				'focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20',
-				'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-50',
-				'dark:border-gray-600 dark:bg-gray-800',
-				hasError && 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500/20',
-				disabled && 'cursor-not-allowed bg-gray-50 opacity-50 dark:bg-gray-900',
+				'disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-disabled',
+				'dark:border-border dark:bg-surface',
+				hasError &&
+					'border-destructive focus-within:border-destructive focus-within:ring-destructive/20',
+				disabled && 'cursor-not-allowed bg-muted opacity-disabled dark:bg-muted',
 				className
 			)}
 		>

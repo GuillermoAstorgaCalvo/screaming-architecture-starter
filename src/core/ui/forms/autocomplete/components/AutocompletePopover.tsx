@@ -1,10 +1,8 @@
 import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 import { AutocompleteField } from '@core/ui/forms/autocomplete/components/AutocompleteField';
 import { AutocompleteListbox } from '@core/ui/forms/autocomplete/components/AutocompleteListbox';
-import {
-	type AutocompleteListboxProps,
-	MENU_STYLES,
-} from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import type { AutocompleteListboxProps } from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import { MENU_STYLES } from '@core/ui/forms/autocomplete/helpers/AutocompleteMenuStyles';
 import type { AutocompleteContentProps } from '@core/ui/forms/autocomplete/types/AutocompleteTypes';
 import Popover from '@core/ui/popover/Popover';
 import type { ReactNode, Ref, RefObject } from 'react';

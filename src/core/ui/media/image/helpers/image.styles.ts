@@ -2,7 +2,7 @@ import type { ImageClassParams, ImageStyleParams } from '@core/ui/media/image/ty
 import type { CSSProperties } from 'react';
 
 export function createImageClasses({ isLoading, className }: ImageClassParams): string {
-	return ['transition-opacity duration-300', isLoading ? 'opacity-0' : 'opacity-100', className]
+	return ['transition-opacity duration-slow', isLoading ? 'opacity-0' : 'opacity-100', className]
 		.filter(Boolean)
 		.join(' ');
 }

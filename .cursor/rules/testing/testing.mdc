@@ -10,6 +10,7 @@ alwaysApply: false
 
 - Runner: **Vitest** (v4.0.6)
 - Location: `tests/*`
+- **Important**: On Windows, run tests with Docker (`pnpm run docker:test`) to avoid fork runner timeout issues
 - Test utilities: `tests/utils/testUtils.tsx` (includes `renderWithProviders` function)
 - Test providers: `tests/utils/TestProviders.tsx` (composes all providers for testing)
 - Mock adapters: `tests/utils/mocks/` (MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter)
@@ -17,6 +18,11 @@ alwaysApply: false
 - MSW mocks: `tests/mocks/` (handlers.ts, payloads.ts, server.ts)
 - Setup: `tests/setupTests.ts` (Vitest setup with MSW server, i18n initialization, DOM mocks)
 - Accessibility: **Axe** via `jest-axe`/`vitest-axe` (optional, to be added)
+
+### Running Tests
+
+- **Recommended (Windows)**: `pnpm run docker:test` or `pnpm run docker:test -- --coverage`
+- **Alternative (Mac/Linux)**: `pnpm run test` or `pnpm run test:coverage`
 
 ### E2E Tests
 

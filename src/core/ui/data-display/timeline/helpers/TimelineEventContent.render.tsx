@@ -4,11 +4,11 @@ export function renderEventContent(event: TimelineEventType) {
 	return (
 		<>
 			{event.timestamp ? (
-				<span className="text-xs text-gray-500 dark:text-gray-400 mb-1">{event.timestamp}</span>
+				<span className="text-xs text-text-muted dark:text-text-muted mb-1">{event.timestamp}</span>
 			) : null}
-			<div className="font-medium text-gray-900 dark:text-gray-100">{event.title}</div>
+			<div className="font-medium text-text-primary dark:text-text-primary">{event.title}</div>
 			{event.description ? (
-				<div className="text-gray-600 dark:text-gray-400 mt-1">{event.description}</div>
+				<div className="text-text-secondary dark:text-text-secondary mt-1">{event.description}</div>
 			) : null}
 			{event.content ? <div className="mt-2">{event.content}</div> : null}
 		</>

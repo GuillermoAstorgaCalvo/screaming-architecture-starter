@@ -1,115 +1,10 @@
-import Button from '@core/ui/button/Button';
+import { useTranslation } from '@core/i18n/useTranslation';
+import { AlertDialogDescription } from '@core/ui/feedback/alert-dialog/components/AlertDialogComponents';
+import { createAlertDialogFooter } from '@core/ui/feedback/alert-dialog/helpers/AlertDialog.helpers';
+import type { AlertDialogProps } from '@core/ui/feedback/alert-dialog/types/AlertDialog.types';
 import Modal from '@core/ui/modal/Modal';
-import type { ReactNode } from 'react';
 
-export interface AlertDialogProps {
-	/** Whether the alert dialog is open */
-	isOpen: boolean;
-	/** Function to close the alert dialog */
-	onClose: () => void;
-	/** Alert dialog title */
-	title: string;
-	/** Alert dialog description/content */
-	description?: ReactNode;
-	/** Label for the confirm/primary action button */
-	confirmLabel?: string;
-	/** Label for the cancel/secondary action button */
-	cancelLabel?: string;
-	/** Callback when confirm button is clicked */
-	onConfirm?: () => void | Promise<void>;
-	/** Callback when cancel button is clicked */
-	onCancel?: () => void;
-	/** Whether the confirm action is destructive (changes button styling) @default false */
-	destructive?: boolean;
-	/** Whether to show cancel button @default true */
-	showCancel?: boolean;
-	/** Size of the alert dialog @default 'sm' */
-	size?: 'sm' | 'md' | 'lg';
-	/** Additional CSS classes */
-	className?: string;
-}
-
-const DEFAULT_CONFIRM_LABEL = 'Confirm';
-const DEFAULT_CANCEL_LABEL = 'Cancel';
-
-/**
- * Creates a confirm handler that executes the onConfirm callback and then closes the dialog
- */
-function createConfirmHandler(
-	onConfirm: (() => void | Promise<void>) | undefined,
-	onClose: () => void
-): () => Promise<void> {
-	return async () => {
-		if (onConfirm) {
-			await onConfirm();
-		}
-		onClose();
-	};
-}
-
-/**
- * Creates a cancel handler that executes the onCancel callback and then closes the dialog
- */
-function createCancelHandler(onCancel: (() => void) | undefined, onClose: () => void): () => void {
-	return () => {
-		if (onCancel) {
-			onCancel();
-		}
-		onClose();
-	};
-}
-
-interface FooterProps {
-	showCancel: boolean;
-	cancelLabel: string;
-	confirmLabel: string;
-	destructive: boolean;
-	onCancel: () => void;
-	onConfirm: () => Promise<void>;
-}
-
-/**
- * Renders the footer with cancel and confirm buttons
- */
-function renderFooter({
-	showCancel,
-	cancelLabel,
-	confirmLabel,
-	destructive,
-	onCancel,
-	onConfirm,
-}: FooterProps) {
-	return (
-		<div className="flex justify-end gap-2">
-			{showCancel ? (
-				<Button variant="secondary" onClick={onCancel}>
-					{cancelLabel}
-				</Button>
-			) : null}
-			<Button
-				variant="primary"
-				className={
-					destructive
-						? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-						: undefined
-				}
-				onClick={onConfirm}
-			>
-				{confirmLabel}
-			</Button>
-		</div>
-	);
-}
-
-/**
- * Renders the description content if provided
- */
-function renderDescription(description: ReactNode | undefined) {
-	if (!description) {
-		return null;
-	}
-	return <div className="text-sm text-muted-foreground">{description}</div>;
-}
+export type { AlertDialogProps } from '@core/ui/feedback/alert-dialog/types/AlertDialog.types';
 
 /**
  * AlertDialog - Simple alert/confirmation dialog component
@@ -153,8 +48,8 @@ export default function AlertDialog({
 	onClose,
 	title,
 	description,
-	confirmLabel = DEFAULT_CONFIRM_LABEL,
-	cancelLabel = DEFAULT_CANCEL_LABEL,
+	confirmLabel,
+	cancelLabel,
 	onConfirm,
 	onCancel,
 	destructive = false,
@@ -162,16 +57,15 @@ export default function AlertDialog({
 	size = 'sm',
 	className,
 }: Readonly<AlertDialogProps>) {
-	const handleConfirm = createConfirmHandler(onConfirm, onClose);
-	const handleCancel = createCancelHandler(onCancel, onClose);
-
-	const footer = renderFooter({
+	const { t } = useTranslation('common');
+	const footer = createAlertDialogFooter({
 		showCancel,
-		cancelLabel,
-		confirmLabel,
+		cancelLabel: cancelLabel ?? t('cancel'),
+		confirmLabel: confirmLabel ?? t('confirm'),
 		destructive,
-		onCancel: handleCancel,
-		onConfirm: handleConfirm,
+		onConfirm,
+		onCancel,
+		onClose,
 	});
 
 	return (
@@ -185,7 +79,7 @@ export default function AlertDialog({
 			closeOnOverlayClick={false}
 			{...(className !== undefined && { className })}
 		>
-			{renderDescription(description)}
+			<AlertDialogDescription description={description} />
 		</Modal>
 	);
 }

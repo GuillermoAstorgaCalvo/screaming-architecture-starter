@@ -5,5 +5,232 @@
 	},
 	"nav": {
 		"home": "الرئيسية"
+	},
+	"errors": {
+		"error500": {
+			"title": "500",
+			"message": "خطأ داخلي في الخادم",
+			"returnHome": "العودة إلى الرئيسية"
+		},
+		"error404": {
+			"title": "404",
+			"message": "الصفحة غير موجودة",
+			"returnHome": "العودة إلى الرئيسية"
+		},
+		"errorBoundary": {
+			"title": "حدث خطأ ما",
+			"description": "نأسف، لكن حدث شيء غير متوقع. يرجى المحاولة مرة أخرى.",
+			"tryAgain": "حاول مرة أخرى",
+			"goToHome": "الذهاب إلى الرئيسية",
+			"tryAgainAriaLabel": "حاول مرة أخرى لإعادة تحميل التطبيق"
+		},
+		"requestTimeout": "انتهت مهلة الطلب",
+		"networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+		"unknownError": "حدث خطأ غير معروف",
+		"requestFailed": "فشل الطلب",
+		"rootElementNotFound": "العنصر الجذري #root غير موجود",
+		"unableToLoadDemoContent": "تعذر تحميل محتوى العرض التوضيحي.",
+		"failedToLoadGoogleMaps": "فشل تحميل خرائط Google"
+	},
+	"a11y": {
+		"mainNavigation": "التنقل الرئيسي",
+		"notifications": "الإشعارات",
+		"dismissNotification": "إلغاء الإشعار",
+		"languageSelector": "محدد اللغة",
+		"currentLanguage": "اللغة الحالية: {language}",
+		"selectLanguage": "اختر اللغة",
+		"toggleTheme": "تبديل المظهر",
+		"currentTheme": "المظهر الحالي: {theme}",
+		"currentThemeDescription": "المظهر الحالي: {theme}. انقر للتبديل.",
+		"required": "مطلوب",
+		"imageGallery": "معرض الصور",
+		"uploadProgress": "تقدم التحميل: {progress}%",
+		"chooseLanguage": "اختر لغتك",
+		"addNewItem": "إضافة عنصر جديد",
+		"createNewPost": "إنشاء منشور جديد",
+		"virtualizedList": "قائمة افتراضية",
+		"sidebar": "الشريط الجانبي",
+		"applicationMenu": "قائمة التطبيق",
+		"resizableContainer": "حاوية قابلة للتغيير",
+		"countryCode": "رمز البلد",
+		"splitterContainer": "حاوية مقسمة",
+		"info": "معلومات",
+		"commands": "الأوامر",
+		"searchCommands": "البحث عن الأوامر",
+		"steps": "الخطوات",
+		"transferList": "قائمة النقل",
+		"segmentedControl": "عنصر تحكم مجزأ",
+		"clearSearch": "مسح البحث",
+		"oneTimePasswordInput": "إدخال كلمة مرور لمرة واحدة",
+		"increment": "زيادة",
+		"decrement": "تقليل",
+		"search": "بحث",
+		"more": "المزيد",
+		"close": "إغلاق",
+		"fileUploadDropzone": "منطقة رفع الملفات",
+		"moreOptions": "المزيد من الخيارات",
+		"timeline": "الجدول الزمني",
+		"scrollToTop": "التمرير إلى الأعلى",
+		"sortableList": "قائمة قابلة للترتيب",
+		"closeModal": "إغلاق النافذة المنبثقة",
+		"closeDrawer": "إغلاق الدرج",
+		"closeSheet": "إغلاق الورقة",
+		"closeDialog": "إغلاق الحوار",
+		"openMenu": "فتح القائمة",
+		"closeMenu": "إغلاق القائمة",
+		"loading": "جارٍ التحميل",
+		"loadingContent": "جارٍ تحميل المحتوى",
+		"error": "خطأ",
+		"success": "نجح",
+		"warning": "تحذير",
+		"submit": "إرسال النموذج",
+		"delete": "حذف",
+		"edit": "تعديل",
+		"save": "حفظ",
+		"skipToContent": "تخطي إلى المحتوى الرئيسي",
+		"menuButton": "القائمة",
+		"navigation": "التنقل",
+		"mainContent": "المحتوى الرئيسي",
+		"breadcrumb": "مسار التنقل",
+		"tabs": "التبويبات",
+		"modalContent": "محتوى النافذة المنبثقة",
+		"pagination": "ترقيم الصفحات",
+		"carousel": "العرض المتحرك",
+		"rating": "التقييم",
+		"marquee": "محتوى متحرك"
+	},
+	"commandPalette": {
+		"placeholder": "اكتب أمرًا أو ابحث...",
+		"emptyState": "لم يتم العثور على أوامر"
+	},
+	"inlineEdit": {
+		"placeholder": "انقر للتحرير"
+	},
+	"theme": {
+		"light": "فاتح",
+		"dark": "داكن",
+		"system": "النظام"
+	},
+	"language": {
+		"en": "الإنجليزية",
+		"es": "الإسبانية",
+		"ar": "العربية"
+	},
+	"common": {
+		"retry": "إعادة المحاولة",
+		"failedToLoadMoreItems": "فشل تحميل المزيد من العناصر",
+		"anErrorOccurred": "حدث خطأ",
+		"confirm": "تأكيد",
+		"cancel": "إلغاء",
+		"noMatches": "لا توجد نتائج",
+		"loadingOptions": "جارٍ تحميل الخيارات…",
+		"fieldRequired": "هذا الحقل مطلوب",
+		"input": "إدخال",
+		"selectAll": "تحديد الكل",
+		"deselectAll": "إلغاء تحديد الكل",
+		"selectAllRows": "تحديد جميع الصفوف",
+		"noDataAvailable": "لا توجد بيانات متاحة",
+		"search": "بحث...",
+		"searchPlaceholder": "بحث...",
+		"noActionsAvailable": "لا توجد إجراءات متاحة",
+		"noOptionsFound": "لم يتم العثور على خيارات"
+	},
+	"carousel": {
+		"previousSlide": "الشريحة السابقة",
+		"nextSlide": "الشريحة التالية",
+		"slideIndicators": "مؤشرات الشرائح",
+		"goToSlide": "الانتقال إلى الشريحة {index}"
+	},
+	"password": {
+		"showPassword": "إظهار كلمة المرور",
+		"hidePassword": "إخفاء كلمة المرور"
+	},
+	"calendar": {
+		"previousMonth": "الشهر السابق",
+		"nextMonth": "الشهر التالي",
+		"goToToday": "الانتقال إلى اليوم",
+		"today": "اليوم"
+	},
+	"fileUpload": {
+		"dropFilesHere": "إسقاط الملفات هنا",
+		"dragAndDropFilesHere": "اسحب وأفلت الملفات هنا",
+		"or": "أو",
+		"browseFiles": "تصفح الملفات",
+		"accepted": "مقبول:",
+		"fileSizeExceedsMaximum": "يتجاوز حجم الملف الحد الأقصى وهو {maxSize}",
+		"fileSizeBelowMinimum": "حجم الملف أقل من الحد الأدنى وهو {minSize}",
+		"fileTypeNotAccepted": "نوع الملف غير مقبول. الأنواع المقبولة: {types}",
+		"maximum": "الحد الأقصى",
+		"minimum": "الحد الأدنى",
+		"file": "ملف",
+		"files": "ملفات",
+		"allowed": "مسموح",
+		"required": "مطلوب",
+		"bytes": "بايت",
+		"kb": "كيلوبايت",
+		"mb": "ميجابايت",
+		"gb": "جيجابايت",
+		"uploadProgress": "تقدم التحميل: {progress}%"
+	},
+	"wizard": {
+		"next": "التالي",
+		"previous": "السابق",
+		"finish": "إنهاء",
+		"skip": "تخطي",
+		"progress": "تقدم المعالج: {progress}%",
+		"validationFailed": "فشل التحقق",
+		"validationError": "خطأ في التحقق"
+	},
+	"pagination": {
+		"showing": "عرض {startIndex} إلى {endIndex} من {totalItems} نتائج",
+		"first": "الأول",
+		"last": "الأخير",
+		"previous": "السابق",
+		"next": "التالي",
+		"goToFirstPage": "الانتقال إلى الصفحة الأولى",
+		"goToLastPage": "الانتقال إلى الصفحة الأخيرة",
+		"goToPreviousPage": "الانتقال إلى الصفحة السابقة",
+		"goToNextPage": "الانتقال إلى الصفحة التالية",
+		"goToPage": "الانتقال إلى الصفحة {page}"
+	},
+	"filters": {
+		"activeFilters": "الفلاتر النشطة:",
+		"clearAll": "مسح الكل",
+		"clearAllAriaLabel": "مسح جميع الفلاتر",
+		"removeFilter": "إزالة فلتر {label}",
+		"filterBuilder": "منشئ الفلاتر",
+		"closeFilterBuilder": "إغلاق منشئ الفلاتر",
+		"addFilter": "إضافة فلتر",
+		"filterLabel": "تسمية الفلتر",
+		"filterLabelPlaceholder": "مثال: الحالة، التاريخ، الفئة",
+		"filterType": "نوع الفلتر",
+		"addNewFilter": "إضافة فلتر جديد",
+		"filterTypeText": "نص",
+		"filterTypeSelect": "تحديد",
+		"filterTypeMultiSelect": "تحديد متعدد",
+		"filterTypeDate": "تاريخ",
+		"filterTypeDateRange": "نطاق التاريخ"
+	},
+	"transfer": {
+		"sourceTitle": "متاح",
+		"targetTitle": "محدد",
+		"searchList": "البحث في قائمة {type}",
+		"moveSelectedToRight": "نقل المحدد إلى اليمين",
+		"moveSelectedToLeft": "نقل المحدد إلى اليسار"
+	},
+	"copy": {
+		"copyToClipboard": "نسخ إلى الحافظة",
+		"copied": "تم النسخ!",
+		"clipboardApiNotAvailable": "واجهة برمجة التطبيقات للحافظة غير متاحة",
+		"failedToCopy": "فشل نسخ النص إلى الحافظة"
+	},
+	"seo": {
+		"siteName": "Screaming Architecture Starter",
+		"defaultDescription": "قالب تطبيق React حديث وقابل للتوسع",
+		"defaultTitle": "Screaming Architecture Starter"
+	},
+	"noscript": {
+		"title": "JavaScript مطلوب",
+		"message": "يتطلب هذا التطبيق تفعيل JavaScript. يرجى تفعيل JavaScript في إعدادات المتصفح."
 	}
 }

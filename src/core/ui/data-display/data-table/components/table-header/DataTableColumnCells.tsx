@@ -1,5 +1,5 @@
-import type { ColumnCellsProps } from '@core/ui/data-display/data-table/components/DataTableHeader.types';
-import { DataTableHeaderCell } from '@core/ui/data-display/data-table/components/DataTableHeaderCell';
+import type { ColumnCellsProps } from '@core/ui/data-display/data-table/components/table-header/DataTableHeader.types';
+import { DataTableHeaderCell } from '@core/ui/data-display/data-table/components/table-header/DataTableHeaderCell';
 
 /**
  * ColumnCells - Renders all column header cells

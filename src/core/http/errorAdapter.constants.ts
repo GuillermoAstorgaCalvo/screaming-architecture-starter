@@ -4,6 +4,8 @@
  * HTTP status codes and error messages used for error adaptation.
  */
 
+import i18n from '@core/i18n/i18n';
+
 import type { DomainErrorType } from './errorAdapter.types';
 
 /** HTTP status code constants */
@@ -24,11 +26,17 @@ export const STATUS_CODE_TO_ERROR_TYPE: Record<number, DomainErrorType> = {
 	[HTTP_STATUS_UNPROCESSABLE_ENTITY]: 'validation',
 } as const;
 
-/** Error messages */
+/** Error messages - using i18n for translations */
 export const ERROR_MESSAGES = {
-	TIMEOUT: 'Request timeout',
-	NETWORK: 'Network error. Please check your connection.',
-	UNKNOWN: 'An unknown error occurred',
+	get TIMEOUT() {
+		return i18n.t('errors.requestTimeout', { ns: 'common' });
+	},
+	get NETWORK() {
+		return i18n.t('errors.networkError', { ns: 'common' });
+	},
+	get UNKNOWN() {
+		return i18n.t('errors.unknownError', { ns: 'common' });
+	},
 } as const;
 
 /** Client error types (4xx) */

@@ -9,7 +9,7 @@ export function getCurrentMonthClasses(): string {
  * Get classes for days in other months
  */
 export function getOtherMonthClasses(): string {
-	return 'text-muted-foreground opacity-50';
+	return 'text-muted-foreground opacity-disabled';
 }
 
 /**
@@ -61,7 +61,7 @@ export function getStateClasses({
 		[isRangeHighlighted(isSelected === true, isInRange === true), 'bg-primary/20'],
 		[isRangeStart === true, 'rounded-l-lg'],
 		[isRangeEnd === true, 'rounded-r-lg'],
-		[disabled === true, 'opacity-50 cursor-not-allowed'],
+		[disabled === true, 'opacity-disabled cursor-not-allowed'],
 		[
 			shouldApplyHover(disabled === true, isSelected === true),
 			'hover:bg-accent hover:text-accent-foreground',
@@ -95,7 +95,7 @@ export function getDayClasses({
 	disabled?: boolean;
 }): string {
 	const baseClasses =
-		'aspect-square flex flex-col items-center justify-start p-1 text-sm cursor-pointer transition-colors';
+		'aspect-square flex flex-col items-center justify-start p-xs text-sm cursor-pointer transition-colors';
 	const monthClasses = isCurrentMonth ? getCurrentMonthClasses() : getOtherMonthClasses();
 	const stateParams = buildStateParams(
 		isToday,

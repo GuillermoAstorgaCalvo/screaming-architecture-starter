@@ -18,7 +18,9 @@ const CONTAINER_MAX_WIDTH_CLASSES: Record<NonNullable<ContainerProps['maxWidth']
 	full: 'max-w-full',
 } as const;
 
-const CONTAINER_PADDING_CLASSES = 'px-4 sm:px-6 lg:px-8';
+// Uses design token spacing: xs=4px, sm=8px, md=12px, lg=16px, xl=24px
+// px-lg (16px) for mobile, px-xl (24px) for sm and up, px-2xl (32px) for lg and up
+const CONTAINER_PADDING_CLASSES = 'px-lg sm:px-xl lg:px-2xl';
 
 /**
  * Container - Layout component for consistent max-width and padding
@@ -47,7 +49,7 @@ const CONTAINER_PADDING_CLASSES = 'px-4 sm:px-6 lg:px-8';
  *
  * @example
  * ```tsx
- * <Container maxWidth="full" padding className="bg-gray-100">
+ * <Container maxWidth="full" padding className="bg-muted">
  *   <div>Full width with padding and custom styling</div>
  * </Container>
  * ```

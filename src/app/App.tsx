@@ -16,8 +16,8 @@ import { LoggerProvider } from '@core/providers/logger/LoggerProvider';
 import { StorageProvider } from '@core/providers/storage/StorageProvider';
 import { ToastProvider } from '@core/providers/toast/ToastProvider';
 import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
-import { LayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup';
-import { MotionProvider } from '@core/ui/utilities/motion/components/MotionProvider';
+import { LazyLayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup.lazy';
+import { LazyMotionProvider } from '@core/ui/utilities/motion/components/MotionProvider.lazy';
 import {
 	googleAnalyticsAdapter,
 	noopAnalyticsAdapter,
@@ -64,16 +64,16 @@ export default function App() {
 								<I18nProvider>
 									<QueryProvider>
 										<AnalyticsProvider analytics={analyticsAdapter} config={analyticsConfig}>
-											<MotionProvider reducedMotion="user">
+											<LazyMotionProvider reducedMotion="user">
 												<ToastProvider>
 													<BrowserRouter>
-														<LayoutGroup id="app-route-transitions">
+														<LazyLayoutGroup id="app-route-transitions">
 															<Router />
-														</LayoutGroup>
+														</LazyLayoutGroup>
 													</BrowserRouter>
 													<ToastContainer />
 												</ToastProvider>
-											</MotionProvider>
+											</LazyMotionProvider>
 										</AnalyticsProvider>
 									</QueryProvider>
 								</I18nProvider>

@@ -1,97 +1,10 @@
+import { prepareAreaConfig } from '@core/ui/data-display/chart/area-chart/helpers/AreaChart.config';
 import {
-	createAreaProps,
 	renderChart,
 	renderEmptyState,
 } from '@core/ui/data-display/chart/area-chart/helpers/AreaChart.helpers';
-import { getChartColors } from '@core/ui/data-display/chart/shared/ChartHelpers';
+import { normalizeProps } from '@core/ui/data-display/chart/area-chart/helpers/AreaChart.normalize';
 import type { AreaChartProps } from '@src-types/ui/data/chart';
-import type { HTMLAttributes, ReactNode } from 'react';
-
-type CurveType = 'linear' | 'monotone' | 'step' | 'stepBefore' | 'stepAfter';
-
-const DEFAULT_CHART_HEIGHT = 300;
-const DEFAULT_FILL_OPACITY = 0.6;
-
-interface ChartConfig {
-	colorScheme: AreaChartProps['colorScheme'];
-	dataKey: string;
-	showDots: boolean;
-	strokeWidth: number;
-	curveType: CurveType;
-	connectNulls: boolean;
-	fillOpacity: number;
-}
-
-/** Prepares the area props configuration */
-function prepareAreaConfig(config: ChartConfig) {
-	const colors = getChartColors(config.colorScheme);
-	const primaryColor = colors[0] ?? '#3b82f6';
-	return createAreaProps({
-		color: primaryColor,
-		dataKey: config.dataKey,
-		curveType: config.curveType,
-		strokeWidth: config.strokeWidth,
-		fillOpacity: config.fillOpacity,
-		showDots: config.showDots,
-		connectNulls: config.connectNulls,
-	});
-}
-
-interface NormalizedAreaChartProps {
-	data: AreaChartProps['data'];
-	title?: string | undefined;
-	description?: string | undefined;
-	width: number | string;
-	height: number;
-	colorScheme: AreaChartProps['colorScheme'];
-	showLegend: boolean;
-	showTooltip: boolean;
-	showGrid: boolean;
-	dataKey: string;
-	showDots: boolean;
-	strokeWidth: number;
-	curveType: CurveType;
-	connectNulls: boolean;
-	fillOpacity: number;
-	emptyMessage: ReactNode;
-	chartClassName?: string | undefined;
-	className?: string | undefined;
-	containerProps: HTMLAttributes<HTMLDivElement>;
-}
-
-const DEFAULT_PROPS = {
-	width: '100%',
-	height: DEFAULT_CHART_HEIGHT,
-	colorScheme: 'default' as const,
-	showLegend: true,
-	showTooltip: true,
-	showGrid: true,
-	dataKey: 'value',
-	showDots: false,
-	strokeWidth: 2,
-	curveType: 'monotone' as const,
-	connectNulls: false,
-	fillOpacity: DEFAULT_FILL_OPACITY,
-	emptyMessage: 'No data available',
-} as const;
-
-/** Normalizes and extracts props from AreaChartProps */
-function normalizeProps(props: Readonly<AreaChartProps>): NormalizedAreaChartProps {
-	const { data, title, description, chartClassName, className, ...restProps } = props;
-	const normalized = {
-		...DEFAULT_PROPS,
-		...props,
-		data,
-		title,
-		description,
-		chartClassName,
-		className,
-	};
-	return {
-		...normalized,
-		containerProps: restProps,
-	};
-}
 
 /**
  * AreaChart - Area chart component for data visualization

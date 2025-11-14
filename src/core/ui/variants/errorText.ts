@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
  *
  * Provides type-safe variant management for ErrorText component.
  */
-export const errorTextVariants = cva('mt-1 text-red-600 dark:text-red-400', {
+export const errorTextVariants = cva('mt-1 text-destructive dark:text-destructive-foreground', {
 	variants: {
 		size: {
 			sm: TEXT_SIZE_CLASSES.sm,

@@ -1,9 +1,9 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { ListProvider } from '@core/ui/data-display/list/providers/ListProvider';
 import {
-	prepareItemHandlers,
+	prepareRenderedItems,
 	useSortableListConfig,
 } from '@core/ui/utilities/sortable-list/helpers/SortableListHelpers';
-import { renderSortableItems } from '@core/ui/utilities/sortable-list/helpers/SortableListRenderers';
 import { getListVariantClasses } from '@core/ui/variants/list';
 import type { SortableListProps } from '@src-types/ui/layout/list';
 import { useId } from 'react';
@@ -60,33 +60,30 @@ export default function SortableList<T = unknown>({
 	dragHandle,
 	disabled = false,
 	className,
-	'aria-label': ariaLabel = 'Sortable list',
+	'aria-label': ariaLabel,
 	...props
 }: Readonly<SortableListProps<T>>) {
+	const { t } = useTranslation('common');
 	const listId = useId();
 	const classes = getListVariantClasses({ variant, className });
-
-	const sortableListState = useSortableListConfig({
+	const sortableListState = useSortableListConfig({ items, onReorder, disabled });
+	const renderedItems = prepareRenderedItems({
+		sortableListState,
 		items,
-		onReorder,
-		disabled,
-	});
-
-	const handlers = prepareItemHandlers(sortableListState);
-	const renderedItems = renderSortableItems({
-		items,
-		draggedItemId: sortableListState.draggedItemId,
-		dragTargetIndex: sortableListState.dragTargetIndex,
 		showDragHandle,
 		dragHandle,
 		disabled,
-		handlers,
 		renderItem,
 	});
 
 	return (
 		<ListProvider size={size}>
-			<ul {...props} id={listId} className={classes} aria-label={ariaLabel}>
+			<ul
+				{...props}
+				id={listId}
+				className={classes}
+				aria-label={ariaLabel ?? t('a11y.sortableList')}
+			>
 				{renderedItems}
 			</ul>
 		</ListProvider>

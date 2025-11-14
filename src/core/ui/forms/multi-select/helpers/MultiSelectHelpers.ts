@@ -1,5 +1,6 @@
 import { INPUT_BASE_CLASSES, INPUT_SIZE_CLASSES } from '@core/constants/ui/forms';
 import { FORM_ERROR_CLASSES } from '@core/constants/ui/shared';
+import i18n from '@core/i18n/i18n';
 import type { MultiSelectProps } from '@core/ui/forms/multi-select/MultiSelect';
 import type {
 	UseMultiSelectStateOptions,
@@ -88,9 +89,10 @@ export function extractMultiSelectProps(props: Readonly<MultiSelectProps>) {
 		disabled,
 		placeholder,
 		maxHeight = 280,
-		emptyState = 'No options found',
+		emptyState,
 		...rest
 	} = props;
+	const defaultEmptyState = emptyState ?? i18n.t('common.noOptionsFound', { ns: 'common' });
 	return {
 		label,
 		error,
@@ -100,7 +102,7 @@ export function extractMultiSelectProps(props: Readonly<MultiSelectProps>) {
 		disabled,
 		placeholder,
 		maxHeight,
-		emptyState,
+		emptyState: defaultEmptyState,
 		rest,
 	};
 }

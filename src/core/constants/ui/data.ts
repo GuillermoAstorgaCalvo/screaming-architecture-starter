@@ -13,39 +13,45 @@ export const TABLE_BASE_CLASSES = 'w-full border-collapse';
 
 /**
  * Table size classes (padding for cells)
+ * Uses design tokens for spacing
  */
 export const TABLE_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-2 py-1 text-sm',
-	md: 'px-4 py-2 text-base',
-	lg: 'px-6 py-3 text-lg',
+	sm: 'px-xs py-0.5 text-sm',
+	md: 'px-md py-sm text-base',
+	lg: 'px-xl py-md text-lg',
 } as const;
 
 /**
  * Table header base classes
+ * Uses design tokens for colors
  */
 export const TABLE_HEADER_BASE_CLASSES =
-	'bg-gray-50 font-semibold text-left text-gray-900 dark:bg-gray-800 dark:text-gray-100';
+	'bg-muted font-semibold text-left text-text-primary dark:bg-muted-dark dark:text-text-primary-dark';
 
 /**
  * Table row base classes
+ * Uses design tokens for colors
  */
 export const TABLE_ROW_BASE_CLASSES =
-	'border-b border-gray-200 transition-colors dark:border-gray-700';
+	'border-b border-border transition-colors dark:border-border-dark';
 
 /**
  * Table row striped classes
+ * Uses design tokens for colors
  */
-export const TABLE_ROW_STRIPED_CLASSES = 'even:bg-gray-50 dark:even:bg-gray-800/50';
+export const TABLE_ROW_STRIPED_CLASSES = 'even:bg-muted dark:even:bg-muted-dark/50';
 
 /**
  * Table row hover classes
+ * Uses design tokens for colors
  */
-export const TABLE_ROW_HOVER_CLASSES = 'hover:bg-gray-100 dark:hover:bg-gray-700/50';
+export const TABLE_ROW_HOVER_CLASSES = 'hover:bg-muted dark:hover:bg-muted-dark/50';
 
 /**
  * Table cell base classes
+ * Uses design tokens for colors
  */
-export const TABLE_CELL_BASE_CLASSES = 'text-gray-900 dark:text-gray-100';
+export const TABLE_CELL_BASE_CLASSES = 'text-text-primary dark:text-text-primary-dark';
 
 /**
  * Pagination base classes
@@ -60,28 +66,31 @@ export const PAGINATION_BUTTON_BASE_CLASSES =
 
 /**
  * Pagination button size classes (padding + text size)
+ * Uses design tokens for spacing and customizable min-width
  */
 export const PAGINATION_BUTTON_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-2 py-1 text-sm min-w-[2rem]',
-	md: 'px-3 py-1.5 text-base min-w-[2.5rem]',
-	lg: 'px-4 py-2 text-lg min-w-[3rem]',
+	sm: 'px-xs py-0.5 text-sm min-w-[calc(var(--spacing-lg)*2)]',
+	md: 'px-sm py-xs text-base min-w-[calc(var(--spacing-lg)*2.5)]',
+	lg: 'px-md py-sm text-lg min-w-[calc(var(--spacing-lg)*3)]',
 } as const;
 
 /**
  * Pagination button variant classes
+ * Uses design tokens for colors
  */
 export const PAGINATION_BUTTON_VARIANT_CLASSES = {
 	active:
 		'bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90',
 	inactive:
-		'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
+		'bg-surface text-text-secondary hover:bg-muted dark:bg-surface-dark dark:text-text-secondary-dark dark:hover:bg-muted-dark',
 } as const;
 
 /**
  * Avatar base classes
+ * Uses design tokens for colors
  */
 export const AVATAR_BASE_CLASSES =
-	'inline-flex items-center justify-center font-medium text-white bg-gray-400 overflow-hidden flex-shrink-0';
+	'inline-flex items-center justify-center font-medium text-text-on-primary bg-secondary overflow-hidden flex-shrink-0';
 
 /**
  * Avatar size classes (width + height + text size)

@@ -16,8 +16,12 @@ Suggested package scripts (pnpm):
 - `format`: Prettier write
 - `typecheck`: TypeScript type checking (`tsc -b`)
 - `clean`: Remove dist, node_modules and prune pnpm store (`pnpm dlx rimraf dist node_modules pnpm store prune`)
-- `test`: Run unit tests (`vitest run`)
+- `test`: Run unit tests (`vitest run`) - Use Docker on Windows
 - `test:watch`: Run unit tests in watch mode (`vitest`)
+- `test:coverage`: Run unit tests with coverage (`vitest run --coverage`)
 - `test:e2e`: Run e2e tests (Playwright)
+- `docker:test`: Run unit tests with Docker (recommended on Windows)
+- `docker:test:watch`: Run unit tests in watch mode with Docker
+- `docker:test:e2e`: Run e2e tests with Docker
 
 Place custom generators in `scripts/codegen.ts` and mock server in `scripts/mockServer.ts`.

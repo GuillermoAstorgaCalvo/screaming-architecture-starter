@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	createCancelHandler,
 	createConfirmHandler,
@@ -34,18 +35,22 @@ function useActionHandlers({
 	onCancel,
 	handleClose,
 	setError,
-}: HandlerCreationParams) {
+	getRequiredError,
+}: HandlerCreationParams & { getRequiredError: () => string }) {
 	const handleConfirm = useMemo(
 		() =>
-			createConfirmHandler({
-				value,
-				validate,
-				required,
-				onConfirm,
-				onClose: handleClose,
-				setError,
-			}),
-		[value, validate, required, onConfirm, handleClose, setError]
+			createConfirmHandler(
+				{
+					value,
+					validate,
+					required,
+					onConfirm,
+					onClose: handleClose,
+					setError,
+				},
+				getRequiredError
+			),
+		[value, validate, required, onConfirm, handleClose, setError, getRequiredError]
 	);
 
 	const handleCancel = useMemo(
@@ -67,6 +72,7 @@ export function usePromptDialogState({
 	onConfirm,
 	onCancel,
 }: UsePromptDialogStateOptions) {
+	const { t } = useTranslation('common');
 	const [value, setValue] = useState(defaultValue);
 	const [error, setError] = useState<string | undefined>(undefined);
 
@@ -76,6 +82,8 @@ export function usePromptDialogState({
 		onClose();
 	}, [defaultValue, onClose]);
 
+	const getRequiredError = useCallback(() => t('fieldRequired'), [t]);
+
 	const { handleConfirm, handleCancel } = useActionHandlers({
 		value,
 		validate,
@@ -84,6 +92,7 @@ export function usePromptDialogState({
 		onCancel,
 		handleClose,
 		setError,
+		getRequiredError,
 	});
 
 	const handleValueChange = useCallback((newValue: string) => {
@@ -100,3 +109,5 @@ export function usePromptDialogState({
 		handleValueChange,
 	};
 }
+
+export type PromptDialogState = ReturnType<typeof usePromptDialogState>;

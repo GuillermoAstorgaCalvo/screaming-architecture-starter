@@ -1,4 +1,4 @@
-import { ARIA_LABELS } from '@core/constants/aria';
+import { useTranslation } from '@core/i18n/useTranslation';
 import { getLabelVariantClasses } from '@core/ui/variants/label';
 import type { LabelProps } from '@src-types/ui/forms';
 
@@ -25,6 +25,7 @@ export default function Label({
 	className,
 	...props
 }: Readonly<LabelProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<label
 			className={getLabelVariantClasses({ size, className })}
@@ -33,7 +34,10 @@ export default function Label({
 		>
 			{children}
 			{required ? (
-				<span className="text-red-600 dark:text-red-400 ml-1" aria-label={ARIA_LABELS.REQUIRED}>
+				<span
+					className="text-destructive dark:text-destructive-foreground ml-1"
+					aria-label={t('a11y.required')}
+				>
 					*
 				</span>
 			) : null}

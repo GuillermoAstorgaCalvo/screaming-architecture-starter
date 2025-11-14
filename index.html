@@ -70,20 +70,63 @@
 						sans-serif;
 					text-align: center;
 				}
+				/* Hide all language-specific noscript messages by default */
+				[data-lang] {
+					display: none;
+				}
+				/* Show message matching HTML lang attribute */
+				[data-lang='en']:lang(en),
+				[data-lang='es']:lang(es),
+				[data-lang='ar']:lang(ar) {
+					display: block;
+				}
+				/* Fallback: show English if no lang match */
+				html:not([lang]) [data-lang='en'],
+				html[lang=''] [data-lang='en'] {
+					display: block;
+				}
 			</style>
 		</noscript>
 	</head>
 	<body>
 		<noscript>
 			<div>
-				<h1>JavaScript Required</h1>
-				<p>
-					This application requires JavaScript to be enabled. Please enable JavaScript in your
-					browser settings.
-				</p>
+				<div data-lang="en">
+					<h1>JavaScript Required</h1>
+					<p>
+						This application requires JavaScript to be enabled. Please enable JavaScript in your
+						browser settings.
+					</p>
+				</div>
+				<div data-lang="es">
+					<h1>JavaScript Requerido</h1>
+					<p>
+						Esta aplicación requiere que JavaScript esté habilitado. Por favor, habilita JavaScript
+						en la configuración de tu navegador.
+					</p>
+				</div>
+				<div data-lang="ar">
+					<h1>JavaScript مطلوب</h1>
+					<p>يتطلب هذا التطبيق تفعيل JavaScript. يرجى تفعيل JavaScript في إعدادات المتصفح.</p>
+				</div>
 			</div>
 		</noscript>
 		<div id="root"></div>
+		<script>
+			// Set HTML lang attribute based on browser language before React loads
+			// This ensures the CSS :lang() selector works correctly for noscript messages
+			(function () {
+				const lang = navigator.language || navigator.userLanguage || 'en';
+				const langCode = lang.split('-')[0].toLowerCase();
+				const htmlElement = document.documentElement;
+
+				// Update HTML lang attribute to match browser language
+				// This allows CSS :lang() selector to show the correct noscript message
+				if (['en', 'es', 'ar'].includes(langCode)) {
+					htmlElement.setAttribute('lang', langCode);
+				}
+			})();
+		</script>
 		<script type="module" src="/src/app/main.tsx"></script>
 	</body>
 </html>

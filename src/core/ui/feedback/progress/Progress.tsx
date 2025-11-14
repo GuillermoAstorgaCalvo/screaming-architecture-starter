@@ -44,7 +44,7 @@ function ProgressBar({ percentage }: Readonly<{ percentage: number }>) {
 }
 
 function ProgressValue({ value }: Readonly<{ value: number }>) {
-	return <div className="mt-1 text-xs text-gray-600 dark:text-gray-400 text-right">{value}%</div>;
+	return <div className="mt-1 text-xs text-text-secondary text-right">{value}%</div>;
 }
 
 export default function Progress({

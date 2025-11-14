@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import { getFileUploadDropzoneClasses } from '@core/ui/forms/file-upload/helpers/FileUploadHelpers';
 import type { FileUploadDropzoneProps } from '@core/ui/forms/file-upload/types/FileUploadTypes';
 import { type DragEvent, type KeyboardEvent, useRef } from 'react';
@@ -113,7 +114,7 @@ function getDropzoneProps({
 		role: 'button' as const,
 		tabIndex: disabled ? -1 : 0,
 		'aria-disabled': disabled,
-		'aria-label': 'File upload dropzone',
+		'aria-label': i18n.t('a11y.fileUploadDropzone', { ns: 'common' }),
 		className,
 		onDragEnter: handlers.handleDragEnter,
 		onDragLeave: handlers.handleDragLeave,

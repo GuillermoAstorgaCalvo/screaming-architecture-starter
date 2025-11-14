@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type { MapProps } from '@src-types/ui/maps';
 
 interface InitializeMapParams {
@@ -35,7 +36,7 @@ export async function initializeMapInstance({
 	const googleMapsApi = await initializeGoogleMaps(resolvedApiKey, libraries);
 
 	if (!googleMapsApi) {
-		throw new Error('Failed to load Google Maps');
+		throw new Error(i18n.t('errors.failedToLoadGoogleMaps', { ns: 'common' }));
 	}
 
 	// Import helpers dynamically to avoid circular dependencies

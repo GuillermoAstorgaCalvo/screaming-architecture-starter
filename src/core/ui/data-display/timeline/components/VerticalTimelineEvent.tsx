@@ -13,7 +13,7 @@ export function VerticalTimelineEvent({
 	onClick,
 }: Readonly<VerticalTimelineEventProps>) {
 	const isClickable = Boolean(onClick);
-	const clickableClasses = `${contentClasses} ${contentSpacing} text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50`;
+	const clickableClasses = `${contentClasses} ${contentSpacing} text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-colors hover:bg-muted dark:hover:bg-muted`;
 
 	return (
 		<>

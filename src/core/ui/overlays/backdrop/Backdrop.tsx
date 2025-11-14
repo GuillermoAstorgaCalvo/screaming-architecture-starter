@@ -79,7 +79,7 @@ export default function Backdrop({
 function getVariantClasses(variant: BackdropProps['variant']): string {
 	switch (variant) {
 		case 'blur': {
-			return 'backdrop-blur-sm';
+			return 'backdrop-blur-md';
 		}
 		case 'solid': {
 			return '';
@@ -97,17 +97,17 @@ function getVariantClasses(variant: BackdropProps['variant']): string {
 function getOpacityClasses(opacity: BackdropProps['opacity']): string {
 	switch (opacity) {
 		case 'light': {
-			return 'bg-black/30 dark:bg-black/40';
+			return 'bg-overlay-light dark:bg-overlay-light-dark';
 		}
 		case 'medium': {
-			return 'bg-black/50 dark:bg-black/60';
+			return 'bg-overlay-medium dark:bg-overlay-medium-dark';
 		}
 		case 'dark': {
-			return 'bg-black/70 dark:bg-black/80';
+			return 'bg-overlay-dark dark:bg-overlay-dark-dark';
 		}
 		case 'default':
 		default: {
-			return 'bg-black/50 dark:bg-black/70';
+			return 'bg-overlay dark:bg-overlay-default-dark';
 		}
 	}
 }

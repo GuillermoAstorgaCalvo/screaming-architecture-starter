@@ -79,3 +79,36 @@ export function usePaginationButtonProps(options: UsePaginationButtonPropsOption
 		[currentPage, totalPages, visiblePages, size, showFirstLast, showPrevNext, onPageChange]
 	);
 }
+
+export interface UsePaginationContentOptions {
+	currentPage: number;
+	totalPages: number;
+	onPageChange: (page: number) => void;
+	showFirstLast: boolean;
+	showPrevNext: boolean;
+	maxVisiblePages: number;
+	size: StandardSize;
+	paginationId: string | undefined;
+}
+
+/**
+ * Custom hook that combines pagination setup and button props
+ */
+export function usePaginationContent(options: UsePaginationContentOptions) {
+	const { id, visiblePages } = usePaginationSetup({
+		currentPage: options.currentPage,
+		totalPages: options.totalPages,
+		maxVisiblePages: options.maxVisiblePages,
+		paginationId: options.paginationId,
+	});
+	const buttonProps = usePaginationButtonProps({
+		currentPage: options.currentPage,
+		totalPages: options.totalPages,
+		visiblePages,
+		size: options.size,
+		showFirstLast: options.showFirstLast,
+		showPrevNext: options.showPrevNext,
+		onPageChange: options.onPageChange,
+	});
+	return { id, buttonProps };
+}

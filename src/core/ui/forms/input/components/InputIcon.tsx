@@ -10,7 +10,7 @@ export function InputIcon({ position, children }: Readonly<InputIconProps>) {
 		<div
 			className={classNames(
 				positionClasses,
-				'pointer-events-none text-gray-400 dark:text-gray-500'
+				'pointer-events-none text-text-muted dark:text-text-muted'
 			)}
 		>
 			{children}

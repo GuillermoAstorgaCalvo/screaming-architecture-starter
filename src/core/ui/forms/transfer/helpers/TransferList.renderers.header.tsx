@@ -18,7 +18,7 @@ export function renderHeader({
 	return (
 		<div className={headerClasses} id={headerId}>
 			<div className="flex items-center justify-between">
-				<h3 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+				<h3 className="font-semibold text-text-primary dark:text-text-primary">{title}</h3>
 				{showSelectAll && enabledOptionsCount > 0
 					? renderSelectAllButton({ allSelected, disabled, labels, onSelectAllToggle })
 					: null}

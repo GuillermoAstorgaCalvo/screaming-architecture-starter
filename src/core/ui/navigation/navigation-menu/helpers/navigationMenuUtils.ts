@@ -1,4 +1,5 @@
 import type { NavigationMenuItem } from '@src-types/ui/navigation/navigationMenu';
+import type { KeyboardEvent } from 'react';
 
 export function findNextEnabledItemIndex(
 	items: readonly NavigationMenuItem[],
@@ -16,4 +17,18 @@ export function findNextEnabledItemIndex(
 	}
 
 	return -1;
+}
+
+export function getMenuContainerProps(
+	orientation: 'horizontal' | 'vertical',
+	classes: string,
+	handleKeyDown: (event: KeyboardEvent<HTMLElement>) => void
+) {
+	return {
+		role: 'menu' as const,
+		className: classes,
+		onKeyDown: handleKeyDown,
+		tabIndex: 0,
+		'aria-orientation': orientation,
+	};
 }

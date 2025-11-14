@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { StepperSteps } from '@core/ui/navigation/stepper/components/Stepper.components';
 import { getStepperVariantClasses } from '@core/ui/variants/stepper';
 import type { StepperProps } from '@src-types/ui/navigation/stepper';
@@ -38,13 +39,14 @@ export default function Stepper({
 	className,
 	...props
 }: Readonly<StepperProps>) {
+	const { t } = useTranslation('common');
 	const stepperClasses = useMemo(
 		() => getStepperVariantClasses({ orientation, className }),
 		[orientation, className]
 	);
 
 	return (
-		<nav className={stepperClasses} aria-label="Steps" {...props}>
+		<nav className={stepperClasses} aria-label={t('a11y.steps')} {...props}>
 			<StepperSteps
 				steps={steps}
 				activeStep={activeStep}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { prepareAllData } from '@core/ui/utilities/resizable/helpers/ResizableContainer.helpers';
 import type {
 	ProcessedContainerProps,
@@ -33,30 +34,26 @@ function processContainerProps(props: ResizableContainerProps): ProcessedContain
 	return { id, containerStyle, containerClasses, handle, children };
 }
 
-function renderContainer(
-	{ id, containerStyle, containerClasses, handle, children }: ProcessedContainerProps,
+function ResizableContainerInner(
+	props: ResizableContainerProps,
 	ref: ForwardedRef<HTMLDivElement>
 ) {
+	const { t } = useTranslation('common');
+	const processedProps = processContainerProps(props);
+	const { id, containerStyle, containerClasses, handle, children } = processedProps;
+
 	return (
 		<div
 			ref={ref}
 			id={id}
 			className={containerClasses}
 			style={containerStyle}
-			aria-label="Resizable container"
+			aria-label={t('a11y.resizableContainer')}
 		>
 			{children}
 			{handle}
 		</div>
 	);
-}
-
-function ResizableContainerInner(
-	props: ResizableContainerProps,
-	ref: ForwardedRef<HTMLDivElement>
-) {
-	const processedProps = processContainerProps(props);
-	return renderContainer(processedProps, ref);
 }
 
 export const ResizableContainer = forwardRef<HTMLDivElement, ResizableContainerProps>(

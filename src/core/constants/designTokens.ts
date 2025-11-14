@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Design tokens constants
  * Single source of truth for design tokens (color, radius, spacing, shadows, typography)
@@ -74,6 +75,18 @@ export const designTokens = {
 			dark: '#0b0f19',
 			elevated: '#ffffff',
 			elevatedDark: '#1a1f2e',
+		},
+
+		// Overlay/backdrop colors for modals, drawers, etc.
+		overlay: {
+			DEFAULT: 'rgba(0, 0, 0, 0.5)',
+			light: 'rgba(0, 0, 0, 0.3)',
+			lightDark: 'rgba(0, 0, 0, 0.4)',
+			medium: 'rgba(0, 0, 0, 0.5)',
+			mediumDark: 'rgba(0, 0, 0, 0.6)',
+			dark: 'rgba(0, 0, 0, 0.7)',
+			darkDark: 'rgba(0, 0, 0, 0.8)',
+			defaultDark: 'rgba(0, 0, 0, 0.7)',
 		},
 
 		// Border colors
@@ -233,6 +246,100 @@ export const designTokens = {
 			slow: '300ms',
 			slower: '500ms',
 		},
+		easing: {
+			linear: 'linear',
+			ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
+			'ease-in': 'cubic-bezier(0.4, 0, 1, 1)',
+			'ease-out': 'cubic-bezier(0, 0, 0.2, 1)',
+			'ease-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
+			'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+			'bounce-out': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+			spring: 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
+		},
+	},
+
+	// Opacity tokens for consistent transparency
+	opacity: {
+		transparent: '0',
+		disabled: '0.5',
+		hover: '0.8',
+		focus: '0.9',
+		overlay: {
+			light: '0.3',
+			medium: '0.5',
+			dark: '0.7',
+		},
+	},
+
+	// Border width tokens for consistent borders
+	borderWidth: {
+		none: '0',
+		thin: '1px',
+		medium: '2px',
+		thick: '4px',
+	},
+
+	// Backdrop blur tokens for glassmorphism effects
+	backdropBlur: {
+		none: '0',
+		sm: '4px',
+		md: '8px',
+		lg: '12px',
+		xl: '16px',
+		'2xl': '24px',
+	},
+
+	// Filter blur tokens for animation effects (CSS filter: blur())
+	filterBlur: {
+		none: '0px',
+		sm: '4px',
+		md: '8px',
+		lg: '12px',
+		xl: '16px',
+		'2xl': '24px',
+		// Common animation blur values
+		animation: '10px',
+	},
+
+	// Component size tokens for consistent component dimensions
+	componentSize: {
+		// Button heights
+		button: {
+			sm: '32px',
+			md: '40px',
+			lg: '48px',
+		},
+		// Input heights
+		input: {
+			sm: '32px',
+			md: '40px',
+			lg: '48px',
+		},
+		// Icon sizes
+		icon: {
+			xs: '12px',
+			sm: '16px',
+			md: '20px',
+			lg: '24px',
+			xl: '32px',
+		},
+		// Avatar sizes
+		avatar: {
+			sm: '32px',
+			md: '40px',
+			lg: '48px',
+			xl: '64px',
+		},
+	},
+
+	// Breakpoint tokens for responsive design
+	breakpoint: {
+		xs: '0px',
+		sm: '640px',
+		md: '768px',
+		lg: '1024px',
+		xl: '1280px',
+		'2xl': '1536px',
 	},
 } as const;
 

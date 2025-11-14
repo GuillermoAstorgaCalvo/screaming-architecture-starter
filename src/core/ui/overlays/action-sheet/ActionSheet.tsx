@@ -1,10 +1,11 @@
-import Backdrop from '@core/ui/backdrop/Backdrop';
-import { ActionSheetContent } from '@core/ui/overlays/action-sheet/components/ActionSheet.components';
-import { createActionSheetHandlers } from '@core/ui/overlays/action-sheet/helpers/ActionSheet.helpers';
+import { useTranslation } from '@core/i18n/useTranslation';
+import {
+	createActionSheetHandlers,
+	createActionSheetPortalContent,
+} from '@core/ui/overlays/action-sheet/helpers/ActionSheet.helpers';
 import { useEscapeKey } from '@core/ui/overlays/modal/hooks/useModal';
 import type { ActionSheetProps } from '@src-types/ui/overlays/interactions';
 import { useId } from 'react';
-import { createPortal } from 'react-dom';
 
 /**
  * ActionSheet - Mobile-style action sheet
@@ -38,7 +39,7 @@ export default function ActionSheet({
 	onClose,
 	actions,
 	title,
-	cancelLabel = 'Cancel',
+	cancelLabel,
 	showCancel = true,
 	closeOnOverlayClick = true,
 	closeOnEscape = true,
@@ -46,6 +47,8 @@ export default function ActionSheet({
 	className,
 	overlayClassName,
 }: Readonly<ActionSheetProps>) {
+	const { t } = useTranslation('common');
+	const defaultCancelLabel = cancelLabel ?? t('cancel');
 	const generatedId = useId();
 	const id = actionSheetId ?? generatedId;
 	useEscapeKey(isOpen, closeOnEscape, onClose);
@@ -53,25 +56,17 @@ export default function ActionSheet({
 
 	if (!isOpen) return null;
 
-	const backdropProps = overlayClassName ? { className: overlayClassName } : {};
-	const contentProps = {
-		...(title && { title }),
-		...(className && { className }),
-	};
-
-	return createPortal(
-		<>
-			<Backdrop isOpen={isOpen} onClick={onOverlayClick} {...backdropProps} zIndex={40} />
-			<ActionSheetContent
-				id={id}
-				actions={actions}
-				cancelLabel={cancelLabel}
-				showCancel={showCancel}
-				onClose={onClose}
-				onActionClick={onActionClick}
-				{...contentProps}
-			/>
-		</>,
-		document.body
-	);
+	return createActionSheetPortalContent({
+		id,
+		actions,
+		cancelLabel: defaultCancelLabel,
+		showCancel,
+		onClose,
+		onActionClick,
+		onOverlayClick,
+		...(title !== undefined && { title }),
+		...(className !== undefined && { className }),
+		...(overlayClassName !== undefined && { overlayClassName }),
+		isOpen,
+	});
 }

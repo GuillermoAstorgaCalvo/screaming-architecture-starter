@@ -29,13 +29,57 @@ types/
 ├── ui/              # UI component types (organized by category)
 │   ├── base.ts      # Base UI types
 │   ├── buttons.ts   # Button and IconButton types
-│   ├── data.ts      # Table and Pagination types
+│   ├── data/        # Data display component types
+│   │   ├── calendar.ts
+│   │   ├── chart.ts
+│   │   ├── description-list.ts
+│   │   ├── infinite-scroll.ts
+│   │   ├── pagination.ts
+│   │   ├── table.ts
+│   │   └── transfer.ts
+│   ├── dataTable.ts # Advanced data table types
 │   ├── feedback.ts  # Error, Helper, and feedback types
-│   ├── forms.ts     # Input, Textarea, and Select types
+│   ├── forms.ts     # Basic form input types
+│   ├── forms-advanced.ts # Advanced form types
+│   ├── forms-dates.ts # Date-related form types
+│   ├── forms-editors.ts # Editor form types (rich text, etc.)
+│   ├── forms-inputs.ts # Specialized input types
+│   ├── forms-specialized.ts # Specialized form types
 │   ├── icons.ts     # Icon types
-│   ├── layout.ts    # Layout and navigation types
-│   ├── navigation.ts # Navigation component types
-│   ├── overlays.ts  # Modal, Popover, Tooltip types
+│   ├── layout/      # Layout component types
+│   │   ├── card.ts
+│   │   ├── carousel.ts
+│   │   ├── common.ts
+│   │   ├── divider.ts
+│   │   ├── list.ts
+│   │   ├── marquee.ts
+│   │   ├── primitives.ts
+│   │   ├── scroll.ts
+│   │   ├── splitter.ts
+│   │   └── timeline.ts
+│   ├── maps.ts      # Map component types
+│   ├── media.ts     # Media component types
+│   ├── navigation/  # Navigation component types
+│   │   ├── accordion.ts
+│   │   ├── appBar.ts
+│   │   ├── bottomNavigation.ts
+│   │   ├── breadcrumbs.ts
+│   │   ├── floatingActionButton.ts
+│   │   ├── link.ts
+│   │   ├── menubar.ts
+│   │   ├── navigationMenu.ts
+│   │   ├── notificationBell.ts
+│   │   ├── segmentedControl.ts
+│   │   ├── stepper.ts
+│   │   ├── tabs.ts
+│   │   ├── treeView.ts
+│   │   └── wizard.ts
+│   ├── overlays/    # Overlay component types
+│   │   ├── containers.ts
+│   │   ├── floating.ts
+│   │   ├── interactions.ts
+│   │   └── panels.ts
+│   ├── advancedFilter.ts # Advanced filter types
 │   ├── theme.ts     # Theme types
 │   └── typography.ts # Heading, Text types
 └── README.md        # This file
@@ -199,15 +243,59 @@ import type { HttpClientConfig } from '@core/ports/HttpPort';
 ### UI Types (`types/ui/`)
 
 - Component prop types organized by category:
-  - `base.ts` - Base UI types
+  - `base.ts` - Base UI types (children, className, data-testid, etc.)
   - `buttons.ts` - Button and IconButton types
-  - `data.ts` - Table and Pagination types
+  - `data/` - Data display component types:
+    - `calendar.ts` - Calendar and date picker types
+    - `chart.ts` - Chart component types
+    - `description-list.ts` - Description list types
+    - `infinite-scroll.ts` - Infinite scroll types
+    - `pagination.ts` - Pagination types
+    - `table.ts` - Table types
+    - `transfer.ts` - Transfer component types
+  - `dataTable.ts` - Advanced data table types
   - `feedback.ts` - Error, Helper, feedback types, Avatar, Badge, Skeleton, Spinner, and Progress types
-  - `forms.ts` - Input, Textarea, and Select types
+  - `forms.ts` - Basic form input types (Input, Textarea, Select)
+  - `forms-advanced.ts` - Advanced form types
+  - `forms-dates.ts` - Date-related form types (date picker, time picker, etc.)
+  - `forms-editors.ts` - Editor form types (rich text editor, etc.)
+  - `forms-inputs.ts` - Specialized input types (autocomplete, combobox, etc.)
+  - `forms-specialized.ts` - Specialized form types (OTP, phone, currency, etc.)
   - `icons.ts` - Icon types
-  - `layout.ts` - Layout and navigation types
-  - `navigation.ts` - Navigation component types
-  - `overlays.ts` - Modal, Popover, Tooltip types
+  - `layout/` - Layout component types:
+    - `card.ts` - Card component types
+    - `carousel.ts` - Carousel types
+    - `common.ts` - Common layout types
+    - `divider.ts` - Divider types
+    - `list.ts` - List component types
+    - `marquee.ts` - Marquee types
+    - `primitives.ts` - Layout primitive types
+    - `scroll.ts` - Scroll area types
+    - `splitter.ts` - Splitter types
+    - `timeline.ts` - Timeline types
+  - `maps.ts` - Map component types
+  - `media.ts` - Media component types (image, video, etc.)
+  - `navigation/` - Navigation component types:
+    - `accordion.ts` - Accordion types
+    - `appBar.ts` - App bar types
+    - `bottomNavigation.ts` - Bottom navigation types
+    - `breadcrumbs.ts` - Breadcrumbs types
+    - `floatingActionButton.ts` - FAB types
+    - `link.ts` - Link types
+    - `menubar.ts` - Menubar types
+    - `navigationMenu.ts` - Navigation menu types
+    - `notificationBell.ts` - Notification bell types
+    - `segmentedControl.ts` - Segmented control types
+    - `stepper.ts` - Stepper types
+    - `tabs.ts` - Tabs types
+    - `treeView.ts` - Tree view types
+    - `wizard.ts` - Wizard types
+  - `overlays/` - Overlay component types:
+    - `containers.ts` - Container overlay types (modal, dialog, etc.)
+    - `floating.ts` - Floating overlay types (tooltip, popover, etc.)
+    - `interactions.ts` - Interaction overlay types
+    - `panels.ts` - Panel overlay types (drawer, sheet, etc.)
+  - `advancedFilter.ts` - Advanced filter types
   - `theme.ts` - Theme types
   - `typography.ts` - Heading, Text types
 

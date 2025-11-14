@@ -18,7 +18,7 @@ export function MapLoadingOverlay({
 	}
 
 	return (
-		<div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 bg-opacity-75">
+		<div className="absolute inset-0 flex items-center justify-center bg-surface dark:bg-surface bg-opacity-75">
 			{loadingFallback ?? <Spinner size="lg" />}
 		</div>
 	);

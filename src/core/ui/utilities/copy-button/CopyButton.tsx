@@ -1,63 +1,24 @@
+import { type TypedTFunction, useTranslation } from '@core/i18n/useTranslation';
 import IconButton from '@core/ui/icon-button/IconButton';
 import Icon from '@core/ui/icons/Icon';
 import Tooltip from '@core/ui/tooltip/Tooltip';
 import { useCopyButton } from '@core/ui/utilities/copy-button/hooks/useCopyButton';
+import type { HookOptionsInput } from '@core/ui/utilities/copy-button/types/copyButton.types';
+import { getHookOptions, getUIState } from '@core/ui/utilities/copy-button/utils/copyButtonUtils';
 import type { CopyButtonProps } from '@src-types/ui/buttons';
 
-interface HookOptionsInput {
-	text: string;
-	onCopySuccess?: () => void;
-	onCopyError?: (error: Error) => void;
-	successDuration?: number;
-}
-
-/**
- * Gets the hook options with conditional callbacks
- */
-function getHookOptions(input: HookOptionsInput) {
-	const options: Parameters<typeof useCopyButton>[0] = {
-		text: input.text,
-	};
-
-	if (input.successDuration !== undefined) {
-		options.successDuration = input.successDuration;
+function getDefaults(
+	t: TypedTFunction<'common'>,
+	opts: {
+		copyTooltip?: string | undefined;
+		copiedTooltip?: string | undefined;
+		ariaLabel?: string | undefined;
 	}
-
-	if (input.onCopySuccess) {
-		options.onCopySuccess = input.onCopySuccess;
-	}
-
-	if (input.onCopyError) {
-		options.onCopyError = input.onCopyError;
-	}
-
-	return options;
-}
-
-interface UIStateInput {
-	isCopied: boolean;
-	copyTooltip: string;
-	copiedTooltip: string;
-	ariaLabel?: string;
-}
-
-/**
- * Gets the derived UI state based on copy status
- */
-function getUIState({
-	isCopied,
-	copyTooltip,
-	copiedTooltip,
-	ariaLabel = 'Copy to clipboard',
-}: UIStateInput) {
-	const tooltipText = isCopied ? copiedTooltip : copyTooltip;
-	const iconName = isCopied ? 'check' : 'copy';
-	const buttonAriaLabel = isCopied ? copiedTooltip : ariaLabel;
-
+) {
 	return {
-		tooltipText,
-		iconName,
-		buttonAriaLabel,
+		copyTooltip: opts.copyTooltip ?? t('copy.copyToClipboard'),
+		copiedTooltip: opts.copiedTooltip ?? t('copy.copied'),
+		ariaLabel: opts.ariaLabel ?? t('copy.copyToClipboard'),
 	};
 }
 
@@ -91,8 +52,8 @@ function getUIState({
 export default function CopyButton({
 	text,
 	'aria-label': ariaLabel,
-	copyTooltip = 'Copy to clipboard',
-	copiedTooltip = 'Copied!',
+	copyTooltip,
+	copiedTooltip,
 	size = 'md',
 	variant = 'default',
 	onCopySuccess,
@@ -101,18 +62,16 @@ export default function CopyButton({
 	className,
 	...props
 }: Readonly<CopyButtonProps>) {
-	const hookOptionsInput: HookOptionsInput = { text, successDuration };
-	if (onCopySuccess) hookOptionsInput.onCopySuccess = onCopySuccess;
-	if (onCopyError) hookOptionsInput.onCopyError = onCopyError;
-
-	const { isCopied, copyToClipboard } = useCopyButton(getHookOptions(hookOptionsInput));
-
-	const uiStateInput: UIStateInput = { isCopied, copyTooltip, copiedTooltip };
-	if (ariaLabel) uiStateInput.ariaLabel = ariaLabel;
-
-	const { tooltipText, iconName, buttonAriaLabel } = getUIState(uiStateInput);
-
-	// Extract title from props to avoid conflicts, we use tooltipText instead
+	const { t } = useTranslation('common');
+	const defaults = getDefaults(t, { copyTooltip, copiedTooltip, ariaLabel });
+	const hookOptions: HookOptionsInput = {
+		text,
+		successDuration,
+		...(onCopySuccess && { onCopySuccess }),
+		...(onCopyError && { onCopyError }),
+	};
+	const { isCopied, copyToClipboard } = useCopyButton(getHookOptions(hookOptions));
+	const { tooltipText, iconName, buttonAriaLabel } = getUIState({ isCopied, ...defaults });
 	const { title: _title, ...restProps } = props;
 
 	return (

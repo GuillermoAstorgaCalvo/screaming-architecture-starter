@@ -1,5 +1,6 @@
 import {
 	getTreeChildrenClasses,
+	getTreeChildrenStyle,
 	getTreeExpandIconClasses,
 	getTreeNodeContentClasses,
 	getTreeNodeIconClasses,
@@ -68,7 +69,11 @@ export function ChildNodesContainer({
 	children: ReactNode;
 }>) {
 	return (
-		<div aria-labelledby={nodeButtonId} className={getTreeChildrenClasses(nodeIsExpanded)}>
+		<div
+			aria-labelledby={nodeButtonId}
+			className={getTreeChildrenClasses(nodeIsExpanded)}
+			style={getTreeChildrenStyle(nodeIsExpanded)}
+		>
 			{children}
 		</div>
 	);

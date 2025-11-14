@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import Button from '@core/ui/button/Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -14,6 +15,7 @@ export function CalendarNavigation({
 	onNextMonth,
 	onToday,
 }: Readonly<CalendarNavigationProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<>
 			<Button
@@ -21,7 +23,7 @@ export function CalendarNavigation({
 				size="sm"
 				onClick={onPreviousMonth}
 				disabled={disabled}
-				aria-label="Previous month"
+				aria-label={t('calendar.previousMonth')}
 			>
 				<ChevronLeft className="h-4 w-4" />
 			</Button>
@@ -30,16 +32,16 @@ export function CalendarNavigation({
 				size="sm"
 				onClick={onToday}
 				disabled={disabled}
-				aria-label="Go to today"
+				aria-label={t('calendar.goToToday')}
 			>
-				Today
+				{t('calendar.today')}
 			</Button>
 			<Button
 				variant="ghost"
 				size="sm"
 				onClick={onNextMonth}
 				disabled={disabled}
-				aria-label="Next month"
+				aria-label={t('calendar.nextMonth')}
 			>
 				<ChevronRight className="h-4 w-4" />
 			</Button>

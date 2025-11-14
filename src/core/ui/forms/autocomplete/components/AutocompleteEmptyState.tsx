@@ -1,4 +1,4 @@
-import { MENU_STYLES } from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import { MENU_STYLES } from '@core/ui/forms/autocomplete/helpers/AutocompleteMenuStyles';
 import type { ReactNode } from 'react';
 
 interface AutocompleteEmptyStateProps {

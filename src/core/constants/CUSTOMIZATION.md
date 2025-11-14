@@ -25,6 +25,7 @@ Design tokens are the single source of truth for all design values. They're defi
 - **Typography**: Font families, sizes, weights, letter spacing
 - **Z-Index**: base, dropdown, sticky, fixed, modalBackdrop, modal, popover, tooltip
 - **Transitions**: Duration (fast, normal, slow, slower) and timing functions
+- **Animations**: Duration (fast, normal, slow, slower) for animation-specific use cases
 
 ## CSS Variable Overrides
 
@@ -69,6 +70,11 @@ All variables are prefixed with their category:
 /* Transitions */
 --transition-duration-fast
 --transition-timing-ease
+/* ... */
+
+/* Animations */
+--animation-duration-fast
+--animation-duration-normal
 /* ... */
 ```
 

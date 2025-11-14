@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type { ComboboxProps } from '@core/ui/forms/combobox/Combobox';
 import { useComboboxState } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
 import { createFieldProps } from '@core/ui/forms/combobox/hooks/useComboboxField';
@@ -72,9 +73,10 @@ function extractComboboxProps(props: Readonly<ComboboxProps>) {
 		disabled,
 		placeholder,
 		maxHeight = 280,
-		emptyState = 'No options found',
+		emptyState,
 		...rest
 	} = props;
+	const defaultEmptyState = emptyState ?? i18n.t('common.noOptionsFound', { ns: 'common' });
 	return {
 		label,
 		error,
@@ -84,7 +86,7 @@ function extractComboboxProps(props: Readonly<ComboboxProps>) {
 		disabled,
 		placeholder,
 		maxHeight,
-		emptyState,
+		emptyState: defaultEmptyState,
 		rest,
 	};
 }

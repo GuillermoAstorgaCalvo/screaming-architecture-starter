@@ -12,8 +12,8 @@ export const MENU_STYLES = {
 	OPTION:
 		'px-4 py-2 text-sm cursor-pointer hover:bg-accent focus:bg-accent focus:outline-none flex items-center gap-2',
 	OPTION_HIGHLIGHTED: 'bg-accent',
-	OPTION_DISABLED: 'opacity-50 cursor-not-allowed',
-	CHECKBOX: 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500',
+	OPTION_DISABLED: 'opacity-disabled cursor-not-allowed',
+	CHECKBOX: 'h-4 w-4 rounded border-border text-primary focus:ring-primary',
 } as const;
 
 export function createOptionHandlers(

@@ -95,7 +95,7 @@ export function NavigationButtons<T extends FieldValues>({
 	onCancel,
 }: Readonly<NavigationButtonsProps<T>>) {
 	return (
-		<div className="flex items-center justify-between gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+		<div className="flex items-center justify-between gap-4 pt-4 border-t border-border dark:border-border">
 			<div>
 				{!isFirstStep && (
 					<PreviousButton

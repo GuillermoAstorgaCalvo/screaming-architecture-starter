@@ -10,7 +10,7 @@ type TableEmptyStateProps = Readonly<{
 
 export function TableEmptyState({ emptyMessage }: TableEmptyStateProps) {
 	return (
-		<div className="flex items-center justify-center p-8 text-gray-500 dark:text-gray-400">
+		<div className="flex items-center justify-center p-8 text-text-muted dark:text-text-muted-dark">
 			{emptyMessage}
 		</div>
 	);

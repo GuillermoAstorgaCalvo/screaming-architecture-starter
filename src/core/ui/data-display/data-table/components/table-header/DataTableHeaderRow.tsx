@@ -1,6 +1,6 @@
-import { ColumnCells } from '@core/ui/data-display/data-table/components/DataTableColumnCells';
-import type { HeaderRowProps } from '@core/ui/data-display/data-table/components/DataTableHeader.types';
-import { SelectionCheckbox } from '@core/ui/data-display/data-table/components/DataTableHeaderComponents';
+import { ColumnCells } from '@core/ui/data-display/data-table/components/table-header/DataTableColumnCells';
+import type { HeaderRowProps } from '@core/ui/data-display/data-table/components/table-header/DataTableHeader.types';
+import { SelectionCheckbox } from '@core/ui/data-display/data-table/components/table-header/DataTableHeaderComponents';
 
 /**
  * HeaderRow - Table header row with selection checkbox and column cells

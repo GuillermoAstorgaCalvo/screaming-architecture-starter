@@ -1,54 +1,57 @@
 import Button from '@core/ui/button/Button';
+import { DismissButton } from '@core/ui/feedback/snackbar/components/DismissButton';
 import { SNACKBAR_INTENT_STYLES } from '@core/ui/feedback/snackbar/constants/snackbar.constants';
-import type { SnackbarProps } from '@core/ui/feedback/snackbar/types/snackbar.types';
+import { useAutoDismiss } from '@core/ui/feedback/snackbar/hooks/useAutoDismiss';
+import type {
+	SnackbarIntent,
+	SnackbarProps,
+} from '@core/ui/feedback/snackbar/types/snackbar.types';
+import { componentZIndex } from '@core/ui/theme/tokens';
 import { classNames } from '@core/utils/classNames';
-import { useEffect, useRef } from 'react';
 
-function useAutoDismiss({
-	isOpen,
-	autoDismiss,
-	dismissAfter,
+const SNACKBAR_STYLE = {
+	zIndex: componentZIndex.popover,
+	minWidth: 'calc(var(--spacing-3xl) * 6.25)',
+	maxWidth: 'calc(var(--spacing-4xl) * 7.8125)',
+} as const;
+
+function SnackbarContent({
+	message,
+	intent,
+	className,
+	action,
 	onDismiss,
-}: {
-	readonly isOpen: boolean;
-	readonly autoDismiss: boolean;
-	readonly dismissAfter: number;
-	readonly onDismiss: (() => void) | undefined;
-}): void {
-	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-	useEffect(() => {
-		if (isOpen && autoDismiss && onDismiss) {
-			timeoutRef.current = setTimeout(() => {
-				onDismiss();
-			}, dismissAfter);
-
-			return () => {
-				if (timeoutRef.current) {
-					clearTimeout(timeoutRef.current);
-				}
-			};
-		}
-		return undefined;
-	}, [isOpen, autoDismiss, dismissAfter, onDismiss]);
-}
-
-function DismissButton({ onDismiss }: { readonly onDismiss: () => void }) {
+}: Readonly<{
+	message: SnackbarProps['message'];
+	intent: SnackbarIntent;
+	className?: string | undefined;
+	action?: SnackbarProps['action'] | undefined;
+	onDismiss?: (() => void) | undefined;
+}>) {
 	return (
-		<button
-			type="button"
-			onClick={onDismiss}
-			aria-label="Dismiss notification"
-			className="ml-2 text-current/80 hover:text-current"
+		<output
+			aria-live="polite"
+			className={classNames(
+				'fixed flex items-center justify-between gap-md rounded-lg px-md py-md shadow-lg transition-all duration-slow',
+				SNACKBAR_INTENT_STYLES[intent],
+				className
+			)}
+			style={SNACKBAR_STYLE}
 		>
-			<svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
-				<path
-					fillRule="evenodd"
-					d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-					clipRule="evenodd"
-				/>
-			</svg>
-		</button>
+			<div className="flex-1 text-sm font-medium">{message}</div>
+			{action ? (
+				<Button
+					type="button"
+					size="sm"
+					variant="ghost"
+					onClick={action.onClick}
+					className="text-current hover:bg-surface/20"
+				>
+					{action.label}
+				</Button>
+			) : null}
+			{onDismiss ? <DismissButton onDismiss={onDismiss} /> : null}
+		</output>
 	);
 }
 
@@ -103,27 +106,12 @@ export default function Snackbar({
 	}
 
 	return (
-		<output
-			aria-live="polite"
-			className={classNames(
-				'fixed z-50 flex min-w-[300px] max-w-[500px] items-center justify-between gap-4 rounded-lg px-4 py-3 shadow-lg transition-all duration-300',
-				SNACKBAR_INTENT_STYLES[intent],
-				className
-			)}
-		>
-			<div className="flex-1 text-sm font-medium">{message}</div>
-			{action ? (
-				<Button
-					type="button"
-					size="sm"
-					variant="ghost"
-					onClick={action.onClick}
-					className="text-current hover:bg-white/20"
-				>
-					{action.label}
-				</Button>
-			) : null}
-			{onDismiss ? <DismissButton onDismiss={onDismiss} /> : null}
-		</output>
+		<SnackbarContent
+			message={message}
+			intent={intent}
+			className={className}
+			action={action}
+			onDismiss={onDismiss}
+		/>
 	);
 }

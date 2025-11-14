@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	prepareContentParams,
 	prepareRenderParams,
@@ -17,11 +18,13 @@ export default function DropdownMenu({
 	className,
 	menuLabel,
 	maxHeight = 280,
-	emptyState = 'No actions available',
+	emptyState,
 }: Readonly<DropdownMenuProps>) {
+	const { t } = useTranslation('common');
+	const defaultEmptyState = emptyState ?? t('noActionsAvailable');
 	const menuData = useDropdownMenu({ items, isOpen, onOpenChange, onSelect });
 	const { triggerNode, menuContent } = usePrepareDropdownMenuContent(
-		prepareContentParams({ menuData, trigger, items, emptyState })
+		prepareContentParams({ menuData, trigger, items, emptyState: defaultEmptyState })
 	);
 	return renderDropdownMenu(
 		prepareRenderParams({

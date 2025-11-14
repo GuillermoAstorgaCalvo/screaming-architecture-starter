@@ -1,92 +1,13 @@
-import Button from '@core/ui/button/Button';
-import Heading from '@core/ui/heading/Heading';
-import Text from '@core/ui/text/Text';
 import { classNames } from '@core/utils/classNames';
-import type { ReactNode } from 'react';
 
-type EmptyStateSize = 'sm' | 'md' | 'lg';
+import { EmptyStateAction } from './components/EmptyStateAction';
+import { EmptyStateContent } from './components/EmptyStateContent';
+import { EmptyStateIcon } from './components/EmptyStateIcon';
+import { SIZE_CLASSES } from './constants';
+import type { EmptyStateProps } from './types/emptyState.types';
+import { getSizeVariant } from './utils/emptyStateUtils';
 
-export interface EmptyStateProps {
-	/** Title text for the empty state */
-	readonly title: string;
-	/** Optional description text */
-	readonly description?: string;
-	/** Optional action button label */
-	readonly actionLabel?: string;
-	/** Optional action button click handler */
-	readonly onAction?: () => void;
-	/** Optional icon or image to display above the title */
-	readonly icon?: ReactNode;
-	/** Optional custom className */
-	readonly className?: string;
-	/** Size variant for the empty state @default 'md' */
-	readonly size?: EmptyStateSize;
-}
-
-const SIZE_CLASSES: Record<EmptyStateSize, string> = {
-	sm: 'py-6 gap-2',
-	md: 'py-10 gap-3',
-	lg: 'py-16 gap-4',
-};
-
-function getSizeVariant(size: EmptyStateSize): EmptyStateSize {
-	if (size === 'sm') return 'sm';
-	if (size === 'lg') return 'lg';
-	return 'md';
-}
-
-interface EmptyStateIconProps {
-	readonly icon: ReactNode;
-	readonly size: EmptyStateSize;
-}
-
-function EmptyStateIcon({ icon, size }: EmptyStateIconProps) {
-	if (icon == null) return null;
-	return (
-		<div className={classNames(size === 'lg' ? 'mb-4' : 'mb-2', 'text-muted-foreground')}>
-			{icon}
-		</div>
-	);
-}
-
-interface EmptyStateContentProps {
-	readonly title: string;
-	readonly description?: string | undefined;
-	readonly variantSize: EmptyStateSize;
-}
-
-function EmptyStateContent({ title, description, variantSize }: EmptyStateContentProps) {
-	return (
-		<>
-			<Heading as="h3" size={variantSize}>
-				{title}
-			</Heading>
-			{description == null ? null : (
-				<Text size={variantSize} className="text-muted-foreground max-w-md">
-					{description}
-				</Text>
-			)}
-		</>
-	);
-}
-
-interface EmptyStateActionProps {
-	readonly actionLabel?: string | undefined;
-	readonly onAction?: (() => void) | undefined;
-	readonly variantSize: EmptyStateSize;
-	readonly size: EmptyStateSize;
-}
-
-function EmptyStateAction({ actionLabel, onAction, variantSize, size }: EmptyStateActionProps) {
-	if (actionLabel == null || onAction == null) return null;
-	return (
-		<div className={size === 'lg' ? 'mt-4' : 'mt-2'}>
-			<Button variant="primary" size={variantSize} onClick={onAction}>
-				{actionLabel}
-			</Button>
-		</div>
-	);
-}
+export type { EmptyStateProps } from './types/emptyState.types';
 
 /**
  * EmptyState - Reusable empty state component for displaying when there's no data or content

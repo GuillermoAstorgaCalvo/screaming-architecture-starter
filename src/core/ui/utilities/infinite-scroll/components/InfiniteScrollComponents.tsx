@@ -1,4 +1,5 @@
 import { ARIA_LABELS, ARIA_LIVE } from '@core/constants/aria';
+import { useTranslation } from '@core/i18n/useTranslation';
 import Button from '@core/ui/button/Button';
 import Spinner from '@core/ui/spinner/Spinner';
 import Text from '@core/ui/text/Text';
@@ -17,7 +18,7 @@ export function DefaultLoadingComponent({ loadingText }: Readonly<{ loadingText?
 		<div className={getLoadingContainerClasses()}>
 			<Spinner size="md" aria-label={ARIA_LABELS.LOADING} />
 			{loadingText ? (
-				<Text size="sm" className="ml-2 text-gray-500 dark:text-gray-400">
+				<Text size="sm" className="ml-2 text-text-muted">
 					{loadingText}
 				</Text>
 			) : null}
@@ -36,7 +37,7 @@ export function DefaultEndMessage({ endMessage }: Readonly<{ endMessage?: ReactN
 	return (
 		<div className={getEndMessageClasses()} aria-live={ARIA_LIVE.POLITE}>
 			{typeof endMessage === 'string' ? (
-				<Text size="sm" className="text-gray-500 dark:text-gray-400">
+				<Text size="sm" className="text-text-muted">
 					{endMessage}
 				</Text>
 			) : (
@@ -56,16 +57,18 @@ export function DefaultErrorComponent({
 	errorMessage?: ReactNode;
 	onRetry?: (() => void) | undefined;
 }>) {
+	const { t } = useTranslation('common');
+
 	let errorContent: ReactNode;
 	if (errorMessage === undefined) {
 		errorContent = (
-			<Text size="sm" className="text-red-600 dark:text-red-400">
-				Failed to load more items
+			<Text size="sm" className="text-destructive">
+				{t('failedToLoadMoreItems')}
 			</Text>
 		);
 	} else if (typeof errorMessage === 'string') {
 		errorContent = (
-			<Text size="sm" className="text-red-600 dark:text-red-400">
+			<Text size="sm" className="text-destructive">
 				{errorMessage}
 			</Text>
 		);
@@ -78,7 +81,7 @@ export function DefaultErrorComponent({
 			{errorContent}
 			{onRetry !== undefined && (
 				<Button variant="secondary" size="sm" onClick={onRetry}>
-					Retry
+					{t('retry')}
 				</Button>
 			)}
 		</div>

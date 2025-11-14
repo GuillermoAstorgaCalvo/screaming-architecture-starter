@@ -9,6 +9,6 @@ export function getTreeNodeElementClasses(
 	nodeIsSelected: boolean,
 	nodeDisabled: boolean | undefined
 ): string {
-	const disabledClass = nodeDisabled ? 'opacity-50' : '';
+	const disabledClass = nodeDisabled ? 'opacity-disabled' : '';
 	return getTreeNodeClasses(size, nodeIsSelected, disabledClass);
 }

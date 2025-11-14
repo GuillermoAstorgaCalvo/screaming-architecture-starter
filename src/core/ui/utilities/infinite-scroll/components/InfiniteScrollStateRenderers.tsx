@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import Text from '@core/ui/text/Text';
 import {
 	DefaultEndMessage,
@@ -20,15 +21,17 @@ export function renderEmptyState({
 	emptyComponent: ReactNode | undefined;
 	props: Readonly<Record<string, unknown>>;
 }>) {
+	const defaultEmptyMessage = emptyComponent ?? (
+		<div className="flex items-center justify-center py-2xl">
+			<Text size="sm" className="text-text-muted dark:text-text-muted">
+				{i18n.t('common.noDataAvailable', { ns: 'common' })}
+			</Text>
+		</div>
+	);
+
 	return (
 		<div id={infiniteScrollId} className={containerClasses} {...props}>
-			{emptyComponent ?? (
-				<div className="flex items-center justify-center py-8">
-					<Text size="sm" className="text-gray-500 dark:text-gray-400">
-						No items to display
-					</Text>
-				</div>
-			)}
+			{defaultEmptyMessage}
 		</div>
 	);
 }

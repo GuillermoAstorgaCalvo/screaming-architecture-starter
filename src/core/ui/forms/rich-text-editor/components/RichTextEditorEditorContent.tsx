@@ -13,7 +13,7 @@ export function RichTextEditorEditorContent({
 }: Readonly<RichTextEditorEditorContentProps>) {
 	return (
 		<div
-			className="rounded border border-gray-300 bg-white p-2 dark:border-gray-600 dark:bg-gray-800"
+			className="rounded border border-border bg-surface p-2 dark:border-border dark:bg-surface"
 			aria-invalid={hasError}
 			aria-describedby={ariaDescribedBy}
 		>

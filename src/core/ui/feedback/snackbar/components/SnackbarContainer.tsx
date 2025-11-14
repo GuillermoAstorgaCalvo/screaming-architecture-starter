@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { useSnackbar } from '@core/providers/snackbar/useSnackbar';
 import { SNACKBAR_POSITION_CLASSES } from '@core/ui/feedback/snackbar/constants/snackbar.constants';
 import Snackbar from '@core/ui/feedback/snackbar/Snackbar';
@@ -5,6 +6,7 @@ import type {
 	SnackbarItem,
 	SnackbarPosition,
 } from '@core/ui/feedback/snackbar/types/snackbar.types';
+import { componentZIndex } from '@core/ui/theme/tokens';
 import { classNames } from '@core/utils/classNames';
 import { useEffect, useState } from 'react';
 
@@ -31,6 +33,7 @@ export default function SnackbarContainer({
 	position = 'bottom-center',
 	className,
 }: Readonly<SnackbarContainerProps>) {
+	const { t } = useTranslation('common');
 	const { snackbars, dismiss } = useSnackbar();
 	const [visibleSnackbars, setVisibleSnackbars] = useState<readonly SnackbarItem[]>([]);
 
@@ -45,11 +48,12 @@ export default function SnackbarContainer({
 	return (
 		<div
 			className={classNames(
-				'pointer-events-none fixed z-50 flex flex-col gap-2',
+				'pointer-events-none fixed flex flex-col gap-2',
 				SNACKBAR_POSITION_CLASSES[position],
 				className
 			)}
-			aria-label="Notifications"
+			style={{ zIndex: componentZIndex.popover }}
+			aria-label={t('a11y.notifications')}
 		>
 			{visibleSnackbars.map(snackbar => (
 				<div key={snackbar.id} className="pointer-events-auto">

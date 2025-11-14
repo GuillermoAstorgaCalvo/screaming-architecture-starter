@@ -36,6 +36,7 @@ export function getRichTextEditorClasses(
 		md: 'text-base',
 		lg: 'text-lg',
 	};
-	const errorClasses = hasError ? 'border-red-500' : '';
+	// Uses design token for error border color
+	const errorClasses = hasError ? 'border-destructive' : '';
 	return `${baseClasses} ${sizeClasses[size]} ${errorClasses} ${className ?? ''}`.trim();
 }

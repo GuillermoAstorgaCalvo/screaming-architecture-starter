@@ -12,9 +12,9 @@ export function renderTooltip(showTooltip: boolean): ReactElement | null {
 	return (
 		<Tooltip
 			contentStyle={{
-				backgroundColor: 'var(--color-background)',
+				backgroundColor: 'var(--color-surface)',
 				border: '1px solid var(--color-border)',
-				borderRadius: '0.5rem',
+				borderRadius: 'var(--radius-lg)',
 			}}
 			labelStyle={{ color: 'var(--color-text-primary)' }}
 		/>
@@ -31,7 +31,7 @@ export function renderLegend(showLegend: boolean): ReactElement | null {
 
 	return (
 		<Legend
-			wrapperStyle={{ paddingTop: '1rem' }}
+			wrapperStyle={{ paddingTop: 'var(--spacing-lg)' }}
 			className="text-sm text-text-primary dark:text-text-primary"
 		/>
 	);

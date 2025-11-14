@@ -105,9 +105,10 @@ const SKIP_LINK_CLASSES =
 	// Base styles - hidden by default
 	'sr-only ' +
 	// Visible when focused - standard Tailwind pattern
-	'focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 ' +
-	// Visual styling when focused
-	'focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-md ' +
+	// Uses design token z-index (tooltip is highest at 1600) to ensure skip link is above all content
+	'focus:not-sr-only focus:absolute focus:left-lg focus:top-lg focus:z-tooltip ' +
+	// Visual styling when focused - uses design tokens for spacing
+	'focus:px-lg focus:py-sm focus:bg-primary-600 focus:text-primary-foreground focus:rounded-md ' +
 	'focus:shadow-lg focus:font-medium focus:outline-none focus:ring-2 ' +
 	'focus:ring-primary-500 focus:ring-offset-2';
 

@@ -5,5 +5,232 @@
 	},
 	"nav": {
 		"home": "Home"
+	},
+	"errors": {
+		"error500": {
+			"title": "500",
+			"message": "Internal server error",
+			"returnHome": "Return to Home"
+		},
+		"error404": {
+			"title": "404",
+			"message": "Page not found",
+			"returnHome": "Return to Home"
+		},
+		"errorBoundary": {
+			"title": "Something went wrong",
+			"description": "We're sorry, but something unexpected happened. Please try again.",
+			"tryAgain": "Try again",
+			"goToHome": "Go to Home",
+			"tryAgainAriaLabel": "Try again to reload the application"
+		},
+		"requestTimeout": "Request timeout",
+		"networkError": "Network error. Please check your connection.",
+		"unknownError": "An unknown error occurred",
+		"requestFailed": "Request failed",
+		"rootElementNotFound": "Root element #root not found",
+		"unableToLoadDemoContent": "Unable to load demo content.",
+		"failedToLoadGoogleMaps": "Failed to load Google Maps"
+	},
+	"a11y": {
+		"mainNavigation": "Main navigation",
+		"notifications": "Notifications",
+		"dismissNotification": "Dismiss notification",
+		"languageSelector": "Language selector",
+		"currentLanguage": "Current language: {language}",
+		"selectLanguage": "Select language",
+		"toggleTheme": "Toggle theme",
+		"currentTheme": "Current theme: {theme}",
+		"currentThemeDescription": "Current theme: {theme}. Click to toggle.",
+		"required": "Required",
+		"imageGallery": "Image gallery",
+		"uploadProgress": "Upload progress: {progress}%",
+		"chooseLanguage": "Choose your language",
+		"addNewItem": "Add new item",
+		"createNewPost": "Create new post",
+		"virtualizedList": "Virtualized list",
+		"sidebar": "Sidebar",
+		"applicationMenu": "Application menu",
+		"resizableContainer": "Resizable container",
+		"countryCode": "Country code",
+		"splitterContainer": "Splitter container",
+		"info": "Info",
+		"commands": "Commands",
+		"searchCommands": "Search commands",
+		"steps": "Steps",
+		"transferList": "Transfer list",
+		"segmentedControl": "Segmented control",
+		"clearSearch": "Clear search",
+		"oneTimePasswordInput": "One-time password input",
+		"increment": "Increment",
+		"decrement": "Decrement",
+		"search": "Search",
+		"more": "More",
+		"close": "Close",
+		"fileUploadDropzone": "File upload dropzone",
+		"moreOptions": "More options",
+		"timeline": "Timeline",
+		"scrollToTop": "Scroll to top",
+		"sortableList": "Sortable list",
+		"closeModal": "Close modal",
+		"closeDrawer": "Close drawer",
+		"closeSheet": "Close sheet",
+		"closeDialog": "Close dialog",
+		"openMenu": "Open menu",
+		"closeMenu": "Close menu",
+		"loading": "Loading",
+		"loadingContent": "Loading content",
+		"error": "Error",
+		"success": "Success",
+		"warning": "Warning",
+		"submit": "Submit form",
+		"delete": "Delete",
+		"edit": "Edit",
+		"save": "Save",
+		"skipToContent": "Skip to main content",
+		"menuButton": "Menu",
+		"navigation": "Navigation",
+		"mainContent": "Main content",
+		"breadcrumb": "Breadcrumb",
+		"tabs": "Tabs",
+		"modalContent": "Modal content",
+		"pagination": "Pagination",
+		"carousel": "Carousel",
+		"rating": "Rating",
+		"marquee": "Scrolling content"
+	},
+	"commandPalette": {
+		"placeholder": "Type a command or search...",
+		"emptyState": "No commands found"
+	},
+	"inlineEdit": {
+		"placeholder": "Click to edit"
+	},
+	"theme": {
+		"light": "Light",
+		"dark": "Dark",
+		"system": "System"
+	},
+	"language": {
+		"en": "English",
+		"es": "Spanish",
+		"ar": "Arabic"
+	},
+	"common": {
+		"retry": "Retry",
+		"failedToLoadMoreItems": "Failed to load more items",
+		"anErrorOccurred": "An error occurred",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
+		"noMatches": "No matches",
+		"loadingOptions": "Loading options…",
+		"fieldRequired": "This field is required",
+		"input": "Input",
+		"selectAll": "Select all",
+		"deselectAll": "Deselect all",
+		"selectAllRows": "Select all rows",
+		"noDataAvailable": "No data available",
+		"search": "Search...",
+		"searchPlaceholder": "Search...",
+		"noActionsAvailable": "No actions available",
+		"noOptionsFound": "No options found"
+	},
+	"carousel": {
+		"previousSlide": "Previous slide",
+		"nextSlide": "Next slide",
+		"slideIndicators": "Slide indicators",
+		"goToSlide": "Go to slide {index}"
+	},
+	"password": {
+		"showPassword": "Show password",
+		"hidePassword": "Hide password"
+	},
+	"calendar": {
+		"previousMonth": "Previous month",
+		"nextMonth": "Next month",
+		"goToToday": "Go to today",
+		"today": "Today"
+	},
+	"fileUpload": {
+		"dropFilesHere": "Drop files here",
+		"dragAndDropFilesHere": "Drag and drop files here",
+		"or": "or",
+		"browseFiles": "Browse Files",
+		"accepted": "Accepted:",
+		"fileSizeExceedsMaximum": "File size exceeds maximum of {maxSize}",
+		"fileSizeBelowMinimum": "File size is below minimum of {minSize}",
+		"fileTypeNotAccepted": "File type not accepted. Accepted types: {types}",
+		"maximum": "Maximum",
+		"minimum": "Minimum",
+		"file": "file",
+		"files": "files",
+		"allowed": "allowed",
+		"required": "required",
+		"bytes": "Bytes",
+		"kb": "KB",
+		"mb": "MB",
+		"gb": "GB",
+		"uploadProgress": "Upload progress: {progress}%"
+	},
+	"wizard": {
+		"next": "Next",
+		"previous": "Previous",
+		"finish": "Finish",
+		"skip": "Skip",
+		"progress": "Wizard progress: {progress}%",
+		"validationFailed": "Validation failed",
+		"validationError": "Validation error"
+	},
+	"pagination": {
+		"showing": "Showing {startIndex} to {endIndex} of {totalItems} results",
+		"first": "First",
+		"last": "Last",
+		"previous": "Previous",
+		"next": "Next",
+		"goToFirstPage": "Go to first page",
+		"goToLastPage": "Go to last page",
+		"goToPreviousPage": "Go to previous page",
+		"goToNextPage": "Go to next page",
+		"goToPage": "Go to page {page}"
+	},
+	"filters": {
+		"activeFilters": "Active filters:",
+		"clearAll": "Clear all",
+		"clearAllAriaLabel": "Clear all filters",
+		"removeFilter": "Remove {label} filter",
+		"filterBuilder": "Filter Builder",
+		"closeFilterBuilder": "Close filter builder",
+		"addFilter": "Add Filter",
+		"filterLabel": "Filter Label",
+		"filterLabelPlaceholder": "e.g., Status, Date, Category",
+		"filterType": "Filter Type",
+		"addNewFilter": "Add New Filter",
+		"filterTypeText": "Text",
+		"filterTypeSelect": "Select",
+		"filterTypeMultiSelect": "Multi-Select",
+		"filterTypeDate": "Date",
+		"filterTypeDateRange": "Date Range"
+	},
+	"transfer": {
+		"sourceTitle": "Available",
+		"targetTitle": "Selected",
+		"searchList": "Search {type} list",
+		"moveSelectedToRight": "Move selected to right",
+		"moveSelectedToLeft": "Move selected to left"
+	},
+	"copy": {
+		"copyToClipboard": "Copy to clipboard",
+		"copied": "Copied!",
+		"clipboardApiNotAvailable": "Clipboard API is not available",
+		"failedToCopy": "Failed to copy text to clipboard"
+	},
+	"seo": {
+		"siteName": "Screaming Architecture Starter",
+		"defaultDescription": "A modern, scalable React application starter template",
+		"defaultTitle": "Screaming Architecture Starter"
+	},
+	"noscript": {
+		"title": "JavaScript Required",
+		"message": "This application requires JavaScript to be enabled. Please enable JavaScript in your browser settings."
 	}
 }

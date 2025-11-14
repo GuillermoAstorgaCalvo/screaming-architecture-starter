@@ -22,8 +22,8 @@ function getConnectorColorClasses(
 	if (currentEvent.active || currentEvent.completed) {
 		return 'bg-primary';
 	}
-	// Default gray connector
-	return 'bg-gray-300 dark:bg-gray-600';
+	// Default muted connector
+	return 'bg-muted';
 }
 
 export function TimelineConnector({

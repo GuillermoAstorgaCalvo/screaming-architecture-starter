@@ -22,5 +22,5 @@ alwaysApply: false
 ### Analytics
 
 - Use `domains/shared/analytics` for types and hooks.
-- Adapter pattern in `infrastructure/analytics/analyticsAdapter.ts` with provider-specific adapters.
+- Adapter pattern in `infrastructure/analytics/googleAnalyticsAdapter.ts` with provider-specific adapters (exports `googleAnalyticsAdapter` and `noopAnalyticsAdapter`).
 - Fire events from domain boundaries (pages/interactions), not low-level components.

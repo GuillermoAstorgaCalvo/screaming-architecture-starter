@@ -1,4 +1,5 @@
-import { type ApiService, createApiService } from '@core/api/createApiService';
+import { createApiService } from '@core/api/createApiService';
+import type { ApiService } from '@core/api/createApiService.types';
 import type { HttpPort } from '@core/ports/HttpPort';
 import { z } from 'zod';
 
@@ -19,6 +20,6 @@ export function createDemoContentService(http: HttpPort): ApiService<void, DemoC
 		endpoint: '/api/demo',
 		method: 'GET',
 		responseSchema: demoContentSchema,
-		defaultErrorMessage: 'Unable to load demo content.',
+		defaultErrorMessage: 'errors.unableToLoadDemoContent',
 	});
 }

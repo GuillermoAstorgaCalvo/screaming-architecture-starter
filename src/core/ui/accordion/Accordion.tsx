@@ -2,74 +2,8 @@ import type { AccordionProps } from '@src-types/ui/navigation/accordion';
 import { useId } from 'react';
 
 import { AccordionItem } from './components/AccordionItem';
-import { getAccordionClasses } from './helpers/AccordionHelpers';
+import { getAccordionContainerProps, getAccordionId } from './helpers/AccordionHelpers';
 import { useAccordion } from './hooks/useAccordion';
-
-/**
- * Generates a unique accordion ID from the provided ID or a generated one.
- */
-function getAccordionId(accordionId: string | undefined, generatedId: string): string {
-	return accordionId ?? `accordion-${generatedId}`;
-}
-
-interface AccordionContainerPropsParams {
-	variant: AccordionProps['variant'];
-	allowMultiple: boolean;
-	className: string | undefined;
-	props: Omit<
-		AccordionProps,
-		'items' | 'allowMultiple' | 'variant' | 'size' | 'accordionId' | 'className'
-	>;
-}
-
-/**
- * Gets the container props for the accordion wrapper element.
- */
-function getAccordionContainerProps({
-	variant,
-	allowMultiple,
-	className,
-	props,
-}: AccordionContainerPropsParams) {
-	return {
-		className: getAccordionClasses(variant ?? 'default', className),
-		'aria-multiselectable': allowMultiple,
-		...props,
-	};
-}
-
-interface RenderAccordionItemsParams {
-	items: AccordionProps['items'];
-	id: string;
-	variant: AccordionProps['variant'];
-	size: AccordionProps['size'];
-	expandedItems: Set<string>;
-	toggleItem: (itemId: string) => void;
-}
-
-/**
- * Renders accordion items from the provided items array.
- */
-function renderAccordionItems({
-	items,
-	id,
-	variant,
-	size,
-	expandedItems,
-	toggleItem,
-}: RenderAccordionItemsParams) {
-	return items.map((item: AccordionProps['items'][number]) => (
-		<AccordionItem
-			key={item.id}
-			item={item}
-			id={id}
-			variant={variant ?? 'default'}
-			size={size ?? 'md'}
-			isExpanded={expandedItems.has(item.id)}
-			onToggle={() => toggleItem(item.id)}
-		/>
-	));
-}
 
 /**
  * Accordion - Collapsible content component
@@ -107,14 +41,18 @@ export default function Accordion({
 	const id = getAccordionId(accordionId, generatedId);
 	const { expandedItems, toggleItem } = useAccordion(items, allowMultiple);
 	const containerProps = getAccordionContainerProps({ variant, allowMultiple, className, props });
-	const renderedItems = renderAccordionItems({
-		items,
-		id,
-		variant,
-		size,
-		expandedItems,
-		toggleItem,
-	});
+
+	const renderedItems = items.map((item: AccordionProps['items'][number]) => (
+		<AccordionItem
+			key={item.id}
+			item={item}
+			id={id}
+			variant={variant}
+			size={size}
+			isExpanded={expandedItems.has(item.id)}
+			onToggle={() => toggleItem(item.id)}
+		/>
+	));
 
 	return <div {...containerProps}>{renderedItems}</div>;
 }

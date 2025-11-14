@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import Pagination from '@core/ui/navigation/pagination/Pagination';
 import type { StandardSize } from '@src-types/ui/base';
 
@@ -27,13 +28,18 @@ export function DataTablePaginationSection({
 	totalItems,
 	size,
 }: Readonly<DataTablePaginationSectionProps>) {
+	const { t } = useTranslation('common');
 	if (!enablePagination || totalPages <= 1) return null;
 
 	return (
 		<div className="flex items-center justify-between">
 			{showPaginationInfo ? (
-				<div className="text-sm text-gray-600 dark:text-gray-400">
-					Showing {startIndex} to {endIndex} of {totalItems} results
+				<div className="text-sm text-text-secondary dark:text-text-secondary-dark">
+					{t('pagination.showing', {
+						startIndex: startIndex.toString(),
+						endIndex: endIndex.toString(),
+						totalItems: totalItems.toString(),
+					})}
 				</div>
 			) : null}
 			<Pagination

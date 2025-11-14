@@ -1,12 +1,13 @@
+import i18n from '@core/i18n/i18n';
 import type { RenderSelectAllButtonProps } from '@core/ui/forms/transfer/types/TransferList.types';
 import { twMerge } from 'tailwind-merge';
 
 function getSelectAllLabel(labels: RenderSelectAllButtonProps['labels']): string {
-	return labels?.selectAll ?? 'Select all';
+	return labels?.selectAll ?? i18n.t('common.selectAll', { ns: 'common' });
 }
 
 function getSelectNoneLabel(labels: RenderSelectAllButtonProps['labels']): string {
-	return labels?.selectNone ?? 'Deselect all';
+	return labels?.selectNone ?? i18n.t('common.deselectAll', { ns: 'common' });
 }
 
 function getSelectAllAriaLabel(labels: RenderSelectAllButtonProps['labels']): string | undefined {
@@ -35,8 +36,8 @@ export function renderSelectAllButton({
 			onClick={onSelectAllToggle}
 			disabled={disabled}
 			className={twMerge(
-				'text-xs text-blue-600 dark:text-blue-400 hover:underline',
-				disabled && 'opacity-50 cursor-not-allowed'
+				'text-xs text-primary dark:text-primary-foreground hover:underline',
+				disabled && 'opacity-disabled cursor-not-allowed'
 			)}
 			aria-label={ariaLabel}
 		>

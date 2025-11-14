@@ -37,7 +37,7 @@ interface BuildContentClassesOptions {
 
 export function buildContentClasses({ className }: BuildContentClassesOptions): string {
 	const baseClasses =
-		'bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2';
+		'bg-surface dark:bg-surface rounded-lg shadow-lg border border-border dark:border-border p-2';
 	return className ? `${baseClasses} ${className}` : baseClasses;
 }
 

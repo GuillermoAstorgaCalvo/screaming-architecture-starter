@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { PaginationButton } from '@core/ui/navigation/pagination/components/PaginationButton';
 import { createPageChangeHandler } from '@core/ui/navigation/pagination/helpers/PaginationHandlers';
 import type { StandardSize } from '@src-types/ui/base';
@@ -19,12 +20,13 @@ export function PageNumberButtons({
 	size,
 	onPageChange,
 }: Readonly<PageNumberButtonsProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<>
 			{visiblePages.map(page => (
 				<PaginationButton
 					key={page}
-					ariaLabel={`Go to page ${page}`}
+					ariaLabel={t('pagination.goToPage', { page: page.toString() })}
 					onClick={createPageChangeHandler(onPageChange, page)}
 					isActive={page === currentPage}
 					size={size}

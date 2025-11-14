@@ -19,12 +19,10 @@ export function ColorPickerSwatches({
 						type="button"
 						disabled={disabled}
 						className={classNames(
-							'w-8 h-8 rounded border-2 transition-all',
+							'w-8 h-8 rounded border-medium transition-all',
 							'hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary',
-							isSelected
-								? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1'
-								: 'border-gray-300 dark:border-gray-600',
-							disabled && 'opacity-50 cursor-not-allowed'
+							isSelected ? 'border-text-primary ring-2 ring-offset-1' : 'border-border',
+							disabled && 'opacity-disabled cursor-not-allowed'
 						)}
 						style={{ backgroundColor: color }}
 						onClick={() => onColorSelect(color)}

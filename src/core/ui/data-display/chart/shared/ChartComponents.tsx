@@ -32,7 +32,10 @@ export function ChartEmptyState({ title, emptyMessage }: Readonly<ChartEmptyStat
 	return (
 		<>
 			{title ? <h3 className="mb-4 text-lg font-semibold">{title}</h3> : null}
-			<div className="flex h-[300px] items-center justify-center text-text-muted">
+			<div
+				className="flex items-center justify-center text-text-muted"
+				style={{ height: 'calc(var(--spacing-3xl) * 6.25)' }}
+			>
 				{emptyMessage}
 			</div>
 		</>
@@ -75,7 +78,7 @@ export function ChartAxes({ showGrid, isHorizontal }: Readonly<ChartAxesProps>) 
 	return (
 		<>
 			{showGrid ? (
-				<CartesianGrid strokeDasharray="3 3" className="stroke-gray-300 dark:stroke-gray-600" />
+				<CartesianGrid strokeDasharray="3 3" className="stroke-border dark:stroke-border" />
 			) : null}
 			{isHorizontal ? (
 				<>
@@ -111,16 +114,16 @@ export function ChartTooltipAndLegend({
 			{showTooltip ? (
 				<Tooltip
 					contentStyle={{
-						backgroundColor: 'var(--color-background)',
+						backgroundColor: 'var(--color-surface)',
 						border: '1px solid var(--color-border)',
-						borderRadius: '0.5rem',
+						borderRadius: 'var(--radius-lg)',
 					}}
 					labelStyle={{ color: 'var(--color-text-primary)' }}
 				/>
 			) : null}
 			{showLegend ? (
 				<Legend
-					wrapperStyle={{ paddingTop: '1rem' }}
+					wrapperStyle={{ paddingTop: 'var(--spacing-lg)' }}
 					className="text-sm text-text-primary dark:text-text-primary"
 				/>
 			) : null}

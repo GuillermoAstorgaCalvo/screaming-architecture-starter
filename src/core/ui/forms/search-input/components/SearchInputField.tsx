@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import type { SearchInputFieldProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 import Icon from '@core/ui/icons/Icon';
 import { classNames } from '@core/utils/classNames';
@@ -5,7 +6,7 @@ import type { InputHTMLAttributes, MouseEvent } from 'react';
 
 function SearchIcon() {
 	return (
-		<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-text-muted">
+		<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-md text-text-muted">
 			<Icon name="search" size="sm" />
 		</div>
 	);
@@ -17,6 +18,7 @@ interface ClearButtonProps {
 }
 
 function ClearButton({ disabled, onClear }: ClearButtonProps) {
+	const { t } = useTranslation('common');
 	const handleClear = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -24,16 +26,16 @@ function ClearButton({ disabled, onClear }: ClearButtonProps) {
 	};
 
 	return (
-		<div className="absolute inset-y-0 right-0 flex items-center pr-3">
+		<div className="absolute inset-y-0 right-0 flex items-center pr-md">
 			<button
 				type="button"
 				onClick={handleClear}
 				disabled={disabled}
-				aria-label="Clear search"
+				aria-label={t('a11y.clearSearch')}
 				className={classNames(
 					'flex items-center justify-center',
 					'text-text-muted hover:text-text-primary',
-					'disabled:cursor-not-allowed disabled:opacity-50',
+					'disabled:cursor-not-allowed disabled:opacity-disabled',
 					'transition-colors',
 					'rounded-sm focus:outline-none focus:ring-2 focus:ring-primary/20'
 				)}

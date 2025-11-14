@@ -7,9 +7,10 @@ import type { StandardSize } from '@src-types/ui/base';
 
 /**
  * Checkbox base classes
+ * Uses design tokens for colors
  */
 export const CHECKBOX_BASE_CLASSES =
-	'h-4 w-4 rounded border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors dark:border-gray-600 dark:bg-gray-800';
+	'h-4 w-4 rounded border-border text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors dark:border-border-dark dark:bg-surface-dark';
 
 /**
  * Checkbox size classes (height + width)
@@ -42,14 +43,16 @@ export const SWITCH_CHECKED_CLASSES = 'bg-primary';
 
 /**
  * Switch unchecked state classes
+ * Uses design tokens for colors
  */
-export const SWITCH_UNCHECKED_CLASSES = 'bg-gray-300 dark:bg-gray-600';
+export const SWITCH_UNCHECKED_CLASSES = 'bg-muted dark:bg-muted-dark';
 
 /**
  * Switch thumb (the moving circle) base classes
+ * Uses design tokens for colors
  */
 export const SWITCH_THUMB_BASE_CLASSES =
-	'inline-block h-4 w-4 transform rounded-full bg-white transition-transform';
+	'inline-block h-4 w-4 transform rounded-full bg-surface transition-transform';
 
 /**
  * Switch thumb size classes
@@ -76,9 +79,10 @@ export const SWITCH_THUMB_UNCHECKED_CLASSES = 'translate-x-1';
 
 /**
  * Radio base classes
+ * Uses design tokens for colors
  */
 export const RADIO_BASE_CLASSES =
-	'h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors dark:border-gray-600 dark:bg-gray-800';
+	'h-4 w-4 rounded-full border-border text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors dark:border-border-dark dark:bg-surface-dark';
 
 /**
  * Radio size classes (height + width)

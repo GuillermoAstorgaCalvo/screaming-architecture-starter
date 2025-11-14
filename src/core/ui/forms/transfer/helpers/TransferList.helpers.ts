@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type {
 	TransferListContentProps,
 	TransferListProps,
@@ -32,7 +33,7 @@ export function createSelectAllHandler(
  * Default values for transfer list props
  */
 const TRANSFER_LIST_DEFAULTS = {
-	searchPlaceholder: 'Search...',
+	searchPlaceholder: i18n.t('common.searchPlaceholder', { ns: 'common' }),
 	showSearch: true,
 	size: 'md' as StandardSize,
 	disabled: false,

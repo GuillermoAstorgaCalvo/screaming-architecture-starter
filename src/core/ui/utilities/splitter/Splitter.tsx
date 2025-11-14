@@ -1,3 +1,5 @@
+import { designTokens } from '@core/constants/designTokens';
+import { useTranslation } from '@core/i18n/useTranslation';
 import { SplitterContext } from '@core/ui/utilities/splitter/components/SplitterContext';
 import {
 	extractPanelConfigs,
@@ -52,7 +54,7 @@ export default function Splitter({
 	panels,
 	onResize,
 	disabled = false,
-	handleSize = 4,
+	handleSize = designTokens.spacing.xs,
 	handleClassName,
 	className,
 	...props
@@ -72,6 +74,7 @@ export default function Splitter({
 		handleClassName,
 	});
 
+	const { t } = useTranslation('common');
 	const containerClasses = getContainerClasses(orientation, className);
 	const renderedChildren = renderSplitterChildren(children, panelConfigs);
 
@@ -81,7 +84,7 @@ export default function Splitter({
 				ref={containerRef}
 				id={splitterId}
 				className={containerClasses}
-				aria-label="Splitter container"
+				aria-label={t('a11y.splitterContainer')}
 				{...props}
 			>
 				{renderedChildren}

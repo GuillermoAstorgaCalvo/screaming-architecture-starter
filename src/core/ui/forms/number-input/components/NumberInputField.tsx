@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { NumberInputButton } from '@core/ui/forms/number-input/components/NumberInputButton';
 import type { NumberInputFieldProps } from '@core/ui/forms/number-input/types/NumberInputTypes';
 import Icon from '@core/ui/icons/Icon';
@@ -75,6 +76,7 @@ function NumberInputControls({
 	onIncrement,
 	onDecrement,
 }: NumberInputControlsProps) {
+	const { t } = useTranslation('common');
 	const isIncrementDisabled = (disabled ?? false) || !canIncrement;
 	const isDecrementDisabled = (disabled ?? false) || !canDecrement;
 
@@ -83,16 +85,16 @@ function NumberInputControls({
 			<NumberInputButton
 				onClick={onIncrement}
 				disabled={isIncrementDisabled}
-				aria-label="Increment"
+				aria-label={t('a11y.increment')}
 			>
-				<Icon name="arrow-up" size="sm" className="p-1" />
+				<Icon name="arrow-up" size="sm" className="p-xs" />
 			</NumberInputButton>
 			<NumberInputButton
 				onClick={onDecrement}
 				disabled={isDecrementDisabled}
-				aria-label="Decrement"
+				aria-label={t('a11y.decrement')}
 			>
-				<Icon name="arrow-down" size="sm" className="p-1" />
+				<Icon name="arrow-down" size="sm" className="p-xs" />
 			</NumberInputButton>
 		</div>
 	);

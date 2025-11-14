@@ -1,8 +1,6 @@
 import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
-import {
-	type AutocompleteListboxProps,
-	getListboxStyles,
-} from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import type { AutocompleteListboxProps } from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import { getListboxStyles } from '@core/ui/forms/autocomplete/helpers/AutocompleteMenuStyles';
 import type { RefObject } from 'react';
 
 import { AutocompleteOptionItem } from './AutocompleteOptionItem';

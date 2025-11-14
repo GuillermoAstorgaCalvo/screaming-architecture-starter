@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	COUNTRY_CODES,
 	getCountryCodeByDialCode,
@@ -21,6 +22,7 @@ function CountryCodeSelector({
 	disabled,
 	size = 'md',
 }: Readonly<CountryCodeSelectorProps>) {
+	const { t } = useTranslation('common');
 	const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		onChange(e.target.value);
 	};
@@ -32,17 +34,17 @@ function CountryCodeSelector({
 	};
 
 	return (
-		<div className="absolute inset-y-0 left-0 flex items-center pl-3">
+		<div className="absolute inset-y-0 left-0 flex items-center pl-md">
 			<select
 				value={countryCode}
 				onChange={handleChange}
 				disabled={disabled}
-				aria-label="Country code"
+				aria-label={t('a11y.countryCode')}
 				className={classNames(
-					'border-0 bg-transparent pr-2',
+					'border-0 bg-transparent pr-sm',
 					'text-text-muted',
 					'focus:outline-none',
-					'disabled:cursor-not-allowed disabled:opacity-50',
+					'disabled:cursor-not-allowed disabled:opacity-disabled',
 					sizeClasses[size]
 				)}
 			>
@@ -90,9 +92,15 @@ function PhoneInput({
 	inputProps,
 }: Readonly<PhoneInputProps>) {
 	const country = getCountryCodeByDialCode(countryCode);
-	let leftPadding = 'pl-16';
+	// Uses design tokens for spacing: 4xl = 64px
+	// For precise positioning based on dial code length, we use calculated values based on tokens
+	// 2-digit codes: 4xl (64px), longer codes: 4xl + lg = 64px + 16px = 80px
+	let leftPadding = 'pl-4xl'; // Uses spacing-4xl token (64px) for 3-digit codes
 	if (country) {
-		leftPadding = country.dialCode.length === 2 ? 'pl-16' : 'pl-20';
+		leftPadding =
+			country.dialCode.length === 2
+				? 'pl-4xl' // Uses spacing-4xl token (64px)
+				: 'pl-[calc(var(--spacing-4xl)+var(--spacing-lg))]'; // 4xl + lg = 64px + 16px = 80px
 	}
 
 	return (

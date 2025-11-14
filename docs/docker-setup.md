@@ -30,9 +30,14 @@ The dev server will be available at `http://localhost:5173`
 
 ### Running Tests
 
+**⚠️ Important**: Running tests with Docker is the recommended approach, especially on Windows, to avoid fork runner timeout issues.
+
 ```bash
 # Run unit tests
 pnpm run docker:test
+
+# Run tests with coverage
+pnpm run docker:test -- --coverage
 
 # Run tests in watch mode
 pnpm run docker:test:watch
@@ -40,6 +45,8 @@ pnpm run docker:test:watch
 # Run E2E tests
 pnpm run docker:test:e2e
 ```
+
+**Note**: Coverage reports will be generated in the `coverage/` directory and will be accessible from your host machine since it's mounted as a volume.
 
 ### Interactive Shell
 
@@ -76,6 +83,9 @@ docker-compose up
 ```bash
 # Run tests
 docker-compose run --rm app pnpm run test
+
+# Run tests with coverage
+docker-compose run --rm app pnpm run test -- --coverage
 
 # Run linting
 docker-compose run --rm app pnpm run lint

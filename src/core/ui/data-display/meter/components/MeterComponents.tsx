@@ -35,7 +35,9 @@ export function MeterValue({
 		: formatValue(value, max, unit);
 
 	return (
-		<div className="mt-1 text-xs text-gray-600 dark:text-gray-400 text-right">{displayValue}</div>
+		<div className="mt-1 text-xs text-text-secondary dark:text-text-secondary text-right">
+			{displayValue}
+		</div>
 	);
 }
 
@@ -43,7 +45,9 @@ export function MeterValue({
  * Meter label component
  */
 export function MeterLabel({ label }: Readonly<{ label: string }>) {
-	return <div className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">{label}</div>;
+	return (
+		<div className="mb-1 text-sm font-medium text-text-primary dark:text-text-primary">{label}</div>
+	);
 }
 
 /**

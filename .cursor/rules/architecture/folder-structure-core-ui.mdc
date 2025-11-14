@@ -24,7 +24,7 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 
 **Purpose**: React/framework-specific implementations and components that integrate with the framework ecosystem.
 
-- `httpClient.ts`: Exports `HttpClient` class implementing `HttpPort` interface and default `httpClient` instance. Supports default config, interceptors (request/response/error), all HTTP methods, automatic body serialization, timeout via AbortController. Includes helper modules:
+- `httpClient.ts`: Exports `HttpClient` class implementing `HttpPort` interface and default `httpClient` instance (exported as `export const httpClient = new HttpClient()`). Supports default config, interceptors (request/response/error), all HTTP methods, automatic body serialization, timeout via AbortController. Includes helper modules:
   - `httpClientUrl.ts`: URL building utilities (`buildURL`)
   - `httpClientHeaders.ts`: Header manipulation and merging utilities (`mergeHeaders`, `headersToRecord`, `mergeHeaders`)
   - `httpClientBody.ts`: Request body serialization and preparation utilities (`prepareRequestBody`, `serializeBody`)
@@ -39,12 +39,13 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
   - `httpClientRequest.ts`: Request preparation and configuration utilities (`prepareRequestConfig`, `prepareFetchConfig`, `clearTimeoutSafely`)
 - `ErrorBoundary.tsx`: Production-ready React ErrorBoundary (class component). Catches React errors and displays fallback UI with dev error details, reset button, and home link. Requires logger via props (cannot use hooks). Uses `env.DEV` for development error display.
 - `ErrorBoundaryWrapper.tsx`: Wrapper component that injects logger from `LoggerProvider` context into `ErrorBoundary` using `useLogger()` hook (bridges hooks to class component).
-- `date.ts`: ✅ Date manipulation utilities. Framework-agnostic date operations including `isValidDate()`, `toDate()`, `addDays()`, `addHours()`, `addMinutes()`, `daysDiff()`, `isPast()`, `isFuture()`, `isToday()`, `startOfDay()`, `endOfDay()`, `toUTCString()`. SSR-safe with proper Date object validation.
-- `formatDate.ts`: ✅ Date formatting utilities (main export). Provides `formatDate()`, `formatRelativeTime()`, `formatISO()`, `formatTime()`, `formatDateTime()` functions with configurable locale, timezone, and format options. SSR-safe with Intl.DateTimeFormat fallbacks.
-- `formatDate.types.ts`: ✅ Date formatting type definitions
-- `formatISO.ts`: ✅ ISO date formatting utilities
-- `formatRelativeTime.ts`: ✅ Relative time formatting utilities
-- `formatTime.ts`: ✅ Time formatting utilities
+- `date/`: ✅ SSR-safe date primitives organized in a directory:
+  - `date.ts`: ✅ Date manipulation utilities. Framework-agnostic date operations including `isValidDate()`, `toDate()`, `addDays()`, `addHours()`, `addMinutes()`, `daysDiff()`, `isPast()`, `isFuture()`, `isToday()`, `startOfDay()`, `endOfDay()`, `toUTCString()`. SSR-safe with proper Date object validation.
+  - `formatDate.ts`: ✅ Main date formatting utilities. Provides `formatDate()`, `formatDateTime()` functions with configurable locale, timezone, and format options. SSR-safe with Intl.DateTimeFormat fallbacks.
+  - `formatDate.types.ts`: ✅ Date formatting type definitions
+  - `formatISO.ts`: ✅ ISO date formatting utilities
+  - `formatRelativeTime.ts`: ✅ Relative time formatting utilities
+  - `formatTime.ts`: ✅ Time formatting utilities
 
 **Note**: `lib/` may depend on React, React Router, and other framework libraries but must respect hexagonal architecture boundaries.
 
@@ -102,6 +103,7 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 - `errorAdapter.constants.ts`: Error adapter constants
 - `errorAdapter.handlers.ts`: Error handling functions
 - `errorAdapter.helpers.ts`: Helper functions (`isType`, `isClientError`, `isServerError`, `isRetryable`)
+- `errorAdapter.schemas.ts`: Zod schemas for API error responses and validation errors
 - `errorAdapter.types.ts`: Type definitions (`DomainErrorType`, `DomainError`, etc.)
 
 ### providers (React Context Providers)
@@ -122,7 +124,11 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 
 **Purpose**: Framework-agnostic accessibility utilities for focus management and keyboard navigation.
 
-- `focus.ts`: ✅ Focus management utilities for accessible components. Exports `FOCUSABLE_SELECTOR` constant, `getFocusableElements(container)` - Get all focusable elements within a container, `focusFirstElement(container)` - Focus the first focusable element, `focusLastElement(container)` - Focus the last focusable element, `isFocusable(element)` - Check if an element can receive focus, `handleTabNavigation(container, event)` - Handle Tab key navigation with focus trapping (call from keydown handler), `saveActiveElement()` - Save currently focused element for later restoration. Framework-agnostic, works with any DOM elements.
+- `focus/`: ✅ Focus management utilities for accessible components:
+  - `constants.ts`: Focus-related constants (`FOCUSABLE_SELECTOR`, etc.)
+  - `focus.ts`: Focus management functions (`getFocusableElements`, `focusFirstElement`, `focusLastElement`, `isFocusable`, `handleTabNavigation`, `saveActiveElement`)
+  - `helpers.ts`: Internal helper functions for focus utilities
+    Framework-agnostic, works with any DOM elements.
 - `skipToContent.tsx`: ✅ Skip link component for keyboard navigation. Allows users to bypass repetitive navigation and jump directly to main content. Accessible component with visible-on-focus behavior, proper ARIA attributes, and keyboard navigation support. Exports `SkipToContent` component with configurable `targetId` (default: 'main-content') and `label` (default: 'Skip to main content').
 
 ### forms (Form Abstraction)

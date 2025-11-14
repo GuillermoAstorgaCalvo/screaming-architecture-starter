@@ -29,7 +29,10 @@ export function RatingStarIcon({
 	if (isFilled) {
 		return (
 			filledIcon ?? (
-				<StarIcon size={iconSize} className={classNames(starClasses, isHalf && 'opacity-50')} />
+				<StarIcon
+					size={iconSize}
+					className={classNames(starClasses, isHalf && 'opacity-disabled')}
+				/>
 			)
 		);
 	}

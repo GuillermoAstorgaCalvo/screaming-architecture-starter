@@ -1,26 +1,13 @@
 import Button from '@core/ui/button/Button';
 import DropdownMenu from '@core/ui/overlays/dropdown-menu/DropdownMenu';
 import type { DropdownMenuItem } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
+import type {
+	ButtonPropsOnly,
+	ButtonType,
+	MenuAlign,
+} from '@core/ui/split-button/types/SplitButtonTypes';
 import type { ButtonVariant, SplitButtonProps } from '@src-types/ui/buttons';
 import type { ReactElement } from 'react';
-
-type ButtonType = 'button' | 'submit' | 'reset';
-type MenuAlign = 'start' | 'center' | 'end';
-type ButtonPropsOnly = Omit<
-	SplitButtonProps,
-	| 'variant'
-	| 'size'
-	| 'isLoading'
-	| 'disabled'
-	| 'onClick'
-	| 'menuItems'
-	| 'onMenuItemSelect'
-	| 'menuAlign'
-	| 'dropdownAriaLabel'
-	| 'className'
-	| 'children'
-	| 'type'
->;
 
 interface RenderMainButtonParams {
 	readonly variant: ButtonVariant;

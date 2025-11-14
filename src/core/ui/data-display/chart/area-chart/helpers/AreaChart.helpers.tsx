@@ -5,13 +5,12 @@ import {
 	ChartHeader,
 	ChartTooltipAndLegend,
 } from '@core/ui/data-display/chart/shared/ChartComponents';
+import { CHART_MARGIN } from '@core/ui/data-display/chart/shared/chartConstants';
 import type { AreaChartProps } from '@src-types/ui/data/chart';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { Area, AreaChart as RechartsAreaChart, ResponsiveContainer } from 'recharts';
 
 import type { AreaProps } from './AreaChart.props';
-
-export { createAreaProps } from './AreaChart.props';
 
 interface EmptyStateProps {
 	title?: string | undefined;
@@ -55,7 +54,7 @@ export function renderAreaChartContent({
 }: ChartContentProps) {
 	return (
 		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
-			<RechartsAreaChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+			<RechartsAreaChart data={data} margin={CHART_MARGIN}>
 				<ChartAxes showGrid={showGrid} isHorizontal={false} />
 				<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
 				<Area {...areaProps} />

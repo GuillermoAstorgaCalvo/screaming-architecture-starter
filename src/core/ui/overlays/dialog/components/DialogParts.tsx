@@ -23,8 +23,8 @@ interface DialogHeaderProps {
 
 export function DialogHeader({ titleId, title, showCloseButton, onClose }: DialogHeaderProps) {
 	return (
-		<div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
-			<h2 id={titleId} className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+		<div className="flex items-center justify-between border-b border-border px-6 py-4 dark:border-border">
+			<h2 id={titleId} className="text-lg font-semibold text-text-primary dark:text-text-primary">
 				{title}
 			</h2>
 			{Boolean(showCloseButton) && <CloseButton onClose={onClose} />}
@@ -42,7 +42,7 @@ export function DialogContent({ descriptionId, children }: DialogContentProps) {
 		<div
 			id={descriptionId}
 			data-testid="dialog-content"
-			className="px-6 py-4 text-gray-700 dark:text-gray-300"
+			className="px-6 py-4 text-text-secondary dark:text-text-secondary"
 		>
 			{children}
 		</div>
@@ -54,5 +54,5 @@ interface DialogFooterProps {
 }
 
 export function DialogFooter({ footer }: DialogFooterProps) {
-	return <div className="border-t border-gray-200 px-6 py-4 dark:border-gray-700">{footer}</div>;
+	return <div className="border-t border-border px-6 py-4 dark:border-border">{footer}</div>;
 }

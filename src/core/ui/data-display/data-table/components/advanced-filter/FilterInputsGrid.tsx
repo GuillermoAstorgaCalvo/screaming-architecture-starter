@@ -1,4 +1,4 @@
-import { FilterInput } from '@core/ui/data-display/data-table/components/FilterInput';
+import { FilterInput } from '@core/ui/data-display/data-table/components/advanced-filter/FilterInput';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 
 export interface FilterInputsGridProps {
@@ -18,12 +18,12 @@ export function FilterInputsGrid({
 	size = 'md',
 }: Readonly<FilterInputsGridProps>) {
 	return (
-		<div className="mb-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+		<div className="mb-md grid gap-md md:grid-cols-2 lg:grid-cols-3">
 			{filters.map(filter => (
 				<div key={filter.id} className="flex flex-col">
 					<label
 						htmlFor={`filter-${filter.id}`}
-						className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+						className="mb-sm text-sm font-medium text-text-secondary dark:text-text-secondary"
 					>
 						{filter.label}
 					</label>

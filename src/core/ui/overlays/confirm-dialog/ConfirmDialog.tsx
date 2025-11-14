@@ -1,8 +1,5 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import Dialog from '@core/ui/dialog/Dialog';
-import {
-	DEFAULT_CANCEL_LABEL,
-	DEFAULT_CONFIRM_LABEL,
-} from '@core/ui/overlays/confirm-dialog/helpers/confirmDialog.constants';
 import {
 	prepareDialogProps,
 	prepareHandlers,
@@ -55,8 +52,8 @@ export default function ConfirmDialog({
 	onClose,
 	title,
 	description,
-	confirmLabel = DEFAULT_CONFIRM_LABEL,
-	cancelLabel = DEFAULT_CANCEL_LABEL,
+	confirmLabel,
+	cancelLabel,
 	onConfirm,
 	onCancel,
 	destructive = false,
@@ -65,12 +62,16 @@ export default function ConfirmDialog({
 	variant = 'centered',
 	className,
 }: Readonly<ConfirmDialogProps>) {
+	const { t } = useTranslation('common');
+	const defaultConfirmLabel = confirmLabel ?? t('confirm');
+	const defaultCancelLabel = cancelLabel ?? t('cancel');
+
 	const { handleConfirm, handleCancel } = prepareHandlers(onConfirm, onCancel, onClose);
 
 	const footer = renderFooter({
 		showCancel,
-		cancelLabel,
-		confirmLabel,
+		cancelLabel: defaultCancelLabel,
+		confirmLabel: defaultConfirmLabel,
 		destructive,
 		onCancel: handleCancel,
 		onConfirm: handleConfirm,

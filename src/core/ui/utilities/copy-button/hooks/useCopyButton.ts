@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import { useCallback, useState } from 'react';
 
 export interface UseCopyButtonOptions {
@@ -33,7 +34,8 @@ function isClipboardAPIAvailable(): boolean {
  */
 async function copyWithClipboardAPI(text: string): Promise<void> {
 	if (!isClipboardAPIAvailable()) {
-		throw new Error('Clipboard API is not available');
+		const errorMessage = i18n.t('copy.clipboardApiNotAvailable', { ns: 'common' });
+		throw new Error(errorMessage);
 	}
 
 	await navigator.clipboard.writeText(text);
@@ -72,7 +74,8 @@ function handleCopyError(
 	setIsCopied: (value: boolean) => void,
 	onCopyError: ((error: Error) => void) | undefined
 ): void {
-	const copyError = error instanceof Error ? error : new Error('Failed to copy text to clipboard');
+	const errorMessage = i18n.t('copy.failedToCopy', { ns: 'common' });
+	const copyError = error instanceof Error ? error : new Error(errorMessage);
 	onCopyError?.(copyError);
 	setIsCopied(false);
 }

@@ -1,4 +1,5 @@
 import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
+import { componentZIndex } from '@core/ui/theme/tokens';
 import type { ReactNode, RefObject } from 'react';
 
 interface PopoverContentProps {
@@ -25,7 +26,7 @@ export function PopoverContent({
 				position: 'absolute',
 				top: `${position.top}px`,
 				left: `${position.left}px`,
-				zIndex: 1500,
+				zIndex: componentZIndex.popover,
 			}}
 		>
 			{children}

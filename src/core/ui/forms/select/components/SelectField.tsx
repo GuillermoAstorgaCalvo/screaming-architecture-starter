@@ -11,7 +11,7 @@ function SelectArrowIcon() {
 			className={classNames(
 				'pointer-events-none',
 				'absolute inset-y-0 right-0 flex items-center pr-3',
-				'text-gray-400 dark:text-gray-500'
+				'text-text-muted dark:text-text-muted'
 			)}
 		>
 			<svg

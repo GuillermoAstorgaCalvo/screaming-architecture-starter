@@ -8,6 +8,7 @@ Thank you for your interest in contributing to the Screaming Architecture Starte
 - [Workflow](#workflow)
 - [Branching Model](#branching-model)
 - [Pull Requests](#pull-requests)
+- [Code Review Guidelines](#code-review-guidelines)
 - [Coding Standards](#coding-standards)
 - [Commits](#commits)
 - [Testing](#testing)
@@ -122,6 +123,220 @@ Use the PR template provided in `.github/PULL_REQUEST_TEMPLATE.md`. Include:
 - **Feature/fix/chore PRs**: Prefer squash merge
 - **Release/hotfix PRs**: Keep history explicit (no squash) if changelog relies on it
 - **Keep branches up to date**: Rebase on `develop` before merge to avoid noisy merges
+
+## 👀 Code Review Guidelines
+
+Code reviews are essential for maintaining code quality, sharing knowledge, and ensuring consistency across the codebase. This section outlines expectations for both reviewers and contributors.
+
+### Review Process
+
+1. **Automatic Assignment**: CODEOWNERS are automatically assigned based on the `CODEOWNERS` file. All code requires approval from at least one code owner.
+2. **Review Timeline**: Aim to provide initial feedback within 2 business days. For urgent fixes, reviews should be prioritized.
+3. **Review Completion**: All CI checks must pass and at least one approval is required before merging.
+
+### For Reviewers
+
+#### What to Review
+
+**Architecture & Boundaries**
+
+- [ ] Code follows the project's folder structure and module boundaries
+- [ ] No forbidden imports across boundaries (see `.cursor/rules/boundaries.mdc`)
+- [ ] Imports use path aliases where available (no deep relative paths)
+- [ ] No re-export barrels (`index.ts` re-exports) introduced
+- [ ] Domain code is self-contained and framework-agnostic where appropriate
+
+**Code Quality**
+
+- [ ] Code follows project conventions (see `.cursor/rules/quality/conventions.mdc`)
+- [ ] TypeScript types are properly defined and used
+- [ ] No `any` types without justification
+- [ ] Error handling is appropriate and consistent
+- [ ] Code is readable and maintainable
+- [ ] Complex logic is documented with comments
+
+**Testing**
+
+- [ ] Adequate test coverage for new functionality
+- [ ] Tests are well-written and follow testing best practices
+- [ ] Edge cases and error scenarios are covered
+- [ ] E2E tests added for user-facing features (if applicable)
+
+**Performance & Accessibility**
+
+- [ ] No obvious performance issues (unnecessary re-renders, missing memoization)
+- [ ] Accessibility requirements met (ARIA labels, keyboard navigation, focus management)
+- [ ] Images have appropriate alt text
+- [ ] Color contrast meets WCAG standards
+
+**Security**
+
+- [ ] No secrets or sensitive data committed
+- [ ] Input validation and sanitization where needed
+- [ ] Safe handling of user data and external APIs
+- [ ] Dependencies reviewed for known vulnerabilities
+
+**Documentation**
+
+- [ ] README updated if adding features or changing setup
+- [ ] Architecture docs updated if structure changes
+- [ ] JSDoc comments for public APIs
+- [ ] Complex algorithms or business logic explained
+
+#### How to Provide Feedback
+
+**Be Constructive**
+
+- Focus on the code, not the person
+- Explain the "why" behind suggestions, not just the "what"
+- Offer specific solutions or examples when possible
+- Acknowledge good practices and improvements
+
+**Use Review Comments Effectively**
+
+- **Blocking comments**: Use for critical issues that must be fixed before merge
+- **Suggestions**: Use for improvements that are nice-to-have
+- **Questions**: Use when you need clarification or want to understand the approach
+- **Praise**: Recognize good solutions and patterns
+
+**Review Tone**
+
+- Be respectful and professional
+- Ask questions rather than making demands
+- Use "we" language to foster collaboration
+- Remember that everyone is learning and improving
+
+**Example Good Feedback**
+
+```
+Great use of the Result type for error handling!
+
+One suggestion: Could we extract the validation logic into a separate function?
+This would make it easier to test and reuse. Something like:
+
+function validateUserInput(input: string): Result<User, ValidationError> {
+  // validation logic
+}
+```
+
+**Example Poor Feedback**
+
+```
+This is wrong. Do it differently.
+```
+
+### For Contributors
+
+#### Before Requesting Review
+
+- [ ] Complete the PR checklist in the PR template
+- [ ] Ensure all CI checks pass
+- [ ] Self-review your code
+- [ ] Update documentation as needed
+- [ ] Add tests for new functionality
+- [ ] Keep PRs focused and reasonably sized (aim for < 500 lines when possible)
+
+#### Responding to Feedback
+
+**Be Open to Feedback**
+
+- View reviews as learning opportunities
+- Ask for clarification if feedback is unclear
+- Discuss trade-offs when you disagree with suggestions
+- Remember that reviewers are trying to help improve the codebase
+
+**Addressing Comments**
+
+- Respond to all review comments (even if just acknowledging)
+- Make requested changes or explain why an alternative approach is better
+- Mark conversations as resolved when you've addressed the feedback
+- Request re-review when ready for another look
+
+**Iterative Improvement**
+
+- It's normal for PRs to go through multiple review cycles
+- Don't take feedback personally
+- Focus on improving the code together
+- Thank reviewers for their time and feedback
+
+### Review Criteria Checklist
+
+When reviewing a PR, verify:
+
+**Must Have (Blocking)**
+
+- [ ] All CI checks pass
+- [ ] Code follows architectural boundaries
+- [ ] No security vulnerabilities introduced
+- [ ] Tests pass and coverage is adequate
+- [ ] No breaking changes without documentation
+- [ ] TypeScript compiles without errors
+
+**Should Have (Important)**
+
+- [ ] Code follows project conventions
+- [ ] Error handling is appropriate
+- [ ] Performance considerations addressed
+- [ ] Accessibility requirements met
+- [ ] Documentation updated
+
+**Nice to Have (Suggestions)**
+
+- [ ] Code could be more readable
+- [ ] Additional edge cases could be tested
+- [ ] Performance could be optimized further
+- [ ] Documentation could be enhanced
+
+### Review Approval
+
+**When to Approve**
+
+- All blocking criteria are met
+- Code quality is acceptable
+- You understand the changes and their impact
+- You're confident the code won't break production
+
+**When to Request Changes**
+
+- Critical issues that must be fixed
+- Security concerns
+- Architectural violations
+- Missing essential tests
+- Breaking changes without proper documentation
+
+**When to Comment (Without Blocking)**
+
+- Suggestions for improvement
+- Questions about implementation
+- Alternative approaches to consider
+- Future refactoring opportunities
+
+### Special Cases
+
+**Large PRs**
+
+- Consider breaking into smaller, reviewable chunks
+- If large PR is necessary, provide a high-level overview
+- Reviewers may focus on critical paths first
+
+**Urgent Fixes (Hotfixes)**
+
+- Reviews should be prioritized but not rushed
+- Security and critical bugs may require faster turnaround
+- Still maintain quality standards
+
+**Conflicting Feedback**
+
+- Discuss with other reviewers to reach consensus
+- Maintainer has final say on architectural decisions
+- Document decisions in PR comments for future reference
+
+### Continuous Improvement
+
+- Review your own code before requesting review
+- Learn from feedback and apply it to future PRs
+- Share knowledge gained from reviews with the team
+- Suggest improvements to this review process
 
 ## 💻 Coding Standards
 
@@ -254,6 +469,8 @@ All PRs must pass CI checks:
 - ✅ Build verification
 
 CI runs automatically on PR creation and updates. Ensure all checks pass before requesting review.
+
+For detailed information on how the CI pipeline works, setting it up, and customizing it, see the [CI/CD Setup Guide](../docs/ci-cd-setup.md).
 
 ## 📞 Getting Help
 

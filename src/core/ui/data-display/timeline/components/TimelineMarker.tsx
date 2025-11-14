@@ -17,12 +17,12 @@ function getMarkerStatusClasses(
 	completed: boolean | undefined
 ): string {
 	if (completed) {
-		return 'bg-primary border-primary text-white';
+		return 'bg-primary border-primary text-primary-foreground';
 	}
 	if (active) {
-		return 'bg-primary border-primary text-white ring-2 ring-primary ring-offset-2';
+		return 'bg-primary border-primary text-primary-foreground ring-2 ring-primary ring-offset-2';
 	}
-	return 'bg-gray-200 border-gray-300 text-gray-600 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400';
+	return 'bg-muted border-border text-text-secondary';
 }
 
 function DefaultMarker({
@@ -36,8 +36,8 @@ function DefaultMarker({
 }) {
 	const markerSizeClasses = getTimelineMarkerSizeClasses(size);
 	const statusClasses = getMarkerStatusClasses(event.active, event.completed);
-	const baseClasses = `rounded-full border-2 flex items-center justify-center shrink-0 ${markerSizeClasses} ${statusClasses}`;
-	const positionClasses = orientation === 'vertical' ? 'mt-1' : 'mx-auto';
+	const baseClasses = `rounded-full border-medium flex items-center justify-center shrink-0 ${markerSizeClasses} ${statusClasses}`;
+	const positionClasses = orientation === 'vertical' ? 'mt-xs' : 'mx-auto';
 
 	return <div className={`${baseClasses} ${positionClasses}`} aria-hidden="true" />;
 }
@@ -54,7 +54,7 @@ function DotMarker({
 	const markerSizeClasses = getTimelineMarkerSizeClasses(size);
 	const statusClasses = getMarkerStatusClasses(event.active, event.completed);
 	const baseClasses = `rounded-full ${markerSizeClasses} ${statusClasses}`;
-	const positionClasses = orientation === 'vertical' ? 'mt-1' : 'mx-auto';
+	const positionClasses = orientation === 'vertical' ? 'mt-xs' : 'mx-auto';
 
 	return <div className={`${baseClasses} ${positionClasses}`} aria-hidden="true" />;
 }
@@ -70,8 +70,8 @@ function IconMarker({
 }) {
 	const iconSizeClasses = getTimelineMarkerIconSizeClasses(size);
 	const statusClasses = getMarkerStatusClasses(event.active, event.completed);
-	const baseClasses = `rounded-full border-2 flex items-center justify-center shrink-0 ${iconSizeClasses} ${statusClasses}`;
-	const positionClasses = orientation === 'vertical' ? 'mt-1' : 'mx-auto';
+	const baseClasses = `rounded-full border-medium flex items-center justify-center shrink-0 ${iconSizeClasses} ${statusClasses}`;
+	const positionClasses = orientation === 'vertical' ? 'mt-xs' : 'mx-auto';
 
 	return (
 		<div className={`${baseClasses} ${positionClasses}`} aria-hidden="true">
@@ -91,7 +91,7 @@ function CustomMarker({
 	readonly event: TimelineEvent;
 	readonly orientation: TimelineOrientation;
 }) {
-	const positionClasses = orientation === 'vertical' ? 'mt-1' : 'mx-auto';
+	const positionClasses = orientation === 'vertical' ? 'mt-xs' : 'mx-auto';
 
 	return (
 		<div className={`shrink-0 ${positionClasses}`} aria-hidden="true">

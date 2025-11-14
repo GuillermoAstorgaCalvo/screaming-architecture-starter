@@ -25,12 +25,13 @@ const GRID_COLS_CLASSES: Record<Exclude<GridCols, 'auto'>, string> = {
 
 /**
  * Grid gap classes
+ * Uses design tokens for spacing: sm=8px, md=12px, lg=16px
  */
 const GRID_GAP_CLASSES: Record<StandardSize | 'none', string> = {
 	none: '',
-	sm: 'gap-2',
-	md: 'gap-4',
-	lg: 'gap-6',
+	sm: 'gap-sm',
+	md: 'gap-md',
+	lg: 'gap-lg',
 } as const;
 
 /**

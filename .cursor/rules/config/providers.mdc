@@ -12,8 +12,13 @@ alwaysApply: false
 - `LoggerContext.tsx`: React context definition for logger (exports `LoggerContext` and `LoggerContextValue` type).
 - `StorageProvider.tsx`: Provides `StoragePort` instance via React context. Requires `storage` prop (injected at app level with `localStorageAdapter` or `cookieStorageAdapter`). Required by `ThemeProvider` for persistence. Provides `useStorage()` hook via `useStorage.ts`.
 - `StorageContext.tsx`: React context definition for storage (exports `StorageContext` and `StorageContextValue` type).
-- `HttpProvider.tsx`: Provides `HttpPort` instance via React context. Requires `http` prop (injected at app level with `httpClient` from `@core/lib/httpClient`). Used by hooks like `useFetch` and domain services for HTTP operations. Provides `useHttp()` hook via `useHttp.ts`.
+- `HttpProvider.tsx`: Provides `HttpPort` instance via React context. Requires `http` prop (injected at app level with `httpClient` from `@core/lib/http/httpClient`). Used by hooks like `useFetch` and domain services for HTTP operations. Provides `useHttp()` hook via `useHttp.ts`.
 - `HttpContext.tsx`: React context definition for HTTP client (exports `HttpContext` and `HttpContextValue` type).
+- `AuthProvider.tsx`: Provides `AuthPort` (e.g., `JwtAuthAdapter`) to the component tree. Keeps auth state centralized and exposes `useAuth()` for login/logout/token access. Renders children only; side-effects happen through hooks (e.g., `useHttpClientAuth`).
+- `AuthContext.tsx`: React context definition for auth (tokens, derived data, convenience helpers).
+- `AnalyticsProvider.tsx`: Bridges `AnalyticsPort` implementations (Google Analytics, Segment, noop). Accepts `analytics` implementation + optional `config`. Provides `useAnalytics()` hook for tracking page views/events without importing adapters.
+- `ToastProvider.tsx`: Provides toast queue management (open/dismiss actions). Works in tandem with `ToastContainer` from `core/ui`. Exposes `useToast()` hook.
+- `SnackbarProvider.tsx`: Lightweight alternative notification provider (`useSnackbar()` hook).
 
 **App Providers** (in `app/providers/`):
 
@@ -22,12 +27,22 @@ alwaysApply: false
 - `I18nProvider.tsx`: Provides i18next instance to the React component tree. Wraps application with `I18nextProvider` from `react-i18next` using the configured i18n instance from `@core/i18n/i18n`. Located in `app/providers/` because it's app-specific (i18n is initialized in `main.tsx` before app render).
 - `QueryProvider.tsx`: React Query client with optimized defaults (stale time: 30s, gcTime: 5min, retry: 3 with exponential backoff, max retry delay: 30s). Uses `env.PROD` for `refetchOnWindowFocus` behavior (true in production, false in development). Mutation retries: 1 with 1s delay. Creates new `QueryClient` instance on mount via `useMemo` for performance optimization. Also enables `refetchOnReconnect: true` and `refetchOnMount: true` for query defaults. Uses `@tanstack/react-query` v5 API (gcTime instead of cacheTime).
 
-### Optional/Planned Providers
+Composition: `app/App.tsx` wraps router with providers in order:
 
-- `AuthProvider.tsx`: (Optional) Manages auth session and user.
-- `AnalyticsProvider.tsx`: (Optional) Event tracking abstraction.
-
-Composition: `app/App.tsx` wraps router with providers in order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `StorageProvider` → `ThemeProvider` → `I18nProvider` → `QueryProvider` → `BrowserRouter` → `Router`.
+1. `LoggerProvider`
+2. `ErrorBoundaryWrapper`
+3. `HttpProvider`
+4. `AuthProvider`
+5. `StorageProvider`
+6. `ThemeProvider`
+7. `I18nProvider`
+8. `QueryProvider`
+9. `AnalyticsProvider`
+10. `MotionProvider` / `LayoutGroup` (from `core/ui/utilities/motion`)
+11. `ToastProvider`
+12. `BrowserRouter`
+13. `LayoutGroup` (route transitions)
+14. `Router` (renders routes) + `ToastContainer`
 
 ### Provider Hooks
 
@@ -35,3 +50,6 @@ Composition: `app/App.tsx` wraps router with providers in order: `LoggerProvider
 - `useStorage()` (from `core/providers/useStorage.ts`): Access `StoragePort` from `StorageProvider` context. Throws if used outside provider.
 - `useHttp()` (from `core/providers/useHttp.ts`): Access `HttpPort` from `HttpProvider` context. Throws if used outside provider.
 - `useTheme()` (from `app/providers/useTheme.ts`): Access theme state and controls from `ThemeProvider` context. Returns object with `theme`, `resolvedTheme`, and `setTheme` function.
+- `useAuth()` (from `core/providers/auth/useAuth.ts`): Access auth state, tokens, and helpers.
+- `useAnalytics()` (from `core/providers/analytics/useAnalytics.ts`): Track events/page views without touching adapters.
+- `useToast()` / `useSnackbar()` (from `core/providers/toast` / `core/providers/snackbar`): Enqueue/dismiss toast or snackbar notifications.

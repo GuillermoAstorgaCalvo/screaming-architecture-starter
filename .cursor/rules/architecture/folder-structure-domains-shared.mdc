@@ -20,11 +20,12 @@ Self-contained areas of business capability. Domain code stays isolated and impo
 - `i18n/*`: ✅ Domain translations. Contains translation files (`en.json`, `es.json`, `ar.json`) and registration file (`index.ts`) that uses `registerDomainTranslations()` from `@core/i18n/registry` with async IIFE pattern. Translations are registered in `app/main.tsx` via `import '@domains/<domain>/i18n';`. See `config/i18n.mdc` for registration pattern details.
 - `store/*`: ✅ Zustand store(s); minimal state; derive when possible. Example: `landingStore.ts` with `useLandingStore` hook and `landingSelectors` for optimized state access. See `domains/<domain>/store/README.md` for best practices.
 
+- `services/*`: ✅ Domain APIs/services; use `createApiService` from `@core/api/createApiService`; validate IO with Zod. Example: `services/api/getDemoContentService.ts` demonstrates type-safe API service creation with Zod validation.
+
 **Optional/Planned:**
 
 - `routes.ts`: Domain routes aggregation (lazy-loaded pages; no side effects) - for larger apps.
 - `models/*`: Zod schemas + inferred TS types for runtime-safe domain models.
-- `services/*`: Domain APIs/services; use `core/lib/httpClient`; validate IO with Zod.
 - `constants.ts`: Domain-specific constants/enums.
 
 **Example Domain Structure (landing):**
@@ -35,6 +36,9 @@ src/domains/landing/
 │   └── LandingPage.tsx        # ✅ Receives theme via props from withTheme HOC
 │                              # Uses useTranslation hook for i18n
 │                              # Minimal implementation demonstrating domain structure
+├── services/                  # ✅ Domain API services
+│   └── api/
+│       └── getDemoContentService.ts  # ✅ Example API service using createApiService
 ├── i18n/                      # ✅ Domain translations
 │   ├── index.ts               # ✅ Registration file using registerDomainTranslations() with async IIFE pattern
 │   ├── en.json                # ✅ English translations
@@ -45,7 +49,7 @@ src/domains/landing/
     └── README.md              # ✅ Store documentation and best practices
 ```
 
-**Note**: The landing domain is currently a minimal implementation. Optional directories (`components/`, `hooks/`, `services/`, `models/`) can be added as the domain grows. See "Optional/Planned" section below for guidance on when to add these. The `store/` directory is already implemented as an example.
+**Note**: The landing domain demonstrates the core domain structure with pages, services, i18n, and store. Optional directories (`components/`, `hooks/`, `models/`) can be added as the domain grows. See "Optional/Planned" section below for guidance on when to add these.
 
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 read_file
@@ -102,6 +106,16 @@ src/shared/
 
 - `components/layout/Layout.tsx`: Main layout wrapper that accepts optional theme config and renders `Navbar` + children. Includes `SkipToContent` component from `@core/a11y/skipToContent` for accessibility. Accepts `theme` prop that gets passed to Navbar. Wraps content in `<main id="main-content">` for skip-to-content navigation.
 - `components/layout/Navbar.tsx`: Navigation bar with home link and optional `ThemeToggle` when theme prop provided. Accepts theme configuration via props (not via context to maintain domain-agnostic design). Uses `ROUTES` constants from `@core/config/routes`. Uses `ThemeToggle` from `@core/ui/theme-toggle/ThemeToggle` (atomic UI primitive).
+
+## src/domains/shared: Cross-Domain Shared Components
+
+Purpose: Reusable composite components shared across multiple domains but not part of the core UI primitives.
+
+**Current Implementation:**
+
+- `components/autocomplete-combobox/`: ✅ Accessible combobox component built on core/ui primitives. Includes body/field/parts components, helpers, and hooks for state management, handlers, IDs, and setup.
+- `components/date-picker/`: ✅ Date picker surface component with ISO parsing and validation.
+- `components/slider/`: ✅ Slider widget component with model, view, helpers, and types.
 
 Conventions:
 

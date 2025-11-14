@@ -16,7 +16,7 @@ alwaysApply: false
 0. Enable pnpm (recommended): `corepack enable && corepack prepare pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c --activate`
 1. Install deps: `pnpm install`
 2. Start dev server: `pnpm dev`
-3. Run tests: `pnpm test`
+3. Run tests: `pnpm run docker:test` (Windows) or `pnpm test` (Mac/Linux)
 4. Lint/format: `pnpm lint` / `pnpm format`
 
 ### Configure Aliases & Boundaries

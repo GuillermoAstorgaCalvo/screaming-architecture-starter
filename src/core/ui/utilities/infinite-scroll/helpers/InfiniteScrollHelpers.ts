@@ -25,7 +25,7 @@ export function getLoadingContainerClasses(): string {
  * Get classes for the end message container
  */
 export function getEndMessageClasses(): string {
-	return 'flex items-center justify-center py-4 text-sm text-gray-500 dark:text-gray-400';
+	return 'flex items-center justify-center py-4 text-sm text-text-muted';
 }
 
 /**

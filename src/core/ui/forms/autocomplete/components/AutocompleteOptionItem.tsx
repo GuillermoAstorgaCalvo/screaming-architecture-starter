@@ -1,9 +1,9 @@
 import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 import {
 	createOptionHandlers,
-	getOptionClassName,
 	renderHighlightedLabel,
 } from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
+import { getOptionClassName } from '@core/ui/forms/autocomplete/helpers/AutocompleteMenuStyles';
 import type { RefObject } from 'react';
 
 interface AutocompleteOptionItemProps {

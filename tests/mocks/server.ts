@@ -42,24 +42,6 @@ export interface SetupServerApi {
  * Note: The lifecycle hooks (beforeAll, afterEach, afterAll) must be called
  * directly in your test setup file, not inside this utility function.
  */
-/**
- * @deprecated This function is provided for documentation purposes only.
- * In practice, you should call the server methods directly in your setup file:
- *
- * ```ts
- * beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
- * afterEach(() => server.resetHandlers());
- * afterAll(() => server.close());
- * ```
- *
- * These hooks are available globally when vitest/globals is referenced.
- *
- * @param _server - MSW server instance (unused, kept for API compatibility)
- */
-export function setupMSWServer(_server: SetupServerApi): void {
-	// This function does nothing - it's kept for backward compatibility
-	// and documentation purposes. Call the lifecycle hooks directly in your setup file.
-}
 
 /**
  * Get MSW server setup instructions

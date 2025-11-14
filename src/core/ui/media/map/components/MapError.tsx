@@ -22,17 +22,14 @@ export function MapError({
 }: Readonly<MapErrorProps>) {
 	return (
 		<div
-			className={twMerge(
-				'flex items-center justify-center bg-gray-100 dark:bg-gray-800',
-				className
-			)}
+			className={twMerge('flex items-center justify-center bg-surface dark:bg-surface', className)}
 			style={{ height, width }}
 			{...props}
 		>
 			{errorFallback ?? (
 				<div className="text-center p-4">
-					<p className="text-red-600 dark:text-red-400">Error loading map</p>
-					<p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{error}</p>
+					<p className="text-destructive">Error loading map</p>
+					<p className="text-sm text-text-secondary mt-2">{error}</p>
 				</div>
 			)}
 		</div>

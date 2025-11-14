@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type {
 	ButtonConfig,
 	ButtonConfigOptions,
@@ -14,12 +15,13 @@ export function createMoveToTargetButtonConfig({
 	disabled,
 	label,
 }: Readonly<ButtonConfigOptions>): ButtonConfig {
+	const defaultLabel = i18n.t('transfer.moveSelectedToRight', { ns: 'common' });
 	return {
 		icon: <ArrowRightIcon size={buttonSize} />,
 		onClick,
 		disabled,
-		ariaLabel: label ?? 'Move selected to right',
-		title: label ?? 'Move selected to right',
+		ariaLabel: label ?? defaultLabel,
+		title: label ?? defaultLabel,
 	};
 }
 
@@ -32,11 +34,12 @@ export function createMoveToSourceButtonConfig({
 	disabled,
 	label,
 }: Readonly<ButtonConfigOptions>): ButtonConfig {
+	const defaultLabel = i18n.t('transfer.moveSelectedToLeft', { ns: 'common' });
 	return {
 		icon: <ArrowLeftIcon size={buttonSize} />,
 		onClick,
 		disabled,
-		ariaLabel: label ?? 'Move selected to left',
-		title: label ?? 'Move selected to left',
+		ariaLabel: label ?? defaultLabel,
+		title: label ?? defaultLabel,
 	};
 }

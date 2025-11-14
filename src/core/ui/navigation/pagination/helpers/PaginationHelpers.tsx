@@ -1,11 +1,16 @@
+import { ARIA_LABELS } from '@core/constants/aria';
 import {
 	PAGINATION_BASE_CLASSES,
 	PAGINATION_BUTTON_BASE_CLASSES,
 	PAGINATION_BUTTON_SIZE_CLASSES,
 	PAGINATION_BUTTON_VARIANT_CLASSES,
 } from '@core/constants/ui/data';
+import {
+	PaginationButtons,
+	type PaginationButtonsProps,
+} from '@core/ui/navigation/pagination/components/PaginationButtons';
 import type { StandardSize } from '@src-types/ui/base';
-import { useId } from 'react';
+import { type HTMLAttributes, useId } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export function getPaginationClasses(className?: string): string {
@@ -41,4 +46,27 @@ export function getVisiblePages(
 export function usePaginationId(paginationId: string | undefined): string {
 	const generatedId = useId();
 	return paginationId ?? `pagination-${generatedId}`;
+}
+
+export interface RenderPaginationNavOptions {
+	id: string;
+	className: string | undefined;
+	buttonProps: PaginationButtonsProps;
+	restProps: Omit<HTMLAttributes<HTMLElement>, 'className' | 'id' | 'aria-label'>;
+}
+
+/**
+ * Renders the pagination navigation element
+ */
+export function renderPaginationNav(options: RenderPaginationNavOptions) {
+	return (
+		<nav
+			id={options.id}
+			aria-label={ARIA_LABELS.PAGINATION}
+			className={getPaginationClasses(options.className)}
+			{...options.restProps}
+		>
+			<PaginationButtons {...options.buttonProps} />
+		</nav>
+	);
 }

@@ -1,5 +1,5 @@
-import type { HeaderContentProps } from '@core/ui/data-display/data-table/components/DataTableHeader.types';
-import { SortButton } from '@core/ui/data-display/data-table/components/DataTableHeaderComponents';
+import type { HeaderContentProps } from '@core/ui/data-display/data-table/components/table-header/DataTableHeader.types';
+import { SortButton } from '@core/ui/data-display/data-table/components/table-header/DataTableHeaderComponents';
 
 /**
  * HeaderContent - Renders either a sortable button or plain header text

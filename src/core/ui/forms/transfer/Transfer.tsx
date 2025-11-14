@@ -43,7 +43,7 @@ import type { TransferProps } from '@src-types/ui/data/transfer';
  *   renderItem={(option) => (
  *     <div>
  *       <strong>{option.label}</strong>
- *       <p className="text-sm text-gray-500">{option.description}</p>
+ *       <p className="text-sm text-text-muted">{option.description}</p>
  *     </div>
  *   )}
  * />

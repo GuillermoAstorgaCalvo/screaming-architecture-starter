@@ -3,7 +3,7 @@ import '@styles/globals.css';
 
 import App from '@app/App';
 import { initConfig } from '@core/config/init';
-import { i18nInitPromise } from '@core/i18n/i18n';
+import i18n, { i18nInitPromise } from '@core/i18n/i18n';
 import { reportWebVitals } from '@core/perf/reportWebVitals';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { StrictMode } from 'react';
@@ -29,7 +29,7 @@ reportWebVitals(loggerAdapter);
 
 const container = document.querySelector('#root');
 if (!container) {
-	throw new Error('Root element #root not found');
+	throw new Error(i18n.t('errors.rootElementNotFound', { ns: 'common' }));
 }
 
 createRoot(container).render(

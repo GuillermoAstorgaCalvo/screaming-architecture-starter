@@ -24,14 +24,14 @@ export function HoverCardContent({
 }: Readonly<HoverCardContentProps>) {
 	const positionClasses = getPositionClasses(position);
 	const baseContentClasses =
-		'rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-900 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100';
+		'rounded-lg border border-border bg-surface p-4 text-sm text-text-primary shadow-lg dark:border-border dark:bg-surface dark:text-text-primary';
 	const contentClasses = twMerge(baseContentClasses, contentClassName);
 
 	return (
 		<div
 			id={hoverCardId}
 			role="tooltip"
-			className={`absolute z-1600 ${positionClasses} pointer-events-none`}
+			className={`absolute ${positionClasses} pointer-events-none`}
 			style={{ zIndex: componentZIndex.tooltip }}
 		>
 			<div className={contentClasses}>{content}</div>

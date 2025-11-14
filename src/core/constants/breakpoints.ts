@@ -4,7 +4,7 @@
  * Defines standard responsive breakpoints used across the application.
  * These breakpoints match the BreakpointSize type defined in types/layout.ts.
  *
- * Breakpoints use Tailwind's default breakpoint system:
+ * Breakpoints are derived from design tokens for consistency and customization.
  * - xs: 0px (default, no min-width)
  * - sm: 640px
  * - md: 768px
@@ -22,19 +22,20 @@
  * ```
  */
 
+import { designTokens } from '@core/constants/designTokens';
 import type { BreakpointSize } from '@src-types/layout';
 
 /**
  * Breakpoint values in pixels
- * Matches Tailwind CSS default breakpoints
+ * Derived from design tokens for consistency and customization
  */
 export const breakpoints = {
-	xs: 0,
-	sm: 640,
-	md: 768,
-	lg: 1024,
-	xl: 1280,
-	'2xl': 1536,
+	xs: Number.parseInt(designTokens.breakpoint.xs, 10),
+	sm: Number.parseInt(designTokens.breakpoint.sm, 10),
+	md: Number.parseInt(designTokens.breakpoint.md, 10),
+	lg: Number.parseInt(designTokens.breakpoint.lg, 10),
+	xl: Number.parseInt(designTokens.breakpoint.xl, 10),
+	'2xl': Number.parseInt(designTokens.breakpoint['2xl'], 10),
 } as const;
 
 /**

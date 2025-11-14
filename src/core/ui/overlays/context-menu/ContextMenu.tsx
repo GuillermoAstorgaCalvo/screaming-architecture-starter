@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { ContextMenuContent } from '@core/ui/overlays/context-menu/components/ContextMenuContent';
 import { useContextMenu } from '@core/ui/overlays/context-menu/hooks/useContextMenu';
 import type { ReactElement, ReactNode } from 'react';
@@ -76,8 +77,10 @@ export default function ContextMenu({
 	className,
 	menuLabel,
 	maxHeight = 280,
-	emptyState = 'No actions available',
+	emptyState,
 }: Readonly<ContextMenuProps>) {
+	const { t } = useTranslation('common');
+	const defaultEmptyState = emptyState ?? t('noActionsAvailable');
 	const contextMenuData = useContextMenu({ items, isOpen, onOpenChange, onSelect });
 	return (
 		<ContextMenuContent
@@ -87,7 +90,7 @@ export default function ContextMenu({
 			className={className}
 			menuLabel={menuLabel}
 			maxHeight={maxHeight}
-			emptyState={emptyState}
+			emptyState={defaultEmptyState}
 			items={items}
 		/>
 	);

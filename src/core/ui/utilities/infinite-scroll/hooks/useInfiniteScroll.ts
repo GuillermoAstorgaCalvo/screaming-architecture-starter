@@ -161,7 +161,7 @@ export function useInfiniteScroll({
 	hasMore,
 	onLoadMore,
 	threshold: _threshold = 100,
-	rootMargin = '100px',
+	rootMargin = 'var(--spacing-4xl)',
 	enabled = true,
 }: UseInfiniteScrollOptions) {
 	const sentinelRef = useRef<HTMLDivElement>(null);

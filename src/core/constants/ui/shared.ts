@@ -27,12 +27,14 @@ export const ICON_SIZE_CLASSES: Record<StandardSize, string> = {
 
 /**
  * Shared error state classes for form inputs (Input, Textarea, Select)
+ * Uses design tokens for colors
  */
 export const FORM_ERROR_CLASSES =
-	'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:focus:border-red-400';
+	'border-destructive focus:border-destructive focus:ring-destructive dark:border-destructive-dark dark:focus:border-destructive-dark';
 
 /**
  * Shared normal state classes for form inputs (Input, Textarea, Select)
+ * Uses design tokens for colors
  */
 export const FORM_NORMAL_CLASSES =
-	'border-gray-300 focus:border-primary focus:ring-primary dark:border-gray-600 dark:focus:border-primary';
+	'border-border focus:border-primary focus:ring-primary dark:border-border-dark dark:focus:border-primary';

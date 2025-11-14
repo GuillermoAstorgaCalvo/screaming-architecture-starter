@@ -38,7 +38,7 @@ export default function ScrollArea({
 
 	return (
 		<div className={classes} {...props}>
-			<div className="h-full w-full overflow-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 dark:[&::-webkit-scrollbar-track]:bg-gray-800">
+			<div className="h-full w-full overflow-auto [&::-webkit-scrollbar]:w-(--spacing-xs) [&::-webkit-scrollbar]:h-(--spacing-xs) [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-muted dark:[&::-webkit-scrollbar-thumb]:bg-border-dark dark:[&::-webkit-scrollbar-track]:bg-muted-dark">
 				{children}
 			</div>
 		</div>

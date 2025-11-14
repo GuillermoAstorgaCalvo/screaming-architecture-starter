@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import AutocompleteComboboxBody from '@domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxBody';
 import { useAutocompleteComboboxSetup } from '@domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxSetup';
 import type { ReactNode } from 'react';
@@ -31,44 +32,29 @@ export interface AutocompleteComboboxProps {
 	readonly className?: string;
 }
 
-export default function AutocompleteCombobox({
-	id,
-	label,
-	value,
-	inputValue,
-	placeholder,
-	helperText,
-	error,
-	disabled = false,
-	required = false,
-	options,
-	onValueChange,
-	onInputValueChange,
-	onOptionSelect,
-	noOptionsMessage = 'No matches',
-	loadingMessage = 'Loading options…',
-	isLoading = false,
-	className,
-}: Readonly<AutocompleteComboboxProps>) {
-	const bodyProps = useAutocompleteComboboxSetup({
-		id,
-		label,
-		helperText,
-		error,
-		value,
-		inputValue,
-		options,
-		disabled,
-		required,
-		placeholder,
-		isLoading,
-		loadingMessage,
-		noOptionsMessage,
-		className,
-		onValueChange,
-		onInputValueChange,
-		onOptionSelect,
+function useBodyProps(props: Readonly<AutocompleteComboboxProps>) {
+	const { t } = useTranslation('common');
+	return useAutocompleteComboboxSetup({
+		id: props.id,
+		label: props.label,
+		helperText: props.helperText,
+		error: props.error,
+		value: props.value,
+		inputValue: props.inputValue,
+		options: props.options,
+		disabled: props.disabled ?? false,
+		required: props.required ?? false,
+		placeholder: props.placeholder,
+		isLoading: props.isLoading ?? false,
+		loadingMessage: props.loadingMessage ?? t('loadingOptions'),
+		noOptionsMessage: props.noOptionsMessage ?? t('noMatches'),
+		className: props.className,
+		onValueChange: props.onValueChange,
+		onInputValueChange: props.onInputValueChange,
+		onOptionSelect: props.onOptionSelect,
 	});
+}
 
-	return <AutocompleteComboboxBody {...bodyProps} />;
+export default function AutocompleteCombobox(props: Readonly<AutocompleteComboboxProps>) {
+	return <AutocompleteComboboxBody {...useBodyProps(props)} />;
 }

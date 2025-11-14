@@ -5,5 +5,232 @@
 	},
 	"nav": {
 		"home": "Inicio"
+	},
+	"errors": {
+		"error500": {
+			"title": "500",
+			"message": "Error interno del servidor",
+			"returnHome": "Volver al Inicio"
+		},
+		"error404": {
+			"title": "404",
+			"message": "Página no encontrada",
+			"returnHome": "Volver al Inicio"
+		},
+		"errorBoundary": {
+			"title": "Algo salió mal",
+			"description": "Lo sentimos, pero ocurrió algo inesperado. Por favor, inténtalo de nuevo.",
+			"tryAgain": "Intentar de nuevo",
+			"goToHome": "Ir al Inicio",
+			"tryAgainAriaLabel": "Intentar de nuevo para recargar la aplicación"
+		},
+		"requestTimeout": "Tiempo de espera de solicitud agotado",
+		"networkError": "Error de red. Por favor, verifica tu conexión.",
+		"unknownError": "Ocurrió un error desconocido",
+		"requestFailed": "La solicitud falló",
+		"rootElementNotFound": "Elemento raíz #root no encontrado",
+		"unableToLoadDemoContent": "No se pudo cargar el contenido de demostración.",
+		"failedToLoadGoogleMaps": "Error al cargar Google Maps"
+	},
+	"a11y": {
+		"mainNavigation": "Navegación principal",
+		"notifications": "Notificaciones",
+		"dismissNotification": "Descartar notificación",
+		"languageSelector": "Selector de idioma",
+		"currentLanguage": "Idioma actual: {language}",
+		"selectLanguage": "Seleccionar idioma",
+		"toggleTheme": "Alternar tema",
+		"currentTheme": "Tema actual: {theme}",
+		"currentThemeDescription": "Tema actual: {theme}. Haz clic para alternar.",
+		"required": "Requerido",
+		"imageGallery": "Galería de imágenes",
+		"uploadProgress": "Progreso de carga: {progress}%",
+		"chooseLanguage": "Elige tu idioma",
+		"addNewItem": "Agregar nuevo elemento",
+		"createNewPost": "Crear nueva publicación",
+		"virtualizedList": "Lista virtualizada",
+		"sidebar": "Barra lateral",
+		"applicationMenu": "Menú de aplicación",
+		"resizableContainer": "Contenedor redimensionable",
+		"countryCode": "Código de país",
+		"splitterContainer": "Contenedor divisor",
+		"info": "Información",
+		"commands": "Comandos",
+		"searchCommands": "Buscar comandos",
+		"steps": "Pasos",
+		"transferList": "Lista de transferencia",
+		"segmentedControl": "Control segmentado",
+		"clearSearch": "Limpiar búsqueda",
+		"oneTimePasswordInput": "Entrada de contraseña de un solo uso",
+		"increment": "Incrementar",
+		"decrement": "Decrementar",
+		"search": "Buscar",
+		"more": "Más",
+		"close": "Cerrar",
+		"fileUploadDropzone": "Zona de carga de archivos",
+		"moreOptions": "Más opciones",
+		"timeline": "Línea de tiempo",
+		"scrollToTop": "Desplazar hacia arriba",
+		"sortableList": "Lista ordenable",
+		"closeModal": "Cerrar modal",
+		"closeDrawer": "Cerrar cajón",
+		"closeSheet": "Cerrar hoja",
+		"closeDialog": "Cerrar diálogo",
+		"openMenu": "Abrir menú",
+		"closeMenu": "Cerrar menú",
+		"loading": "Cargando",
+		"loadingContent": "Cargando contenido",
+		"error": "Error",
+		"success": "Éxito",
+		"warning": "Advertencia",
+		"submit": "Enviar formulario",
+		"delete": "Eliminar",
+		"edit": "Editar",
+		"save": "Guardar",
+		"skipToContent": "Saltar al contenido principal",
+		"menuButton": "Menú",
+		"navigation": "Navegación",
+		"mainContent": "Contenido principal",
+		"breadcrumb": "Miga de pan",
+		"tabs": "Pestañas",
+		"modalContent": "Contenido del modal",
+		"pagination": "Paginación",
+		"carousel": "Carrusel",
+		"rating": "Calificación",
+		"marquee": "Contenido desplazable"
+	},
+	"commandPalette": {
+		"placeholder": "Escribe un comando o busca...",
+		"emptyState": "No se encontraron comandos"
+	},
+	"inlineEdit": {
+		"placeholder": "Haz clic para editar"
+	},
+	"theme": {
+		"light": "Claro",
+		"dark": "Oscuro",
+		"system": "Sistema"
+	},
+	"language": {
+		"en": "Inglés",
+		"es": "Español",
+		"ar": "Árabe"
+	},
+	"common": {
+		"retry": "Reintentar",
+		"failedToLoadMoreItems": "Error al cargar más elementos",
+		"anErrorOccurred": "Ocurrió un error",
+		"confirm": "Confirmar",
+		"cancel": "Cancelar",
+		"noMatches": "No hay coincidencias",
+		"loadingOptions": "Cargando opciones…",
+		"fieldRequired": "Este campo es obligatorio",
+		"input": "Entrada",
+		"selectAll": "Seleccionar todo",
+		"deselectAll": "Deseleccionar todo",
+		"selectAllRows": "Seleccionar todas las filas",
+		"noDataAvailable": "No hay datos disponibles",
+		"search": "Buscar...",
+		"searchPlaceholder": "Buscar...",
+		"noActionsAvailable": "No hay acciones disponibles",
+		"noOptionsFound": "No se encontraron opciones"
+	},
+	"carousel": {
+		"previousSlide": "Diapositiva anterior",
+		"nextSlide": "Diapositiva siguiente",
+		"slideIndicators": "Indicadores de diapositivas",
+		"goToSlide": "Ir a la diapositiva {index}"
+	},
+	"password": {
+		"showPassword": "Mostrar contraseña",
+		"hidePassword": "Ocultar contraseña"
+	},
+	"calendar": {
+		"previousMonth": "Mes anterior",
+		"nextMonth": "Mes siguiente",
+		"goToToday": "Ir a hoy",
+		"today": "Hoy"
+	},
+	"fileUpload": {
+		"dropFilesHere": "Soltar archivos aquí",
+		"dragAndDropFilesHere": "Arrastra y suelta archivos aquí",
+		"or": "o",
+		"browseFiles": "Explorar archivos",
+		"accepted": "Aceptado:",
+		"fileSizeExceedsMaximum": "El tamaño del archivo excede el máximo de {maxSize}",
+		"fileSizeBelowMinimum": "El tamaño del archivo está por debajo del mínimo de {minSize}",
+		"fileTypeNotAccepted": "Tipo de archivo no aceptado. Tipos aceptados: {types}",
+		"maximum": "Máximo",
+		"minimum": "Mínimo",
+		"file": "archivo",
+		"files": "archivos",
+		"allowed": "permitido",
+		"required": "requerido",
+		"bytes": "Bytes",
+		"kb": "KB",
+		"mb": "MB",
+		"gb": "GB",
+		"uploadProgress": "Progreso de carga: {progress}%"
+	},
+	"wizard": {
+		"next": "Siguiente",
+		"previous": "Anterior",
+		"finish": "Finalizar",
+		"skip": "Omitir",
+		"progress": "Progreso del asistente: {progress}%",
+		"validationFailed": "La validación falló",
+		"validationError": "Error de validación"
+	},
+	"pagination": {
+		"showing": "Mostrando {startIndex} a {endIndex} de {totalItems} resultados",
+		"first": "Primero",
+		"last": "Último",
+		"previous": "Anterior",
+		"next": "Siguiente",
+		"goToFirstPage": "Ir a la primera página",
+		"goToLastPage": "Ir a la última página",
+		"goToPreviousPage": "Ir a la página anterior",
+		"goToNextPage": "Ir a la página siguiente",
+		"goToPage": "Ir a la página {page}"
+	},
+	"filters": {
+		"activeFilters": "Filtros activos:",
+		"clearAll": "Limpiar todo",
+		"clearAllAriaLabel": "Limpiar todos los filtros",
+		"removeFilter": "Eliminar filtro {label}",
+		"filterBuilder": "Constructor de filtros",
+		"closeFilterBuilder": "Cerrar constructor de filtros",
+		"addFilter": "Agregar filtro",
+		"filterLabel": "Etiqueta del filtro",
+		"filterLabelPlaceholder": "p. ej., Estado, Fecha, Categoría",
+		"filterType": "Tipo de filtro",
+		"addNewFilter": "Agregar nuevo filtro",
+		"filterTypeText": "Texto",
+		"filterTypeSelect": "Seleccionar",
+		"filterTypeMultiSelect": "Selección múltiple",
+		"filterTypeDate": "Fecha",
+		"filterTypeDateRange": "Rango de fechas"
+	},
+	"transfer": {
+		"sourceTitle": "Disponible",
+		"targetTitle": "Seleccionado",
+		"searchList": "Buscar lista de {type}",
+		"moveSelectedToRight": "Mover seleccionado a la derecha",
+		"moveSelectedToLeft": "Mover seleccionado a la izquierda"
+	},
+	"copy": {
+		"copyToClipboard": "Copiar al portapapeles",
+		"copied": "¡Copiado!",
+		"clipboardApiNotAvailable": "La API del portapapeles no está disponible",
+		"failedToCopy": "Error al copiar texto al portapapeles"
+	},
+	"seo": {
+		"siteName": "Screaming Architecture Starter",
+		"defaultDescription": "Una plantilla moderna y escalable para aplicaciones React",
+		"defaultTitle": "Screaming Architecture Starter"
+	},
+	"noscript": {
+		"title": "JavaScript Requerido",
+		"message": "Esta aplicación requiere que JavaScript esté habilitado. Por favor, habilita JavaScript en la configuración de tu navegador."
 	}
 }

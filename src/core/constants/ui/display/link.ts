@@ -9,8 +9,10 @@ export const LINK_BASE_CLASSES =
 
 export const LINK_VARIANT_CLASSES: Record<LinkVariant, string> = {
 	default: 'text-primary hover:text-primary/90 dark:text-primary dark:hover:text-primary/80',
-	subtle: 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200',
-	muted: 'text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300',
+	subtle:
+		'text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark',
+	muted:
+		'text-text-muted hover:text-text-secondary dark:text-text-muted-dark dark:hover:text-text-secondary-dark',
 } as const;
 
 export const LINK_SIZE_CLASSES: Record<StandardSize, string> = {

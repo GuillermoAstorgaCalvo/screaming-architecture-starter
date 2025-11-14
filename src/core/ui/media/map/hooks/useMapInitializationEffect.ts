@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import { initializeMapInstance } from '@core/ui/media/map/helpers/mapInitialization.helpers';
 import type { MapProps } from '@src-types/ui/maps';
 import { type RefObject, useEffect, useMemo } from 'react';
@@ -60,7 +61,10 @@ function handleMapInitializationSuccess(
  * Handles errors during map initialization
  */
 function handleMapInitializationError(error: unknown, callbacks: MapInitializationCallbacks): void {
-	const errorMessage = error instanceof Error ? error.message : 'Failed to load Google Maps';
+	const errorMessage =
+		error instanceof Error
+			? error.message
+			: i18n.t('errors.failedToLoadGoogleMaps', { ns: 'common' });
 	callbacks.onError(errorMessage);
 	callbacks.onLoadingChange(false);
 }

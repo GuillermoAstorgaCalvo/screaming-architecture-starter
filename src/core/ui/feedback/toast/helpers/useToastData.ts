@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { extractDismissConfig } from '@core/ui/feedback/toast/helpers/toast.dismiss.builders';
 import {
 	extractRenderProps,
@@ -12,6 +13,7 @@ export interface UseToastDataReturn {
 }
 
 export function useToastData(props: Readonly<ToastProps>): UseToastDataReturn {
+	const { t } = useTranslation('common');
 	const dismissConfig = extractDismissConfig({
 		intent: props.intent,
 		isOpen: props.isOpen,
@@ -22,7 +24,7 @@ export function useToastData(props: Readonly<ToastProps>): UseToastDataReturn {
 		role: props.role,
 	});
 	const { accessibleRole, dismissHandlers } = useToastConfig(dismissConfig);
-	const dismissLabel = props.dismissLabel ?? 'Dismiss notification';
+	const dismissLabel = props.dismissLabel ?? t('a11y.dismissNotification');
 	return {
 		isOpen: dismissConfig.isOpen,
 		renderProps: extractRenderProps({

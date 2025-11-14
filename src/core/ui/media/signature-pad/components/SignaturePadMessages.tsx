@@ -10,12 +10,12 @@ export function SignaturePadMessages({
 	return (
 		<div className="mt-1">
 			{error ? (
-				<p id={`${signaturePadId}-error`} className="text-sm text-red-600 dark:text-red-400">
+				<p id={`${signaturePadId}-error`} className="text-sm text-destructive">
 					{error}
 				</p>
 			) : null}
 			{helperText && !error ? (
-				<p id={`${signaturePadId}-helper`} className="text-sm text-gray-500 dark:text-gray-400">
+				<p id={`${signaturePadId}-helper`} className="text-sm text-text-muted">
 					{helperText}
 				</p>
 			) : null}

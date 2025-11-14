@@ -1,0 +1,2420 @@
+---
+description: 'Comprehensive test coverage roadmap from current 3.1% to full coverage'
+globs: ['**/*']
+alwaysApply: false
+---
+
+# Test Coverage Roadmap: From 3.1% to Full Coverage
+
+**Last Verified**: 2025-11-14 - Roadmap has been comprehensively verified against actual project structure. All file paths, component structures, directory hierarchies, and test file specifications have been validated and confirmed accurate. All mentioned files exist, all directory structures match, and all test file paths are correctly specified.
+
+## Current State
+
+**Overall Coverage**: 3.1% statements, 1.43% branches, 2.29% functions, 3.13% lines
+
+**Test Files That Exist**:
+
+- `tests/app/App.test.tsx`: Tests `src/app/App.tsx` ✅
+- `e2e/example.spec.ts`: Example E2E test ✅
+
+**Note**: The following test files are mentioned in `docs/structure.md` but do NOT actually exist:
+
+- `tests/core/router/routes.gen.test.ts` - Does not exist ✅ Verified
+- `tests/shared/components/layout/Layout.test.tsx` - Does not exist ✅ Verified
+- `tests/shared/components/layout/Navbar.test.tsx` - Does not exist ✅ Verified
+
+**Note**: The source files for these tests DO exist:
+
+- `src/core/router/routes.gen.ts` - Exists ✅
+- `src/shared/components/layout/Layout.tsx` - Exists ✅
+- `src/shared/components/layout/Navbar.tsx` - Exists ✅
+
+**Covered Files** (based on existing test file):
+
+- `src/app/App.tsx`: Covered by `tests/app/App.test.tsx` ✅
+
+**Note**: Coverage percentages mentioned in this roadmap (e.g., "77%", "32%", etc.) are based on previous coverage reports and may need verification by running `pnpm run test:coverage` or `pnpm run docker:test -- --coverage`. The roadmap assumes these percentages are approximate and may have changed.
+
+**Target Coverage Thresholds** (to be enabled):
+
+- Lines: 80%
+- Functions: 80%
+- Branches: 80%
+- Statements: 80%
+
+## Testing Strategy
+
+### Test Organization
+
+- **Location**: `tests/` directory (unit tests), `e2e/` (E2E tests)
+- **Pattern**: `*.test.{ts,tsx}` or `*.spec.{ts,tsx}`
+- **Framework**: Vitest with React Testing Library
+- **Mocking**: MSW for API, Mock adapters for ports
+- **Accessibility**: vitest-axe for a11y testing
+
+### Running Tests
+
+**Recommended**: Use Docker to run tests (especially on Windows):
+
+```bash
+# Run all tests
+pnpm run docker:test
+
+# Run tests with coverage
+pnpm run docker:test -- --coverage
+
+# Run tests in watch mode
+pnpm run docker:test:watch
+
+# Run E2E tests
+pnpm run docker:test:e2e
+```
+
+**Alternative** (if Docker is not available):
+
+```bash
+# Run all tests
+pnpm run test
+
+# Run tests with coverage
+pnpm run test:coverage
+
+# Run tests in watch mode
+pnpm run test:watch
+```
+
+**Note**: On Windows, direct test execution may fail due to fork runner timeout. Docker is the recommended solution.
+
+### Test Utilities Available
+
+- `tests/utils/testUtils.tsx`: `renderWithProviders()` helper ✅
+- `tests/utils/TestProviders.tsx`: Provider composition ✅
+- `tests/utils/mocks/`: Mock adapters ✅
+  - `MockStorageAdapter.ts` ✅
+  - `MockLoggerAdapter.ts` ✅
+  - `MockHttpAdapter.ts` ✅
+  - `MockAuthAdapter.ts` ✅
+  - `MockAnalyticsAdapter.ts` ✅
+- `tests/factories/`: Test data factories ✅
+  - `apiFactories.ts` ✅
+  - `userFactories.ts` ✅
+- `tests/mocks/`: MSW handlers and payloads ✅
+  - `handlers.ts` ✅
+  - `payloads.ts` ✅
+  - `server.ts` ✅
+- `tests/utils/a11y.ts`: Accessibility testing utilities ✅
+
+---
+
+## Phase 1: Core Utilities & Foundation (Priority: CRITICAL)
+
+### Task 1.1: Core Utils - classNames.ts
+
+**File**: `src/core/utils/classNames.ts`
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test `classNames()` function with various input types
+- Test string concatenation
+- Test conditional classes
+- Test array handling
+- Test object key-value pairs
+- Test edge cases (null, undefined, empty strings)
+- Test performance with large inputs
+
+**Test File**: `tests/core/utils/classNames.test.ts`
+
+**Example Test Cases**:
+
+```typescript
+describe('classNames', () => {
+	it('combines string classes', () => {
+		expect(classNames('foo', 'bar')).toBe('foo bar');
+	});
+
+	it('handles conditional classes', () => {
+		expect(classNames('foo', false && 'bar', 'baz')).toBe('foo baz');
+	});
+
+	it('handles object notation', () => {
+		expect(classNames({ foo: true, bar: false })).toBe('foo');
+	});
+
+	it('handles arrays', () => {
+		expect(classNames(['foo', 'bar'])).toBe('foo bar');
+	});
+
+	it('filters out falsy values', () => {
+		expect(classNames('foo', null, undefined, '', 0, false, 'bar')).toBe('foo bar');
+	});
+});
+```
+
+---
+
+### Task 1.2: Core Utils - hookUtils.ts
+
+**File**: `src/core/utils/hookUtils.ts`
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test hook composition utilities
+- Test hook dependency management
+- Test hook memoization helpers
+- Test hook lifecycle utilities
+
+**Test File**: `tests/core/utils/hookUtils.test.ts`
+
+---
+
+### Task 1.3: Core Utils - themeCustomization.ts
+
+**File**: `src/core/utils/themeCustomization.ts`
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test theme customization functions
+- Test token overrides
+- Test theme merging logic
+- Test validation
+
+**Test File**: `tests/core/utils/themeCustomization.test.ts`
+
+---
+
+### Task 1.4: Debounce Utilities
+
+**Files** (verified):
+
+- `src/core/utils/debounce/debounce.ts` ✅
+- `src/core/utils/debounce/debounceHelpers.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test debounce function with various delays
+- Test immediate execution option
+- Test cancel functionality
+- Test flush functionality
+- Test leading/trailing edge options
+- Test multiple rapid calls
+- Test cleanup on unmount
+
+**Test File**: `tests/core/utils/debounce/debounce.test.ts`
+
+**Example Test Cases**:
+
+```typescript
+describe('debounce', () => {
+	it('delays function execution', async () => {
+		const fn = vi.fn();
+		const debounced = debounce(fn, 100);
+
+		debounced();
+		expect(fn).not.toHaveBeenCalled();
+
+		await new Promise(resolve => setTimeout(resolve, 150));
+		expect(fn).toHaveBeenCalledTimes(1);
+	});
+
+	it('cancels pending execution', () => {
+		const fn = vi.fn();
+		const debounced = debounce(fn, 100);
+
+		debounced();
+		debounced.cancel();
+
+		// Wait and verify not called
+	});
+
+	it('flushes pending execution', () => {
+		const fn = vi.fn();
+		const debounced = debounce(fn, 100);
+
+		debounced();
+		debounced.flush();
+
+		expect(fn).toHaveBeenCalledTimes(1);
+	});
+});
+```
+
+---
+
+### Task 1.5: Throttle Utilities
+
+**Files** (verified):
+
+- `src/core/utils/throttle/throttle.ts` ✅
+- `src/core/utils/throttle/throttleHelpers.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test throttle function with various intervals
+- Test leading edge execution
+- Test trailing edge execution
+- Test both leading and trailing
+- Test cancel functionality
+- Test multiple rapid calls
+
+**Test File**: `tests/core/utils/throttle/throttle.test.ts`
+
+---
+
+### Task 1.6: SEO Utilities
+
+**Files** (verified):
+
+- `src/core/utils/seo/seoDomUtils.ts` (main file) ✅
+- `src/core/utils/seo/seoDomUtils.basic.ts` ✅
+- `src/core/utils/seo/seoDomUtils.custom.ts` ✅
+- `src/core/utils/seo/seoDomUtils.helpers.ts` ✅
+- `src/core/utils/seo/seoDomUtils.openGraph.ts` ✅
+- `src/core/utils/seo/seoDomUtils.twitter.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test basic SEO helpers (`seoDomUtils.basic.ts`)
+- Test custom SEO utilities (`seoDomUtils.custom.ts`)
+- Test OpenGraph helpers (`seoDomUtils.openGraph.ts`)
+- Test Twitter card helpers (`seoDomUtils.twitter.ts`)
+- Test DOM manipulation utilities (`seoDomUtils.helpers.ts`)
+- Test main SEO utilities (`seoDomUtils.ts`)
+
+**Test Files**: `tests/core/utils/seo/seoDomUtils.test.ts`, `tests/core/utils/seo/seoDomUtils.basic.test.ts`, `tests/core/utils/seo/seoDomUtils.openGraph.test.ts`, `tests/core/utils/seo/seoDomUtils.twitter.test.ts`, etc.
+
+---
+
+## Phase 2: Core Hooks (Priority: CRITICAL)
+
+### Task 2.1: Async Hooks
+
+**File**: `src/core/hooks/async/useAsync.ts`
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test async operation execution
+- Test loading states
+- Test success states
+- Test error states
+- Test cancellation
+- Test retry logic
+- Test dependency changes
+
+**Test File**: `tests/core/hooks/async/useAsync.test.ts`
+
+**Example Test Cases**:
+
+```typescript
+describe('useAsync', () => {
+	it('executes async function', async () => {
+		const { result } = renderHook(() => useAsync(() => Promise.resolve('success')));
+
+		await waitFor(() => {
+			expect(result.current.data).toBe('success');
+			expect(result.current.loading).toBe(false);
+		});
+	});
+
+	it('handles errors', async () => {
+		const { result } = renderHook(() => useAsync(() => Promise.reject(new Error('failed'))));
+
+		await waitFor(() => {
+			expect(result.current.error).toBeTruthy();
+			expect(result.current.loading).toBe(false);
+		});
+	});
+
+	it('cancels on unmount', () => {
+		// Test cancellation
+	});
+});
+```
+
+---
+
+### Task 2.2: Debounce Hook
+
+**File**: `src/core/hooks/debounce/useDebounce.ts`
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test debounced value updates
+- Test delay configuration
+- Test cleanup on unmount
+- Test dependency changes
+
+**Test File**: `tests/core/hooks/debounce/useDebounce.test.ts`
+
+---
+
+### Task 2.3: Fetch Hooks
+
+**Files** (verified):
+
+- `src/core/hooks/fetch/useFetch.ts` ✅
+- `src/core/hooks/fetch/useFetch.helpers.ts` ✅
+- `src/core/hooks/fetch/useFetch.effects.ts` ✅
+- `src/core/hooks/fetch/useFetch.types.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test data fetching
+- Test loading states
+- Test error handling
+- Test refetch functionality
+- Test cache management
+- Test dependency changes
+- Test abort signal handling
+
+**Test File**: `tests/core/hooks/fetch/useFetch.test.ts`
+
+---
+
+### Task 2.4: Interval Hook
+
+**File**: `src/core/hooks/interval/useInterval.ts`
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test interval execution
+- Test start/stop functionality
+- Test delay changes
+- Test cleanup on unmount
+- Test immediate execution option
+
+**Test File**: `tests/core/hooks/interval/useInterval.test.ts`
+
+---
+
+### Task 2.5: Throttle Hook
+
+**File**: `src/core/hooks/throttle/useThrottle.ts`
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test throttled value updates
+- Test interval configuration
+- Test leading/trailing options
+- Test cleanup
+
+**Test File**: `tests/core/hooks/throttle/useThrottle.test.ts`
+
+---
+
+### Task 2.6: Storage Hooks
+
+**Files**:
+
+- `src/core/hooks/storage/useLocalStorage.ts`
+- `src/core/hooks/storage/useSessionStorage.ts`
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test value persistence
+- Test value retrieval
+- Test value updates
+- Test removal
+- Test SSR safety
+- Test error handling (quota exceeded, etc.)
+- Test serialization/deserialization
+
+**Test File**: `tests/core/hooks/storage/useLocalStorage.test.ts`, `tests/core/hooks/storage/useSessionStorage.test.ts`
+
+**Example Test Cases**:
+
+```typescript
+describe('useLocalStorage', () => {
+	beforeEach(() => {
+		localStorage.clear();
+	});
+
+	it('stores and retrieves values', () => {
+		const { result } = renderHook(() => useLocalStorage('key', 'initial'));
+
+		act(() => {
+			result.current[1]('updated');
+		});
+
+		expect(result.current[0]).toBe('updated');
+		expect(localStorage.getItem('key')).toBe(JSON.stringify('updated'));
+	});
+
+	it('handles JSON serialization', () => {
+		const { result } = renderHook(() => useLocalStorage('key', { foo: 'bar' }));
+
+		expect(result.current[0]).toEqual({ foo: 'bar' });
+	});
+
+	it('handles SSR safely', () => {
+		// Mock SSR environment
+	});
+});
+```
+
+---
+
+### Task 2.7: UI Hooks
+
+**Files**:
+
+- `src/core/hooks/ui/useMediaQuery.ts`
+- `src/core/hooks/ui/usePrevious.ts`
+- `src/core/hooks/ui/useToggle.ts`
+- `src/core/hooks/ui/useWindowSize.ts`
+
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test media query matching
+- Test previous value tracking
+- Test toggle functionality
+- Test window size tracking
+- Test responsive updates
+
+**Test File**: `tests/core/hooks/ui/useMediaQuery.test.ts`, etc.
+
+---
+
+### Task 2.8: Motion Hooks
+
+**Files** (verified):
+
+- `src/core/hooks/motion/useInView.ts` ✅
+- `src/core/hooks/motion/useMotionAnimationFrame.ts` ✅
+- `src/core/hooks/motion/useMotionSpring.ts` ✅
+- `src/core/hooks/motion/useMotionTransform.ts` ✅
+- `src/core/hooks/motion/useMotionValue.ts` ✅
+- `src/core/hooks/motion/useMotionVelocity.ts` ✅
+- `src/core/hooks/motion/useScrollMotionValue.ts` ✅
+- `src/core/hooks/motion/useScrollProgress.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test intersection observer (useInView)
+- Test animation frame hooks
+- Test motion spring
+- Test transform utilities
+- Test motion values
+- Test velocity calculations
+- Test scroll progress
+
+**Test Files**: `tests/core/hooks/motion/useInView.test.ts`, `tests/core/hooks/motion/useMotionSpring.test.ts`, etc.
+
+---
+
+### Task 2.9: Scroll Hook
+
+**File**: `src/core/hooks/scroll/useScrollPosition.ts`
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test scroll position tracking
+- Test scroll direction
+- Test scroll velocity
+- Test cleanup
+
+**Test File**: `tests/core/hooks/scroll/useScrollPosition.test.ts`
+
+---
+
+### Task 2.10: SEO Hook
+
+**File**: `src/core/hooks/seo/useSEO.ts`
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test meta tag updates
+- Test title updates
+- Test OpenGraph tags
+- Test Twitter cards
+- Test cleanup on unmount
+
+**Test File**: `tests/core/hooks/seo/useSEO.test.ts`
+
+---
+
+### Task 2.11: HTTP Client Auth Hook
+
+**File**: `src/core/hooks/http/useHttpClientAuth.ts`
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test auth interceptor attachment
+- Test interceptor idempotency (only attaches once)
+- Test cleanup on unmount
+- Test adapter changes
+
+**Test File**: `tests/core/hooks/http/useHttpClientAuth.test.ts`
+
+---
+
+## Phase 3: Core Providers (Priority: CRITICAL)
+
+### Task 3.1: Analytics Provider
+
+**Files** (verified):
+
+- `src/core/providers/analytics/AnalyticsContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/analytics/AnalyticsProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/analytics/useAnalytics.ts` ✅ (0% - no test file exists)
+
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test context value provision
+- Test provider initialization
+- Test analytics event tracking
+- Test page view tracking
+- Test error handling
+- Test adapter switching
+- Test hook usage outside provider
+
+**Test File**: `tests/core/providers/analytics/AnalyticsProvider.test.tsx`
+
+**Example Test Cases**:
+
+```typescript
+describe('AnalyticsProvider', () => {
+  it('provides analytics context', () => {
+    const { result } = renderHook(() => useAnalytics(), {
+      wrapper: ({ children }) => (
+        <AnalyticsProvider adapter={mockAnalyticsAdapter}>
+          {children}
+        </AnalyticsProvider>
+      ),
+    });
+
+    expect(result.current).toBeDefined();
+    expect(result.current.track).toBeDefined();
+  });
+
+  it('tracks events', () => {
+    const { result } = renderHook(() => useAnalytics(), {
+      wrapper: ({ children }) => (
+        <AnalyticsProvider adapter={mockAnalyticsAdapter}>
+          {children}
+        </AnalyticsProvider>
+      ),
+    });
+
+    act(() => {
+      result.current.track('event', { foo: 'bar' });
+    });
+
+    expect(mockAnalyticsAdapter.track).toHaveBeenCalledWith('event', { foo: 'bar' });
+  });
+
+  it('throws when used outside provider', () => {
+    expect(() => {
+      renderHook(() => useAnalytics());
+    }).toThrow();
+  });
+});
+```
+
+---
+
+### Task 3.2: Auth Provider
+
+**Files** (verified):
+
+- `src/core/providers/auth/AuthContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/auth/AuthProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/auth/useAuth.ts` ✅ (0% - no test file exists)
+
+**Priority**: CRITICAL
+
+**Test Requirements**:
+
+- Test login functionality
+- Test logout functionality
+- Test token management
+- Test user state management
+- Test authentication status
+- Test token refresh
+- Test error handling
+- Test hook usage outside provider
+
+**Test File**: `tests/core/providers/auth/AuthProvider.test.tsx`
+
+---
+
+### Task 3.3: HTTP Provider
+
+**Files** (verified):
+
+- `src/core/providers/http/HttpContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/http/HttpProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/http/useHttp.ts` ✅ (0% - no test file exists)
+
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test context value provision
+- Test HTTP client injection
+- Test hook usage
+- Test error handling
+
+**Test File**: `tests/core/providers/http/HttpProvider.test.tsx`
+
+---
+
+### Task 3.4: Logger Provider
+
+**Files** (verified):
+
+- `src/core/providers/logger/LoggerContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/logger/LoggerProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/logger/useLogger.ts` ✅ (0% - no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete coverage for useLogger.ts
+- Test all log levels (debug, info, warn, error)
+- Test context usage
+
+**Test File**: `tests/core/providers/logger/LoggerProvider.test.tsx`
+
+---
+
+### Task 3.5: Storage Provider
+
+**Files** (verified):
+
+- `src/core/providers/storage/StorageContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/storage/StorageProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/storage/useStorage.ts` ✅ (0% - no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete coverage for useStorage.ts
+- Test storage operations
+- Test error handling
+
+**Test File**: `tests/core/providers/storage/StorageProvider.test.tsx`
+
+---
+
+### Task 3.6: Toast Provider
+
+**Files** (verified):
+
+- `src/core/providers/toast/ToastContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/toast/ToastProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/core/providers/toast/useToast.ts` ✅ (0% - no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete ToastProvider coverage
+- Complete useToast coverage
+- Test toast creation
+- Test toast removal
+- Test toast positioning
+- Test toast variants
+
+**Test File**: `tests/core/providers/toast/ToastProvider.test.tsx`
+
+---
+
+### Task 3.7: Snackbar Provider
+
+**Files** (verified):
+
+- `src/core/providers/snackbar/SnackbarContext.tsx` ✅ (0%)
+- `src/core/providers/snackbar/SnackbarProvider.tsx` ✅ (0%)
+- `src/core/providers/snackbar/useSnackbar.ts` ✅ (0%)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test context provision
+- Test snackbar creation
+- Test snackbar removal
+- Test snackbar queue
+- Test hook usage
+
+**Test File**: `tests/core/providers/snackbar/SnackbarProvider.test.tsx`
+
+---
+
+### Task 3.8: Theme Provider
+
+**Files** (verified):
+
+- `src/app/providers/ThemeContext.tsx` ✅ (coverage unknown - needs verification)
+- `src/app/providers/ThemeProvider.tsx` ✅ (coverage unknown - needs verification)
+- `src/app/providers/useTheme.ts` ✅ (0% - no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete ThemeProvider coverage
+- Complete useTheme coverage
+- Test theme switching (light/dark/system)
+- Test theme persistence
+- Test system preference detection
+
+**Test File**: `tests/app/providers/ThemeProvider.test.tsx`
+
+---
+
+### Task 3.9: I18n Provider
+
+**File** (verified): `src/app/providers/I18nProvider.tsx` ✅ (coverage unknown - needs verification, no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test i18n initialization
+- Test language switching
+- Test translation loading
+- Test provider context provision
+
+**Test File**: `tests/app/providers/I18nProvider.test.tsx`
+
+---
+
+### Task 3.10: Query Provider
+
+**File** (verified): `src/app/providers/QueryProvider.tsx` ✅ (coverage unknown - needs verification, no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete QueryProvider coverage to 100%
+- Test QueryClient creation
+- Test query configuration (stale time, cache time, retry logic)
+- Test mutation configuration
+- Test provider context provision
+
+**Test File**: `tests/app/providers/QueryProvider.test.tsx`
+
+---
+
+## Phase 4: Core Configuration (Priority: HIGH)
+
+### Task 4.1: Environment Config
+
+**File** (verified): `src/core/config/env.client.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test all environment variable parsing
+- Test default values
+- Test validation
+- Test type coercion
+
+**Test File**: `tests/core/config/env.client.test.ts`
+
+---
+
+### Task 4.2: Feature Flags
+
+**File** (verified): `src/core/config/featureFlags.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test feature flag evaluation
+- Test default values
+- Test runtime overrides
+
+**Test File**: `tests/core/config/featureFlags.test.ts`
+
+---
+
+### Task 4.3: Features Config
+
+**File** (verified): `src/core/config/features.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test feature definitions
+- Test feature evaluation
+- Test feature dependencies
+
+**Test File**: `tests/core/config/features.test.ts`
+
+---
+
+### Task 4.4: Runtime Config
+
+**File** (verified): `src/core/config/runtime.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test config loading
+- Test config caching
+- Test config validation
+- Test error handling
+
+**Test File**: `tests/core/config/runtime.test.ts`
+
+---
+
+### Task 4.5: SEO Config
+
+**File** (verified): `src/core/config/seo.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test SEO metadata generation
+- Test OpenGraph tags
+- Test Twitter cards
+- Test meta tag helpers
+
+**Test File**: `tests/core/config/seo.test.ts`
+
+---
+
+### Task 4.6: Init Config
+
+**File** (verified): `src/core/config/init.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test initialization sequence
+- Test error handling
+- Test dependency order
+
+**Test File**: `tests/core/config/init.test.ts`
+
+---
+
+### Task 4.7: Routes Config
+
+**File** (verified): `src/core/config/routes.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test route definitions
+- Test route configuration
+- Test route helpers
+
+**Test File**: `tests/core/config/routes.test.ts`
+
+---
+
+## Phase 5: Core Constants (Priority: MEDIUM)
+
+### Task 5.1: Aria Constants
+
+**File** (verified): `src/core/constants/aria.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test all ARIA attribute constants
+
+**Test File**: `tests/core/constants/aria.test.ts`
+
+---
+
+### Task 5.2: Breakpoints
+
+**File** (verified): `src/core/constants/breakpoints.ts` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test breakpoint definitions
+- Test breakpoint utilities
+
+**Test File**: `tests/core/constants/breakpoints.test.ts`
+
+---
+
+### Task 5.3: Design Tokens
+
+**File** (verified): `src/core/constants/designTokens.ts` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test token definitions
+- Test token accessors
+
+**Test File**: `tests/core/constants/designTokens.test.ts`
+
+---
+
+### Task 5.4: Endpoints
+
+**File** (verified): `src/core/constants/endpoints.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test endpoint definitions
+- Test endpoint builders
+
+**Test File**: `tests/core/constants/endpoints.test.ts`
+
+---
+
+### Task 5.5: Regex Constants
+
+**File** (verified): `src/core/constants/regex.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test all regex patterns
+- Test regex matching
+- Test regex validation
+
+**Test File**: `tests/core/constants/regex.test.ts`
+
+---
+
+### Task 5.6: Additional Constants
+
+**Files** (verified):
+
+- `src/core/constants/env.ts` (0% coverage)
+- `src/core/constants/theme.ts` (0% coverage)
+- `src/core/constants/timeouts.ts` (0% coverage)
+- `src/core/constants/ui/buttons.ts` (0% coverage)
+- `src/core/constants/ui/controls.ts` (0% coverage)
+- `src/core/constants/ui/data.ts` (0% coverage)
+- `src/core/constants/ui/display/badge.ts` (0% coverage)
+- `src/core/constants/ui/display/card.ts` (0% coverage)
+- `src/core/constants/ui/display/divider.ts` (0% coverage)
+- `src/core/constants/ui/display/link.ts` (0% coverage)
+- `src/core/constants/ui/display/list.ts` (0% coverage)
+- `src/core/constants/ui/display/progress.ts` (0% coverage)
+- `src/core/constants/ui/display/skeleton.ts` (0% coverage)
+- `src/core/constants/ui/display/stat-card.ts` (0% coverage)
+- `src/core/constants/ui/display/status-indicator.ts` (0% coverage)
+- `src/core/constants/ui/display/stepper.ts` (0% coverage)
+- `src/core/constants/ui/display/timeline.ts` (0% coverage)
+- `src/core/constants/ui/display/typography.ts` (0% coverage)
+- `src/core/constants/ui/forms.ts` (0% coverage)
+- `src/core/constants/ui/navigation.ts` (0% coverage)
+- `src/core/constants/ui/overlays.ts` (0% coverage)
+- `src/core/constants/ui/rating.ts` (0% coverage)
+- `src/core/constants/ui/shared.ts` (0% coverage)
+
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test environment constants
+- Test theme constants
+- Test timeout constants
+- Test UI component constants (buttons, forms, navigation, overlays, display components, etc.)
+
+**Test Files**: `tests/core/constants/env.test.ts`, `tests/core/constants/theme.test.ts`, `tests/core/constants/timeouts.test.ts`, `tests/core/constants/ui/buttons.test.ts`, `tests/core/constants/ui/display/badge.test.ts`, etc.
+
+---
+
+## Phase 6: HTTP Client & API Services (Priority: CRITICAL)
+
+### Task 6.1: HTTP Client Core
+
+**File** (verified): `src/core/lib/http/httpClient.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: CRITICAL
+
+**Test Requirements**:
+
+- Test all HTTP methods (GET, POST, PUT, PATCH, DELETE)
+- Test request configuration
+- Test response handling
+- Test error handling
+- Test timeout handling
+- Test interceptors
+- Test request/response transformation
+
+**Test File**: `tests/core/lib/http/httpClient.test.ts`
+
+**Example Test Cases**:
+
+```typescript
+describe('httpClient', () => {
+	it('makes GET request', async () => {
+		server.use(http.get('/api/test', () => HttpResponse.json({ data: 'test' })));
+
+		const response = await httpClient.get('/api/test');
+		expect(response).toEqual({ data: 'test' });
+	});
+
+	it('handles errors', async () => {
+		server.use(
+			http.get('/api/test', () => HttpResponse.json({ error: 'Not found' }, { status: 404 }))
+		);
+
+		await expect(httpClient.get('/api/test')).rejects.toThrow();
+	});
+
+	it('applies interceptors', async () => {
+		const interceptor = vi.fn(config => {
+			config.headers.set('X-Custom', 'value');
+			return config;
+		});
+
+		httpClient.addRequestInterceptor(interceptor);
+
+		// Test interceptor application
+	});
+});
+```
+
+---
+
+### Task 6.2: HTTP Auth Interceptor
+
+**File** (verified): `src/core/lib/http/httpAuthInterceptor.ts` ✅
+**Current Coverage**: 0% (no test file exists)
+**Priority**: CRITICAL
+
+**Test Requirements**:
+
+- Test token injection
+- Test token scheme (Bearer, custom, null)
+- Test header name customization
+- Test shouldAttach predicate
+- Test custom token selector
+- Test header collision detection (doesn't override existing headers)
+- Test interceptor attachment
+
+**Test File**: `tests/core/lib/http/httpAuthInterceptor.test.ts`
+
+---
+
+### Task 6.3: HTTP Error Adapter
+
+**Files** (verified):
+
+- `src/core/http/errorAdapter.ts` ✅
+- `src/core/http/errorAdapter.constants.ts` ✅
+- `src/core/http/errorAdapter.handlers.ts` ✅
+- `src/core/http/errorAdapter.helpers.ts` ✅
+- `src/core/http/errorAdapter.schemas.ts` ✅
+- `src/core/http/errorAdapter.types.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test error parsing
+- Test error transformation
+- Test error handlers
+- Test error schemas
+- Test error constants
+- Test error helpers
+
+**Test Files**: `tests/core/http/errorAdapter.test.ts`, `tests/core/http/errorAdapter.handlers.test.ts`, etc.
+
+---
+
+### Task 6.4: HTTP Client Helpers
+
+**Files** (verified):
+
+- `src/core/lib/http/httpClientBody.ts` ✅
+- `src/core/lib/http/httpClientConfig.ts` ✅
+- `src/core/lib/http/httpClientErrorCreation.ts` ✅
+- `src/core/lib/http/httpClientErrorHandler.ts` ✅
+- `src/core/lib/http/httpClientHeaders.ts` ✅
+- `src/core/lib/http/httpClientInterceptors.ts` ✅
+- `src/core/lib/http/httpClientMethods.ts` ✅
+- `src/core/lib/http/httpClientRequest.ts` ✅
+- `src/core/lib/http/httpClientResponse.ts` ✅
+- `src/core/lib/http/httpClientResponseParsing.ts` ✅
+- `src/core/lib/http/httpClientTimeout.ts` ✅
+- `src/core/lib/http/httpClientUrl.ts` ✅
+
+**Current Coverage**: 0% (no test files exist)
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test body serialization
+- Test header management
+- Test URL building
+- Test request building
+- Test response parsing
+- Test timeout handling
+- Test error creation and handling
+- Test interceptor management
+
+**Test Files**: `tests/core/lib/http/httpClientBody.test.ts`, `tests/core/lib/http/httpClientConfig.test.ts`, etc.
+
+---
+
+### Task 6.5: API Service Factory
+
+**Files** (verified):
+
+- `src/core/api/createApiService.ts` ✅
+- `src/core/api/createApiService.helpers.ts` ✅
+- `src/core/api/createApiService.request.ts` ✅
+- `src/core/api/createApiService.types.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test service creation
+- Test request/response mapping
+- Test error handling
+- Test validation
+- Test type safety
+
+**Test File**: `tests/core/api/createApiService.test.ts`
+
+---
+
+## Phase 7: Authentication & Security (Priority: CRITICAL)
+
+### Task 7.1: Auth Token Storage
+
+**File** (verified): `src/core/auth/authTokenStorage.ts` ✅
+**Current Coverage**: 0%
+**Priority**: CRITICAL
+
+**Test Requirements**:
+
+- Test token storage
+- Test token retrieval
+- Test token removal
+- Test token expiration
+- Test SSR safety
+
+**Test File**: `tests/core/auth/authTokenStorage.test.ts`
+
+---
+
+### Task 7.2: Security - CSP
+
+**Files** (verified):
+
+- `src/core/security/csp/cryptoUtils.ts` ✅
+- `src/core/security/csp/hash.ts` ✅
+- `src/core/security/csp/helpers.ts` ✅
+- `src/core/security/csp/nonce.ts` ✅
+- `src/core/security/csp/policy.ts` ✅
+- `src/core/security/csp/types.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test crypto utilities
+- Test hash generation
+- Test nonce generation
+- Test CSP policy building
+- Test CSP helpers
+
+**Test Files**: `tests/core/security/csp/cryptoUtils.test.ts`, `tests/core/security/csp/hash.test.ts`, etc.
+
+---
+
+### Task 7.3: Security - Permissions
+
+**Files** (verified):
+
+- `src/core/security/permissions/permissionsCheck.ts` ✅
+- `src/core/security/permissions/permissionsManipulate.ts` ✅
+- `src/core/security/permissions/permissionsPattern.ts` ✅
+- `src/core/security/permissions/permissionsRoles.ts` ✅
+- `src/core/security/permissions/permissionsTypes.ts` ✅
+- `src/core/security/permissions/permissionsValidate.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test permission checking
+- Test permission manipulation
+- Test permission patterns
+- Test role-based permissions
+- Test permission validation
+
+**Test Files**: `tests/core/security/permissions/permissionsCheck.test.ts`, etc.
+
+---
+
+### Task 7.4: Security - Sanitization
+
+**Files** (verified):
+
+- `src/core/security/sanitize/sanitizeHtml.ts` ✅
+- `src/core/security/sanitize/sanitizeHtmlConstants.ts` ✅
+- `src/core/security/sanitize/sanitizeHtmlDOMPurify.ts` ✅
+- `src/core/security/sanitize/sanitizeHtmlEscape.ts` ✅
+- `src/core/security/sanitize/sanitizeHtmlHelpers.ts` ✅
+- `src/core/security/sanitize/sanitizeHtmlTypes.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test HTML sanitization
+- Test DOMPurify integration
+- Test HTML escaping
+- Test XSS prevention
+- Test sanitization helpers
+
+**Test Files**: `tests/core/security/sanitize/sanitizeHtml.test.ts`, etc.
+
+---
+
+## Phase 8: Internationalization (Priority: MEDIUM)
+
+### Task 8.1: i18n Core
+
+**Files** (verified):
+
+- `src/core/i18n/i18n.ts` ✅ (coverage unknown - needs verification, no test file exists)
+- `src/core/i18n/constants/constants.ts` ✅ (0% - no test file exists)
+- `src/core/i18n/types/types.ts` ✅ (0% - no test file exists)
+- `src/core/i18n/errors.ts` ✅ (0% - no test file exists)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete i18n.ts coverage to 100%
+- Test initialization
+- Test language switching
+- Test translation loading
+- Test constants definitions
+- Test type definitions
+- Test error classes
+
+**Test Files**: `tests/core/i18n/i18n.test.ts`, `tests/core/i18n/constants/constants.test.ts`, `tests/core/i18n/types/types.test.ts`, `tests/core/i18n/errors.test.ts`
+
+---
+
+### Task 8.2: i18n Registry
+
+**File** (verified): `src/core/i18n/registry.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test namespace registration
+- Test translation registration
+
+**Test File**: `tests/core/i18n/registry.test.ts`
+
+---
+
+### Task 8.3: i18n Resource Loader
+
+**Files** (verified):
+
+- `src/core/i18n/resourceLoader.ts` ✅ (main re-export file with clearResourceCache)
+- `src/core/i18n/resourceLoader/cache.ts` ✅
+- `src/core/i18n/resourceLoader/i18n.ts` ✅
+- `src/core/i18n/resourceLoader/load.ts` ✅
+- `src/core/i18n/resourceLoader/registry.ts` ✅
+- `src/core/i18n/resourceLoader/types.ts` ✅
+- `src/core/i18n/resourceLoader/validation.ts` ✅
+
+**Current Coverage**: Unknown - needs verification (no test files exist)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test resource loading
+- Test caching (cache key generation, cache retrieval, cache clearing)
+- Test validation
+- Test resource loader registry (registration, retrieval)
+- Test cache clearing (clearResourceCache function)
+- Test loading state tracking (prevent duplicate requests)
+
+**Test Files**:
+
+- `tests/core/i18n/resourceLoader.test.ts` (main file)
+- `tests/core/i18n/resourceLoader/cache.test.ts`
+- `tests/core/i18n/resourceLoader/load.test.ts`
+- `tests/core/i18n/resourceLoader/registry.test.ts`
+- `tests/core/i18n/resourceLoader/validation.test.ts`
+
+---
+
+### Task 8.4: i18n Hooks
+
+**Files** (verified):
+
+- `src/core/i18n/useTranslation.ts` ✅ (main translation hook)
+- `src/core/i18n/hooks/useTranslationHelpers.ts` ✅
+- `src/core/i18n/hooks/useTranslationLoader.ts` ✅
+- `src/core/i18n/hooks/useTranslationState.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test main useTranslation hook
+- Test translation helpers
+- Test translation loader
+- Test translation state
+- Test type-safe translation function
+- Test loading state management
+- Test resource loading integration
+
+**Test Files**: `tests/core/i18n/useTranslation.test.ts`, `tests/core/i18n/hooks/useTranslationHelpers.test.ts`, `tests/core/i18n/hooks/useTranslationLoader.test.ts`, `tests/core/i18n/hooks/useTranslationState.test.ts`
+
+---
+
+### Task 8.5: RTL Hook
+
+**File** (verified): `src/core/i18n/useRtl.ts` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test RTL detection
+- Test RTL switching
+
+**Test File**: `tests/core/i18n/useRtl.test.ts`
+
+---
+
+## Phase 9: Router & Routing (Priority: MEDIUM)
+
+### Task 9.1: Route Generation
+
+**File** (verified): `src/core/router/routes.gen.ts` ✅
+**Current Coverage**: 0% (no test file exists)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test route generation
+- Test route building
+- Test route parameters
+
+**Test File**: `tests/core/router/routes.gen.test.ts`
+
+**Note**: This test file is mentioned in `docs/structure.md` as existing, but it does NOT actually exist. It needs to be created.
+
+---
+
+### Task 9.2: Route Guards
+
+**File** (verified): `src/core/router/routes.guards.ts` ✅
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test authentication guards
+- Test authorization guards
+- Test redirect logic
+- Test guard composition
+
+**Test File**: `tests/core/router/routes.guards.test.ts`
+
+---
+
+## Phase 10: Forms (Priority: MEDIUM)
+
+### Task 10.1: Form Controller
+
+**File** (verified): `src/core/forms/controller.tsx` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test form control
+- Test validation
+- Test error handling
+
+**Test File**: `tests/core/forms/controller.test.tsx`
+
+---
+
+### Task 10.2: Form Adapter
+
+**File** (verified): `src/core/forms/formAdapter.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test form adapter functionality
+- Test integration with react-hook-form
+
+**Test File**: `tests/core/forms/formAdapter.test.ts`
+
+---
+
+### Task 10.3: Form Hook
+
+**File** (verified): `src/core/forms/useController.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test controller hook
+- Test form state management
+
+**Test File**: `tests/core/forms/useController.test.ts`
+
+---
+
+## Phase 11: Core Library Components (Priority: MEDIUM)
+
+### Task 11.1: Error Boundary
+
+**Files** (verified):
+
+- `src/core/lib/ErrorBoundary.tsx` ✅ (coverage unknown - needs verification, no test file exists)
+- `src/core/lib/ErrorBoundaryWrapper.tsx` ✅ (coverage unknown - needs verification, no test file exists)
+
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Complete ErrorBoundary coverage
+- Test error catching
+- Test error logging
+- Test fallback rendering
+- Test error recovery
+
+**Test File**: `tests/core/lib/ErrorBoundary.test.tsx`
+
+---
+
+### Task 11.2: Store Utils
+
+**File** (verified): `src/core/lib/storeUtils.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test `createSelector` function
+- Test selector type helpers
+- Test `StoreSlice` type helper
+- Test `StoreActions` type helper
+- Test `StoreSelector` type helper
+- Test `StoreWithActions` type helper
+
+**Test File**: `tests/core/lib/storeUtils.test.ts`
+
+---
+
+### Task 11.3: Date Utilities
+
+**Files** (verified):
+
+- `src/core/lib/date/date.ts` ✅
+- `src/core/lib/date/formatDate.ts` ✅
+- `src/core/lib/date/formatDate.types.ts` ✅
+- `src/core/lib/date/formatISO.ts` ✅
+- `src/core/lib/date/formatRelativeTime.ts` ✅
+- `src/core/lib/date/formatTime.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test date formatting
+- Test relative time
+- Test ISO formatting
+- Test time formatting
+- Test date parsing
+
+**Test Files**: `tests/core/lib/date/formatDate.test.ts`, `tests/core/lib/date/formatISO.test.ts`, etc.
+
+---
+
+### Task 11.4: Google Maps Loader
+
+**File** (verified): `src/core/lib/googleMapsLoader.ts` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test `loadGoogleMaps` function
+- Test `isGoogleMapsAvailable` function
+- Test lazy loading
+- Test script injection
+- Test error handling
+- Test dynamic import of adapter
+
+**Test File**: `tests/core/lib/googleMapsLoader.test.ts`
+
+---
+
+### Task 11.5: Performance Utilities
+
+**File** (verified): `src/core/perf/reportWebVitals.ts` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test `reportWebVitals` function
+- Test metric formatting
+- Test metric handler creation
+- Test logger integration
+- Test all metric types (CLS, FID, FCP, LCP, TTFB, INP)
+
+**Test File**: `tests/core/perf/reportWebVitals.test.ts`
+
+---
+
+## Phase 12: Accessibility (Priority: MEDIUM)
+
+### Task 12.1: Focus Management
+
+**File** (verified): `src/core/a11y/focus/focus.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test focus trapping
+- Test focus restoration
+- Test focus utilities
+
+**Test File**: `tests/core/a11y/focus/focus.test.ts`
+
+---
+
+### Task 12.2: Focus Helpers
+
+**Files** (verified):
+
+- `src/core/a11y/focus/helpers.ts` ✅ (0% coverage)
+- `src/core/a11y/focus/constants.ts` ✅ (0% coverage)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test focus helper functions
+- Test focusable element detection
+- Test focus constants
+
+**Test Files**: `tests/core/a11y/focus/helpers.test.ts`, `tests/core/a11y/focus/constants.test.ts`
+
+---
+
+### Task 12.3: Skip to Content
+
+**File** (verified): `src/core/a11y/skipToContent.tsx` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test skip link rendering
+- Test skip link functionality
+
+**Test File**: `tests/core/a11y/skipToContent.test.tsx`
+
+---
+
+## Phase 13: App Components (Priority: MEDIUM)
+
+### Task 13.1: App Layout
+
+**File** (verified): `src/app/components/AppLayout.tsx` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test layout rendering
+- Test layout structure
+- Test responsive behavior
+
+**Test File**: `tests/app/components/AppLayout.test.tsx`
+
+---
+
+### Task 13.2: Page Wrapper
+
+**File** (verified): `src/app/components/PageWrapper.tsx` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test page wrapping
+- Test SEO integration
+- Test error handling
+
+**Test File**: `tests/app/components/PageWrapper.test.tsx`
+
+---
+
+### Task 13.3: Protected Route
+
+**File** (verified): `src/app/components/ProtectedRoute.tsx` ✅
+**Current Coverage**: 0%
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test authentication check
+- Test authorization check
+- Test redirect logic
+- Test loading states
+
+**Test File**: `tests/app/components/ProtectedRoute.test.tsx`
+
+---
+
+### Task 13.4: Error Pages
+
+**Files** (verified):
+
+- `src/app/pages/Error404.tsx` ✅
+- `src/app/pages/Error500.tsx` ✅
+
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test error page rendering
+- Test error page content
+
+**Test Files**: `tests/app/pages/Error404.test.tsx`, `tests/app/pages/Error500.test.tsx`
+
+---
+
+### Task 13.5: Router & Main
+
+**Files** (verified):
+
+- `src/app/router.tsx` ✅ (0%)
+- `src/app/main.tsx` ✅ (0%)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test route configuration
+- Test route rendering
+- Test app initialization
+
+**Test Files**: `tests/app/router.test.tsx`, `tests/app/main.test.tsx`
+
+---
+
+### Task 13.6: Shared Layout Components
+
+**Files** (verified):
+
+- `src/shared/components/layout/Layout.tsx` ✅
+- `src/shared/components/layout/Navbar.tsx` ✅
+
+**Current Coverage**: 0% (no test files exist)
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test layout rendering
+- Test navbar rendering
+- Test navigation links
+- Test theme toggle integration
+- Test language selector integration
+
+**Test Files**: `tests/shared/components/layout/Layout.test.tsx`, `tests/shared/components/layout/Navbar.test.tsx`
+
+**Note**: The source files exist, but the test files do NOT exist. They need to be created.
+
+---
+
+## Phase 14: Infrastructure Adapters (Priority: MEDIUM)
+
+### Task 14.1: Analytics Adapter
+
+**File** (verified): `src/infrastructure/analytics/googleAnalyticsAdapter.ts` ✅
+**Current Coverage**: 0%
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test adapter implementation
+- Test event tracking
+- Test initialization
+
+**Test File**: `tests/infrastructure/analytics/googleAnalyticsAdapter.test.ts`
+
+---
+
+### Task 14.2: Auth Adapter
+
+**Files** (verified):
+
+- `src/infrastructure/auth/jwtAuthAdapter.ts` ✅ (0%)
+- `src/infrastructure/auth/jwtUtils.ts` ✅ (0%)
+
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test JWT parsing
+- Test JWT validation
+- Test token storage
+- Test adapter implementation
+
+**Test Files**: `tests/infrastructure/auth/jwtAuthAdapter.test.ts`, `tests/infrastructure/auth/jwtUtils.test.ts`
+
+---
+
+### Task 14.3: Logger Adapter
+
+**File** (verified): `src/infrastructure/logging/loggerAdapter.ts` ✅
+**Current Coverage**: Unknown - needs verification (no test file exists)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Complete coverage to 100%
+- Test all log levels
+- Test SSR safety
+
+**Test File**: `tests/infrastructure/logging/loggerAdapter.test.ts`
+
+---
+
+### Task 14.4: Maps Adapter
+
+**File** (verified): `src/infrastructure/maps/googleMapsAdapter.ts` ✅
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test adapter implementation
+- Test map initialization
+- Test error handling
+
+**Test File**: `tests/infrastructure/maps/googleMapsAdapter.test.ts`
+
+---
+
+### Task 14.5: Storage Adapters
+
+**Files** (verified):
+
+- `src/infrastructure/storage/cookieStorageAdapter.ts` ✅
+- `src/infrastructure/storage/cookieStorageAdapter.constants.ts` ✅
+- `src/infrastructure/storage/cookieStorageAdapter.logging.ts` ✅
+- `src/infrastructure/storage/cookieStorageAdapter.parsing.ts` ✅
+- `src/infrastructure/storage/cookieStorageAdapter.serialization.ts` ✅
+- `src/infrastructure/storage/localStorageAdapter.ts` ✅
+- `src/infrastructure/storage/memoryStorageAdapter.ts` ✅
+- `src/infrastructure/storage/sessionStorageAdapter.ts` ✅
+
+**Current Coverage**: 0% (no test files exist)
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Complete coverage for all adapters
+- Test localStorage adapter
+- Test sessionStorage adapter
+- Test cookieStorage adapter (including parsing, serialization, constants, logging)
+- Test memory adapter
+- Test error handling
+- Test SSR safety
+
+**Test Files**: `tests/infrastructure/storage/localStorageAdapter.test.ts`, `tests/infrastructure/storage/cookieStorageAdapter.test.ts`, etc.
+
+---
+
+## Phase 15: UI Components (Priority: LOW-MEDIUM)
+
+### Task 15.1: Critical Form Components
+
+**Components**: Input, Select, Checkbox, Radio, Textarea, Switch, FileUpload
+**Priority**: MEDIUM
+
+**Note**: FileUpload is a complex component with extensive helpers and hooks:
+
+- `src/core/ui/forms/file-upload/FileUpload.tsx` ✅
+- Helpers: `FileUploadHelpers.ts`, `FileUploadValidation.ts`, `useFileUpload.utils.ts`, `FileUploadContentHelpers.ts`, `FileUploadContent.builders.ts`, `FileUploadContentSections.types.ts` ✅
+- Hooks: `useFileUpload.ts`, `useFileUpload.handlers.ts`, `useFileUpload.hooks.ts`, `useFileUpload.props.ts` ✅
+- Types: `FileUploadTypes.ts`, `FileUploadContent.types.ts` ✅
+- Components: Multiple component files in `components/` directory (FileUploadContent, FileUploadDropzone, FileUploadPreview, etc.) - focus testing on main FileUpload component and testable helpers/hooks
+
+**Test Requirements**:
+
+- Test rendering
+- Test user interactions
+- Test validation
+- Test accessibility
+- Test error states
+- Test disabled states
+- Test file upload functionality
+- Test file preview
+- Test drag and drop
+- Test file removal
+
+**Test Files**: `tests/core/ui/forms/input/Input.test.tsx`, `tests/core/ui/forms/file-upload/FileUpload.test.tsx`, etc.
+
+---
+
+### Task 15.2: Critical Feedback Components
+
+**Components**: Alert, Toast, Snackbar, Spinner, Progress
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test rendering
+- Test variants
+- Test animations
+- Test accessibility
+- Test dismissal
+
+**Test Files**: `tests/core/ui/feedback/alert/Alert.test.tsx`, etc.
+
+---
+
+### Task 15.3: Critical Navigation Components
+
+**Components**: Link, Tabs, Breadcrumbs
+**Priority**: MEDIUM
+
+**Note**: Button is in `src/core/ui/button/Button.tsx` (not in navigation directory)
+
+**Test Requirements**:
+
+- Test rendering
+- Test interactions
+- Test navigation
+- Test accessibility
+- Test keyboard navigation
+
+**Test Files**: `tests/core/ui/navigation/link/Link.test.tsx`, `tests/core/ui/navigation/tabs/Tabs.test.tsx`, `tests/core/ui/navigation/breadcrumbs/Breadcrumbs.test.tsx`, etc.
+
+**Button Component** (separate):
+
+- `src/core/ui/button/Button.tsx` ✅
+- **Test File**: `tests/core/ui/button/Button.test.tsx`
+
+---
+
+### Task 15.4: Critical Data Display
+
+**Components**: Table, DataTable, Card, Badge, Avatar
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test rendering
+- Test data display
+- Test interactions
+- Test accessibility
+
+**Test Files**: `tests/core/ui/data-display/table/Table.test.tsx`, etc.
+
+---
+
+### Task 15.5: Critical Overlays
+
+**Components**: Dialog, Modal, Popover, Tooltip, Drawer
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test rendering
+- Test open/close
+- Test focus management
+- Test accessibility
+- Test backdrop
+- Test escape key
+
+**Test Files**: `tests/core/ui/overlays/dialog/Dialog.test.tsx`, etc.
+
+---
+
+### Task 15.6: Complex Components
+
+**Components**: Calendar, DatePicker, Combobox, Autocomplete, MultiSelect
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test complex interactions
+- Test state management
+- Test accessibility
+- Test keyboard navigation
+
+**Test Files**: `tests/core/ui/forms/date-picker/DatePicker.test.tsx`, etc.
+
+---
+
+### Task 15.7: Utility Components
+
+**Components**: Accordion, Collapsible, Affix, Resizable, ScrollArea
+**Priority**: LOW
+
+**Note**: Accordion, Collapsible, and Affix are in their own directories (not in utilities):
+
+- `src/core/ui/accordion/Accordion.tsx` ✅
+- `src/core/ui/collapsible/Collapsible.tsx` ✅
+- `src/core/ui/affix/Affix.tsx` ✅
+- Resizable and ScrollArea are in utilities:
+- `src/core/ui/utilities/resizable/Resizable.tsx` ✅
+- `src/core/ui/utilities/scroll-area/ScrollArea.tsx` ✅
+
+**Test Requirements**:
+
+- Test functionality
+- Test interactions
+- Test accessibility
+
+**Test Files**:
+
+- `tests/core/ui/accordion/Accordion.test.tsx`
+- `tests/core/ui/collapsible/Collapsible.test.tsx`
+- `tests/core/ui/affix/Affix.test.tsx`
+- `tests/core/ui/utilities/resizable/Resizable.test.tsx`
+- `tests/core/ui/utilities/scroll-area/ScrollArea.test.tsx`
+
+---
+
+### Task 15.8: Motion Components
+
+**Components** (verified):
+
+- `src/core/ui/utilities/motion/MotionBox.tsx` ✅ (main component)
+- `src/core/ui/utilities/motion/components/MotionFade.tsx` ✅
+- `src/core/ui/utilities/motion/components/MotionSlide.tsx` ✅
+- `src/core/ui/utilities/motion/components/MotionList.tsx` ✅
+- `src/core/ui/utilities/motion/components/AnimatePresence.tsx` ✅
+- Additional motion components: MotionBlur, MotionRotate, MotionScale, MotionShake, MotionStagger, MotionAccordion, MotionPresence, MotionProvider, MotionSharedElement, RouteTransition, LayoutGroup ✅
+
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test animations
+- Test variants
+- Test transitions
+- Test motion hooks (useMotionConfig, useReducedMotion)
+- Test motion helpers and utilities
+
+**Test Files**:
+
+- `tests/core/ui/utilities/motion/MotionBox.test.tsx`
+- `tests/core/ui/utilities/motion/components/MotionFade.test.tsx`
+- `tests/core/ui/utilities/motion/components/MotionSlide.test.tsx`
+- `tests/core/ui/utilities/motion/components/MotionList.test.tsx`
+- `tests/core/ui/utilities/motion/components/AnimatePresence.test.tsx`
+- `tests/core/ui/utilities/motion/hooks/useMotionConfig.test.ts`
+- `tests/core/ui/utilities/motion/hooks/useReducedMotion.test.ts`
+
+---
+
+### Task 15.9: Chart Components
+
+**Components**: AreaChart, BarChart, LineChart, PieChart
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test rendering
+- Test data visualization
+- Test interactions
+
+**Test Files**: `tests/core/ui/data-display/chart/area-chart/AreaChart.test.tsx`, etc.
+
+---
+
+### Task 15.10: UI Variants
+
+**Files**: `src/core/ui/variants/*.ts` (30 variant files)
+**Current Coverage**: 0% (no test files exist)
+**Priority**: LOW
+
+**Variant Files** (verified):
+
+- `anchor.ts`, `badge.ts`, `button.ts`, `card.ts`, `checkbox.ts`, `chip.ts`, `code.ts`, `dialog.ts`, `errorText.ts`, `heading.ts`, `helperText.ts`, `icon.ts`, `iconButton.ts`, `input.ts`, `label.ts`, `link.ts`, `list.ts`, `modal.ts`, `radio.ts`, `rating.ts`, `select.ts`, `skeleton.ts`, `spinner.ts`, `stat.ts`, `stepper.ts`, `switch.ts`, `text.ts`, `textarea.ts`, `timeline.ts`, `toggle.ts`
+
+**Test Requirements**:
+
+- Test variant functions
+- Test class generation
+- Test variant combinations
+- Test variant type safety
+
+**Test Files**: `tests/core/ui/variants/button.test.ts`, `tests/core/ui/variants/input.test.ts`, etc.
+
+---
+
+## Phase 16: Domain Code (Priority: LOW)
+
+### Task 16.1: Landing Domain
+
+**Files** (verified):
+
+- `src/domains/landing/pages/LandingPage.tsx` ✅
+- `src/domains/landing/services/api/getDemoContentService.ts` ✅
+- `src/domains/landing/store/landingStore.ts` ✅
+- `src/domains/landing/i18n/index.ts` ✅
+
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test landing store
+- Test landing services
+- Test landing page
+- Test i18n integration
+
+**Test Files**: `tests/domains/landing/store/landingStore.test.ts`, `tests/domains/landing/pages/LandingPage.test.tsx`, etc.
+
+---
+
+### Task 16.2: Shared Domain
+
+**Files** (verified):
+
+**AutocompleteCombobox**:
+
+- `src/domains/shared/components/autocomplete-combobox/AutocompleteCombobox.tsx`
+- `src/domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxBody.tsx`
+- `src/domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxField.tsx`
+- `src/domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxParts.tsx`
+- `src/domains/shared/components/autocomplete-combobox/helpers/AutocompleteComboboxHelpers.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteCombobox.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxEffects.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.input.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.keyboard.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.list.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.option.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxIds.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxSetup.ts`
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxState.ts`
+
+**DatePicker**:
+
+- `src/domains/shared/components/date-picker/DatePicker.tsx`
+
+**Slider**:
+
+- `src/domains/shared/components/slider/Slider.tsx`
+- `src/domains/shared/components/slider/components/SliderView.tsx`
+- `src/domains/shared/components/slider/helpers/sliderModel.ts`
+- `src/domains/shared/components/slider/types/slider.types.ts`
+
+**Current Coverage**: 0%
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test shared components (AutocompleteCombobox, DatePicker, Slider)
+- Test shared component hooks (all 10 AutocompleteCombobox hooks)
+- Test shared component helpers (AutocompleteComboboxHelpers, sliderModel)
+- Test component interactions and state management
+
+**Test Files**: `tests/domains/shared/components/autocomplete-combobox/AutocompleteCombobox.test.tsx`, `tests/domains/shared/components/date-picker/DatePicker.test.tsx`, `tests/domains/shared/components/slider/Slider.test.tsx`, etc.
+
+---
+
+## Phase 17: Integration & E2E (Priority: MEDIUM)
+
+### Task 17.1: Provider Integration Tests
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test provider composition
+- Test provider interaction
+- Test provider lifecycle
+
+**Test File**: `tests/integration/providers.test.tsx`
+
+---
+
+### Task 17.2: Router Integration Tests
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test route navigation
+- Test route guards
+- Test route parameters
+- Test route transitions
+
+**Test File**: `tests/integration/router.test.tsx`
+
+---
+
+### Task 17.3: Auth Flow Integration Tests
+
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test login flow
+- Test logout flow
+- Test protected routes
+- Test token refresh
+
+**Test File**: `tests/integration/authFlow.test.tsx`
+
+---
+
+### Task 17.4: E2E Test Expansion
+
+**File**: `e2e/example.spec.ts`
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Critical user flows
+- Login/logout
+- Navigation
+- Form submission
+- Error handling
+- Accessibility checks
+
+**Test File**: `e2e/critical-flows.spec.ts`
+
+---
+
+## Phase 18: Coverage Configuration (Priority: HIGH)
+
+### Task 18.1: Enable Coverage Thresholds
+
+**File**: `vitest.config.ts`
+**Priority**: HIGH
+
+**Action Required**:
+
+1. Uncomment coverage thresholds in `vitest.config.ts`
+2. Set thresholds to:
+   - lines: 80
+   - functions: 80
+   - branches: 80
+   - statements: 80
+3. Gradually increase thresholds as coverage improves
+
+**Configuration**:
+
+```typescript
+coverage: {
+  thresholds: {
+    lines: 80,
+    functions: 80,
+    branches: 80,
+    statements: 80,
+  },
+}
+```
+
+---
+
+## Testing Best Practices
+
+### 1. Test Structure
+
+- Use `describe` blocks for grouping
+- Use `it` or `test` for individual test cases
+- Use descriptive test names
+- Follow AAA pattern (Arrange, Act, Assert)
+
+### 2. Mocking Strategy
+
+- Use MSW for API mocking
+- Use mock adapters for ports
+- Mock external dependencies
+- Avoid mocking implementation details
+
+### 3. Test Data
+
+- Use factories for test data
+- Use consistent test data
+- Avoid hardcoded values where possible
+
+### 4. Accessibility Testing
+
+- Use `vitest-axe` for a11y tests
+- Test keyboard navigation
+- Test screen reader compatibility
+- Test focus management
+
+### 5. Coverage Goals
+
+- Aim for 80%+ coverage on critical paths
+- Focus on business logic over implementation details
+- Test error cases and edge cases
+- Test user interactions
+
+### 6. Performance
+
+- Keep tests fast (< 100ms per test)
+- Use `vi.useFakeTimers()` for time-dependent tests
+- Mock expensive operations
+- Use `beforeEach`/`afterEach` for cleanup
+
+---
+
+## Progress Tracking
+
+### Current Status
+
+- **Overall Coverage**: 3.1% statements, 1.43% branches, 2.29% functions, 3.13% lines (as of last measurement)
+- **Files with Tests**: 1 unit test file (`tests/app/App.test.tsx` covering `src/app/App.tsx`)
+- **E2E Tests**: 1 (`e2e/example.spec.ts`)
+- **Total Test Files Needed**: ~200+ (estimated based on source file count)
+- **Covered Files** (verified):
+  - `src/app/App.tsx`: Covered by `tests/app/App.test.tsx` ✅
+- **Test Infrastructure**: Complete ✅
+  - Test utilities, factories, mocks, and MSW setup all exist
+  - All mock adapters are available
+- **Note**: Tests should be run using Docker on Windows to avoid fork runner timeout issues. Coverage can be generated with `pnpm run docker:test -- --coverage` or `pnpm run test:coverage` on Mac/Linux.
+- **Important**: Coverage percentages mentioned throughout this roadmap (e.g., "77%", "32%", "100%") are based on previous coverage reports and should be verified by running coverage analysis. The actual current coverage may differ.
+
+### Milestones
+
+1. **Phase 1-3 Complete** (Core utilities, hooks, providers): Target 40% coverage
+2. **Phase 4-6 Complete** (Config, constants, HTTP): Target 60% coverage
+3. **Phase 7-11 Complete** (Security, i18n, router, forms, lib): Target 75% coverage
+4. **Phase 12-16 Complete** (A11y, app, infrastructure, UI, domains): Target 85% coverage
+5. **Phase 17-18 Complete** (Integration, E2E, thresholds): Target 90%+ coverage
+
+---
+
+## Notes
+
+- Start with high-priority tasks (CRITICAL, HIGH)
+- Focus on core functionality first
+- UI components can be tested incrementally
+- Use existing test utilities and patterns
+- Maintain consistency with existing test structure
+- Update this document as tasks are completed
+
+## Known Issues
+
+### Test Execution Problem on Windows
+
+Tests are currently failing to run directly on Windows due to a Vitest fork runner timeout:
+
+```
+Error: [vitest-pool]: Timeout starting forks runner.
+```
+
+**Solution**: Run tests using Docker to avoid Windows-specific issues:
+
+```bash
+# Run tests
+pnpm run docker:test
+
+# Run tests with coverage
+pnpm run docker:test -- --coverage
+
+# Run tests in watch mode
+pnpm run docker:test:watch
+
+# Run E2E tests
+pnpm run docker:test:e2e
+```
+
+**Why Docker?**: Docker provides a consistent Linux environment that avoids the Windows fork runner timeout issues. The `vitest.config.ts` has Windows-specific configuration, but running in Docker is the recommended approach for reliable test execution and coverage reports.
+
+**Note**: There is no separate `docker:test:coverage` script. To run tests with coverage in Docker, use: `pnpm run docker:test -- --coverage`
+
+**Additional Scripts Available**:
+
+- `test:ui`: Run tests with Vitest UI (`pnpm run test:ui`)
+- `test:e2e:ui`: Run E2E tests with Playwright UI (`pnpm run test:e2e:ui`)

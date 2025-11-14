@@ -50,7 +50,7 @@ function SplitterPanelContent({
 		defaultSize,
 	});
 
-	const panelClasses = twMerge('overflow-hidden', disabled && 'opacity-50', className);
+	const panelClasses = twMerge('overflow-hidden', disabled && 'opacity-disabled', className);
 	const panelStyle = calculatePanelStyle({
 		orientation,
 		panelState: panelState ? { size: panelState.size ?? undefined } : undefined,

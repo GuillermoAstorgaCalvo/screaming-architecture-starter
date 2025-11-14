@@ -1,4 +1,4 @@
-import { ColumnResizer } from '@core/ui/data-display/data-table/components/DataTableHeaderComponents';
+import { ColumnResizer } from '@core/ui/data-display/data-table/components/table-header/DataTableHeaderComponents';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import type { CSSProperties } from 'react';
 

@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import { VirtualizedListContent } from '@core/ui/utilities/virtualized-list/components/VirtualizedListContent';
 import {
 	useInitialScroll,
@@ -109,16 +110,14 @@ export default function VirtualizedList<T = unknown>({
 
 	// Empty state
 	if (items.length === 0) {
+		const defaultEmptyMessage = emptyMessage ?? i18n.t('common.noDataAvailable', { ns: 'common' });
 		return (
 			<div
-				className={twMerge(
-					containerClasses,
-					'flex items-center justify-center text-gray-500 dark:text-gray-400'
-				)}
+				className={twMerge(containerClasses, 'flex items-center justify-center text-text-muted')}
 				style={containerStyle}
 				{...props}
 			>
-				{emptyMessage ?? <span>No items to display</span>}
+				{defaultEmptyMessage}
 			</div>
 		);
 	}
@@ -131,7 +130,7 @@ export default function VirtualizedList<T = unknown>({
 			ref={parentRef}
 			className={containerClasses}
 			style={containerStyle}
-			aria-label="Virtualized list"
+			aria-label={i18n.t('a11y.virtualizedList', { ns: 'common' })}
 			{...props}
 		>
 			<VirtualizedListContent

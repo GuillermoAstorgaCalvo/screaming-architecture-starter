@@ -1,86 +1,10 @@
-import { ModalDialog } from '@core/ui/overlays/modal/components/ModalDialog';
 import { useModalSetup } from '@core/ui/overlays/modal/hooks/useModalSetup';
-import type { ModalSize } from '@src-types/ui/base';
+import {
+	extractModalProps,
+	prepareModalOptions,
+	renderModalDialog,
+} from '@core/ui/overlays/modal/utils/modalUtils';
 import type { ModalProps } from '@src-types/ui/overlays/panels';
-import type { ReactNode } from 'react';
-
-interface ModalSetupOptions {
-	readonly modalId?: string;
-	readonly closeOnOverlayClick: boolean;
-	readonly onClose: () => void;
-}
-
-function prepareModalOptions(
-	modalId: string | undefined,
-	closeOnOverlayClick: boolean,
-	onClose: () => void
-): ModalSetupOptions {
-	if (modalId !== undefined) {
-		return { modalId, closeOnOverlayClick, onClose };
-	}
-	return { closeOnOverlayClick, onClose };
-}
-
-interface DialogProps {
-	readonly setup: ReturnType<typeof useModalSetup>;
-	readonly className?: string;
-	readonly closeOnEscape: boolean;
-	readonly onClose: () => void;
-	readonly size: ModalSize;
-	readonly title: string;
-	readonly showCloseButton: boolean;
-	readonly footer?: ReactNode;
-	readonly children: ReactNode;
-}
-
-function buildDialogProps(props: DialogProps) {
-	const {
-		setup,
-		className,
-		closeOnEscape,
-		onClose,
-		size,
-		title,
-		showCloseButton,
-		footer,
-		children,
-	} = props;
-	return {
-		modalRef: setup.modalRef,
-		titleId: setup.titleId,
-		descriptionId: setup.descriptionId,
-		...(className !== undefined && { className }),
-		closeOnEscape,
-		onClose,
-		handleOverlayClick: setup.handleOverlayClick,
-		handleOverlayKeyDown: setup.handleOverlayKeyDown,
-		size,
-		title,
-		showCloseButton,
-		footer,
-		children,
-	};
-}
-
-function renderModalDialog(props: DialogProps) {
-	return <ModalDialog {...buildDialogProps(props)} />;
-}
-
-function extractModalProps(props: Readonly<ModalProps>) {
-	return {
-		isOpen: props.isOpen,
-		onClose: props.onClose,
-		title: props.title,
-		children: props.children,
-		size: props.size ?? 'md',
-		showCloseButton: props.showCloseButton ?? true,
-		footer: props.footer,
-		className: props.className,
-		closeOnOverlayClick: props.closeOnOverlayClick ?? true,
-		closeOnEscape: props.closeOnEscape ?? true,
-		modalId: props.modalId,
-	};
-}
 
 /**
  * Modal - Accessible modal dialog component

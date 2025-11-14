@@ -3,6 +3,7 @@ import {
 	ACTION_SHEET_CANCEL_CLASSES,
 	ACTION_SHEET_CONTAINER_CLASSES,
 	ACTION_SHEET_TITLE_CLASSES,
+	ACTION_SHEET_Z_INDEX,
 } from '@core/ui/overlays/action-sheet/helpers/ActionSheet.constants';
 import { getActionClasses } from '@core/ui/overlays/action-sheet/helpers/ActionSheet.helpers';
 import type { ActionSheetAction } from '@src-types/ui/overlays/interactions';
@@ -121,6 +122,7 @@ export function ActionSheetContent({
 			aria-modal="true"
 			aria-labelledby={title ? `${id}-title` : undefined}
 			className={actionSheetClasses}
+			style={{ zIndex: ACTION_SHEET_Z_INDEX }}
 		>
 			{title ? <ActionSheetTitle id={id} title={title} /> : null}
 			<ActionSheetActions actions={actions} onActionClick={onActionClick} />

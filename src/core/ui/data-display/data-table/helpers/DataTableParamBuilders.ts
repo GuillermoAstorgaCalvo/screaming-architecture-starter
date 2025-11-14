@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type {
 	ColumnParams,
 	DataAndDisplayParams,
@@ -16,7 +17,7 @@ export function buildDataAndDisplayParams<T>({
 	return {
 		displayData,
 		initialData,
-		emptyMessage: emptyMessage ?? ('No data available' as ReactNode),
+		emptyMessage: emptyMessage ?? (i18n.t('common.noDataAvailable', { ns: 'common' }) as ReactNode),
 	};
 }
 
@@ -29,7 +30,8 @@ export function buildFilterParams({
 	return {
 		filter,
 		setGlobalSearch,
-		globalSearchPlaceholder: globalSearchPlaceholder ?? 'Search...',
+		globalSearchPlaceholder:
+			globalSearchPlaceholder ?? i18n.t('common.searchPlaceholder', { ns: 'common' }),
 		enableGlobalFilter,
 	};
 }
@@ -72,7 +74,7 @@ export function buildSortAndSelectionParams<T>({
 		handleSelectAll,
 		allRowIdsSelected,
 		someRowIdsSelected,
-		selectAllLabel: selectAllLabel ?? 'Select all rows',
+		selectAllLabel: selectAllLabel ?? i18n.t('common.selectAllRows', { ns: 'common' }),
 		selectedRowIds,
 		toggleRow,
 	};

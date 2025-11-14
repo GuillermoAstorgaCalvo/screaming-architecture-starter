@@ -1,9 +1,9 @@
-import type { DataTableHeaderCellProps } from '@core/ui/data-display/data-table/components/DataTableHeader.types';
-import { HeaderContent } from '@core/ui/data-display/data-table/components/DataTableHeaderContent';
+import type { DataTableHeaderCellProps } from '@core/ui/data-display/data-table/components/table-header/DataTableHeader.types';
+import { HeaderContent } from '@core/ui/data-display/data-table/components/table-header/DataTableHeaderContent';
 import {
 	getColumnStyle,
 	renderColumnResizer,
-} from '@core/ui/data-display/data-table/components/DataTableHeaderHelpers';
+} from '@core/ui/data-display/data-table/components/table-header/DataTableHeaderHelpers';
 import { getHeaderClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
 
 /**

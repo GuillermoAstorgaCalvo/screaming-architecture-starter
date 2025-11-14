@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import Box from '@core/ui/box/Box';
 import Button from '@core/ui/button/Button';
 import type {
@@ -89,8 +90,13 @@ export function renderRetryButton(
 		return null;
 	}
 
+	const t = (key: string) => i18n.t(key, { ns: 'common' });
 	return (
-		<Button variant="primary" onClick={onRetry} aria-label="Try again to reload the application">
+		<Button
+			variant="primary"
+			onClick={onRetry}
+			aria-label={t('errors.errorBoundary.tryAgainAriaLabel')}
+		>
 			{retryLabel}
 		</Button>
 	);
@@ -111,7 +117,7 @@ export function renderHomeLink(showHomeLink: boolean, homeLinkLabel: string, hom
 	return (
 		<Link
 			to={homeLinkTo}
-			className="rounded-lg border border-border bg-background px-6 py-3 font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-gray-800"
+			className="rounded-lg border border-border bg-background px-6 py-3 font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-surface"
 		>
 			{homeLinkLabel}
 		</Link>

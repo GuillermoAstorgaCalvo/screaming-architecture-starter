@@ -34,11 +34,11 @@ function buildListItemClasses({
 }: BuildListItemClassesParams): string {
 	const classes = [
 		getListItemSizeClasses(size),
-		'flex items-center gap-3',
+		'flex items-center gap-md',
 		isInteractive
-			? 'cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+			? 'cursor-pointer transition-colors hover:bg-muted dark:hover:bg-muted-dark'
 			: null,
-		selected ? 'bg-gray-100 dark:bg-gray-800' : null,
+		selected ? 'bg-muted dark:bg-muted-dark' : null,
 		className ?? null,
 	].filter(Boolean);
 

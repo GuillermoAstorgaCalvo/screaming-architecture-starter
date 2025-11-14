@@ -1,8 +1,12 @@
+import { designTokens } from '@core/constants/designTokens';
 import type { QRCodeProps } from '@src-types/ui/media';
 import { QRCodeSVG } from 'qrcode.react';
 
 /** Default margin size for QR codes when includeMargin is true */
-const DEFAULT_QR_MARGIN_SIZE = 4;
+const DEFAULT_QR_MARGIN_SIZE = designTokens.spacing.xs;
+// Use design tokens for default colors - these can be customized via props
+const DEFAULT_BG_COLOR = designTokens.color.surface.DEFAULT;
+const DEFAULT_FG_COLOR = designTokens.color.text.primary;
 
 /**
  * Validates and constructs imageSettings for QRCodeSVG
@@ -71,8 +75,8 @@ export default function QRCode({
 	value,
 	size = 256,
 	level = 'M',
-	bgColor = '#FFFFFF',
-	fgColor = '#000000',
+	bgColor = DEFAULT_BG_COLOR,
+	fgColor = DEFAULT_FG_COLOR,
 	includeMargin = true,
 	imageSettings,
 	renderAs: _renderAs = 'svg',

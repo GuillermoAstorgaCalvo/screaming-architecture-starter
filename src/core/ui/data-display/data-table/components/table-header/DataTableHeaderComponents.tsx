@@ -1,4 +1,5 @@
 import { getHeaderClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
+import { componentSpacing } from '@core/ui/theme/tokens';
 import type { StandardSize } from '@src-types/ui/base';
 import type { DataTableColumn } from '@src-types/ui/dataTable';
 import type { MouseEvent as ReactMouseEvent } from 'react';
@@ -49,7 +50,7 @@ export function SelectionCheckbox({
 	selectAllLabel,
 }: Readonly<SelectionCheckboxProps>) {
 	return (
-		<th scope="col" className={getHeaderClasses(size)} style={{ width: '48px' }}>
+		<th scope="col" className={getHeaderClasses(size)} style={{ width: componentSpacing['3xl'] }}>
 			<input
 				type="checkbox"
 				checked={isAllSelected}
@@ -115,7 +116,7 @@ export function ColumnResizer({
 			type="button"
 			onMouseDown={handleMouseDown}
 			className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 bg-transparent border-0 p-0"
-			style={{ right: '-2px' }}
+			style={{ right: `calc(-1 * ${componentSpacing.xs} / 2)` }}
 			aria-label={`Resize column ${columnId}`}
 		/>
 	);

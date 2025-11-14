@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import Input from '@core/ui/forms/input/Input';
 
 export interface DataTableFilterProps {
@@ -13,7 +14,7 @@ export interface DataTableFilterProps {
 export function DataTableFilter({
 	globalSearch,
 	onGlobalSearchChange,
-	placeholder = 'Search...',
+	placeholder = i18n.t('common.searchPlaceholder', { ns: 'common' }),
 	className,
 }: Readonly<DataTableFilterProps>) {
 	return (

@@ -86,11 +86,12 @@ function TagInput({
 			aria-describedby={ariaDescribedBy}
 			placeholder={placeholder}
 			className={classNames(
-				'flex-1 min-w-[120px] border-0 bg-transparent p-0 outline-none',
-				'placeholder:text-gray-400',
+				'flex-1 border-0 bg-transparent p-0 outline-none',
+				'placeholder:text-text-muted',
 				'disabled:cursor-not-allowed',
-				'dark:placeholder:text-gray-500'
+				'dark:placeholder:text-text-muted'
 			)}
+			style={{ minWidth: 'calc(var(--spacing-3xl) * 2.5)' }}
 			{...inputProps}
 		/>
 	);

@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	AlertContent,
 	AlertDismissButton,
@@ -20,9 +21,11 @@ export default function Alert({
 	className,
 	action,
 	onDismiss,
-	dismissLabel = 'Dismiss notification',
+	dismissLabel,
 	role,
 }: Readonly<AlertProps>) {
+	const { t } = useTranslation('common');
+	const defaultDismissLabel = dismissLabel ?? t('a11y.dismissNotification');
 	const contentProps = {
 		...(title !== undefined && { title }),
 		...(description !== undefined && { description }),
@@ -36,7 +39,9 @@ export default function Alert({
 		>
 			<AlertIcon intent={intent} icon={icon} />
 			<AlertContent {...contentProps}>{children}</AlertContent>
-			{onDismiss ? <AlertDismissButton onDismiss={onDismiss} dismissLabel={dismissLabel} /> : null}
+			{onDismiss ? (
+				<AlertDismissButton onDismiss={onDismiss} dismissLabel={defaultDismissLabel} />
+			) : null}
 		</div>
 	);
 }

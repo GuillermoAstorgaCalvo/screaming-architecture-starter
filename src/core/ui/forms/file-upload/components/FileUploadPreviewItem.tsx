@@ -62,11 +62,11 @@ function FileThumbnail({
 	return (
 		<div
 			className={classNames(
-				'shrink-0 flex items-center justify-center rounded bg-gray-200 dark:bg-gray-700',
+				'shrink-0 flex items-center justify-center rounded bg-muted dark:bg-muted',
 				sizeClasses
 			)}
 		>
-			<span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+			<span className="text-xs font-medium text-text-secondary dark:text-text-secondary">
 				{getFileExtension(file.name)}
 			</span>
 		</div>
@@ -84,13 +84,13 @@ function FileInfo({
 
 	return (
 		<div className="flex-1 min-w-0">
-			<p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+			<p className="text-sm font-medium text-text-primary dark:text-text-primary truncate">
 				{file.file.name}
 			</p>
-			<p className="text-xs text-gray-500 dark:text-gray-400">{formatFileSize(file.file.size)}</p>
-			{file.error ? (
-				<p className="text-xs text-red-600 dark:text-red-400 mt-1">{file.error}</p>
-			) : null}
+			<p className="text-xs text-text-muted dark:text-text-muted">
+				{formatFileSize(file.file.size)}
+			</p>
+			{file.error ? <p className="text-xs text-destructive mt-1">{file.error}</p> : null}
 			{hasProgress ? (
 				<div className="mt-2">
 					<Progress value={file.progress} max={100} size="sm" showValue />
@@ -111,7 +111,7 @@ function RemoveButton({
 		<button
 			type="button"
 			onClick={onRemove}
-			className="shrink-0 p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+			className="shrink-0 p-1 text-text-muted hover:text-destructive dark:hover:text-destructive transition-colors"
 			aria-label={`Remove ${fileName}`}
 		>
 			<svg
@@ -155,7 +155,7 @@ export function FileUploadPreviewItem({
 	}, [file.id, onRemove]);
 
 	return (
-		<div className="relative flex items-center gap-3 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
+		<div className="relative flex items-center gap-3 p-2 border border-border dark:border-border rounded-lg bg-muted dark:bg-muted">
 			<FileThumbnail file={file.file} preview={preview} size={size} />
 			<FileInfo file={file} showProgress={showProgress} />
 			<RemoveButton fileName={file.file.name} onRemove={handleRemove} />

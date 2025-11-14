@@ -24,7 +24,7 @@ export function getSidebarClasses(
 	className?: string
 ): string {
 	const borderClass = showBorder
-		? `${SIDEBAR_POSITION_CLASSES[position]} border-gray-200 dark:border-gray-700`
+		? `${SIDEBAR_POSITION_CLASSES[position]} border-border dark:border-border`
 		: '';
 	return `${SIDEBAR_BASE_CLASSES} ${borderClass} ${className ?? ''}`.trim();
 }

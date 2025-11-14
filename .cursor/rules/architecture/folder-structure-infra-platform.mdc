@@ -29,11 +29,22 @@ Technical adapters and framework-specific code that implement `core` ports.
 - Gate browser APIs for SSR/test environments.
 - All adapters implement port interfaces defined in `core/ports/`.
 
+### auth
+
+- `jwtAuthAdapter.ts`: ✅ JWT authentication adapter implementing `AuthPort`. Exports `JwtAuthAdapter` class that handles JWT token management, decoding, expiration checks, and token change listeners. Supports access and refresh tokens with expiration tracking. Uses `createAuthTokenStorage` from `@core/auth/authTokenStorage` for token persistence via `StoragePort`. Provides `getAccessToken()`, `getRefreshToken()`, `setTokens()`, `clearTokens()`, `isAuthenticated()`, `decodeToken()`, `isTokenExpired()`, and `getTokenExpiration()` methods. Supports token change listeners for reactive updates.
+- `jwtUtils.ts`: ✅ JWT utility functions shared with adapter. Exports `decodeJwt()` function for parsing JWT tokens and `extractNumericClaim()` helper for extracting numeric claims from JWT payloads. SSR-safe with proper error handling.
+
+### analytics
+
+- `googleAnalyticsAdapter.ts`: ✅ Google Analytics (GA4) adapter implementing `AnalyticsPort`. Exports `googleAnalyticsAdapter` instance and `noopAnalyticsAdapter` for testing/disabled scenarios. Uses gtag.js for Google Analytics 4 tracking. Supports `initialize()`, `trackPageView()`, `trackEvent()`, `identify()`, `setUserProperties()`, and `reset()` methods. SSR-safe with browser environment checks. Can be extended/replaced with other analytics providers (Segment, Mixpanel, etc.) without changing domain code.
+
+### maps
+
+- `googleMapsAdapter.ts`: ✅ Google Maps adapter for dynamic script loading and marker support. Dynamically loads Google Maps JS API with optional libraries. Provides helper functions for marker creation and map initialization. Uses `googleMapsLoader` from `@core/lib/googleMapsLoader` for lazy loading.
+
 ### Optional/Planned Infrastructure Adapters
 
-- `api/`: (Optional) Axios instance, request/response interceptors (auth headers, trace IDs, error normalization).
-- `auth/`: (Optional) JWT handling (parse/refresh tokens; clock skew; storage via adapters).
-- `analytics/`: (Optional) Provider adapter (batch/flush, offline queue optional).
+- `api/`: (Optional) Additional API client adapters if needed beyond the core httpClient.
 - `observability/`: (Optional) Error tracking adapter, Web Vitals adapter.
 - `security/`: (Optional) Crypto helpers (hashing, uuid).
 

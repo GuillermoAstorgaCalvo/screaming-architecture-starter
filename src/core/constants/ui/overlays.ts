@@ -28,5 +28,6 @@ export const MODAL_SIZE_CLASSES: Record<ModalSize, string> = {
 /**
  * Backdrop base classes
  * Fixed positioning covering the entire viewport with transition
+ * Uses design tokens for transitions
  */
-export const BACKDROP_BASE_CLASSES = 'fixed inset-0 transition-opacity duration-300 ease-in-out';
+export const BACKDROP_BASE_CLASSES = 'fixed inset-0 transition-opacity duration-slower ease-in-out';

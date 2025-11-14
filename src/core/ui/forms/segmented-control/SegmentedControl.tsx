@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { SegmentedControlItemButton } from '@core/ui/forms/segmented-control/components/SegmentedControlItemButton';
 import { handleKeyDown } from '@core/ui/forms/segmented-control/helpers/SegmentedControlHandlers';
 import {
@@ -58,16 +59,14 @@ export default function SegmentedControl({
 	className,
 	...props
 }: Readonly<SegmentedControlProps>) {
+	const { t } = useTranslation('common');
 	const id = useSegmentedControlId(segmentedControlId);
 	const containerClasses = getContainerClasses(variant, className);
-	const handleKeyDownWrapper = (event: KeyboardEvent<HTMLButtonElement>, itemId: string) => {
-		handleKeyDown({ event, itemId, items, disabled, onValueChange });
-	};
 
 	return (
 		<div
 			role="tablist"
-			aria-label="Segmented control"
+			aria-label={t('a11y.segmentedControl')}
 			id={id}
 			className={containerClasses}
 			{...props}
@@ -82,7 +81,9 @@ export default function SegmentedControl({
 					size={size}
 					id={id}
 					onValueChange={onValueChange}
-					onKeyDown={handleKeyDownWrapper}
+					onKeyDown={(event: KeyboardEvent<HTMLButtonElement>, itemId: string) =>
+						handleKeyDown({ event, itemId, items, disabled, onValueChange })
+					}
 				/>
 			))}
 		</div>

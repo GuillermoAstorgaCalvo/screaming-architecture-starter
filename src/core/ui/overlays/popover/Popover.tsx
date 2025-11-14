@@ -1,52 +1,7 @@
-import { buildPopoverContentSetup } from '@core/ui/overlays/popover/helpers/PopoverContentSetup';
-import type { PopoverPositionState } from '@core/ui/overlays/popover/helpers/popoverPosition';
-import { usePopoverComponentSetup } from '@core/ui/overlays/popover/hooks/PopoverSetup';
+import { PopoverTrigger } from '@core/ui/overlays/popover/components/PopoverTrigger';
+import { buildPopoverContent } from '@core/ui/overlays/popover/helpers/PopoverContentBuilder';
+import { usePopoverSetup } from '@core/ui/overlays/popover/hooks/usePopoverSetup';
 import type { PopoverProps } from '@src-types/ui/overlays/floating';
-import type { ReactNode, RefObject } from 'react';
-
-interface PopoverTriggerProps {
-	readonly triggerWrapperRef: RefObject<HTMLDivElement | null>;
-	readonly containerClassName?: string | undefined;
-	readonly trigger: ReactNode;
-}
-
-function PopoverTrigger({ triggerWrapperRef, containerClassName, trigger }: PopoverTriggerProps) {
-	return (
-		<div ref={triggerWrapperRef} className={containerClassName}>
-			{trigger}
-		</div>
-	);
-}
-
-interface BuildPopoverContentOptions {
-	readonly className?: string | undefined;
-	readonly isOpen: boolean;
-	readonly popoverRef: RefObject<HTMLDivElement | null>;
-	readonly popoverPosition: PopoverPositionState;
-	readonly id: string;
-	readonly children: ReactNode;
-	readonly createPortalFn: ((children: ReactNode, container: HTMLElement) => ReactNode) | undefined;
-}
-
-function buildPopoverContent({
-	className,
-	isOpen,
-	popoverRef,
-	popoverPosition,
-	id,
-	children,
-	createPortalFn,
-}: BuildPopoverContentOptions) {
-	return buildPopoverContentSetup({
-		className,
-		isOpen,
-		popoverRef,
-		popoverPosition,
-		id,
-		children,
-		createPortalFn,
-	});
-}
 
 /**
  * Popover - Flexible overlay component
@@ -76,25 +31,6 @@ function buildPopoverContent({
  * </Popover>
  * ```
  */
-function usePopoverSetup(props: Readonly<PopoverProps>) {
-	const {
-		isOpen,
-		onClose,
-		position = 'bottom',
-		closeOnOutsideClick = true,
-		closeOnEscape = true,
-		popoverId,
-	} = props;
-
-	return usePopoverComponentSetup({
-		isOpen,
-		position,
-		closeOnOutsideClick,
-		closeOnEscape,
-		onClose,
-		popoverId: popoverId ?? undefined,
-	});
-}
 
 export default function Popover(props: Readonly<PopoverProps>) {
 	const { children, trigger, className, containerClassName, isOpen } = props;

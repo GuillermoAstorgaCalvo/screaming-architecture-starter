@@ -22,7 +22,7 @@ export function DataTableNoResults({
 					placeholder={placeholder}
 				/>
 			) : null}
-			<div className="text-center py-8 text-gray-500 dark:text-gray-400">
+			<div className="text-center py-8 text-text-muted dark:text-text-muted">
 				No results found. Try adjusting your filters.
 			</div>
 		</div>

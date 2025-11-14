@@ -1,4 +1,5 @@
 import { useScrollPosition } from '@core/hooks/scroll/useScrollPosition';
+import { useTranslation } from '@core/i18n/useTranslation';
 import FloatingActionButton from '@core/ui/floating-action-button/FloatingActionButton';
 import ArrowUpIcon from '@core/ui/icons/arrow-up-icon/ArrowUpIcon';
 import type { StandardSize } from '@src-types/ui/base';
@@ -56,11 +57,13 @@ export default function ScrollToTop({
 	position = 'bottom-right',
 	size = 'md',
 	className,
-	'aria-label': ariaLabel = 'Scroll to top',
+	'aria-label': ariaLabel,
 	tooltip,
 	smooth = true,
 }: Readonly<ScrollToTopProps>) {
+	const { t } = useTranslation('common');
 	const scrollY = useScrollPosition(100);
+	const defaultAriaLabel = ariaLabel ?? t('a11y.scrollToTop');
 
 	const handleScrollToTop = useCallback(() => {
 		if (!('window' in globalThis)) {
@@ -86,8 +89,8 @@ export default function ScrollToTop({
 	return (
 		<FloatingActionButton
 			icon={<ArrowUpIcon />}
-			aria-label={ariaLabel}
-			tooltip={tooltip ?? ariaLabel}
+			aria-label={defaultAriaLabel}
+			tooltip={tooltip ?? defaultAriaLabel}
 			position={position}
 			size={size}
 			onClick={handleScrollToTop}

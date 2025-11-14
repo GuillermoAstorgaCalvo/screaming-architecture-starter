@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type { AutocompleteProps } from '@core/ui/forms/autocomplete/Autocomplete';
 import { useAutocompleteState } from '@core/ui/forms/autocomplete/helpers/AutocompleteHelpers';
 import { createFieldProps } from '@core/ui/forms/autocomplete/hooks/useAutocompleteField';
@@ -86,10 +87,11 @@ function extractAutocompleteProps(props: Readonly<AutocompleteProps>) {
 		disabled,
 		placeholder,
 		maxHeight = 280,
-		emptyState = 'No options found',
+		emptyState,
 		highlightMatches = true,
 		...rest
 	} = props;
+	const defaultEmptyState = emptyState ?? i18n.t('common.noOptionsFound', { ns: 'common' });
 	return {
 		label,
 		error,
@@ -99,7 +101,7 @@ function extractAutocompleteProps(props: Readonly<AutocompleteProps>) {
 		disabled,
 		placeholder,
 		maxHeight,
-		emptyState,
+		emptyState: defaultEmptyState,
 		highlightMatches,
 		rest,
 	};

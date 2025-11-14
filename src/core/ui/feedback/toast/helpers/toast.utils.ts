@@ -10,7 +10,7 @@ export const getAriaLive = (role: 'status' | 'alert'): 'assertive' | 'polite' =>
 
 export const getToastClassName = (intent: ToastIntent, className?: string): string =>
 	classNames(
-		'pointer-events-auto min-w-[18rem] max-w-sm rounded-lg border px-4 py-3 shadow-lg ring-1 ring-black/5 transition-all duration-200 focus-visible:outline-none',
+		'pointer-events-auto rounded-lg border px-lg py-md shadow-lg ring-1 ring-black/5 transition-all duration-normal focus-visible:outline-none',
 		TOAST_INTENT_STYLES[intent],
 		className
 	);

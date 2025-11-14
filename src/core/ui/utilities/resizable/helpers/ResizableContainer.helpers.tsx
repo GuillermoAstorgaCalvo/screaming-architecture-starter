@@ -12,8 +12,8 @@ import type { CSSProperties } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export function getResizeHandleClasses(direction: ResizableDirection, disabled: boolean): string {
-	const baseClasses = 'absolute bg-gray-300 dark:bg-gray-600 transition-colors';
-	const hoverClasses = disabled ? '' : 'hover:bg-gray-400 dark:hover:bg-gray-500';
+	const baseClasses = 'absolute bg-border transition-colors';
+	const hoverClasses = disabled ? '' : 'hover:bg-muted';
 
 	if (direction === 'horizontal') {
 		return twMerge(baseClasses, hoverClasses, 'right-0 top-0 bottom-0 w-1 cursor-ew-resize');
@@ -32,7 +32,7 @@ export function getContainerClasses({
 }: ContainerClassesParams): string {
 	const baseClasses = 'relative overflow-hidden';
 	const resizingClasses = isResizing ? 'select-none' : '';
-	const disabledClasses = disabled ? 'opacity-50' : '';
+	const disabledClasses = disabled ? 'opacity-disabled' : '';
 
 	return twMerge(baseClasses, resizingClasses, disabledClasses, className);
 }

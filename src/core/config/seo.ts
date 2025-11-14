@@ -1,4 +1,5 @@
 import { designTokens } from '@core/constants/designTokens';
+import i18n from '@core/i18n/i18n';
 
 /**
  * SEO & Metadata Configuration
@@ -9,25 +10,52 @@ import { designTokens } from '@core/constants/designTokens';
  */
 
 /**
- * Default SEO configuration
+ * Get default SEO configuration with i18n support
  * These values are used as fallbacks when route-specific metadata is not provided
  * Theme colors are derived from design tokens to maintain consistency
+ * Uses i18n translations when available, falls back to English if i18n is not ready
  */
-export const DEFAULT_SEO = {
-	title: 'Screaming Architecture Starter',
-	description: 'A modern, scalable React application starter template',
-	siteName: 'Screaming Architecture Starter',
-	locale: 'en_US',
-	robots: 'index, follow',
-	themeColorLight: designTokens.color.primary.DEFAULT,
-	themeColorDark: designTokens.color.surface.dark,
-	colorScheme: 'light dark',
-	ogImage: '/og-image.png',
-	ogImageWidth: 1200,
-	ogImageHeight: 630,
-	twitterCard: 'summary_large_image' as const,
-	appleMobileWebAppTitle: 'SAS',
-} as const;
+function getDefaultSEOValues() {
+	// Try to get translations, fall back to English defaults if i18n is not ready
+	let title = 'Screaming Architecture Starter';
+	let description = 'A modern, scalable React application starter template';
+	let siteName = 'Screaming Architecture Starter';
+
+	try {
+		if (i18n.isInitialized) {
+			title = i18n.t('seo.defaultTitle', { ns: 'common', defaultValue: title });
+			description = i18n.t('seo.defaultDescription', {
+				ns: 'common',
+				defaultValue: description,
+			});
+			siteName = i18n.t('seo.siteName', { ns: 'common', defaultValue: siteName });
+		}
+	} catch {
+		// i18n not ready, use defaults
+	}
+
+	return {
+		title,
+		description,
+		siteName,
+		locale: 'en_US',
+		robots: 'index, follow',
+		themeColorLight: designTokens.color.primary.DEFAULT,
+		themeColorDark: designTokens.color.surface.dark,
+		colorScheme: 'light dark',
+		ogImage: '/og-image.png',
+		ogImageWidth: 1200,
+		ogImageHeight: 630,
+		twitterCard: 'summary_large_image' as const,
+		appleMobileWebAppTitle: 'SAS',
+	} as const;
+}
+
+/**
+ * Default SEO configuration (for backward compatibility)
+ * @deprecated Use getDefaultSEOValues() for i18n-aware defaults
+ */
+export const DEFAULT_SEO = getDefaultSEOValues();
 
 /**
  * SEO metadata configuration for a route/page
@@ -71,10 +99,13 @@ export interface SEOConfig {
  * Build full page title from title and site name
  *
  * @param title - Page title
- * @param siteName - Site name (defaults to DEFAULT_SEO.siteName)
+ * @param siteName - Site name (defaults to i18n-aware site name)
  * @returns Full title with site name
  */
-export function buildPageTitle(title?: string, siteName: string = DEFAULT_SEO.siteName): string {
+export function buildPageTitle(
+	title?: string,
+	siteName: string = getDefaultSEOValues().siteName
+): string {
 	if (!title) return siteName;
 	return `${title} | ${siteName}`;
 }
@@ -112,7 +143,7 @@ export function buildRobotsContent(indexable?: boolean): string {
 	if (indexable === false) {
 		return 'noindex, nofollow';
 	}
-	return DEFAULT_SEO.robots;
+	return getDefaultSEOValues().robots;
 }
 
 /**
@@ -123,7 +154,7 @@ export function buildRobotsContent(indexable?: boolean): string {
  * @returns Absolute URL for Open Graph image
  */
 export function buildOgImageUrl(ogImage?: string): string {
-	const imageUrl = ogImage ?? DEFAULT_SEO.ogImage;
+	const imageUrl = ogImage ?? getDefaultSEOValues().ogImage;
 	return buildAbsoluteUrl(imageUrl);
 }
 
@@ -136,7 +167,7 @@ export function buildOgImageUrl(ogImage?: string): string {
  * @returns Absolute URL for Twitter image
  */
 export function buildTwitterImageUrl(twitterImage?: string, ogImage?: string): string {
-	const imageUrl = twitterImage ?? ogImage ?? DEFAULT_SEO.ogImage;
+	const imageUrl = twitterImage ?? ogImage ?? getDefaultSEOValues().ogImage;
 	return buildAbsoluteUrl(imageUrl);
 }
 
@@ -196,18 +227,19 @@ function buildBaseSEOResult(
 	config: SEOConfig,
 	values: ReturnType<typeof buildRequiredSEOValues>
 ): ReturnType<typeof mergeSEOConfig> {
+	const defaults = getDefaultSEOValues();
 	return {
 		title: values.title,
-		description: config.description ?? DEFAULT_SEO.description,
+		description: config.description ?? defaults.description,
 		indexable: config.indexable ?? true,
 		canonicalUrl: values.canonicalUrl,
 		ogType: config.ogType ?? 'website',
 		ogImage: values.ogImage,
-		ogImageWidth: config.ogImageWidth ?? DEFAULT_SEO.ogImageWidth,
-		ogImageHeight: config.ogImageHeight ?? DEFAULT_SEO.ogImageHeight,
+		ogImageWidth: config.ogImageWidth ?? defaults.ogImageWidth,
+		ogImageHeight: config.ogImageHeight ?? defaults.ogImageHeight,
 		ogImageAlt: values.ogImageAlt,
-		ogLocale: config.ogLocale ?? DEFAULT_SEO.locale,
-		twitterCard: config.twitterCard ?? DEFAULT_SEO.twitterCard,
+		ogLocale: config.ogLocale ?? defaults.locale,
+		twitterCard: config.twitterCard ?? defaults.twitterCard,
 		twitterImage: values.twitterImage,
 		twitterImageAlt: values.twitterImageAlt,
 	};

@@ -27,20 +27,23 @@ export const BUTTON_VARIANT_CLASSES: Record<ButtonVariant, string> = {
 
 /**
  * Button size classes (padding + text size)
+ * Uses design tokens for spacing
+ * Note: Original px-3 (12px) → px-md, px-4 (16px) → px-lg, px-6 (24px) → px-xl
  */
 export const BUTTON_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-3 py-1.5 text-sm',
-	md: 'px-4 py-2 text-base',
-	lg: 'px-6 py-3 text-lg',
+	sm: 'px-md py-xs text-sm',
+	md: 'px-lg py-sm text-base',
+	lg: 'px-xl py-md text-lg',
 } as const;
 
 /**
  * Icon button size classes (height + width + padding)
+ * Uses design tokens for spacing
  */
 export const ICON_BUTTON_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'h-4 w-4 p-1',
-	md: 'h-5 w-5 p-1',
-	lg: 'h-6 w-6 p-1.5',
+	sm: 'h-4 w-4 p-xs',
+	md: 'h-5 w-5 p-xs',
+	lg: 'h-6 w-6 p-sm',
 } as const;
 
 /**
@@ -72,11 +75,13 @@ export const TOGGLE_VARIANT_CLASSES: Record<ToggleVariant, string> = {
 
 /**
  * Toggle size classes (padding + text size)
+ * Uses design tokens for spacing
+ * Note: Original px-3 (12px) → px-md, px-4 (16px) → px-lg, px-6 (24px) → px-xl
  */
 export const TOGGLE_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-3 py-1.5 text-sm',
-	md: 'px-4 py-2 text-base',
-	lg: 'px-6 py-3 text-lg',
+	sm: 'px-md py-xs text-sm',
+	md: 'px-lg py-sm text-base',
+	lg: 'px-xl py-md text-lg',
 } as const;
 
 /**

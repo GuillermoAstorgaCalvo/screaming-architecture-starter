@@ -1,7 +1,9 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import type { ToastItem } from '@core/providers/toast/ToastContext';
 import { useToast } from '@core/providers/toast/useToast';
 import Toast from '@core/ui/feedback/toast/Toast';
 import type { ToastAction } from '@core/ui/feedback/toast/types/toast.types';
+import { componentZIndex } from '@core/ui/theme/tokens';
 import { classNames } from '@core/utils/classNames';
 import { type ReactNode, useEffect, useState } from 'react';
 
@@ -99,6 +101,7 @@ export default function ToastContainer({
 	position = 'top-right',
 	className,
 }: Readonly<ToastContainerProps>) {
+	const { t } = useTranslation('common');
 	const { toasts, dismiss } = useToast();
 	const [visibleToasts, setVisibleToasts] = useState<readonly ToastItem[]>([]);
 
@@ -113,11 +116,12 @@ export default function ToastContainer({
 	return (
 		<section
 			className={classNames(
-				'pointer-events-none fixed z-50 flex flex-col gap-2',
+				'pointer-events-none fixed flex flex-col gap-2',
 				POSITION_CLASSES[position],
 				className
 			)}
-			aria-label="Notifications"
+			style={{ zIndex: componentZIndex.popover }}
+			aria-label={t('a11y.notifications')}
 			aria-live="polite"
 		>
 			{visibleToasts.map(toast => (

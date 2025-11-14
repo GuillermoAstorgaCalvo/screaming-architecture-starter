@@ -32,7 +32,7 @@ function BreadcrumbSpan({
 	item,
 	isCurrentPage,
 }: Readonly<{ item: BreadcrumbItem; isCurrentPage: boolean }>) {
-	const currentPageClasses = 'font-medium text-gray-900 dark:text-gray-100';
+	const currentPageClasses = 'font-medium text-text-primary dark:text-text-primary';
 	return (
 		<span
 			className={isCurrentPage ? currentPageClasses : BREADCRUMBS_ITEM_CLASSES}

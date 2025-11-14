@@ -21,19 +21,22 @@ export const RATING_SIZE_CLASSES: Record<StandardSize, string> = {
 
 /**
  * Rating star filled classes
+ * Uses design tokens for colors (warning color for stars)
  */
-export const RATING_STAR_FILLED_CLASSES = 'text-yellow-400 dark:text-yellow-500 transition-colors';
+export const RATING_STAR_FILLED_CLASSES = 'text-warning dark:text-warning-dark transition-colors';
 
 /**
  * Rating star empty classes
+ * Uses design tokens for colors
  */
-export const RATING_STAR_EMPTY_CLASSES = 'text-gray-300 dark:text-gray-600 transition-colors';
+export const RATING_STAR_EMPTY_CLASSES = 'text-muted dark:text-muted-dark transition-colors';
 
 /**
  * Rating star interactive classes
+ * Uses design tokens for colors
  */
 export const RATING_STAR_INTERACTIVE_CLASSES =
-	'cursor-pointer hover:text-yellow-400 dark:hover:text-yellow-500';
+	'cursor-pointer hover:text-warning dark:hover:text-warning-dark';
 
 /**
  * Rating star disabled classes

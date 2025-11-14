@@ -12,12 +12,13 @@ const STACK_DIRECTION_CLASSES: Record<'vertical' | 'horizontal', string> = {
 
 /**
  * Stack gap classes
+ * Uses design tokens for spacing
  */
 const STACK_GAP_CLASSES: Record<StandardSize | 'none', string> = {
 	none: '',
-	sm: 'gap-2',
-	md: 'gap-4',
-	lg: 'gap-6',
+	sm: 'gap-sm',
+	md: 'gap-md',
+	lg: 'gap-lg',
 } as const;
 
 /**

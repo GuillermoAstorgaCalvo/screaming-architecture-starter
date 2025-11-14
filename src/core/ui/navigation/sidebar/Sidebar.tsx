@@ -1,4 +1,5 @@
 import { SIDEBAR_DEFAULT_WIDTH } from '@core/constants/ui/navigation';
+import i18n from '@core/i18n/i18n';
 import {
 	getSidebarClasses,
 	getSidebarWidth,
@@ -21,7 +22,7 @@ interface SidebarHeaderProps {
 
 function SidebarHeader({ header }: SidebarHeaderProps) {
 	if (!header) return null;
-	return <div className="shrink-0 border-b border-gray-200 dark:border-gray-700">{header}</div>;
+	return <div className="shrink-0 border-b border-border dark:border-border">{header}</div>;
 }
 
 interface SidebarFooterProps {
@@ -30,7 +31,7 @@ interface SidebarFooterProps {
 
 function SidebarFooter({ footer }: SidebarFooterProps) {
 	if (!footer) return null;
-	return <div className="shrink-0 border-t border-gray-200 dark:border-gray-700">{footer}</div>;
+	return <div className="shrink-0 border-t border-border dark:border-border">{footer}</div>;
 }
 
 /**
@@ -60,7 +61,11 @@ export default function Sidebar(props: Readonly<SidebarProps>) {
 	};
 
 	return (
-		<aside className={sidebarClasses} style={sidebarStyle} aria-label="Sidebar">
+		<aside
+			className={sidebarClasses}
+			style={sidebarStyle}
+			aria-label={i18n.t('a11y.sidebar', { ns: 'common' })}
+		>
 			<SidebarHeader header={header} />
 			<SidebarContent {...(contentClassName !== undefined && { contentClassName })}>
 				{children}

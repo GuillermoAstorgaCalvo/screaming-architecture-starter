@@ -1,9 +1,10 @@
 /**
  * Stat card display constants
+ * Uses design tokens for spacing
  */
 import type { StandardSize } from '@src-types/ui/base';
 
-export const STAT_CARD_BASE_CLASSES = 'flex flex-col gap-2';
+export const STAT_CARD_BASE_CLASSES = 'flex flex-col gap-sm';
 
 export const STAT_CARD_VALUE_SIZE_CLASSES: Record<StandardSize, string> = {
 	sm: 'text-2xl font-bold',

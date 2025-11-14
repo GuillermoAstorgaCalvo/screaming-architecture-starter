@@ -1,8 +1,5 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { buildPopconfirmSetup } from '@core/ui/overlays/popconfirm/helpers/Popconfirm.builders';
-import {
-	DEFAULT_CANCEL_LABEL,
-	DEFAULT_CONFIRM_LABEL,
-} from '@core/ui/overlays/popconfirm/helpers/popconfirm.constants';
 import type { PopconfirmProps } from '@core/ui/overlays/popconfirm/types/popconfirm.types';
 import Popover from '@core/ui/popover/Popover';
 
@@ -27,9 +24,10 @@ import Popover from '@core/ui/popover/Popover';
  * ```
  */
 export default function Popconfirm(props: Readonly<PopconfirmProps>) {
+	const { t } = useTranslation('common');
 	const {
-		confirmLabel = DEFAULT_CONFIRM_LABEL,
-		cancelLabel = DEFAULT_CANCEL_LABEL,
+		confirmLabel,
+		cancelLabel,
 		destructive = false,
 		showCancel = true,
 		position = 'top',
@@ -37,10 +35,13 @@ export default function Popconfirm(props: Readonly<PopconfirmProps>) {
 		closeOnEscape = true,
 		...restProps
 	} = props;
+	const defaultConfirmLabel = confirmLabel ?? t('confirm');
+	const defaultCancelLabel = cancelLabel ?? t('cancel');
+
 	const popoverProps = buildPopconfirmSetup({
 		...restProps,
-		confirmLabel,
-		cancelLabel,
+		confirmLabel: defaultConfirmLabel,
+		cancelLabel: defaultCancelLabel,
 		destructive,
 		showCancel,
 		position,

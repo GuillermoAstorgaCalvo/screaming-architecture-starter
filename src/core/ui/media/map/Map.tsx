@@ -57,7 +57,7 @@ export default function GoogleMap({
 	onMapClick,
 	loadingFallback,
 	errorFallback,
-	height = '400px',
+	height = 'var(--spacing-4xl)',
 	width = '100%',
 	className,
 	...props

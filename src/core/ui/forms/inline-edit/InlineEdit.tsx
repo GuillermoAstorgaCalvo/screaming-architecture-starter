@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	renderEditInput,
 	renderViewMode,
@@ -65,12 +66,9 @@ function useInlineEditConfig(props: Readonly<InlineEditProps>) {
 }
 
 export default function InlineEdit(props: Readonly<InlineEditProps>) {
-	const {
-		placeholder = 'Click to edit',
-		showEmptyPlaceholder = true,
-		renderDisplay,
-		...inputProps
-	} = props;
+	const { t } = useTranslation('inlineEdit');
+	const { placeholder, showEmptyPlaceholder = true, renderDisplay, ...inputProps } = props;
+	const defaultPlaceholder = placeholder ?? t('placeholder');
 	const id = useId();
 	const { setup } = useInlineEditConfig(props);
 	const disabled = props.disabled ?? false;
@@ -80,7 +78,7 @@ export default function InlineEdit(props: Readonly<InlineEditProps>) {
 			id,
 			editValue: setup.editValue,
 			inputClasses: setup.inputClasses,
-			placeholder,
+			placeholder: defaultPlaceholder,
 			disabled,
 			handleChange: setup.handleChange,
 			handleKeyDown: setup.handleKeyDown,
@@ -92,7 +90,7 @@ export default function InlineEdit(props: Readonly<InlineEditProps>) {
 	return renderViewMode({
 		isEmpty: setup.isEmpty,
 		showEmptyPlaceholder,
-		placeholder,
+		placeholder: defaultPlaceholder,
 		displayValue: setup.displayValue,
 		renderDisplay,
 		displayClasses: setup.displayClasses,

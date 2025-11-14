@@ -12,9 +12,9 @@ export function renderDefaultEvent(event: CalendarEvent): ReactElement {
 		default: 'bg-muted text-muted-foreground',
 		primary: 'bg-primary text-primary-foreground',
 		secondary: 'bg-secondary text-secondary-foreground',
-		success: 'bg-green-500 text-white',
-		warning: 'bg-yellow-500 text-white',
-		error: 'bg-red-500 text-white',
+		success: 'bg-success text-success-foreground',
+		warning: 'bg-warning text-warning-foreground',
+		error: 'bg-destructive text-destructive-foreground',
 	};
 
 	return (

@@ -1,4 +1,5 @@
 import type { Theme } from '@core/constants/theme';
+import { useTranslation } from '@core/i18n/useTranslation';
 import { classNames } from '@core/utils/classNames';
 import type { ThemeToggleProps } from '@src-types/ui/theme';
 
@@ -20,11 +21,14 @@ function getThemeIcon(
 	return resolvedTheme === 'dark' ? '🌙' : '☀️';
 }
 
-function getThemeLabel(currentTheme: Readonly<Theme>): string {
+function getThemeLabel(
+	currentTheme: Readonly<Theme>,
+	t: (key: 'theme.system' | 'theme.dark' | 'theme.light') => string
+): string {
 	if (currentTheme === 'system') {
-		return 'System';
+		return t('theme.system');
 	}
-	return currentTheme === 'dark' ? 'Dark' : 'Light';
+	return currentTheme === 'dark' ? t('theme.dark') : t('theme.light');
 }
 
 function getNextTheme(currentTheme: Readonly<Theme>): Theme {
@@ -42,24 +46,28 @@ export default function ThemeToggle({
 	theme: currentTheme,
 	resolvedTheme,
 	setTheme,
-	ariaLabel = 'Toggle theme',
+	ariaLabel,
 	className,
 }: Readonly<ThemeToggleProps>) {
+	const { t } = useTranslation('common');
 	const handleToggle = (): void => {
 		setTheme(getNextTheme(currentTheme));
 	};
 
-	const themeLabel = getThemeLabel(currentTheme);
+	const themeLabel = getThemeLabel(currentTheme, t);
 	const themeIcon = getThemeIcon(currentTheme, resolvedTheme);
+	const defaultAriaLabel = ariaLabel ?? t('a11y.toggleTheme');
+	const ariaLabelText = t('a11y.currentTheme', { theme: themeLabel });
+	const titleText = t('a11y.currentThemeDescription', { theme: themeLabel });
 
 	return (
 		<button
 			type="button"
 			onClick={handleToggle}
-			aria-label={`${ariaLabel}: Current theme is ${themeLabel}`}
-			title={`Current theme: ${themeLabel}. Click to toggle.`}
+			aria-label={`${defaultAriaLabel}: ${ariaLabelText}`}
+			title={titleText}
 			className={classNames(
-				'inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800',
+				'inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-border dark:bg-surface dark:text-text-primary dark:hover:bg-muted dark:focus:ring-offset-surface',
 				className
 			)}
 		>

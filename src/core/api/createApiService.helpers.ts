@@ -1,5 +1,6 @@
 import { adaptError } from '@core/http/errorAdapter';
 import type { DomainError } from '@core/http/errorAdapter.types';
+import i18n from '@core/i18n/i18n';
 import type { HttpClientResponse } from '@core/ports/HttpPort';
 import type { ApiResponse, ApiResponseWithMeta } from '@src-types/api';
 import type { ZodType } from 'zod';
@@ -180,7 +181,23 @@ function extractCustomMessage<TRequest, TRawResponse, TResponse>(
 	config: ApiServiceConfig<TRequest, TRawResponse, TResponse>,
 	context: ApiServiceErrorContext<TRequest>
 ): string | undefined {
-	return context.options?.errorMessage ?? config.defaultErrorMessage;
+	const message = context.options?.errorMessage ?? config.defaultErrorMessage;
+	if (!message) {
+		return undefined;
+	}
+	// If message looks like a translation key (contains dots and starts with known namespace),
+	// translate it. Otherwise, return as-is (already translated or plain text).
+	if (typeof message === 'string' && message.includes('.')) {
+		const parts = message.split('.');
+		// Check if it's a translation key format (e.g., "errors.something" or "a11y.something")
+		if (
+			parts.length >= 2 &&
+			['errors', 'a11y', 'common', 'app', 'nav'].includes(parts[0] as string)
+		) {
+			return i18n.t(message, { ns: 'common' });
+		}
+	}
+	return message;
 }
 
 function normalizeIssuePath(path: ReadonlyArray<PropertyKey>): Array<string | number> {

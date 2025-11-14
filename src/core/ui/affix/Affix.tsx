@@ -1,3 +1,4 @@
+import { componentZIndex } from '@core/ui/theme/tokens';
 import type { AffixProps } from '@src-types/ui/layout/primitives';
 import type { CSSProperties } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -73,7 +74,7 @@ function getAffixStyles(options: AffixStyleOptions): CSSProperties {
  * @example
  * ```tsx
  * <Affix threshold={100} position="top" offset={16}>
- *   <nav className="bg-white shadow-md p-4">
+ *   <nav className="bg-surface shadow-md p-lg">
  *     Navigation Bar
  *   </nav>
  * </Affix>
@@ -82,7 +83,7 @@ function getAffixStyles(options: AffixStyleOptions): CSSProperties {
  * @example
  * ```tsx
  * <Affix threshold={0} position="bottom" offset={20} onStickyChange={(isSticky) => console.log(isSticky)}>
- *   <div className="bg-blue-500 text-white p-4">
+ *   <div className="bg-primary text-primary-foreground p-lg">
  *     Action Buttons
  *   </div>
  * </Affix>
@@ -91,7 +92,7 @@ function getAffixStyles(options: AffixStyleOptions): CSSProperties {
  * @example
  * ```tsx
  * <Affix threshold={200} position="top" container={scrollContainerRef.current}>
- *   <div className="bg-gray-100 p-4">
+ *   <div className="bg-muted p-lg">
  *     Filter Bar (sticky within container)
  *   </div>
  * </Affix>
@@ -105,7 +106,7 @@ export default function Affix({
 	container,
 	onStickyChange,
 	enabled = true,
-	zIndex = 1000,
+	zIndex = componentZIndex.sticky,
 	className,
 	style,
 	...props

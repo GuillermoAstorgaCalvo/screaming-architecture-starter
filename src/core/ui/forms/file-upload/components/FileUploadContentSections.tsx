@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import Button from '@core/ui/button/Button';
 import { FileUploadDropzone } from '@core/ui/forms/file-upload/components/FileUploadDropzone';
 import { FileUploadLabel } from '@core/ui/forms/file-upload/components/FileUploadLabel';
@@ -21,7 +22,7 @@ export interface FileUploadDropzoneContentProps {
 function FileUploadIcon() {
 	return (
 		<svg
-			className="w-12 h-12 text-gray-400 dark:text-gray-500"
+			className="w-12 h-12 text-text-muted dark:text-text-muted"
 			fill="none"
 			stroke="currentColor"
 			viewBox="0 0 24 24"
@@ -44,13 +45,14 @@ export function FileUploadDropzoneContent({
 	accept,
 	onBrowseClick,
 }: Readonly<FileUploadDropzoneContentProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<>
 			<FileUploadIcon />
-			<p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-				{dragActive ? 'Drop files here' : 'Drag and drop files here'}
+			<p className="text-sm font-medium text-text-primary dark:text-text-primary">
+				{dragActive ? t('fileUpload.dropFilesHere') : t('fileUpload.dragAndDropFilesHere')}
 			</p>
-			<p className="text-xs text-gray-500 dark:text-gray-400">or</p>
+			<p className="text-xs text-text-muted dark:text-text-muted">{t('fileUpload.or')}</p>
 			<Button
 				type="button"
 				variant="secondary"
@@ -61,10 +63,12 @@ export function FileUploadDropzoneContent({
 					onBrowseClick();
 				}}
 			>
-				Browse Files
+				{t('fileUpload.browseFiles')}
 			</Button>
 			{accept ? (
-				<p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Accepted: {accept}</p>
+				<p className="text-xs text-text-muted dark:text-text-muted mt-1">
+					{t('fileUpload.accepted')} {accept}
+				</p>
 			) : null}
 		</>
 	);

@@ -5,7 +5,7 @@ import {
 	MultiSelectFilterInput,
 	SelectFilterInput,
 	TextFilterInput,
-} from '@core/ui/data-display/data-table/components/filterInputComponents';
+} from '@core/ui/data-display/data-table/components/advanced-filter/filterInputComponents';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 
 export interface FilterInputProps {

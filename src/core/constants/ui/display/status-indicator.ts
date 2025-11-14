@@ -1,5 +1,6 @@
 /**
  * Status indicator display constants
+ * Uses design tokens for colors
  */
 import type { StandardSize } from '@src-types/ui/base';
 import type { StatusIndicatorStatus } from '@src-types/ui/feedback';
@@ -9,10 +10,10 @@ import { BADGE_SIZE_CLASSES } from './badge';
 export const STATUS_INDICATOR_BASE_CLASSES = 'inline-flex items-center gap-1.5 transition-colors';
 
 export const STATUS_INDICATOR_STATUS_CLASSES: Record<StatusIndicatorStatus, string> = {
-	online: 'bg-green-500 dark:bg-green-400',
-	offline: 'bg-gray-400 dark:bg-gray-500',
-	busy: 'bg-red-500 dark:bg-red-400',
-	away: 'bg-yellow-500 dark:bg-yellow-400',
+	online: 'bg-success dark:bg-success-dark',
+	offline: 'bg-secondary dark:bg-secondary-dark',
+	busy: 'bg-destructive dark:bg-destructive-dark',
+	away: 'bg-warning dark:bg-warning-dark',
 } as const;
 
 export const STATUS_INDICATOR_DOT_SIZE_CLASSES: Record<StandardSize, string> = {
@@ -27,8 +28,8 @@ export const STATUS_INDICATOR_BADGE_BASE_CLASSES =
 export const STATUS_INDICATOR_BADGE_SIZE_CLASSES: Record<StandardSize, string> = BADGE_SIZE_CLASSES;
 
 export const STATUS_INDICATOR_BADGE_STATUS_CLASSES: Record<StatusIndicatorStatus, string> = {
-	online: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-	offline: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
-	busy: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-	away: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+	online: 'bg-success-light text-success-dark dark:bg-success-dark dark:text-success-light',
+	offline: 'bg-muted text-text-primary dark:bg-muted-dark dark:text-text-primary-dark',
+	busy: 'bg-destructive-light text-destructive-dark dark:bg-destructive-dark dark:text-destructive-light',
+	away: 'bg-warning-light text-warning-dark dark:bg-warning-dark dark:text-warning-light',
 } as const;

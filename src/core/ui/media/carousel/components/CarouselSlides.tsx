@@ -12,7 +12,7 @@ export function CarouselSlides({ slides, activeIndex, carouselId }: Readonly<Car
 	return (
 		<div className="relative overflow-hidden rounded-lg">
 			<div
-				className="flex transition-transform duration-300 ease-in-out"
+				className="flex transition-transform duration-slow ease-in-out"
 				style={{
 					transform: `translateX(-${activeIndex * 100}%)`,
 				}}

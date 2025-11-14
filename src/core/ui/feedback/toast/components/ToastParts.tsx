@@ -108,6 +108,10 @@ export function ToastContainer({
 			role={role}
 			aria-live={getAriaLive(role)}
 			className={getToastClassName(intent, className)}
+			style={{
+				minWidth: 'calc(var(--spacing-3xl) * 3.75)',
+				maxWidth: 'calc(var(--spacing-4xl) * 1.5)',
+			}}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>

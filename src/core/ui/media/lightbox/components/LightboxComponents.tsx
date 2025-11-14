@@ -39,7 +39,7 @@ export function LightboxNavigationArrows({
 					icon={prevArrow ?? <ArrowLeftIcon size="lg" />}
 					aria-label={ARIA_LABELS.PREVIOUS}
 					onClick={onPrevious}
-					className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition-opacity hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-white/50 dark:bg-white/10 dark:hover:bg-white/20"
+					className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-overlay p-3 text-text-primary-dark backdrop-blur-md transition-opacity hover:bg-overlay-dark focus:outline-none focus:ring-2 focus:ring-text-primary-dark/50"
 					variant="ghost"
 					size="lg"
 				/>
@@ -49,7 +49,7 @@ export function LightboxNavigationArrows({
 					icon={nextArrow ?? <ArrowRightIcon size="lg" />}
 					aria-label={ARIA_LABELS.NEXT}
 					onClick={onNext}
-					className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition-opacity hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-white/50 dark:bg-white/10 dark:hover:bg-white/20"
+					className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-overlay p-3 text-text-primary-dark backdrop-blur-md transition-opacity hover:bg-overlay-dark focus:outline-none focus:ring-2 focus:ring-text-primary-dark/50"
 					variant="ghost"
 					size="lg"
 				/>
@@ -100,15 +100,15 @@ export function LightboxHeader({
 	showCaption,
 }: Readonly<LightboxHeaderProps>) {
 	return (
-		<div className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between bg-linear-to-b from-black/70 to-transparent p-4 backdrop-blur-sm">
+		<div className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between bg-linear-to-b from-overlay-dark to-transparent p-4 backdrop-blur-md">
 			<div className="flex-1">
 				{showCaption && image.caption ? (
-					<p className="text-sm font-medium text-white">{image.caption}</p>
+					<p className="text-sm font-medium text-text-primary-dark">{image.caption}</p>
 				) : null}
 			</div>
 			<div className="flex items-center gap-4">
 				{showCounter && totalImages > 1 ? (
-					<span className="text-sm text-white" aria-live="polite">
+					<span className="text-sm text-text-primary-dark" aria-live="polite">
 						{currentIndex + 1} / {totalImages}
 					</span>
 				) : null}
@@ -116,7 +116,7 @@ export function LightboxHeader({
 					icon={<CloseIcon />}
 					aria-label={ARIA_LABELS.CLOSE_MODAL}
 					onClick={onClose}
-					className="rounded-full bg-black/50 p-2 text-white transition-opacity hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-white/50 dark:bg-white/10 dark:hover:bg-white/20"
+					className="rounded-full bg-overlay p-2 text-text-primary-dark transition-opacity hover:bg-overlay-dark focus:outline-none focus:ring-2 focus:ring-text-primary-dark/50"
 					variant="ghost"
 					size="md"
 				/>

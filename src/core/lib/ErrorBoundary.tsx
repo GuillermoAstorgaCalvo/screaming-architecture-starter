@@ -1,5 +1,6 @@
 import { env } from '@core/config/env.client';
 import { ROUTES } from '@core/config/routes';
+import i18n from '@core/i18n/i18n';
 import type { LoggerPort } from '@core/ports/LoggerPort';
 import { Component, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
@@ -70,12 +71,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 		}
 
 		return (
-			<div className="mt-6 rounded-lg bg-red-50 p-4 text-left dark:bg-red-900/20">
-				<p className="font-mono text-sm text-red-800 dark:text-red-200">
+			<div className="mt-6 rounded-lg bg-destructive-light p-4 text-left dark:bg-destructive-dark/20">
+				<p className="font-mono text-sm text-destructive dark:text-destructive-foreground">
 					{this.state.error.toString()}
 				</p>
 				{this.state.error.stack ? (
-					<pre className="mt-2 overflow-auto text-xs text-red-600 dark:text-red-300">
+					<pre className="mt-2 overflow-auto text-xs text-destructive dark:text-destructive-foreground/80">
 						{this.state.error.stack}
 					</pre>
 				) : null}
@@ -84,21 +85,26 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 	}
 
 	private renderErrorActions(): ReactNode {
+		const t = (key: string) => i18n.t(key, { ns: 'common' });
+		const tryAgainLabel = t('errors.errorBoundary.tryAgain');
+		const goToHomeLabel = t('errors.errorBoundary.goToHome');
+		const tryAgainAriaLabel = t('errors.errorBoundary.tryAgainAriaLabel');
+
 		return (
 			<div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
 				<button
 					type="button"
 					onClick={this.handleReset}
-					aria-label="Try again to reload the application"
-					className="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary rounded-lg px-6 py-3 font-medium focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-gray-800"
+					aria-label={tryAgainAriaLabel}
+					className="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary rounded-lg px-6 py-3 font-medium focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-surface"
 				>
-					Try again
+					{tryAgainLabel}
 				</button>
 				<Link
 					to={ROUTES.HOME}
-					className="focus:ring-primary rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus:ring-offset-gray-800"
+					className="focus:ring-primary rounded-lg border border-border px-6 py-3 font-medium text-text-primary hover:bg-muted focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-border dark:text-text-primary dark:hover:bg-muted dark:focus:ring-offset-surface"
 				>
-					Go to Home
+					{goToHomeLabel}
 				</Link>
 			</div>
 		);
@@ -113,15 +119,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 			return this.props.fallback;
 		}
 
+		const t = (key: string) => i18n.t(key, { ns: 'common' });
+		const title = t('errors.errorBoundary.title');
+		const description = t('errors.errorBoundary.description');
+
 		return (
 			<main className="flex min-h-screen flex-col items-center justify-center p-6">
 				<div className="max-w-md text-center">
-					<h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
-						Something went wrong
-					</h1>
-					<p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-						We&apos;re sorry, but something unexpected happened.
-					</p>
+					<h1 className="text-4xl font-bold text-text-primary dark:text-text-primary">{title}</h1>
+					<p className="mt-4 text-lg text-text-secondary dark:text-text-secondary">{description}</p>
 					{this.renderDevErrorDetails()}
 					{this.renderErrorActions()}
 				</div>

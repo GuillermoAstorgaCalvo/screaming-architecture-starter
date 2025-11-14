@@ -6,9 +6,11 @@ import { twMerge } from 'tailwind-merge';
 
 /**
  * Display text base classes
+ * Uses design tokens for customizable min-height and padding
+ * min-height uses line-height token, padding uses spacing tokens
  */
 export const DISPLAY_BASE_CLASSES =
-	'min-h-[1.5em] cursor-text rounded-md px-1 py-0.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700';
+	'min-h-[var(--line-height-base)] cursor-text rounded-md px-xs py-[calc(var(--spacing-xs)/2)] transition-colors hover:bg-muted dark:hover:bg-muted';
 
 /**
  * Display text size classes
@@ -22,7 +24,7 @@ export const DISPLAY_SIZE_CLASSES = {
 /**
  * Placeholder text classes
  */
-export const PLACEHOLDER_CLASSES = 'text-gray-400 italic dark:text-gray-500';
+export const PLACEHOLDER_CLASSES = 'text-text-muted italic dark:text-text-muted';
 
 export interface DisplayContentOptions {
 	readonly isEmpty: boolean;
@@ -71,7 +73,7 @@ export function getDisplayClasses(
 	return twMerge(
 		DISPLAY_BASE_CLASSES,
 		DISPLAY_SIZE_CLASSES[size],
-		disabled && 'cursor-not-allowed opacity-50',
+		disabled && 'cursor-not-allowed opacity-disabled',
 		displayClassName
 	);
 }

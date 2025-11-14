@@ -14,7 +14,7 @@ export const MAX_PULL_MULTIPLIER = 1.5;
  * Pull to refresh indicator classes
  */
 export const INDICATOR_BASE_CLASSES =
-	'flex items-center justify-center h-12 text-text-muted dark:text-text-muted transition-transform duration-200';
+	'flex items-center justify-center h-12 text-text-muted dark:text-text-muted transition-transform duration-normal';
 
 /**
  * Gets the first touch from a touch event

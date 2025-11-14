@@ -3,9 +3,6 @@ import { PromptDialogInput } from '@core/ui/overlays/prompt-dialog/components/Pr
 import type { PromptDialogInputType } from '@core/ui/overlays/prompt-dialog/PromptDialog';
 import type { ReactNode } from 'react';
 
-export const DEFAULT_CONFIRM_LABEL = 'Confirm';
-export const DEFAULT_CANCEL_LABEL = 'Cancel';
-
 interface ConfirmHandlerOptions {
 	value: string;
 	validate?: ((value: string) => string | undefined) | undefined;
@@ -18,12 +15,15 @@ interface ConfirmHandlerOptions {
 /**
  * Creates a confirm handler that validates the input, executes the onConfirm callback, and then closes the dialog
  */
-export function createConfirmHandler(options: ConfirmHandlerOptions): () => Promise<void> {
+export function createConfirmHandler(
+	options: ConfirmHandlerOptions,
+	getRequiredError: () => string
+): () => Promise<void> {
 	const { value, validate, required, onConfirm, onClose, setError } = options;
 	return async () => {
 		// Validate required field
 		if (required && !value.trim()) {
-			setError('This field is required');
+			setError(getRequiredError());
 			return;
 		}
 

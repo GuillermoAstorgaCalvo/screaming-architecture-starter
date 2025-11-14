@@ -14,12 +14,13 @@ const FLEX_DIRECTION_CLASSES: Record<'row' | 'row-reverse' | 'col' | 'col-revers
 
 /**
  * Flex gap classes
+ * Uses design tokens for spacing
  */
 const FLEX_GAP_CLASSES: Record<StandardSize | 'none', string> = {
 	none: '',
-	sm: 'gap-2',
-	md: 'gap-4',
-	lg: 'gap-6',
+	sm: 'gap-sm',
+	md: 'gap-md',
+	lg: 'gap-lg',
 } as const;
 
 /**

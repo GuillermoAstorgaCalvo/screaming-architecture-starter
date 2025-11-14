@@ -107,7 +107,7 @@ function SliderInput({
 			aria-disabled={disabled}
 			disabled={disabled}
 			style={{
-				background: `linear-gradient(to right, hsl(var(--primary)) ${percentage}%, hsl(var(--muted)) ${percentage}%)`,
+				background: `linear-gradient(to right, var(--color-primary) ${percentage}%, var(--color-muted) ${percentage}%)`,
 			}}
 			onChange={event => onChange(Number(event.target.value))}
 		/>

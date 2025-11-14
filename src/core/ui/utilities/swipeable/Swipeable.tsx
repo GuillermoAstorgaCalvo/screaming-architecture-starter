@@ -1,100 +1,7 @@
 import { useSwipeable } from '@core/ui/utilities/swipeable/hooks/useSwipeable';
-import type { SwipeableAction, SwipeableProps } from '@src-types/ui/overlays/interactions';
-import {
-	type CSSProperties,
-	type HTMLAttributes,
-	type ReactNode,
-	type RefObject,
-	type TouchEvent,
-	useRef,
-} from 'react';
-import { twMerge } from 'tailwind-merge';
-
-/**
- * Render action buttons
- */
-function renderActions(
-	actions: readonly SwipeableAction[],
-	actionsContainerStyle: CSSProperties,
-	handleActionClick: (action: SwipeableAction) => Promise<void>
-) {
-	if (actions.length === 0) return null;
-	return (
-		<div className="absolute inset-y-0 flex items-center" style={actionsContainerStyle}>
-			<div className="flex h-full w-full items-center">
-				{actions.map(action => (
-					<button
-						key={action.id}
-						type="button"
-						className={twMerge(
-							'flex h-full items-center justify-center px-4 transition-colors focus:outline-none',
-							action.background ?? 'bg-secondary'
-						)}
-						onClick={() => handleActionClick(action)}
-					>
-						{action.content}
-					</button>
-				))}
-			</div>
-		</div>
-	);
-}
-
-/**
- * Props for SwipeableContainer
- */
-interface SwipeableContainerProps {
-	containerRef: RefObject<HTMLDivElement | null>;
-	className: string | undefined;
-	handleTouchStart: (e: TouchEvent<HTMLDivElement>) => void;
-	handleTouchMove: (e: TouchEvent<HTMLDivElement>) => void;
-	handleTouchEnd: () => void;
-	showActions: boolean;
-	actions: readonly SwipeableAction[];
-	actionsContainerStyle: CSSProperties;
-	handleActionClick: (action: SwipeableAction) => Promise<void>;
-	contentStyle: CSSProperties;
-	children: ReactNode;
-}
-
-/**
- * Render swipeable container
- */
-function SwipeableContainer({
-	containerRef,
-	className,
-	handleTouchStart,
-	handleTouchMove,
-	handleTouchEnd,
-	showActions,
-	actions,
-	actionsContainerStyle,
-	handleActionClick,
-	contentStyle,
-	children,
-	...props
-}: SwipeableContainerProps &
-	Omit<HTMLAttributes<HTMLDivElement>, 'onTouchStart' | 'onTouchMove' | 'onTouchEnd'>) {
-	const actionsElement = showActions
-		? renderActions(actions, actionsContainerStyle, handleActionClick)
-		: null;
-	const containerClassName = twMerge('relative overflow-hidden', className);
-	return (
-		<div
-			ref={containerRef}
-			className={containerClassName}
-			onTouchStart={handleTouchStart}
-			onTouchMove={handleTouchMove}
-			onTouchEnd={handleTouchEnd}
-			{...props}
-		>
-			{actionsElement}
-			<div className="relative transition-transform duration-200 ease-out" style={contentStyle}>
-				{children}
-			</div>
-		</div>
-	);
-}
+import { SwipeableContainer } from '@core/ui/utilities/swipeable/SwipeableContainer';
+import type { SwipeableProps } from '@src-types/ui/overlays/interactions';
+import { useRef } from 'react';
 
 /**
  * Swipeable - Swipeable component for mobile gestures
@@ -112,10 +19,10 @@ function SwipeableContainer({
  * <Swipeable
  *   direction="horizontal"
  *   rightActions={[
- *     { id: 'edit', content: <EditIcon />, background: 'bg-blue-500', onAction: handleEdit },
+ *     { id: 'edit', content: <EditIcon />, background: 'bg-primary', onAction: handleEdit },
  *   ]}
  *   leftActions={[
- *     { id: 'delete', content: <DeleteIcon />, background: 'bg-red-500', onAction: handleDelete },
+ *     { id: 'delete', content: <DeleteIcon />, background: 'bg-destructive', onAction: handleDelete },
  *   ]}
  * >
  *   <div>Your swipeable content</div>

@@ -1,74 +1,12 @@
-import { MenubarItem } from '@core/ui/navigation/menubar/components/MenubarItem';
-import { MenubarSubmenu } from '@core/ui/navigation/menubar/components/MenubarSubmenu';
+import i18n from '@core/i18n/i18n';
 import { getMenubarClasses } from '@core/ui/navigation/menubar/helpers/MenubarHelpers';
+import { renderMenubarItem } from '@core/ui/navigation/menubar/helpers/MenubarRender';
 import { useMenubar } from '@core/ui/navigation/menubar/hooks/useMenubar';
+import { useMenubarState } from '@core/ui/navigation/menubar/hooks/useMenubarState';
 import type {
 	MenubarItem as MenubarItemType,
 	MenubarProps,
 } from '@src-types/ui/navigation/menubar';
-import { createRef, type RefObject, useMemo, useState } from 'react';
-
-interface RenderMenubarItemParams {
-	readonly item: MenubarItemType;
-	readonly activeItemId: string | null;
-	readonly openSubmenuId: string | null;
-	readonly itemRef: RefObject<HTMLButtonElement> | undefined;
-	readonly handleItemClick: (itemId: string) => void;
-	readonly handleSubmenuClose: () => void;
-}
-
-function renderMenubarItem({
-	item,
-	activeItemId,
-	openSubmenuId,
-	itemRef,
-	handleItemClick,
-	handleSubmenuClose,
-}: RenderMenubarItemParams) {
-	const isActive = activeItemId === item.id;
-	const isSubmenuOpen = openSubmenuId === item.id;
-
-	if (item.submenu && item.submenu.length > 0) {
-		return (
-			<MenubarSubmenu
-				key={item.id}
-				item={item}
-				isActive={isActive}
-				isOpen={isSubmenuOpen}
-				itemRef={itemRef}
-				onItemClick={() => handleItemClick(item.id)}
-				onSubmenuClose={handleSubmenuClose}
-			/>
-		);
-	}
-
-	return (
-		<MenubarItem
-			key={item.id}
-			item={item}
-			isActive={isActive}
-			itemRef={itemRef}
-			onClick={() => handleItemClick(item.id)}
-		/>
-	);
-}
-
-function createItemRefs(
-	items: readonly MenubarItemType[]
-): Map<string, RefObject<HTMLButtonElement>> {
-	const refs = new Map<string, RefObject<HTMLButtonElement>>();
-	for (const item of items) {
-		refs.set(item.id, createRef<HTMLButtonElement>() as RefObject<HTMLButtonElement>);
-	}
-	return refs;
-}
-
-function useMenubarState(items: readonly MenubarItemType[]) {
-	const [activeItemId, setActiveItemId] = useState<string | null>(null);
-	const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
-	const itemRefs = useMemo(() => createItemRefs(items), [items]);
-	return { activeItemId, setActiveItemId, openSubmenuId, setOpenSubmenuId, itemRefs };
-}
 
 /**
  * Menubar - Horizontal menu bar component (application menu)
@@ -106,7 +44,7 @@ export default function Menubar({ items, className, ...props }: Readonly<Menubar
 	return (
 		<div
 			role="menubar"
-			aria-label="Application menu"
+			aria-label={i18n.t('a11y.applicationMenu', { ns: 'common' })}
 			className={classes}
 			onKeyDown={handleKeyDown}
 			tabIndex={0}

@@ -4,6 +4,7 @@
  * Handles error transformation and error interceptor execution.
  */
 
+import i18n from '@core/i18n/i18n';
 import { executeErrorInterceptors } from '@core/lib/http/httpClientInterceptors';
 import type { HttpClientError } from '@core/ports/HttpPort';
 
@@ -16,7 +17,8 @@ export async function handleHttpError(
 ): Promise<never> {
 	// Handle AbortError (timeout)
 	if (error instanceof DOMException && error.name === 'AbortError') {
-		const timeoutError: HttpClientError = new Error('Request timeout') as HttpClientError;
+		const timeoutMessage = i18n.t('errors.requestTimeout', { ns: 'common' });
+		const timeoutError: HttpClientError = new Error(timeoutMessage) as HttpClientError;
 		timeoutError.name = 'TimeoutError';
 		return executeErrorInterceptors(errorInterceptors, timeoutError);
 	}

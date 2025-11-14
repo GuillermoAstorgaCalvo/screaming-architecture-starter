@@ -7,32 +7,36 @@ import type { StandardSize } from '@src-types/ui/base';
 
 /**
  * Input base classes
+ * Uses design tokens for colors, spacing, and radius
  */
 export const INPUT_BASE_CLASSES =
-	'w-full rounded-md border bg-white text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500';
+	'w-full rounded-md border bg-surface text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-surface-dark dark:text-text-primary-dark dark:placeholder:text-text-muted-dark';
 
 /**
  * Input size classes (padding + text size)
+ * Uses design tokens for spacing
  */
 export const INPUT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-2.5 py-1.5 text-sm',
-	md: 'px-3 py-2 text-base',
-	lg: 'px-4 py-2.5 text-lg',
+	sm: 'px-sm py-xs text-sm',
+	md: 'px-md py-sm text-base',
+	lg: 'px-lg py-md text-lg',
 } as const;
 
 /**
  * Textarea base classes (extends input but with resize handling)
+ * Uses design tokens for colors, spacing, and radius
  */
 export const TEXTAREA_BASE_CLASSES =
-	'w-full rounded-md border bg-white text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed resize-y dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500';
+	'w-full rounded-md border bg-surface text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed resize-y dark:bg-surface-dark dark:text-text-primary-dark dark:placeholder:text-text-muted-dark';
 
 /**
  * Textarea size classes (padding + text size)
+ * Uses design tokens for spacing and customizable min-height
  */
 export const TEXTAREA_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-2.5 py-1.5 text-sm min-h-[80px]',
-	md: 'px-3 py-2 text-base min-h-[100px]',
-	lg: 'px-4 py-2.5 text-lg min-h-[120px]',
+	sm: 'px-sm py-xs text-sm min-h-[calc(var(--spacing-4xl)+var(--spacing-2xl))]',
+	md: 'px-md py-sm text-base min-h-[calc(var(--spacing-4xl)*1.5625)]',
+	lg: 'px-lg py-md text-lg min-h-[calc(var(--spacing-4xl)*1.875)]',
 } as const;
 
 /**
@@ -45,17 +49,19 @@ export const TEXTAREA_SIZE_CLASSES: Record<StandardSize, string> = {
 
 /**
  * Select base classes (similar to input)
+ * Uses design tokens for colors, spacing, and radius
  */
 export const SELECT_BASE_CLASSES =
-	'w-full rounded-md border bg-white text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-100 appearance-none cursor-pointer dark:border-gray-600';
+	'w-full rounded-md border bg-surface text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-surface-dark dark:text-text-primary-dark appearance-none cursor-pointer dark:border-border-dark';
 
 /**
  * Select size classes (padding + text size)
+ * Uses design tokens for spacing
  */
 export const SELECT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-2.5 py-1.5 text-sm pr-8',
-	md: 'px-3 py-2 text-base pr-10',
-	lg: 'px-4 py-2.5 text-lg pr-12',
+	sm: 'px-sm py-xs text-sm pr-8',
+	md: 'px-md py-sm text-base pr-10',
+	lg: 'px-lg py-md text-lg pr-12',
 } as const;
 
 /**

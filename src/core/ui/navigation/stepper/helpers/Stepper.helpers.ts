@@ -26,17 +26,17 @@ export function getStepStatus(stepIndex: number, activeStep: number): StepperSte
 export function getStepStatusClasses(status: StepperStepStatus): string {
 	switch (status) {
 		case 'completed': {
-			return 'bg-primary text-white border-primary';
+			return 'bg-primary text-primary-foreground border-primary';
 		}
 		case 'active': {
-			return 'bg-primary text-white border-primary ring-2 ring-primary ring-offset-2';
+			return 'bg-primary text-primary-foreground border-primary ring-2 ring-primary ring-offset-2';
 		}
 		case 'error': {
-			return 'bg-red-500 text-white border-red-500';
+			return 'bg-destructive text-destructive-foreground border-destructive';
 		}
 		case 'pending':
 		default: {
-			return 'bg-gray-200 text-gray-600 border-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600';
+			return 'bg-muted text-text-muted border-border dark:bg-muted dark:text-text-muted dark:border-border';
 		}
 	}
 }

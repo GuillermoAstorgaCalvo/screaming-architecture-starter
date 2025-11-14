@@ -117,22 +117,6 @@ export interface NavItem {
 }
 
 /**
- * Breadcrumb item
- *
- * Note: For UI component breadcrumbs, use BreadcrumbItem from @src-types/ui/navigation
- * This type is kept for backward compatibility but may be removed in the future.
- * @deprecated Use BreadcrumbItem from @src-types/ui/navigation instead
- */
-export interface BreadcrumbItem {
-	/** Breadcrumb label */
-	label: string;
-	/** Breadcrumb path */
-	path?: string;
-	/** Whether this is the current page */
-	current?: boolean;
-}
-
-/**
  * Layout configuration
  */
 export interface LayoutConfig {

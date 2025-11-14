@@ -64,7 +64,7 @@ export function getNavigationMenuItemClasses({
 	orientation,
 }: GetNavigationMenuItemClassesParams): string {
 	const baseClasses =
-		'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+		'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-disabled disabled:cursor-not-allowed';
 
 	const sizeClasses = {
 		sm: orientation === 'horizontal' ? 'px-2 py-1 text-sm' : 'px-3 py-2 text-sm',

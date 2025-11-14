@@ -1,4 +1,15 @@
 import {
+	DEFAULT_BACKGROUND_COLOR,
+	DEFAULT_CLEAR_BUTTON_TEXT,
+	DEFAULT_HEIGHT,
+	DEFAULT_MAX_WIDTH,
+	DEFAULT_MIN_WIDTH,
+	DEFAULT_PEN_COLOR,
+	DEFAULT_THROTTLE,
+	DEFAULT_VELOCITY_FILTER_WEIGHT,
+	DEFAULT_WIDTH,
+} from '@core/ui/media/signature-pad/helpers/SignaturePadCanvasHelpers';
+import {
 	generateSignaturePadId,
 	getAriaDescribedBy,
 } from '@core/ui/media/signature-pad/helpers/SignaturePadHelpers';
@@ -73,17 +84,17 @@ function createCanvasProps(
 }
 
 const DEFAULT_CANVAS_CONFIG = {
-	width: 500,
-	height: 200,
-	backgroundColor: '#FFFFFF',
-	penColor: '#000000',
-	velocityFilterWeight: 0.7,
-	minWidth: 0.5,
-	maxWidth: 2.5,
-	throttle: 16,
+	width: DEFAULT_WIDTH,
+	height: DEFAULT_HEIGHT,
+	backgroundColor: DEFAULT_BACKGROUND_COLOR,
+	penColor: DEFAULT_PEN_COLOR,
+	velocityFilterWeight: DEFAULT_VELOCITY_FILTER_WEIGHT,
+	minWidth: DEFAULT_MIN_WIDTH,
+	maxWidth: DEFAULT_MAX_WIDTH,
+	throttle: DEFAULT_THROTTLE,
 	disabled: false,
 	showClearButton: true,
-	clearButtonText: 'Clear',
+	clearButtonText: DEFAULT_CLEAR_BUTTON_TEXT,
 } as const;
 
 function getValueOrDefault<T>(value: T | undefined, defaultValue: T): T {

@@ -1,3 +1,4 @@
+import { designTokens } from '@core/constants/designTokens';
 import { getPieLabelFormatter } from '@core/ui/data-display/chart/pie-chart/helpers/PieChart.labels';
 import type { PieChartProps } from '@src-types/ui/data/chart';
 
@@ -62,7 +63,7 @@ export function getBasePieProps({
 		label: getPieLabelFormatter(showLabels),
 		outerRadius: `${outerRadius}%`,
 		innerRadius: getInnerRadius(innerRadius),
-		fill: '#8884d8',
+		fill: designTokens.color.accent.DEFAULT,
 		dataKey,
 		nameKey,
 		paddingAngle,

@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import { TableElement } from '@core/ui/data-display/table/components/TableElement';
 import { TableEmptyState } from '@core/ui/data-display/table/components/TableEmptyState';
 import type { TableProps } from '@src-types/ui/data/table';
@@ -38,7 +39,7 @@ export default function Table<T = unknown>({
 	striped = false,
 	hoverable = true,
 	size = 'md',
-	emptyMessage = 'No data available',
+	emptyMessage = i18n.t('common.noDataAvailable', { ns: 'common' }),
 	rowClassName,
 	className,
 	...props

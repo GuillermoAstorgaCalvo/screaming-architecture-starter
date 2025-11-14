@@ -53,6 +53,176 @@ export interface CommonTranslations {
 	'app.title': string;
 	'app.description': string;
 	'nav.home': string;
+	'errors.error500.title': string;
+	'errors.error500.message': string;
+	'errors.error500.returnHome': string;
+	'errors.error404.title': string;
+	'errors.error404.message': string;
+	'errors.error404.returnHome': string;
+	'errors.errorBoundary.title': string;
+	'errors.errorBoundary.description': string;
+	'errors.errorBoundary.tryAgain': string;
+	'errors.errorBoundary.goToHome': string;
+	'errors.errorBoundary.tryAgainAriaLabel': string;
+	'errors.requestTimeout': string;
+	'errors.networkError': string;
+	'errors.unknownError': string;
+	'errors.requestFailed': string;
+	'errors.rootElementNotFound': string;
+	'errors.unableToLoadDemoContent': string;
+	'errors.failedToLoadGoogleMaps': string;
+	'a11y.mainNavigation': string;
+	'a11y.notifications': string;
+	'a11y.dismissNotification': string;
+	'a11y.languageSelector': string;
+	'a11y.currentLanguage': string;
+	'a11y.selectLanguage': string;
+	'a11y.toggleTheme': string;
+	'a11y.currentTheme': string;
+	'a11y.currentThemeDescription': string;
+	'a11y.required': string;
+	'a11y.imageGallery': string;
+	'a11y.uploadProgress': string;
+	'a11y.chooseLanguage': string;
+	'a11y.addNewItem': string;
+	'a11y.createNewPost': string;
+	'a11y.virtualizedList': string;
+	'a11y.sidebar': string;
+	'a11y.applicationMenu': string;
+	'a11y.resizableContainer': string;
+	'a11y.countryCode': string;
+	'a11y.splitterContainer': string;
+	'a11y.info': string;
+	'a11y.commands': string;
+	'a11y.searchCommands': string;
+	'a11y.steps': string;
+	'a11y.transferList': string;
+	'a11y.segmentedControl': string;
+	'a11y.clearSearch': string;
+	'a11y.oneTimePasswordInput': string;
+	'a11y.increment': string;
+	'a11y.decrement': string;
+	'a11y.search': string;
+	'a11y.more': string;
+	'a11y.close': string;
+	'a11y.fileUploadDropzone': string;
+	'a11y.moreOptions': string;
+	'a11y.timeline': string;
+	'a11y.scrollToTop': string;
+	'a11y.sortableList': string;
+	'theme.light': string;
+	'theme.dark': string;
+	'theme.system': string;
+	'language.en': string;
+	'language.es': string;
+	'language.ar': string;
+	retry: string;
+	failedToLoadMoreItems: string;
+	anErrorOccurred: string;
+	confirm: string;
+	cancel: string;
+	noMatches: string;
+	loadingOptions: string;
+	fieldRequired: string;
+	input: string;
+	selectAll: string;
+	deselectAll: string;
+	selectAllRows: string;
+	noDataAvailable: string;
+	searchPlaceholder: string;
+	noActionsAvailable: string;
+	noOptionsFound: string;
+	'carousel.previousSlide': string;
+	'carousel.nextSlide': string;
+	'carousel.slideIndicators': string;
+	'carousel.goToSlide': string;
+	'password.showPassword': string;
+	'password.hidePassword': string;
+	'calendar.previousMonth': string;
+	'calendar.nextMonth': string;
+	'calendar.goToToday': string;
+	'calendar.today': string;
+	'fileUpload.dropFilesHere': string;
+	'fileUpload.dragAndDropFilesHere': string;
+	'fileUpload.or': string;
+	'fileUpload.browseFiles': string;
+	'fileUpload.accepted': string;
+	'fileUpload.fileSizeExceedsMaximum': string;
+	'fileUpload.fileSizeBelowMinimum': string;
+	'fileUpload.fileTypeNotAccepted': string;
+	'fileUpload.maximum': string;
+	'fileUpload.minimum': string;
+	'fileUpload.file': string;
+	'fileUpload.files': string;
+	'fileUpload.allowed': string;
+	'fileUpload.required': string;
+	'fileUpload.bytes': string;
+	'fileUpload.kb': string;
+	'fileUpload.mb': string;
+	'fileUpload.gb': string;
+	'fileUpload.uploadProgress': string;
+	'wizard.next': string;
+	'wizard.previous': string;
+	'wizard.finish': string;
+	'wizard.skip': string;
+	'wizard.progress': string;
+	'wizard.validationFailed': string;
+	'wizard.validationError': string;
+	'pagination.showing': string;
+	'pagination.first': string;
+	'pagination.last': string;
+	'pagination.previous': string;
+	'pagination.next': string;
+	'pagination.goToFirstPage': string;
+	'pagination.goToLastPage': string;
+	'pagination.goToPreviousPage': string;
+	'pagination.goToNextPage': string;
+	'pagination.goToPage': string;
+	'filters.activeFilters': string;
+	'filters.clearAll': string;
+	'filters.clearAllAriaLabel': string;
+	'filters.removeFilter': string;
+	'filters.filterBuilder': string;
+	'filters.closeFilterBuilder': string;
+	'filters.addFilter': string;
+	'filters.filterLabel': string;
+	'filters.filterLabelPlaceholder': string;
+	'filters.filterType': string;
+	'filters.addNewFilter': string;
+	'filters.filterTypeText': string;
+	'filters.filterTypeSelect': string;
+	'filters.filterTypeMultiSelect': string;
+	'filters.filterTypeDate': string;
+	'filters.filterTypeDateRange': string;
+	'transfer.sourceTitle': string;
+	'transfer.targetTitle': string;
+	'transfer.searchList': string;
+	'transfer.moveSelectedToRight': string;
+	'transfer.moveSelectedToLeft': string;
+	'copy.copyToClipboard': string;
+	'copy.copied': string;
+	'copy.clipboardApiNotAvailable': string;
+	'copy.failedToCopy': string;
+	'seo.siteName': string;
+	'seo.defaultDescription': string;
+	'seo.defaultTitle': string;
+	'noscript.title': string;
+	'noscript.message': string;
+}
+
+/**
+ * CommandPalette namespace translations
+ */
+export interface CommandPaletteTranslations {
+	placeholder: string;
+	emptyState: string;
+}
+
+/**
+ * InlineEdit namespace translations
+ */
+export interface InlineEditTranslations {
+	placeholder: string;
 }
 
 /**
@@ -128,6 +298,8 @@ export interface LandingTranslations {
 export interface TranslationNamespaces {
 	common: CommonTranslations;
 	landing: LandingTranslations;
+	commandPalette: CommandPaletteTranslations;
+	inlineEdit: InlineEditTranslations;
 }
 
 /**

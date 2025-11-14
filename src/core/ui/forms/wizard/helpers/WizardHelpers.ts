@@ -1,4 +1,5 @@
-import type { WizardNavigationProps } from '@core/ui/forms/wizard/components/WizardNavigation';
+import i18n from '@core/i18n/i18n';
+import type { WizardNavigationProps } from '@core/ui/forms/wizard/components/WizardNavigation.types';
 import { convertStepsToStepperSteps } from '@core/ui/forms/wizard/helpers/wizardUtils';
 import type { useWizard } from '@core/ui/forms/wizard/hooks/useWizard';
 import type { StandardSize } from '@src-types/ui/base';
@@ -112,21 +113,24 @@ interface WizardConfig {
 	className?: string | undefined;
 }
 
-const DEFAULT_WIZARD_CONFIG: Omit<WizardConfig, 'steps' | 'className'> = {
-	orientation: 'horizontal',
-	size: 'md',
-	showNumbers: true,
-	showNavigation: true,
-	nextButtonLabel: 'Next',
-	previousButtonLabel: 'Previous',
-	finishButtonLabel: 'Finish',
-	showProgress: true,
-	allowBackNavigation: true,
+const getDefaultWizardConfig = (): Omit<WizardConfig, 'steps' | 'className'> => {
+	const t = (key: string) => i18n.t(key, { ns: 'common' });
+	return {
+		orientation: 'horizontal',
+		size: 'md',
+		showNumbers: true,
+		showNavigation: true,
+		nextButtonLabel: t('wizard.next'),
+		previousButtonLabel: t('wizard.previous'),
+		finishButtonLabel: t('wizard.finish'),
+		showProgress: true,
+		allowBackNavigation: true,
+	};
 };
 
 export function extractWizardConfig(props: Readonly<WizardProps>): WizardConfig {
 	return {
-		...DEFAULT_WIZARD_CONFIG,
+		...getDefaultWizardConfig(),
 		...props,
 		steps: props.steps,
 		className: props.className,

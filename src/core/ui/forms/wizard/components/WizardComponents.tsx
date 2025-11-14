@@ -1,7 +1,6 @@
-import {
-	WizardNavigation,
-	type WizardNavigationProps,
-} from '@core/ui/forms/wizard/components/WizardNavigation';
+import { useTranslation } from '@core/i18n/useTranslation';
+import { WizardNavigation } from '@core/ui/forms/wizard/components/WizardNavigation';
+import type { WizardNavigationProps } from '@core/ui/forms/wizard/components/WizardNavigation.types';
 import Progress from '@core/ui/progress/Progress';
 import Stepper from '@core/ui/stepper/Stepper';
 import type { StandardSize } from '@src-types/ui/base';
@@ -50,6 +49,7 @@ interface WizardProgressProps {
 }
 
 export function WizardProgressIndicator({ showProgress, progress }: Readonly<WizardProgressProps>) {
+	const { t } = useTranslation('common');
 	if (!showProgress) {
 		return null;
 	}
@@ -61,7 +61,7 @@ export function WizardProgressIndicator({ showProgress, progress }: Readonly<Wiz
 				max={100}
 				size="sm"
 				showValue
-				aria-label={`Wizard progress: ${progress}%`}
+				aria-label={t('wizard.progress', { progress: progress.toString() })}
 			/>
 		</div>
 	);
@@ -72,7 +72,11 @@ interface WizardContentProps {
 }
 
 export function WizardContent({ content }: Readonly<WizardContentProps>) {
-	return <div className="mb-8 min-h-[200px]">{content}</div>;
+	return (
+		<div className="mb-8" style={{ minHeight: 'calc(var(--spacing-4xl) * 3.125)' }}>
+			{content}
+		</div>
+	);
 }
 
 interface WizardBodyProps {

@@ -5,7 +5,7 @@ import {
 import {
 	DataTableHeader,
 	type DataTableHeaderProps,
-} from '@core/ui/data-display/data-table/components/DataTableHeader';
+} from '@core/ui/data-display/data-table/components/table-header/DataTableHeader';
 import { getTableClasses } from '@core/ui/data-display/table/helpers/TableHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ColumnSort, DataTableColumn, DataTableProps } from '@src-types/ui/dataTable';

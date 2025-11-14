@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import { buildOptionalStateProps } from '@core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.state.optional';
 import type { LoadingWrapperStateParams } from '@core/ui/utilities/loading-wrapper/types/LoadingWrapperHelpers.state.types';
 import type { ReactNode } from 'react';
@@ -31,7 +32,7 @@ export function buildStateParams(props: BuildStateParamsProps): LoadingWrapperSt
 		error: error ?? null,
 		isEmpty: isEmpty ?? false,
 		useSkeleton: useSkeleton ?? false,
-		emptyTitle: emptyTitle ?? 'No data available',
+		emptyTitle: emptyTitle ?? i18n.t('common.noDataAvailable', { ns: 'common' }),
 		props: restProps,
 		...buildOptionalStateProps(props),
 	};

@@ -19,7 +19,7 @@ import type { TextProps } from '@src-types/ui/typography';
  *
  * @example
  * ```tsx
- * <Text size="lg" className="text-blue-600">
+ * <Text size="lg" className="text-primary">
  *   Custom styled text
  * </Text>
  * ```

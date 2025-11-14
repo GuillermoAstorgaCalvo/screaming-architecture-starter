@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import Chip from '@core/ui/forms/chip/Chip';
 import type { ActiveFilterValue } from '@src-types/ui/advancedFilter';
 import type { ReactNode } from 'react';
@@ -30,8 +31,11 @@ function getChipSize(size: 'sm' | 'md' | 'lg'): ChipSize {
  * Renders the "Active filters:" label
  */
 function FilterChipsLabel() {
+	const { t } = useTranslation('common');
 	return (
-		<span className="text-sm font-medium text-gray-700 dark:text-gray-300">Active filters:</span>
+		<span className="text-sm font-medium text-text-secondary dark:text-text-secondary-dark">
+			{t('filters.activeFilters')}
+		</span>
 	);
 }
 
@@ -45,13 +49,14 @@ interface DefaultFilterChipProps {
  * Renders a default filter chip with label and value
  */
 function DefaultFilterChip({ filter, chipSize, onRemove }: Readonly<DefaultFilterChipProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<Chip
 			variant="default"
 			size={chipSize}
 			removable
 			onRemove={() => onRemove(filter.filterId)}
-			removeAriaLabel={`Remove ${filter.label} filter`}
+			removeAriaLabel={t('filters.removeFilter', { label: filter.label })}
 		>
 			<span className="font-medium">{filter.label}:</span> {filter.displayValue}
 		</Chip>
@@ -89,14 +94,15 @@ interface ClearAllButtonProps {
  * Renders the "Clear all" button
  */
 function ClearAllButton({ onClearAll }: Readonly<ClearAllButtonProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<button
 			type="button"
 			onClick={onClearAll}
 			className="text-sm text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-			aria-label="Clear all filters"
+			aria-label={t('filters.clearAllAriaLabel')}
 		>
-			Clear all
+			{t('filters.clearAll')}
 		</button>
 	);
 }

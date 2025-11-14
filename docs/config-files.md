@@ -48,7 +48,7 @@ Vite configuration with environment-aware settings:
 - Manual chunk optimization via `getManualChunks()`:
   - `vendor`: `react`, `react-dom`, `react-router-dom`
   - `ui`: `@radix-ui/react-slot` (only includes actually installed packages)
-  - `query`: `@tanstack/react-query` (v5.90.6)
+  - `query`: `@tanstack/react-query` (v5.90.8)
 - Optimized chunk file naming: `assets/[name]-[hash].js` for chunks and entries, `assets/[name]-[hash].[ext]` for assets
 - CSS code splitting: enabled (configurable via `VITE_CSS_CODE_SPLIT`, default: `true` - set to `'false'` to disable)
 - Chunk size warning limit: 1000 KB (configurable via `VITE_CHUNK_SIZE_WARNING_LIMIT`, default: `'1000'`, parsed as integer)
@@ -57,7 +57,7 @@ Vite configuration with environment-aware settings:
 **Dependency Optimization:**
 
 - Environment-aware via `getOptimizeDepsConfig()` function
-- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query` (v5.90.6), `lucide-react`
+- Pre-bundles: `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query` (v5.90.8), `lucide-react`
 - `force: true` for consistent pre-bundling across restarts
 
 **ESBuild Configuration:**
@@ -327,7 +327,7 @@ Project dependencies and scripts:
 
 - **Package Manager**: pnpm 10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c (via Corepack)
 - **Node Version**: >=22.21.1
-- **Scripts**: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `clean`, `typecheck`, `test`, `test:watch`, `test:ui`, `test:coverage`, `test:e2e`, `test:e2e:ui`
+- **Scripts**: `dev`, `build`, `preview`, `lint`, `lint:fix`, `format`, `clean`, `typecheck`, `test`, `test:watch`, `test:ui`, `test:coverage`, `test:e2e`, `test:e2e:ui`, `check:bundle-size`, `docker:build`, `docker:dev`, `docker:down`, `docker:test`, `docker:test:watch`, `docker:test:e2e`, `docker:shell`, `docker:prod:build`, `docker:prod:up`, `docker:prod:down`
 
 **pnpm-workspace.yaml**
 
@@ -397,7 +397,9 @@ Tailwind CSS configuration:
 
 **.env.example**
 
-Template for environment variables:
+Template for environment variables. See [Environment Variables Reference](./environment-variables.md) for comprehensive documentation.
+
+**Quick Reference:**
 
 - **Server**: `VITE_PORT`, `VITE_HOST`, `VITE_OPEN`
 - **Build**: `VITE_BUILD_TARGET`, `VITE_MINIFY`, `VITE_SOURCEMAP`, `VITE_CSS_CODE_SPLIT`
@@ -410,6 +412,7 @@ Template for environment variables:
 - All client-exposed variables must be prefixed with `VITE_`
 - `E2E_BASE_URL` is used by Playwright and does not require the `VITE_` prefix
 - Playwright loads `.env` first, then `.env.local` (which overrides `.env` values)
+- See [Environment Variables Reference](./environment-variables.md) for complete documentation including defaults, runtime configuration, and production setup
 
 #### IDE & Tools
 

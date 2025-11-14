@@ -1,61 +1,6 @@
-import { ARIA_LABELS } from '@core/constants/aria';
-import { PaginationButtons } from '@core/ui/navigation/pagination/components/PaginationButtons';
-import { getPaginationClasses } from '@core/ui/navigation/pagination/helpers/PaginationHelpers';
-import {
-	usePaginationButtonProps,
-	usePaginationSetup,
-} from '@core/ui/navigation/pagination/hooks/usePagination';
+import { renderPaginationNav } from '@core/ui/navigation/pagination/helpers/PaginationHelpers';
+import { usePaginationContent } from '@core/ui/navigation/pagination/hooks/usePagination';
 import type { PaginationProps } from '@src-types/ui/data/pagination';
-
-interface UsePaginationContentOptions {
-	currentPage: number;
-	totalPages: number;
-	onPageChange: (page: number) => void;
-	showFirstLast: boolean;
-	showPrevNext: boolean;
-	maxVisiblePages: number;
-	size: 'sm' | 'md' | 'lg';
-	paginationId: string | undefined;
-}
-
-function usePaginationContent(options: UsePaginationContentOptions) {
-	const { id, visiblePages } = usePaginationSetup({
-		currentPage: options.currentPage,
-		totalPages: options.totalPages,
-		maxVisiblePages: options.maxVisiblePages,
-		paginationId: options.paginationId,
-	});
-	const buttonProps = usePaginationButtonProps({
-		currentPage: options.currentPage,
-		totalPages: options.totalPages,
-		visiblePages,
-		size: options.size,
-		showFirstLast: options.showFirstLast,
-		showPrevNext: options.showPrevNext,
-		onPageChange: options.onPageChange,
-	});
-	return { id, buttonProps };
-}
-
-interface RenderPaginationNavOptions {
-	id: string;
-	className: string | undefined;
-	buttonProps: ReturnType<typeof usePaginationButtonProps>;
-	props: Omit<Readonly<PaginationProps>, keyof UsePaginationContentOptions | 'className'>;
-}
-
-function renderPaginationNav(options: RenderPaginationNavOptions) {
-	return (
-		<nav
-			id={options.id}
-			aria-label={ARIA_LABELS.PAGINATION}
-			className={getPaginationClasses(options.className)}
-			{...options.props}
-		>
-			<PaginationButtons {...options.buttonProps} />
-		</nav>
-	);
-}
 
 /**
  * Pagination - Pagination controls component with accessible navigation, size variants, and configurable page buttons.
@@ -74,7 +19,7 @@ export default function Pagination({
 	size = 'md',
 	paginationId,
 	className,
-	...props
+	...restProps
 }: Readonly<PaginationProps>) {
 	const { id, buttonProps } = usePaginationContent({
 		currentPage,
@@ -86,6 +31,15 @@ export default function Pagination({
 		size,
 		paginationId,
 	});
-	if (totalPages <= 1) return null;
-	return renderPaginationNav({ id, className, buttonProps, props });
+
+	if (totalPages <= 1) {
+		return null;
+	}
+
+	return renderPaginationNav({
+		id,
+		className,
+		buttonProps,
+		restProps,
+	});
 }

@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import type { RenderSearchProps } from '@core/ui/forms/transfer/types/TransferList.types';
 import Input from '@core/ui/input/Input';
 
@@ -18,8 +19,10 @@ export function renderSearch({
 		return null;
 	}
 
+	const searchAriaLabel = i18n.t('transfer.searchList', { ns: 'common', type });
+
 	return (
-		<div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+		<div className="px-3 py-2 border-b border-border dark:border-border">
 			<Input
 				id={searchId}
 				placeholder={searchPlaceholder}
@@ -28,7 +31,7 @@ export function renderSearch({
 				disabled={disabled}
 				size={size}
 				fullWidth
-				aria-label={`Search ${type} list`}
+				aria-label={searchAriaLabel}
 			/>
 		</div>
 	);

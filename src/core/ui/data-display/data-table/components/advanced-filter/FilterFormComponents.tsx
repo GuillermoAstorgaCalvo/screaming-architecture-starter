@@ -1,3 +1,5 @@
+import type { NamespaceKeys } from '@core/i18n/types/types';
+import { useTranslation } from '@core/i18n/useTranslation';
 import Button from '@core/ui/button/Button';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 
@@ -8,19 +10,23 @@ interface FilterLabelInputProps {
 }
 
 export function FilterLabelInput({ value, onChange, disabled }: FilterLabelInputProps) {
+	const { t } = useTranslation('common');
 	return (
 		<div>
-			<label htmlFor="filter-label" className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
-				Filter Label
+			<label
+				htmlFor="filter-label"
+				className="mb-1 block text-sm text-text-secondary dark:text-text-secondary"
+			>
+				{t('filters.filterLabel')}
 			</label>
 			<input
 				id="filter-label"
 				type="text"
 				value={value}
 				onChange={e => onChange(e.target.value)}
-				placeholder="e.g., Status, Date, Category"
+				placeholder={t('filters.filterLabelPlaceholder')}
 				disabled={disabled}
-				className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+				className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-border dark:bg-surface dark:text-text-primary"
 			/>
 		</div>
 	);
@@ -32,30 +38,37 @@ interface FilterTypeSelectProps {
 	readonly disabled?: boolean;
 }
 
-const FILTER_TYPE_OPTIONS: Array<{ value: AdvancedFilter['type']; label: string }> = [
-	{ value: 'text', label: 'Text' },
-	{ value: 'select', label: 'Select' },
-	{ value: 'multi-select', label: 'Multi-Select' },
-	{ value: 'date', label: 'Date' },
-	{ value: 'date-range', label: 'Date Range' },
-] as const;
-
 export function FilterTypeSelect({ value, onChange, disabled }: FilterTypeSelectProps) {
+	const { t } = useTranslation('common');
+	const FILTER_TYPE_OPTIONS: Array<{
+		value: AdvancedFilter['type'];
+		labelKey: NamespaceKeys<'common'>;
+	}> = [
+		{ value: 'text', labelKey: 'filters.filterTypeText' },
+		{ value: 'select', labelKey: 'filters.filterTypeSelect' },
+		{ value: 'multi-select', labelKey: 'filters.filterTypeMultiSelect' },
+		{ value: 'date', labelKey: 'filters.filterTypeDate' },
+		{ value: 'date-range', labelKey: 'filters.filterTypeDateRange' },
+	] as const;
+
 	return (
 		<div>
-			<label htmlFor="filter-type" className="mb-1 block text-sm text-gray-700 dark:text-gray-300">
-				Filter Type
+			<label
+				htmlFor="filter-type"
+				className="mb-1 block text-sm text-text-secondary dark:text-text-secondary"
+			>
+				{t('filters.filterType')}
 			</label>
 			<select
 				id="filter-type"
 				value={value}
 				onChange={e => onChange(e.target.value as AdvancedFilter['type'])}
 				disabled={disabled}
-				className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+				className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-border dark:bg-surface dark:text-text-primary"
 			>
 				{FILTER_TYPE_OPTIONS.map(option => (
 					<option key={option.value} value={option.value}>
-						{option.label}
+						{t(option.labelKey)}
 					</option>
 				))}
 			</select>
@@ -80,11 +93,14 @@ export function AddFilterForm({
 	onAddFilter,
 	disabled,
 }: AddFilterFormProps) {
+	const { t } = useTranslation('common');
 	const isAddButtonDisabled = (disabled ?? false) || !filterLabel.trim();
 
 	return (
 		<div className="space-y-3">
-			<h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Add New Filter</h4>
+			<h4 className="text-sm font-medium text-text-secondary dark:text-text-secondary">
+				{t('filters.addNewFilter')}
+			</h4>
 			<div className="grid gap-3 md:grid-cols-2">
 				<FilterLabelInput
 					value={filterLabel}
@@ -98,7 +114,7 @@ export function AddFilterForm({
 				/>
 			</div>
 			<Button variant="primary" size="sm" onClick={onAddFilter} disabled={isAddButtonDisabled}>
-				Add Filter
+				{t('filters.addFilter')}
 			</Button>
 		</div>
 	);

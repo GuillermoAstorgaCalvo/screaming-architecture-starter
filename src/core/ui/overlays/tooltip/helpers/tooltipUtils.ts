@@ -21,7 +21,7 @@ export function getPositionClasses(position: TooltipProps['position']): string {
 }
 
 export function getArrowClasses(position: TooltipProps['position']): string {
-	const baseClasses = 'absolute w-2 h-2 bg-gray-900 dark:bg-gray-800';
+	const baseClasses = 'absolute w-2 h-2 bg-surface-elevated dark:bg-surface-elevated';
 	switch (position) {
 		case 'top': {
 			return `${baseClasses} top-full left-1/2 -translate-x-1/2 -mt-1 rotate-45`;

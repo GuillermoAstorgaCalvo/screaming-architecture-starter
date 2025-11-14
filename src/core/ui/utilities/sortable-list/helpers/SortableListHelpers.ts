@@ -1,4 +1,5 @@
 import { LIST_ITEM_SIZE_CLASSES } from '@core/constants/ui/display/list';
+import { renderSortableItems } from '@core/ui/utilities/sortable-list/helpers/SortableListRenderers';
 import {
 	useSortableList,
 	type UseSortableListReturn,
@@ -8,6 +9,8 @@ import type {
 	UseSortableListConfig,
 } from '@core/ui/utilities/sortable-list/types/SortableListTypes';
 import type { StandardSize } from '@src-types/ui/base';
+import type { SortableListItem } from '@src-types/ui/layout/list';
+import type { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 /**
@@ -26,14 +29,14 @@ export function getSortableListItemClasses({
 	disabled: boolean;
 	className?: string | undefined;
 }): string {
-	const cursorClass = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-move';
-	const hoverClass = !disabled && !isDragging ? 'hover:bg-gray-100 dark:hover:bg-gray-800' : '';
+	const cursorClass = disabled ? 'opacity-disabled cursor-not-allowed' : 'cursor-move';
+	const hoverClass = !disabled && !isDragging ? 'hover:bg-muted' : '';
 
 	const baseClasses = [
 		LIST_ITEM_SIZE_CLASSES[size],
 		'flex items-center gap-3 relative transition-all',
 		cursorClass,
-		isDragging ? 'opacity-50 scale-95' : '',
+		isDragging ? 'opacity-disabled scale-95' : '',
 		isDragTarget ? 'ring-2 ring-primary ring-offset-2' : '',
 		hoverClass,
 	]
@@ -66,7 +69,7 @@ export function getDragHandleClasses({
 		sizeClass = 'w-6 h-6';
 	}
 
-	const baseClasses = ['shrink-0 text-gray-400 dark:text-gray-500', cursorClass, sizeClass]
+	const baseClasses = ['shrink-0 text-text-muted', cursorClass, sizeClass]
 		.filter(Boolean)
 		.join(' ');
 
@@ -108,4 +111,35 @@ export function prepareItemHandlers(sortableListState: UseSortableListReturn): I
 		handleDrop: sortableListState.handleDrop,
 		handleKeyDown: sortableListState.handleKeyDown,
 	};
+}
+
+/**
+ * Prepares rendered items for sortable list
+ */
+export function prepareRenderedItems<T>({
+	sortableListState,
+	items,
+	showDragHandle,
+	dragHandle,
+	disabled,
+	renderItem,
+}: {
+	sortableListState: UseSortableListReturn;
+	items: readonly SortableListItem<T>[];
+	showDragHandle: boolean;
+	dragHandle?: ReactNode;
+	disabled: boolean;
+	renderItem: (item: SortableListItem<T>, index: number) => ReactNode;
+}): ReactNode[] {
+	const handlers = prepareItemHandlers(sortableListState);
+	return renderSortableItems({
+		items,
+		draggedItemId: sortableListState.draggedItemId,
+		dragTargetIndex: sortableListState.dragTargetIndex,
+		showDragHandle,
+		dragHandle,
+		disabled,
+		handlers,
+		renderItem,
+	});
 }

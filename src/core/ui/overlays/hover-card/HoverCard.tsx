@@ -1,112 +1,7 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
-import { HoverCardWrapper } from '@core/ui/overlays/hover-card/components/HoverCardWrapper';
-import { useHoverCard } from '@core/ui/overlays/hover-card/hooks/useHoverCard';
+import { renderHoverCard } from '@core/ui/overlays/hover-card/helpers/hoverCardHelpers';
+import { useHoverCardState } from '@core/ui/overlays/hover-card/hooks/useHoverCardState';
 import type { HoverCardProps } from '@src-types/ui/overlays/floating';
-import { type ReactNode, useId, useState } from 'react';
-
-interface UseHoverCardStateOptions {
-	readonly delay: number;
-	readonly hideDelay: number;
-	readonly disabled: boolean;
-}
-
-function useHoverCardState({ delay, hideDelay, disabled }: UseHoverCardStateOptions) {
-	const hoverCardId = useId();
-	const [isVisible, setIsVisible] = useState(false);
-	const { handleMouseEnter, handleMouseLeave, handleFocus, handleBlur } = useHoverCard({
-		delay,
-		hideDelay,
-		setIsVisible,
-		disabled,
-	});
-	return {
-		hoverCardId,
-		isVisible,
-		handleMouseEnter,
-		handleMouseLeave,
-		handleFocus,
-		handleBlur,
-	};
-}
-
-interface BuildWrapperPropsOptions {
-	readonly hoverCardId: string;
-	readonly className: string | undefined;
-	readonly handleMouseEnter: () => void;
-	readonly handleMouseLeave: () => void;
-	readonly handleFocus: () => void;
-	readonly handleBlur: () => void;
-	readonly isVisible: boolean;
-	readonly position: HoverCardProps['position'];
-	readonly content: ReactNode;
-	readonly contentClassName: string | undefined;
-	readonly showArrow: boolean;
-}
-
-function buildWrapperProps({
-	hoverCardId,
-	className,
-	handleMouseEnter,
-	handleMouseLeave,
-	handleFocus,
-	handleBlur,
-	isVisible,
-	position,
-	content,
-	contentClassName,
-	showArrow,
-}: BuildWrapperPropsOptions) {
-	return {
-		hoverCardId,
-		className,
-		handleMouseEnter,
-		handleMouseLeave,
-		handleFocus,
-		handleBlur,
-		isVisible,
-		position,
-		content,
-		showArrow,
-		...(contentClassName !== undefined && { contentClassName }),
-	};
-}
-
-interface RenderHoverCardOptions {
-	readonly hoverCardId: string;
-	readonly className: string | undefined;
-	readonly handleMouseEnter: () => void;
-	readonly handleMouseLeave: () => void;
-	readonly handleFocus: () => void;
-	readonly handleBlur: () => void;
-	readonly isVisible: boolean;
-	readonly position: HoverCardProps['position'];
-	readonly content: ReactNode;
-	readonly contentClassName: string | undefined;
-	readonly showArrow: boolean;
-	readonly children: ReactNode;
-}
-
-function renderHoverCard(options: RenderHoverCardOptions) {
-	return (
-		<HoverCardWrapper
-			{...buildWrapperProps({
-				hoverCardId: options.hoverCardId,
-				className: options.className,
-				handleMouseEnter: options.handleMouseEnter,
-				handleMouseLeave: options.handleMouseLeave,
-				handleFocus: options.handleFocus,
-				handleBlur: options.handleBlur,
-				isVisible: options.isVisible,
-				position: options.position,
-				content: options.content,
-				contentClassName: options.contentClassName,
-				showArrow: options.showArrow,
-			})}
-		>
-			{options.children}
-		</HoverCardWrapper>
-	);
-}
 
 /**
  * HoverCard - Accessible hover card component that shows card content on hover
@@ -157,7 +52,11 @@ export default function HoverCard({
 	showArrow = true,
 }: Readonly<HoverCardProps>) {
 	const state = useHoverCardState({ delay, hideDelay, disabled });
-	if (disabled) return children;
+
+	if (disabled) {
+		return children;
+	}
+
 	return renderHoverCard({
 		hoverCardId: state.hoverCardId,
 		className,

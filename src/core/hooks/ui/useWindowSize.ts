@@ -40,8 +40,9 @@ export interface WindowSize {
  *
  * @example
  * ```tsx
+ * import { breakpoints } from '@core/constants/breakpoints';
  * const { width } = useWindowSize();
- * const isMobile = width < 768;
+ * const isMobile = width < breakpoints.md;
  * ```
  *
  * @param initialWidth - Initial width value (default: 0, for SSR)

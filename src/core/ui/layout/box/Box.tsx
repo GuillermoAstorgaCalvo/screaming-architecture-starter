@@ -4,22 +4,24 @@ import { twMerge } from 'tailwind-merge';
 
 /**
  * Padding size classes
+ * Uses design tokens for spacing
  */
 const BOX_PADDING_CLASSES: Record<StandardSize | 'none', string> = {
 	none: '',
-	sm: 'p-3',
-	md: 'p-4',
-	lg: 'p-6',
+	sm: 'p-sm',
+	md: 'p-md',
+	lg: 'p-lg',
 } as const;
 
 /**
  * Margin size classes
+ * Uses design tokens for spacing
  */
 const BOX_MARGIN_CLASSES: Record<StandardSize | 'none', string> = {
 	none: '',
-	sm: 'm-3',
-	md: 'm-4',
-	lg: 'm-6',
+	sm: 'm-sm',
+	md: 'm-md',
+	lg: 'm-lg',
 } as const;
 
 /**
@@ -40,7 +42,7 @@ const BOX_MARGIN_CLASSES: Record<StandardSize | 'none', string> = {
  *
  * @example
  * ```tsx
- * <Box padding="lg" className="bg-gray-100">
+ * <Box padding="lg" className="bg-muted">
  *   <h2>Title</h2>
  *   <p>Content</p>
  * </Box>

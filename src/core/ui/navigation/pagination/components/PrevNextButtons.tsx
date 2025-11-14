@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { PaginationButton } from '@core/ui/navigation/pagination/components/PaginationButton';
 import {
 	createNextPageHandler,
@@ -16,14 +17,15 @@ export interface PreviousButtonProps {
 }
 
 export function PreviousButton({ currentPage, size, onPageChange }: Readonly<PreviousButtonProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<PaginationButton
-			ariaLabel="Go to previous page"
+			ariaLabel={t('pagination.goToPreviousPage')}
 			onClick={createPreviousPageHandler(onPageChange, currentPage)}
 			disabled={currentPage === 1}
 			size={size}
 		>
-			Previous
+			{t('pagination.previous')}
 		</PaginationButton>
 	);
 }
@@ -41,14 +43,15 @@ export function NextButton({
 	size,
 	onPageChange,
 }: Readonly<NextButtonProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<PaginationButton
-			ariaLabel="Go to next page"
+			ariaLabel={t('pagination.goToNextPage')}
 			onClick={createNextPageHandler(onPageChange, currentPage)}
 			disabled={currentPage === totalPages}
 			size={size}
 		>
-			Next
+			{t('pagination.next')}
 		</PaginationButton>
 	);
 }

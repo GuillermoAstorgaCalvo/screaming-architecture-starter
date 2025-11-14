@@ -4,7 +4,11 @@
  * Supports accessibility standards and reduces duplication
  *
  * Use these constants instead of hardcoding ARIA values throughout the codebase
+ *
+ * Note: ARIA_LABELS uses i18n for translations to support internationalization
  */
+
+import i18n from '@core/i18n/i18n';
 
 /**
  * Common ARIA roles
@@ -145,78 +149,149 @@ export const ARIA_INVALID = {
 /**
  * Common ARIA label text
  * Standardized labels for common UI elements to ensure consistency
+ * Uses i18n for translations to support internationalization
  */
 export const ARIA_LABELS = {
 	/** Close button label */
-	CLOSE: 'Close',
+	get CLOSE() {
+		return i18n.t('a11y.close', { ns: 'common' });
+	},
 	/** Close modal label */
-	CLOSE_MODAL: 'Close modal',
+	get CLOSE_MODAL() {
+		return i18n.t('a11y.closeModal', { ns: 'common' });
+	},
 	/** Close drawer label */
-	CLOSE_DRAWER: 'Close drawer',
+	get CLOSE_DRAWER() {
+		return i18n.t('a11y.closeDrawer', { ns: 'common' });
+	},
 	/** Close sheet label */
-	CLOSE_SHEET: 'Close sheet',
+	get CLOSE_SHEET() {
+		return i18n.t('a11y.closeSheet', { ns: 'common' });
+	},
 	/** Close dialog label */
-	CLOSE_DIALOG: 'Close dialog',
+	get CLOSE_DIALOG() {
+		return i18n.t('a11y.closeDialog', { ns: 'common' });
+	},
 	/** Open menu label */
-	OPEN_MENU: 'Open menu',
+	get OPEN_MENU() {
+		return i18n.t('a11y.openMenu', { ns: 'common' });
+	},
 	/** Close menu label */
-	CLOSE_MENU: 'Close menu',
+	get CLOSE_MENU() {
+		return i18n.t('a11y.closeMenu', { ns: 'common' });
+	},
 	/** Loading label */
-	LOADING: 'Loading',
+	get LOADING() {
+		return i18n.t('a11y.loading', { ns: 'common' });
+	},
 	/** Loading content label */
-	LOADING_CONTENT: 'Loading content',
+	get LOADING_CONTENT() {
+		return i18n.t('a11y.loadingContent', { ns: 'common' });
+	},
 	/** Error message label */
-	ERROR: 'Error',
+	get ERROR() {
+		return i18n.t('a11y.error', { ns: 'common' });
+	},
 	/** Success message label */
-	SUCCESS: 'Success',
+	get SUCCESS() {
+		return i18n.t('a11y.success', { ns: 'common' });
+	},
 	/** Warning message label */
-	WARNING: 'Warning',
+	get WARNING() {
+		return i18n.t('a11y.warning', { ns: 'common' });
+	},
 	/** Info message label */
-	INFO: 'Information',
+	get INFO() {
+		return i18n.t('a11y.info', { ns: 'common' });
+	},
 	/** Required field indicator */
-	REQUIRED: 'required',
+	get REQUIRED() {
+		return i18n.t('a11y.required', { ns: 'common' });
+	},
 	/** Search label */
-	SEARCH: 'Search',
+	get SEARCH() {
+		return i18n.t('a11y.search', { ns: 'common' });
+	},
 	/** Submit form label */
-	SUBMIT: 'Submit form',
+	get SUBMIT() {
+		return i18n.t('a11y.submit', { ns: 'common' });
+	},
 	/** Cancel action label */
-	CANCEL: 'Cancel',
+	get CANCEL() {
+		return i18n.t('common.cancel', { ns: 'common' });
+	},
 	/** Confirm action label */
-	CONFIRM: 'Confirm',
+	get CONFIRM() {
+		return i18n.t('common.confirm', { ns: 'common' });
+	},
 	/** Delete action label */
-	DELETE: 'Delete',
+	get DELETE() {
+		return i18n.t('a11y.delete', { ns: 'common' });
+	},
 	/** Edit action label */
-	EDIT: 'Edit',
+	get EDIT() {
+		return i18n.t('a11y.edit', { ns: 'common' });
+	},
 	/** Save action label */
-	SAVE: 'Save',
+	get SAVE() {
+		return i18n.t('a11y.save', { ns: 'common' });
+	},
 	/** Previous page label */
-	PREVIOUS: 'Previous',
+	get PREVIOUS() {
+		return i18n.t('pagination.previous', { ns: 'common' });
+	},
 	/** Next page label */
-	NEXT: 'Next',
+	get NEXT() {
+		return i18n.t('pagination.next', { ns: 'common' });
+	},
 	/** Skip to main content label */
-	SKIP_TO_CONTENT: 'Skip to main content',
+	get SKIP_TO_CONTENT() {
+		return i18n.t('a11y.skipToContent', { ns: 'common' });
+	},
 	/** Toggle theme label */
-	TOGGLE_THEME: 'Toggle theme',
+	get TOGGLE_THEME() {
+		return i18n.t('a11y.toggleTheme', { ns: 'common' });
+	},
 	/** Menu button label */
-	MENU_BUTTON: 'Menu',
+	get MENU_BUTTON() {
+		return i18n.t('a11y.menuButton', { ns: 'common' });
+	},
 	/** Navigation label */
-	NAVIGATION: 'Navigation',
+	get NAVIGATION() {
+		return i18n.t('a11y.navigation', { ns: 'common' });
+	},
 	/** Main content label */
-	MAIN_CONTENT: 'Main content',
+	get MAIN_CONTENT() {
+		return i18n.t('a11y.mainContent', { ns: 'common' });
+	},
 	/** Breadcrumb navigation label */
-	BREADCRUMB: 'Breadcrumb',
+	get BREADCRUMB() {
+		return i18n.t('a11y.breadcrumb', { ns: 'common' });
+	},
 	/** Tabs navigation label */
-	TABS: 'Tabs',
+	get TABS() {
+		return i18n.t('a11y.tabs', { ns: 'common' });
+	},
 	/** Modal content label */
-	MODAL_CONTENT: 'Modal content',
+	get MODAL_CONTENT() {
+		return i18n.t('a11y.modalContent', { ns: 'common' });
+	},
 	/** Pagination label */
-	PAGINATION: 'Pagination',
+	get PAGINATION() {
+		return i18n.t('a11y.pagination', { ns: 'common' });
+	},
 	/** Carousel label */
-	CAROUSEL: 'Carousel',
+	get CAROUSEL() {
+		return i18n.t('a11y.carousel', { ns: 'common' });
+	},
 	/** Rating label */
-	RATING: 'Rating',
+	get RATING() {
+		return i18n.t('a11y.rating', { ns: 'common' });
+	},
 	/** Marquee/scrolling content label */
-	MARQUEE: 'Scrolling content',
+	get MARQUEE() {
+		return i18n.t('a11y.marquee', { ns: 'common' });
+	},
 } as const;
 
 /**

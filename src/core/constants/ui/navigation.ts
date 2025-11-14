@@ -14,38 +14,45 @@ import type {
 	SheetSize,
 	SidebarPosition,
 } from '@src-types/ui/overlays/panels';
+import type React from 'react';
 
 /**
  * Breadcrumbs base classes
+ * Uses design tokens for colors and spacing
  */
 export const BREADCRUMBS_BASE_CLASSES =
-	'flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400';
+	'flex items-center space-x-sm text-sm text-text-secondary dark:text-text-secondary-dark';
 
 /**
  * Breadcrumbs item classes
+ * Uses design tokens for colors
  */
 export const BREADCRUMBS_ITEM_CLASSES =
-	'inline-flex items-center transition-colors hover:text-gray-900 dark:hover:text-gray-200';
+	'inline-flex items-center transition-colors hover:text-text-primary dark:hover:text-text-primary-dark';
 
 /**
  * Breadcrumbs separator classes
+ * Uses design tokens for colors
  */
-export const BREADCRUMBS_SEPARATOR_CLASSES = 'text-gray-400 dark:text-gray-500 select-none';
+export const BREADCRUMBS_SEPARATOR_CLASSES =
+	'text-text-muted dark:text-text-muted-dark select-none';
 
 /**
  * Drawer base classes
+ * Uses design tokens for colors, shadows, and transitions
  */
 export const DRAWER_BASE_CLASSES =
-	'fixed z-50 bg-white shadow-xl transition-transform duration-300 ease-in-out dark:bg-gray-800';
+	'fixed z-50 bg-surface shadow-xl transition-transform duration-slower ease-in-out dark:bg-surface-dark';
 
 /**
  * Drawer size classes (width for left/right, height for top/bottom)
+ * Uses design tokens for customizable sizing
  */
 export const DRAWER_SIZE_CLASSES: Record<DrawerSize, string> = {
-	sm: 'w-64 h-64',
-	md: 'w-80 h-96',
-	lg: 'w-96 h-[32rem]',
-	xl: 'w-[28rem] h-[40rem]',
+	sm: 'w-[calc(var(--spacing-4xl)*4)] h-[calc(var(--spacing-4xl)*4)]',
+	md: 'w-[calc(var(--spacing-4xl)*5)] h-[calc(var(--spacing-4xl)*6)]',
+	lg: 'w-[calc(var(--spacing-4xl)*6)] h-[calc(var(--spacing-4xl)*8)]',
+	xl: 'w-[calc(var(--spacing-4xl)*7)] h-[calc(var(--spacing-4xl)*10)]',
 	full: 'w-full h-full',
 } as const;
 
@@ -61,24 +68,27 @@ export const DRAWER_POSITION_CLASSES: Record<DrawerPosition, string> = {
 
 /**
  * Drawer overlay base classes
+ * Uses design tokens for transitions and overlay colors
  */
 export const DRAWER_OVERLAY_BASE_CLASSES =
-	'fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ease-in-out';
+	'fixed inset-0 z-40 bg-overlay transition-opacity duration-slower ease-in-out';
 
 /**
  * Sheet base classes (similar to Drawer but with different styling)
+ * Uses design tokens for colors, shadows, and transitions
  */
 export const SHEET_BASE_CLASSES =
-	'fixed z-50 bg-white shadow-2xl transition-transform duration-300 ease-in-out dark:bg-gray-800';
+	'fixed z-50 bg-surface shadow-2xl transition-transform duration-slower ease-in-out dark:bg-surface-dark';
 
 /**
  * Sheet size classes (width for left/right, height for top/bottom)
+ * Uses design tokens for customizable sizing
  */
 export const SHEET_SIZE_CLASSES: Record<SheetSize, string> = {
-	sm: 'w-64 h-64',
-	md: 'w-80 h-96',
-	lg: 'w-96 h-[32rem]',
-	xl: 'w-[28rem] h-[40rem]',
+	sm: 'w-[calc(var(--spacing-4xl)*4)] h-[calc(var(--spacing-4xl)*4)]',
+	md: 'w-[calc(var(--spacing-4xl)*5)] h-[calc(var(--spacing-4xl)*6)]',
+	lg: 'w-[calc(var(--spacing-4xl)*6)] h-[calc(var(--spacing-4xl)*8)]',
+	xl: 'w-[calc(var(--spacing-4xl)*7)] h-[calc(var(--spacing-4xl)*10)]',
 	full: 'w-full h-full',
 } as const;
 
@@ -94,15 +104,17 @@ export const SHEET_POSITION_CLASSES: Record<SheetPosition, string> = {
 
 /**
  * Sheet overlay base classes
+ * Uses design tokens for transitions and overlay colors
  */
 export const SHEET_OVERLAY_BASE_CLASSES =
-	'fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 ease-in-out';
+	'fixed inset-0 z-40 bg-overlay-dark transition-opacity duration-slower ease-in-out';
 
 /**
  * Sidebar base classes (persistent layout sidebar, not an overlay)
+ * Uses design tokens for colors and transitions
  */
 export const SIDEBAR_BASE_CLASSES =
-	'flex flex-col h-full bg-white transition-all duration-300 ease-in-out dark:bg-gray-800';
+	'flex flex-col h-full bg-surface transition-all duration-slower ease-in-out dark:bg-surface-dark';
 
 /**
  * Sidebar position classes
@@ -114,13 +126,15 @@ export const SIDEBAR_POSITION_CLASSES: Record<SidebarPosition, string> = {
 
 /**
  * Sidebar collapsed width
+ * Uses design tokens for customizable width
  */
-export const SIDEBAR_COLLAPSED_WIDTH = '4rem';
+export const SIDEBAR_COLLAPSED_WIDTH = 'var(--spacing-4xl)';
 
 /**
  * Sidebar default width
+ * Uses design tokens for customizable width (16rem = 4 * 4rem)
  */
-export const SIDEBAR_DEFAULT_WIDTH = '16rem';
+export const SIDEBAR_DEFAULT_WIDTH = 'calc(var(--spacing-4xl)*4)';
 
 /**
  * Tabs base classes
@@ -129,11 +143,12 @@ export const TABS_BASE_CLASSES = 'flex space-x-1';
 
 /**
  * Tabs variant classes
+ * Uses design tokens for colors and spacing
  */
 export const TABS_VARIANT_CLASSES: Record<TabsVariant, string> = {
 	default: '',
-	pills: 'bg-gray-100 rounded-lg p-1 dark:bg-gray-800',
-	underline: 'border-b border-gray-200 dark:border-gray-700',
+	pills: 'bg-muted rounded-lg p-xs dark:bg-muted-dark',
+	underline: 'border-b border-border dark:border-border-dark',
 } as const;
 
 /**
@@ -153,18 +168,20 @@ const TEXT_SIZE_CLASSES: Record<StandardSize, string> = {
 
 /**
  * Tab button size classes (padding + text size)
+ * Uses design tokens for spacing
  */
 export const TAB_BUTTON_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: `px-2 py-1 ${TEXT_SIZE_CLASSES.sm}`,
-	md: `px-3 py-1.5 ${TEXT_SIZE_CLASSES.md}`,
-	lg: `px-4 py-2 ${TEXT_SIZE_CLASSES.lg}`,
+	sm: `px-xs py-0.5 ${TEXT_SIZE_CLASSES.sm}`,
+	md: `px-sm py-xs ${TEXT_SIZE_CLASSES.md}`,
+	lg: `px-md py-sm ${TEXT_SIZE_CLASSES.lg}`,
 } as const;
 
 /**
  * Tab button inactive state classes (shared across variants)
+ * Uses design tokens for colors
  */
 const TAB_BUTTON_INACTIVE_CLASSES =
-	'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200';
+	'text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark';
 
 /**
  * Tab button variant classes
@@ -176,7 +193,7 @@ export const TAB_BUTTON_VARIANT_CLASSES: Record<TabsVariant, { active: string; i
 			inactive: TAB_BUTTON_INACTIVE_CLASSES,
 		},
 		pills: {
-			active: 'bg-white text-primary shadow-sm dark:bg-gray-700 dark:text-primary',
+			active: 'bg-surface text-primary shadow-sm dark:bg-muted-dark dark:text-primary',
 			inactive: TAB_BUTTON_INACTIVE_CLASSES,
 		},
 		underline: {
@@ -192,18 +209,20 @@ export const ACCORDION_BASE_CLASSES = 'space-y-1';
 
 /**
  * Accordion variant classes
+ * Uses design tokens for colors and spacing
  */
 export const ACCORDION_VARIANT_CLASSES: Record<AccordionVariant, string> = {
 	default: '',
-	bordered: 'border border-gray-200 rounded-lg dark:border-gray-700',
-	separated: 'space-y-2',
+	bordered: 'border border-border rounded-lg dark:border-border-dark',
+	separated: 'space-y-sm',
 } as const;
 
 /**
  * Accordion item base classes
+ * Uses design tokens for transitions
  */
 export const ACCORDION_ITEM_BASE_CLASSES =
-	'overflow-hidden transition-all duration-200 ease-in-out';
+	'overflow-hidden transition-all duration-normal ease-in-out';
 
 /**
  * Accordion header base classes
@@ -213,26 +232,29 @@ export const ACCORDION_HEADER_BASE_CLASSES =
 
 /**
  * Accordion header size classes (padding + text size)
+ * Uses design tokens for spacing
  */
 export const ACCORDION_HEADER_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: `px-3 py-2 ${TEXT_SIZE_CLASSES.sm}`,
-	md: `px-4 py-3 ${TEXT_SIZE_CLASSES.md}`,
-	lg: `px-5 py-4 ${TEXT_SIZE_CLASSES.lg}`,
+	sm: `px-sm py-sm ${TEXT_SIZE_CLASSES.sm}`,
+	md: `px-md py-md ${TEXT_SIZE_CLASSES.md}`,
+	lg: `px-lg py-lg ${TEXT_SIZE_CLASSES.lg}`,
 } as const;
 
 /**
  * Accordion content base classes
+ * Uses design tokens for transitions
  */
 export const ACCORDION_CONTENT_BASE_CLASSES =
-	'overflow-hidden transition-all duration-200 ease-in-out';
+	'overflow-hidden transition-all duration-normal ease-in-out';
 
 /**
  * Accordion content size classes (padding)
+ * Uses design tokens for spacing
  */
 export const ACCORDION_CONTENT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-3 py-2',
-	md: 'px-4 py-3',
-	lg: 'px-5 py-4',
+	sm: 'px-sm py-sm',
+	md: 'px-md py-md',
+	lg: 'px-lg py-lg',
 } as const;
 
 /**
@@ -248,11 +270,12 @@ export const TREE_VIEW_NODE_BASE_CLASSES =
 
 /**
  * TreeView node size classes (padding + text size)
+ * Uses design tokens for spacing
  */
 export const TREE_VIEW_NODE_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: `px-2 py-1 ${TEXT_SIZE_CLASSES.sm}`,
-	md: `px-3 py-1.5 ${TEXT_SIZE_CLASSES.md}`,
-	lg: `px-4 py-2 ${TEXT_SIZE_CLASSES.lg}`,
+	sm: `px-xs py-0.5 ${TEXT_SIZE_CLASSES.sm}`,
+	md: `px-sm py-xs ${TEXT_SIZE_CLASSES.md}`,
+	lg: `px-md py-sm ${TEXT_SIZE_CLASSES.lg}`,
 } as const;
 
 /**
@@ -263,8 +286,9 @@ export const TREE_VIEW_NODE_SELECTED_CLASSES =
 
 /**
  * TreeView node hover state classes
+ * Uses design tokens for colors
  */
-export const TREE_VIEW_NODE_HOVER_CLASSES = 'hover:bg-muted dark:hover:bg-gray-800';
+export const TREE_VIEW_NODE_HOVER_CLASSES = 'hover:bg-muted dark:hover:bg-muted-dark';
 
 /**
  * TreeView node content classes
@@ -278,9 +302,10 @@ export const TREE_VIEW_NODE_ICON_CLASSES = 'flex-shrink-0 mr-2';
 
 /**
  * TreeView expand icon classes
+ * Uses design tokens for transitions
  */
 export const TREE_VIEW_EXPAND_ICON_CLASSES =
-	'flex-shrink-0 mr-1 text-muted-foreground transition-transform duration-200';
+	'flex-shrink-0 mr-1 text-muted-foreground transition-transform duration-normal';
 
 /**
  * TreeView expand icon expanded state classes
@@ -289,14 +314,18 @@ export const TREE_VIEW_EXPAND_ICON_EXPANDED_CLASSES = 'rotate-90';
 
 /**
  * TreeView children container classes
+ * Uses design tokens for transitions
  */
 export const TREE_VIEW_CHILDREN_CONTAINER_CLASSES =
-	'ml-4 overflow-hidden transition-all duration-200 ease-in-out';
+	'ml-4 overflow-hidden transition-all duration-normal ease-in-out';
 
 /**
  * TreeView children container expanded classes
  */
-export const TREE_VIEW_CHILDREN_EXPANDED_CLASSES = 'max-h-[10000px] opacity-100';
+export const TREE_VIEW_CHILDREN_EXPANDED_CLASSES = 'opacity-100';
+export const TREE_VIEW_CHILDREN_EXPANDED_STYLE: React.CSSProperties = {
+	maxHeight: 'var(--animation-max-height-tree-view, 10000px)',
+};
 
 /**
  * TreeView children container collapsed classes
@@ -305,17 +334,19 @@ export const TREE_VIEW_CHILDREN_COLLAPSED_CLASSES = 'max-h-0 opacity-0';
 
 /**
  * SegmentedControl base classes
+ * Uses design tokens for colors and spacing
  */
 export const SEGMENTED_CONTROL_BASE_CLASSES =
-	'inline-flex items-center rounded-md bg-gray-100 p-1 dark:bg-gray-800';
+	'inline-flex items-center rounded-md bg-muted p-xs dark:bg-muted-dark';
 
 /**
  * SegmentedControl variant classes
+ * Uses design tokens for colors
  */
 export const SEGMENTED_CONTROL_VARIANT_CLASSES: Record<SegmentedControlVariant, string> = {
-	default: 'bg-gray-100 dark:bg-gray-800',
-	pills: 'bg-gray-100 dark:bg-gray-800',
-	outline: 'bg-transparent border border-gray-200 dark:border-gray-700',
+	default: 'bg-muted dark:bg-muted-dark',
+	pills: 'bg-muted dark:bg-muted-dark',
+	outline: 'bg-transparent border border-border dark:border-border-dark',
 } as const;
 
 /**
@@ -326,18 +357,20 @@ export const SEGMENTED_CONTROL_ITEM_BASE_CLASSES =
 
 /**
  * SegmentedControl item size classes (padding + text size)
+ * Uses design tokens for spacing
  */
 export const SEGMENTED_CONTROL_ITEM_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: `px-2.5 py-1 ${TEXT_SIZE_CLASSES.sm}`,
-	md: `px-3 py-1.5 ${TEXT_SIZE_CLASSES.md}`,
-	lg: `px-4 py-2 ${TEXT_SIZE_CLASSES.lg}`,
+	sm: `px-sm py-0.5 ${TEXT_SIZE_CLASSES.sm}`,
+	md: `px-sm py-xs ${TEXT_SIZE_CLASSES.md}`,
+	lg: `px-md py-sm ${TEXT_SIZE_CLASSES.lg}`,
 } as const;
 
 /**
  * SegmentedControl item inactive state classes (shared across variants)
+ * Uses design tokens for colors
  */
 const SEGMENTED_CONTROL_ITEM_INACTIVE_CLASSES =
-	'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200';
+	'text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark';
 
 /**
  * SegmentedControl item variant classes
@@ -347,11 +380,12 @@ export const SEGMENTED_CONTROL_ITEM_VARIANT_CLASSES: Record<
 	{ active: string; inactive: string }
 > = {
 	default: {
-		active: 'bg-white text-gray-900 shadow-sm rounded-md dark:bg-gray-700 dark:text-gray-100',
+		active:
+			'bg-surface text-text-primary shadow-sm rounded-md dark:bg-muted-dark dark:text-text-primary-dark',
 		inactive: SEGMENTED_CONTROL_ITEM_INACTIVE_CLASSES,
 	},
 	pills: {
-		active: 'bg-white text-primary shadow-sm rounded-md dark:bg-gray-700 dark:text-primary',
+		active: 'bg-surface text-primary shadow-sm rounded-md dark:bg-muted-dark dark:text-primary',
 		inactive: SEGMENTED_CONTROL_ITEM_INACTIVE_CLASSES,
 	},
 	outline: {

@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import { PaginationButton } from '@core/ui/navigation/pagination/components/PaginationButton';
 import { createPageChangeHandler } from '@core/ui/navigation/pagination/helpers/PaginationHandlers';
 import type { StandardSize } from '@src-types/ui/base';
@@ -12,13 +13,14 @@ export interface FirstButtonProps {
 }
 
 export function FirstButton({ size, onPageChange }: Readonly<FirstButtonProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<PaginationButton
-			ariaLabel="Go to first page"
+			ariaLabel={t('pagination.goToFirstPage')}
 			onClick={createPageChangeHandler(onPageChange, 1)}
 			size={size}
 		>
-			First
+			{t('pagination.first')}
 		</PaginationButton>
 	);
 }
@@ -30,13 +32,14 @@ export interface LastButtonProps {
 }
 
 export function LastButton({ totalPages, size, onPageChange }: Readonly<LastButtonProps>) {
+	const { t } = useTranslation('common');
 	return (
 		<PaginationButton
-			ariaLabel="Go to last page"
+			ariaLabel={t('pagination.goToLastPage')}
 			onClick={createPageChangeHandler(onPageChange, totalPages)}
 			size={size}
 		>
-			Last
+			{t('pagination.last')}
 		</PaginationButton>
 	);
 }

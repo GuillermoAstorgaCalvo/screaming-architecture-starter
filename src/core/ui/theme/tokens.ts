@@ -23,6 +23,9 @@ export const componentSpacing = {
 	md: `${designTokens.spacing.md}px`,
 	lg: `${designTokens.spacing.lg}px`,
 	xl: `${designTokens.spacing.xl}px`,
+	'2xl': `${designTokens.spacing['2xl']}px`,
+	'3xl': `${designTokens.spacing['3xl']}px`,
+	'4xl': `${designTokens.spacing['4xl']}px`,
 } as const;
 
 /**
@@ -39,60 +42,65 @@ export const componentRadius = {
  * Component color tokens
  * Derived from design token color values
  * Provides semantic color mappings for components
+ * Uses CSS variables for full customization support
  */
 export const componentColors = {
 	primary: {
-		background: designTokens.color.primary.DEFAULT,
-		foreground: designTokens.color.primary.foreground,
-		hover: designTokens.color.primary.DEFAULT, // Can be adjusted if needed
+		background: 'var(--color-primary)',
+		foreground: 'var(--color-primary-foreground)',
+		hover: 'var(--color-primary-600)', // Uses customizable 600 shade
 	},
 	surface: {
-		light: designTokens.color.surface.DEFAULT,
-		dark: designTokens.color.surface.dark,
+		light: 'var(--color-surface)',
+		dark: 'var(--color-surface-dark)',
 	},
 } as const;
 
 /**
  * Component shadow tokens
  * Common shadow definitions for components
+ * Uses design tokens for consistency
  */
 export const componentShadows = {
-	sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-	md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-	lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+	sm: designTokens.shadow.sm,
+	md: designTokens.shadow.md,
+	lg: designTokens.shadow.lg,
 } as const;
 
 /**
  * Component focus ring tokens
  * Standardized focus ring styles for accessibility
+ * Uses CSS variables for full customization support
  */
 export const componentFocusRing = {
-	width: '2px',
-	offset: '2px',
-	color: designTokens.color.primary.DEFAULT,
+	width: 'var(--focus-ring-width, 2px)',
+	offset: 'var(--focus-ring-offset, 2px)',
+	color: 'var(--color-primary)',
 } as const;
 
 /**
  * Component transition tokens
  * Standardized transition durations
+ * Uses design tokens for consistency
  */
 export const componentTransitions = {
-	fast: '150ms',
-	normal: '200ms',
-	slow: '300ms',
+	fast: designTokens.transition.duration.fast,
+	normal: designTokens.transition.duration.normal,
+	slow: designTokens.transition.duration.slow,
 } as const;
 
 /**
  * Component z-index tokens
  * Layering system for components (modals, tooltips, etc.)
+ * Uses design tokens for consistency and customization
  */
 export const componentZIndex = {
-	base: 0,
-	dropdown: 1000,
-	sticky: 1100,
-	fixed: 1200,
-	modalBackdrop: 1300,
-	modal: 1400,
-	popover: 1500,
-	tooltip: 1600,
+	base: designTokens.zIndex.base,
+	dropdown: designTokens.zIndex.dropdown,
+	sticky: designTokens.zIndex.sticky,
+	fixed: designTokens.zIndex.fixed,
+	modalBackdrop: designTokens.zIndex.modalBackdrop,
+	modal: designTokens.zIndex.modal,
+	popover: designTokens.zIndex.popover,
+	tooltip: designTokens.zIndex.tooltip,
 } as const;

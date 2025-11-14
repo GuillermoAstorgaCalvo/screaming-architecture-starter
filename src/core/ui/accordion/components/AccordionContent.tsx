@@ -1,4 +1,4 @@
-import { getContentClasses } from '@core/ui/accordion/helpers/AccordionHelpers';
+import { getContentClasses, getContentStyle } from '@core/ui/accordion/helpers/AccordionHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
 
@@ -22,6 +22,7 @@ export function AccordionContent({
 			id={contentId}
 			aria-labelledby={headerId}
 			className={getContentClasses(size, isExpanded)}
+			style={getContentStyle(isExpanded)}
 		>
 			{content}
 		</section>

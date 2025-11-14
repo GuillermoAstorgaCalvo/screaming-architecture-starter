@@ -16,20 +16,6 @@ import type {
 	ApiServiceExecuteOptions,
 } from './createApiService.types';
 
-export { ApiResponseValidationError } from './createApiService.helpers.ts';
-export type {
-	ApiHttpMethod,
-	ApiService,
-	ApiServiceConfig,
-	ApiServiceErrorContext,
-	ApiServiceExecuteOptions,
-	ApiServiceRequestConfig,
-	ApiServiceResponseContext,
-	ApiServiceResponseMapper,
-	ApiServiceResult,
-	ApiServiceSuccess,
-} from './createApiService.types';
-
 export function createApiService<TRequest, TRawResponse = unknown, TResponse = TRawResponse>(
 	http: HttpPort,
 	config: ApiServiceConfig<TRequest, TRawResponse, TResponse>

@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
  * Provides type-safe variant management for Fieldset component.
  */
 export const fieldsetVariants = cva(
-	'border border-gray-300 dark:border-gray-600 rounded-md p-4 disabled:opacity-50 disabled:cursor-not-allowed',
+	'border border-border dark:border-border rounded-md p-4 disabled:opacity-disabled disabled:cursor-not-allowed',
 	{
 		variants: {
 			size: {

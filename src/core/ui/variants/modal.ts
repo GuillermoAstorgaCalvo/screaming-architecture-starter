@@ -9,7 +9,7 @@ import { twMerge } from 'tailwind-merge';
  * Provides type-safe variant management for Modal dialog overlay.
  */
 export const modalDialogVariants = cva(
-	'fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent backdrop:bg-black/50 dark:backdrop:bg-black/70'
+	'fixed inset-0 z-modal flex items-center justify-center p-lg bg-transparent backdrop:bg-overlay dark:backdrop:bg-overlay-default-dark'
 );
 
 /**

@@ -40,7 +40,7 @@ export function renderListItem<T>({
 			}
 			clickable
 			selected={isSelected}
-			className={twMerge(option.disabled && 'opacity-50 cursor-not-allowed')}
+			className={twMerge(option.disabled && 'opacity-disabled cursor-not-allowed')}
 			onClick={handleClick}
 			aria-selected={isSelected}
 		>
@@ -66,7 +66,7 @@ export function renderList<T>({
 	onItemToggle,
 }: RenderListProps<T>) {
 	const emptyContent = (
-		<div className="py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+		<div className="py-8 text-center text-text-muted dark:text-text-muted text-sm">
 			{renderEmpty ? renderEmpty(type) : <span>No items available</span>}
 		</div>
 	);

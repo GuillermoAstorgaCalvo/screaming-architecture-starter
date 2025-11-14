@@ -2,6 +2,16 @@ import type { UseRangeSliderStateReturn } from '@core/ui/forms/range-slider/hook
 import type { RangeSliderInputProps } from '@core/ui/forms/range-slider/types/RangeSliderTypes';
 import type { ChangeEvent, RefObject } from 'react';
 
+/**
+ * Z-index values for range slider inputs
+ * These are relative z-index values for internal layering within the component
+ * (not global z-index values - they're relative to the component's stacking context)
+ * Min input has lower z-index, max input has higher z-index to ensure proper stacking
+ * Note: These are component-internal values and don't need to use design tokens
+ */
+const RANGE_SLIDER_MIN_Z_INDEX = 20;
+const RANGE_SLIDER_MAX_Z_INDEX = 30;
+
 interface ActiveTrackProps {
 	readonly left: number;
 	readonly width: number;
@@ -10,7 +20,7 @@ interface ActiveTrackProps {
 export function ActiveTrack({ left, width }: Readonly<ActiveTrackProps>) {
 	return (
 		<div
-			className="absolute top-1/2 -translate-y-1/2 rounded-full bg-blue-600 dark:bg-blue-500"
+			className="absolute top-1/2 -translate-y-1/2 rounded-full bg-primary"
 			style={{
 				left: `${left}%`,
 				width: `${width}%`,
@@ -124,7 +134,7 @@ function RangeSliderInputs({
 				id={minId}
 				value={state.safeMinValue}
 				onChange={state.handleMinChange}
-				zIndex={20}
+				zIndex={RANGE_SLIDER_MIN_Z_INDEX}
 			/>
 			<RangeInputElement
 				{...commonProps}
@@ -132,7 +142,7 @@ function RangeSliderInputs({
 				id={maxId}
 				value={state.safeMaxValue}
 				onChange={state.handleMaxChange}
-				zIndex={30}
+				zIndex={RANGE_SLIDER_MAX_Z_INDEX}
 			/>
 		</>
 	);

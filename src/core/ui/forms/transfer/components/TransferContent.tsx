@@ -1,3 +1,4 @@
+import { useTranslation } from '@core/i18n/useTranslation';
 import {
 	buildActionsProps,
 	buildSourceListProps,
@@ -20,6 +21,7 @@ import type { TransferContentProps } from '@core/ui/forms/transfer/types/Transfe
  * TransferContent - Main content component for Transfer
  */
 export function TransferContent<T = unknown>(transferData: Readonly<TransferContentProps<T>>) {
+	const { t } = useTranslation('common');
 	const transferProps = extractTransferProps(transferData.props);
 	const containerClasses = getContainerClasses(transferProps.size, transferProps.className);
 	const listLabels = getListLabels(transferProps.labels);
@@ -34,7 +36,7 @@ export function TransferContent<T = unknown>(transferData: Readonly<TransferCont
 			{...transferProps.restProps}
 			className={containerClasses}
 			id={transferProps.transferId}
-			aria-label="Transfer list"
+			aria-label={t('a11y.transferList')}
 		>
 			{renderSourceList(sourceListProps)}
 			{renderActions(actionsProps)}

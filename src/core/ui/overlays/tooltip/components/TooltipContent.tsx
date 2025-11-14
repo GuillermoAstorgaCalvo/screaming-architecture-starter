@@ -18,10 +18,10 @@ export function TooltipContent({ tooltipId, position, content }: Readonly<Toolti
 		<div
 			id={tooltipId}
 			role="tooltip"
-			className={`absolute z-1600 ${positionClasses} pointer-events-none`}
+			className={`absolute ${positionClasses} pointer-events-none`}
 			style={{ zIndex: componentZIndex.tooltip }}
 		>
-			<div className="rounded-md bg-gray-900 px-2 py-1 text-sm text-white shadow-lg dark:bg-gray-800 dark:text-gray-100">
+			<div className="rounded-md bg-surface-elevated px-2 py-1 text-sm text-text-primary shadow-lg dark:bg-surface-elevated dark:text-text-primary">
 				{content}
 			</div>
 			<div className={getArrowClasses(position)} />
