@@ -38,6 +38,9 @@ LABEL org.opencontainers.image.title="Screaming Architecture Starter" \
 # Install pnpm and system dependencies
 # Note: Playwright will install its own browsers with --with-deps flag
 ARG PNPM_VERSION
+# Disable Corepack prompts for non-interactive use
+ENV COREPACK_ENABLE_STRICT=0
+ENV PNPM_VERSION=${PNPM_VERSION}
 RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate && \
     apk add --no-cache \
         bash \
@@ -72,6 +75,10 @@ COPY --chown=nodejs:nodejs . .
 
 # Switch to non-root user
 USER nodejs
+
+# Ensure pnpm is available for nodejs user without prompts
+# Corepack should already be enabled, but we ensure it's ready
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate || true
 
 # Expose Vite dev server port
 EXPOSE 5173

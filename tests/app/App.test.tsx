@@ -5,6 +5,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import type { MockAnalyticsAdapter } from '@tests/utils/mocks/MockAnalyticsAdapter';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+// Mock the router FIRST to ensure it's hoisted before App imports it
+vi.mock('@app/router', async () => {
+	const React = await import('react');
+	return {
+		default: () => React.createElement('div', { 'data-testid': 'router' }, 'Router'),
+	};
+});
+
 // Mock runtime config type
 type RuntimeConfig = {
 	ANALYTICS_WRITE_KEY?: string;
@@ -80,11 +88,6 @@ vi.mock('@core/config/runtime', async () => {
 	};
 });
 
-// Mock the router to avoid lazy loading issues in tests
-vi.mock('@app/router', () => ({
-	default: () => <div data-testid="router">Router</div>,
-}));
-
 // Access mocked modules from globalThis (set in vi.mock factories)
 const getMockGoogleAnalyticsAdapter = () => {
 	const adapter = (globalThis as { mockGoogleAnalyticsAdapter?: MockAnalyticsAdapter })
@@ -157,24 +160,32 @@ describe('App', () => {
 	});
 
 	describe('rendering', () => {
-		it('renders without crashing', () => {
+		it('renders without crashing', async () => {
 			render(<App />);
-			expect(screen.getByTestId('router')).toBeInTheDocument();
+			await waitFor(() => {
+				expect(screen.getByTestId('router')).toBeInTheDocument();
+			});
 		});
 
-		it('renders ErrorBoundaryWrapper with fallback', () => {
+		it('renders ErrorBoundaryWrapper with fallback', async () => {
 			render(<App />);
-			expect(screen.getByTestId('router')).toBeInTheDocument();
+			await waitFor(() => {
+				expect(screen.getByTestId('router')).toBeInTheDocument();
+			});
 		});
 
-		it('renders Router component', () => {
+		it('renders Router component', async () => {
 			render(<App />);
-			expect(screen.getByTestId('router')).toBeInTheDocument();
+			await waitFor(() => {
+				expect(screen.getByTestId('router')).toBeInTheDocument();
+			});
 		});
 
-		it('renders ToastContainer', () => {
+		it('renders ToastContainer', async () => {
 			render(<App />);
-			expect(screen.getByTestId('router')).toBeInTheDocument();
+			await waitFor(() => {
+				expect(screen.getByTestId('router')).toBeInTheDocument();
+			});
 		});
 	});
 
