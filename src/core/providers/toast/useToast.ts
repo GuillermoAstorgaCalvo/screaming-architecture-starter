@@ -1,7 +1,6 @@
+import { ToastContext } from '@core/providers/toast/ToastContext';
 import type { ToastAction, ToastIntent } from '@core/ui/feedback/toast/types/toast.types';
 import { type ReactNode, useCallback, useContext } from 'react';
-
-import { ToastContext } from './ToastContext';
 
 export interface ToastOptions {
 	readonly title?: string;

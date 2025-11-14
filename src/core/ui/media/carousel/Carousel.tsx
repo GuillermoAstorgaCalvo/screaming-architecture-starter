@@ -1,8 +1,6 @@
 import { ARIA_LABELS } from '@core/constants/aria';
-import {
-	CarouselContainer,
-	CarouselContent,
-} from '@core/ui/media/carousel/components/CarouselComponents';
+import { CarouselContainer } from '@core/ui/media/carousel/components/CarouselContainer';
+import { CarouselContent } from '@core/ui/media/carousel/components/CarouselContent';
 import { filterCarouselProps } from '@core/ui/media/carousel/helpers/useCarousel.utils';
 import { useCarouselSetup } from '@core/ui/media/carousel/hooks/useCarousel';
 import type { CarouselProps } from '@src-types/ui/layout/carousel';

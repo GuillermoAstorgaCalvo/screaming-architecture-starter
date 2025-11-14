@@ -5,8 +5,8 @@
  * All functions are SSR-safe.
  */
 
-import { toDate } from './date';
-import type { DateValue, FormatTimeOptions } from './formatDate.types';
+import { toDate } from '@core/lib/date/date';
+import type { DateValue, FormatTimeOptions } from '@core/lib/date/formatDate.types';
 
 const HOURS_IN_12_HOUR_CLOCK = 12;
 

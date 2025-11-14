@@ -5,7 +5,7 @@
  * SSR-safe: falls back to basic entity escaping in non-browser environments.
  */
 
-import { MAX_ESCAPE_LENGTH } from './sanitizeHtmlConstants';
+import { MAX_ESCAPE_LENGTH } from '@core/security/sanitize/sanitizeHtmlConstants';
 
 /**
  * Escape HTML special characters to prevent XSS

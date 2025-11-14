@@ -38,7 +38,7 @@ import {
 	type ThrottleState,
 	validateThrottleOptions,
 	validateWait,
-} from './throttleHelpers';
+} from '@core/utils/throttle/throttleHelpers';
 
 export interface ThrottleOptions {
 	/**

@@ -1,4 +1,4 @@
-import { useDebounce } from '@core/hooks/useDebounce';
+import { useDebounce } from '@core/hooks/debounce/useDebounce';
 import type {
 	AutocompleteOption,
 	AutocompleteProps,

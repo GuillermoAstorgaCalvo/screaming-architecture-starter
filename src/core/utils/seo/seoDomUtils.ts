@@ -17,11 +17,11 @@
  * specialized modules for different meta tag types.
  */
 
-import { updateBasicMetaTags, updateCanonicalUrl } from './seoDomUtils.basic';
-import { updateCustomMetaTags } from './seoDomUtils.custom';
-import type { MergedSEOConfig } from './seoDomUtils.helpers';
-import { updateOpenGraphTags } from './seoDomUtils.openGraph';
-import { updateTwitterTags } from './seoDomUtils.twitter';
+import { updateBasicMetaTags, updateCanonicalUrl } from '@core/utils/seo/seoDomUtils.basic';
+import { updateCustomMetaTags } from '@core/utils/seo/seoDomUtils.custom';
+import type { MergedSEOConfig } from '@core/utils/seo/seoDomUtils.helpers';
+import { updateOpenGraphTags } from '@core/utils/seo/seoDomUtils.openGraph';
+import { updateTwitterTags } from '@core/utils/seo/seoDomUtils.twitter';
 
 /**
  * Apply all SEO metadata to the document

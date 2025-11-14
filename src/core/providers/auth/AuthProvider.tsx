@@ -1,6 +1,6 @@
 import type { AuthPort, AuthTokens } from '@core/ports/AuthPort';
-import { AuthContext, type AuthContextValue } from '@core/providers/AuthContext';
-import type { Permissions } from '@core/security/permissionsTypes';
+import { AuthContext, type AuthContextValue } from '@core/providers/auth/AuthContext';
+import type { Permissions } from '@core/security/permissions/permissionsTypes';
 import type { TokenPayload } from '@src-types/api/auth';
 import { type PropsWithChildren, useCallback, useMemo, useSyncExternalStore } from 'react';
 

@@ -1,8 +1,10 @@
+import {
+	isResourceLoadedInI18n,
+	type StateUpdateFunctions,
+} from '@core/i18n/hooks/useTranslationHelpers';
+import i18n from '@core/i18n/i18n';
+import { isResourceLoading } from '@core/i18n/resourceLoader/cache';
 import { useCallback, useMemo, useRef, useState } from 'react';
-
-import i18n from './i18n';
-import { isResourceLoading } from './resourceLoader.cache';
-import { isResourceLoadedInI18n, type StateUpdateFunctions } from './useTranslationHelpers';
 
 /**
  * Create loading state key

@@ -4,9 +4,8 @@
 // NOSONAR: S6819 - ARIA combobox pattern requires custom implementations
 
 import { classNames } from '@core/utils/classNames';
+import type { AutocompleteOption } from '@domains/shared/components/autocomplete-combobox/AutocompleteCombobox';
 import type { ReactNode } from 'react';
-
-import type { AutocompleteOption } from './AutocompleteCombobox';
 
 interface AutocompleteListboxProps {
 	readonly id: string;

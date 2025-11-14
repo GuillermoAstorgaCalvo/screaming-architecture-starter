@@ -1,4 +1,8 @@
-import type { SliderInputAttributes, SliderModelArgs, SliderViewProps } from './slider.types';
+import type {
+	SliderInputAttributes,
+	SliderModelArgs,
+	SliderViewProps,
+} from '@domains/shared/components/slider/types/slider.types';
 
 const MIN_RANGE_DELTA = 0.0001;
 
@@ -72,13 +76,13 @@ function buildSliderInputProps(args: {
 	};
 }
 
-function buildSliderMarksProps(
-	marks: Array<{ readonly value: number; readonly label?: string }> | undefined,
-	min: number,
-	range: number,
-	marksId: string | undefined
-) {
-	return { marks, min, range, marksId };
+function buildSliderMarksProps(args: {
+	marks: Array<{ readonly value: number; readonly label?: string }> | undefined;
+	min: number;
+	range: number;
+	marksId: string | undefined;
+}) {
+	return { marks: args.marks, min: args.min, range: args.range, marksId: args.marksId };
 }
 
 function extractBasicViewProps(
@@ -139,12 +143,7 @@ function buildSliderViewProps(
 	const sliderMarksArgs = extractSliderMarksArgs(args, derived);
 
 	const sliderInputProps = buildSliderInputProps(sliderInputArgs);
-	const sliderMarksProps = buildSliderMarksProps(
-		sliderMarksArgs.marks,
-		sliderMarksArgs.min,
-		sliderMarksArgs.range,
-		sliderMarksArgs.marksId
-	);
+	const sliderMarksProps = buildSliderMarksProps(sliderMarksArgs);
 
 	return {
 		...basicProps,

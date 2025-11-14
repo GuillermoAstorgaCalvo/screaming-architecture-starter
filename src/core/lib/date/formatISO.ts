@@ -5,8 +5,8 @@
  * All functions are SSR-safe.
  */
 
-import { toDate } from './date';
-import type { DateValue } from './formatDate.types';
+import { toDate } from '@core/lib/date/date';
+import type { DateValue } from '@core/lib/date/formatDate.types';
 
 /**
  * Format a date to ISO string (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)

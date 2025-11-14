@@ -1,5 +1,5 @@
 import type { HttpPort } from '@core/ports/HttpPort';
-import { HttpContext, type HttpContextValue } from '@core/providers/HttpContext';
+import { HttpContext, type HttpContextValue } from '@core/providers/http/HttpContext';
 import { type ReactNode, useMemo } from 'react';
 
 export interface HttpProviderProps {

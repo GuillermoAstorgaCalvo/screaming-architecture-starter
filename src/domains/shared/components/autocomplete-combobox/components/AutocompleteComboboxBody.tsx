@@ -1,7 +1,7 @@
 import { classNames } from '@core/utils/classNames';
+import type { AutocompleteOption } from '@domains/shared/components/autocomplete-combobox/AutocompleteCombobox';
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react';
 
-import type { AutocompleteOption } from './AutocompleteCombobox';
 import AutocompleteComboboxField from './AutocompleteComboboxField';
 import AutocompleteListbox from './AutocompleteComboboxParts';
 

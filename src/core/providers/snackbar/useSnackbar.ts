@@ -1,7 +1,6 @@
+import { SnackbarContext } from '@core/providers/snackbar/SnackbarContext';
 import type { SnackbarIntent, SnackbarItem } from '@core/ui/feedback/snackbar/types/snackbar.types';
 import { type ReactNode, useCallback, useContext } from 'react';
-
-import { SnackbarContext } from './SnackbarContext';
 
 export interface SnackbarOptions {
 	readonly message: string | ReactNode;

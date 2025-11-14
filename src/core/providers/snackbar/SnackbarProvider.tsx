@@ -1,8 +1,10 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
+import {
+	SnackbarContext,
+	type SnackbarContextValue,
+} from '@core/providers/snackbar/SnackbarContext';
 import type { SnackbarItem } from '@core/ui/feedback/snackbar/types/snackbar.types';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';
-
-import { SnackbarContext, type SnackbarContextValue } from './SnackbarContext';
 
 const BASE_36_RADIX = 36;
 const RANDOM_ID_LENGTH = 7;

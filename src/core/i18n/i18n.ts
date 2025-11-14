@@ -1,4 +1,5 @@
 import { env } from '@core/config/env.client';
+import { loadAndAddResource } from '@core/i18n/resourceLoader/i18n';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
@@ -11,9 +12,8 @@ import {
 	LANGUAGE_STORAGE_KEY,
 	SUPPORTED_LANGUAGES,
 	type SupportedLanguage,
-} from './constants';
+} from './constants/constants';
 import { registerCommonTranslations } from './registry';
-import { loadAndAddResource } from './resourceLoader.i18n';
 
 /**
  * Common translation loader factory

@@ -5,9 +5,12 @@
  * Falls back to basic sanitization if DOMPurify is not loaded.
  */
 
-import { sanitizeHtml } from './sanitizeHtml';
-import { DEFAULT_CONFIG, MAX_HTML_LENGTH } from './sanitizeHtmlConstants';
-import type { SanitizeConfig, WindowWithDOMPurify } from './sanitizeHtmlTypes';
+import { sanitizeHtml } from '@core/security/sanitize/sanitizeHtml';
+import { DEFAULT_CONFIG, MAX_HTML_LENGTH } from '@core/security/sanitize/sanitizeHtmlConstants';
+import type {
+	SanitizeConfig,
+	WindowWithDOMPurify,
+} from '@core/security/sanitize/sanitizeHtmlTypes';
 
 /**
  * Type guard to check if DOMPurify is available

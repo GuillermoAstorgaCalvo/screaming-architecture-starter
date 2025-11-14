@@ -23,7 +23,7 @@
  * ```
  */
 
-import { FOCUSABLE_SELECTOR } from './focusConstants';
+import { FOCUSABLE_SELECTOR } from '@core/a11y/focus/constants';
 import {
 	getFocusBounds,
 	handleShiftTabWrap,
@@ -33,7 +33,7 @@ import {
 	isElementVisible,
 	isInsideClosedDetails,
 	shouldExcludeFromFocusable,
-} from './focusHelpers';
+} from '@core/a11y/focus/helpers';
 
 /**
  * Gets all focusable elements within a container

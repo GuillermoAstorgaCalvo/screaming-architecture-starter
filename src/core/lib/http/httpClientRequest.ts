@@ -4,13 +4,12 @@
  * Handles request configuration preparation, fetch config setup, and timeout management.
  */
 
+import { prepareRequestBody } from '@core/lib/http/httpClientBody';
+import { mergeConfigAndHeaders } from '@core/lib/http/httpClientConfig';
+import { headersToRecord, mergeHeaders } from '@core/lib/http/httpClientHeaders';
+import { executeRequestInterceptors } from '@core/lib/http/httpClientInterceptors';
+import { createTimeoutController, type TimeoutController } from '@core/lib/http/httpClientTimeout';
 import type { HttpClientConfig } from '@core/ports/HttpPort';
-
-import { prepareRequestBody } from './httpClientBody';
-import { mergeConfigAndHeaders } from './httpClientConfig';
-import { headersToRecord, mergeHeaders } from './httpClientHeaders';
-import { executeRequestInterceptors } from './httpClientInterceptors';
-import { createTimeoutController, type TimeoutController } from './httpClientTimeout';
 
 /**
  * Clear timeout controller safely

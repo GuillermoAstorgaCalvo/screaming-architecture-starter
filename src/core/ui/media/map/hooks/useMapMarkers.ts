@@ -1,6 +1,6 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
-import { useDebounce } from '@core/hooks/useDebounce';
-import { sanitizeHtml } from '@core/security/sanitizeHtml';
+import { useDebounce } from '@core/hooks/debounce/useDebounce';
+import { sanitizeHtml } from '@core/security/sanitize/sanitizeHtml';
 import type { MapMarker } from '@src-types/ui/maps';
 import { type ReactNode, useEffect, useRef } from 'react';
 

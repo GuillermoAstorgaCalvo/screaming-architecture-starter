@@ -7,8 +7,8 @@
  * @module core/i18n/resourceLoader
  */
 
-import { clearResourceCache as clearResourceCacheImpl } from './resourceLoader.cache';
-import { clearResourceLoaders } from './resourceLoader.registry';
+import { clearResourceCache as clearResourceCacheImpl } from '@core/i18n/resourceLoader/cache';
+import { clearResourceLoaders } from '@core/i18n/resourceLoader/registry';
 
 /**
  * Clear resource cache

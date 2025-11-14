@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { isRtlLanguage as checkIsRtlLanguage } from './constants';
+import { isRtlLanguage as checkIsRtlLanguage } from './constants/constants';
 import i18n from './i18n';
 
 /**

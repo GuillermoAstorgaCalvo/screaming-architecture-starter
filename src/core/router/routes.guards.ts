@@ -1,5 +1,5 @@
-import type { Permissions } from '@core/security/permissionsTypes';
-import { checkPermissions } from '@core/security/permissionsValidate';
+import type { Permissions } from '@core/security/permissions/permissionsTypes';
+import { checkPermissions } from '@core/security/permissions/permissionsValidate';
 
 export interface RouteGuardContext {
 	readonly isAuthenticated: boolean;

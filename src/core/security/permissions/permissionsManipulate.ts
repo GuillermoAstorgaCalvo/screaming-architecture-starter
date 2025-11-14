@@ -4,7 +4,7 @@
  * Provides utilities for merging and filtering permission objects.
  */
 
-import type { Permissions } from './permissionsTypes';
+import type { Permissions } from '@core/security/permissions/permissionsTypes';
 
 /**
  * Merge multiple permission objects

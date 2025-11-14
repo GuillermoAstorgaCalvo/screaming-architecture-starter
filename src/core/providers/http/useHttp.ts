@@ -1,5 +1,5 @@
 import type { HttpPort } from '@core/ports/HttpPort';
-import { HttpContext } from '@core/providers/HttpContext';
+import { HttpContext } from '@core/providers/http/HttpContext';
 import { useContext } from 'react';
 
 /**

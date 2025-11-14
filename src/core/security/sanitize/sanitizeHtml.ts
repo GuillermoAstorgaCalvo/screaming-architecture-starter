@@ -31,14 +31,14 @@
  * @see .cursor/rules/security/security-privacy.mdc
  */
 
-import { MAX_HTML_LENGTH } from './sanitizeHtmlConstants';
-import { escapeHtml } from './sanitizeHtmlEscape';
+import { MAX_HTML_LENGTH } from '@core/security/sanitize/sanitizeHtmlConstants';
+import { escapeHtml } from '@core/security/sanitize/sanitizeHtmlEscape';
 import {
 	mergeSanitizeConfig,
 	processElement,
 	removeDangerousElements,
-} from './sanitizeHtmlHelpers';
-import type { SanitizeConfig } from './sanitizeHtmlTypes';
+} from '@core/security/sanitize/sanitizeHtmlHelpers';
+import type { SanitizeConfig } from '@core/security/sanitize/sanitizeHtmlTypes';
 
 /**
  * Sanitizes HTML content by removing potentially dangerous elements and attributes

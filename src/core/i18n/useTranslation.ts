@@ -1,12 +1,15 @@
+import { isResourceLoadedInI18n } from '@core/i18n/hooks/useTranslationHelpers';
+import {
+	useResourceLoader,
+	useResourceLoadingEffects,
+} from '@core/i18n/hooks/useTranslationLoader';
+import { useResourceLoadingState } from '@core/i18n/hooks/useTranslationState';
+import { isResourceLoading } from '@core/i18n/resourceLoader/cache';
 import { useCallback, useEffect } from 'react';
 import { useTranslation as useI18nextTranslation } from 'react-i18next';
 
 import i18n from './i18n';
-import { isResourceLoading } from './resourceLoader.cache';
-import type { NamespaceKeys, TranslationNamespaces } from './types';
-import { isResourceLoadedInI18n } from './useTranslationHelpers';
-import { useResourceLoader, useResourceLoadingEffects } from './useTranslationLoader';
-import { useResourceLoadingState } from './useTranslationState';
+import type { NamespaceKeys, TranslationNamespaces } from './types/types';
 
 /**
  * Type-safe translation function

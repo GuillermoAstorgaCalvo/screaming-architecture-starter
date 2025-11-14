@@ -4,9 +4,8 @@
  * Handles error transformation and error interceptor execution.
  */
 
+import { executeErrorInterceptors } from '@core/lib/http/httpClientInterceptors';
 import type { HttpClientError } from '@core/ports/HttpPort';
-
-import { executeErrorInterceptors } from './httpClientInterceptors';
 
 /**
  * Handle and transform errors

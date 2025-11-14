@@ -1,5 +1,5 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
-import { useDebounce } from '@core/hooks/useDebounce';
+import { useDebounce } from '@core/hooks/debounce/useDebounce';
 import type { ComboboxOption, ComboboxProps } from '@core/ui/forms/combobox/Combobox';
 import { defaultFilterFn } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
 import { getOptionLabel } from '@core/ui/forms/combobox/helpers/useComboboxHelpers';

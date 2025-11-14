@@ -1,6 +1,5 @@
+import type { AutocompleteOption } from '@domains/shared/components/autocomplete-combobox/AutocompleteCombobox';
 import { type KeyboardEvent, useMemo } from 'react';
-
-import type { AutocompleteOption } from './AutocompleteCombobox';
 
 interface KeyboardHandlersContext {
 	readonly isOpen: boolean;

@@ -6,12 +6,12 @@ import type { AuthPort } from '@core/ports/AuthPort';
 import type { HttpPort } from '@core/ports/HttpPort';
 import type { LoggerPort } from '@core/ports/LoggerPort';
 import type { StoragePort } from '@core/ports/StoragePort';
-import { AnalyticsProvider } from '@core/providers/AnalyticsProvider';
-import { AuthProvider } from '@core/providers/AuthProvider';
-import { HttpProvider } from '@core/providers/HttpProvider';
-import { LoggerProvider } from '@core/providers/LoggerProvider';
-import { StorageProvider } from '@core/providers/StorageProvider';
-import { ToastProvider } from '@core/providers/ToastProvider';
+import { AnalyticsProvider } from '@core/providers/analytics/AnalyticsProvider';
+import { AuthProvider } from '@core/providers/auth/AuthProvider';
+import { HttpProvider } from '@core/providers/http/HttpProvider';
+import { LoggerProvider } from '@core/providers/logger/LoggerProvider';
+import { StorageProvider } from '@core/providers/storage/StorageProvider';
+import { ToastProvider } from '@core/providers/toast/ToastProvider';
 import type { ReactElement, ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 

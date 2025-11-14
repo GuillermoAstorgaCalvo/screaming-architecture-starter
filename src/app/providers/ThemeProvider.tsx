@@ -1,7 +1,7 @@
 import { ThemeContext } from '@app/providers/ThemeContext';
 import { type Theme, THEMES } from '@core/constants/theme';
-import { useLogger } from '@core/providers/useLogger';
-import { useStorage } from '@core/providers/useStorage';
+import { useLogger } from '@core/providers/logger/useLogger';
+import { useStorage } from '@core/providers/storage/useStorage';
 import type { ThemeContextValue, ThemeProviderProps } from '@src-types/layout';
 import {
 	type Dispatch,

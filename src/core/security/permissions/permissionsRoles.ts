@@ -4,7 +4,7 @@
  * Provides utilities for managing permissions based on user roles.
  */
 
-import type { PermissionRoles, Permissions } from './permissionsTypes';
+import type { PermissionRoles, Permissions } from '@core/security/permissions/permissionsTypes';
 
 /**
  * Add permissions from a single role to the permissions object

@@ -1,4 +1,4 @@
-import { addDays, toUTCString } from '@core/lib/date';
+import { addDays, toUTCString } from '@core/lib/date/date';
 import type { CookieOptions } from '@src-types/ports';
 
 import {

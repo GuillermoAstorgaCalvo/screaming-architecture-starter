@@ -1,4 +1,4 @@
-import { useLogger } from '@core/providers/useLogger';
+import { useLogger } from '@core/providers/logger/useLogger';
 import { getDependenciesKey } from '@core/utils/hookUtils';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 

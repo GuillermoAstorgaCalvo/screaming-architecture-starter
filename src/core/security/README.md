@@ -36,9 +36,9 @@ import { generateNonce } from '@core/security/csp/nonce';
 import { generateHash } from '@core/security/csp/hash';
 import { buildCSPPolicy, getRecommendedCSP } from '@core/security/csp/policy';
 import type { HashAlgorithm, CSPDirectives } from '@core/security/csp/types';
-import { escapeHtml } from '@core/security/sanitizeHtmlEscape';
-import { sanitizeHtml } from '@core/security/sanitizeHtml';
-import { hasPermission } from '@core/security/permissionsCheck';
+import { escapeHtml } from '@core/security/sanitize/sanitizeHtmlEscape';
+import { sanitizeHtml } from '@core/security/sanitize/sanitizeHtml';
+import { hasPermission } from '@core/security/permissions/permissionsCheck';
 ```
 
 ### CSP (Content Security Policy)
@@ -84,9 +84,9 @@ const parsed = parseCSPPolicy("default-src 'self'; script-src 'self' 'nonce-abc'
 Sanitize user-provided HTML to prevent XSS attacks:
 
 ```ts
-import { escapeHtml } from '@core/security/sanitizeHtmlEscape';
-import { sanitizeHtml } from '@core/security/sanitizeHtml';
-import { sanitizeHtmlWithDOMPurify } from '@core/security/sanitizeHtmlDOMPurify';
+import { escapeHtml } from '@core/security/sanitize/sanitizeHtmlEscape';
+import { sanitizeHtml } from '@core/security/sanitize/sanitizeHtml';
+import { sanitizeHtmlWithDOMPurify } from '@core/security/sanitize/sanitizeHtmlDOMPurify';
 
 // Escaping HTML (safest option for plain text)
 // SSR-safe: falls back to basic entity escaping in non-browser environments
@@ -122,16 +122,16 @@ import {
 	hasPermission,
 	hasAllPermissions,
 	hasAnyPermission,
-} from '@core/security/permissionsCheck';
-import { checkPermissions } from '@core/security/permissionsValidate';
-import { getPermissionsFromRoles } from '@core/security/permissionsRoles';
-import { mergePermissions, filterPermissions } from '@core/security/permissionsManipulate';
-import { matchesPattern, findPermissionsByPattern } from '@core/security/permissionsPattern';
+} from '@core/security/permissions/permissionsCheck';
+import { checkPermissions } from '@core/security/permissions/permissionsValidate';
+import { getPermissionsFromRoles } from '@core/security/permissions/permissionsRoles';
+import { mergePermissions, filterPermissions } from '@core/security/permissions/permissionsManipulate';
+import { matchesPattern, findPermissionsByPattern } from '@core/security/permissions/permissionsPattern';
 import type {
 	Permissions,
 	PermissionCheckResult,
 	PermissionRoles,
-} from '@core/security/permissionsTypes';
+} from '@core/security/permissions/permissionsTypes';
 
 // Define permissions
 const permissions = {

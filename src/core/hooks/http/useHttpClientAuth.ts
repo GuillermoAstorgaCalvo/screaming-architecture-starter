@@ -5,8 +5,8 @@
  *
  * @param authAdapter - The auth adapter to use for token retrieval
  */
-import { createAuthTokenRequestInterceptor } from '@core/lib/httpAuthInterceptor';
-import { httpClient } from '@core/lib/httpClient';
+import { createAuthTokenRequestInterceptor } from '@core/lib/http/httpAuthInterceptor';
+import { httpClient } from '@core/lib/http/httpClient';
 import type { AuthPort } from '@core/ports/AuthPort';
 import { useEffect } from 'react';
 

@@ -4,7 +4,7 @@
  * Provides simple permission checking functions for single and multiple permissions.
  */
 
-import type { Permissions } from './permissionsTypes';
+import type { Permissions } from '@core/security/permissions/permissionsTypes';
 
 /**
  * Check if a user has a specific permission

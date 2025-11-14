@@ -2,8 +2,8 @@
  * Validation functions for resource loader
  */
 
-import { InvalidResourceFormatError } from './errors';
-import type { AddResourceOptions, TranslationResource } from './resourceLoader.types';
+import { InvalidResourceFormatError } from '@core/i18n/errors';
+import type { AddResourceOptions, TranslationResource } from '@core/i18n/resourceLoader/types';
 
 /**
  * Validate translation resource structure

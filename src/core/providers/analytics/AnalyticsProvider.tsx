@@ -1,5 +1,5 @@
 import type { AnalyticsInitOptions, AnalyticsPort } from '@core/ports/AnalyticsPort';
-import { AnalyticsContext } from '@core/providers/AnalyticsContext';
+import { AnalyticsContext } from '@core/providers/analytics/AnalyticsContext';
 import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 
 function isPromiseLike<T>(value: unknown): value is PromiseLike<T> {

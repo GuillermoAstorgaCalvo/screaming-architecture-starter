@@ -4,12 +4,11 @@
  * Handles response parsing, transformation, and response interceptor execution.
  */
 
+import { createHttpError } from '@core/lib/http/httpClientErrorCreation';
+import { executeResponseInterceptors } from '@core/lib/http/httpClientInterceptors';
+import { parseResponse } from '@core/lib/http/httpClientResponseParsing';
 import type { HttpClientResponse } from '@core/ports/HttpPort';
 import type { z } from 'zod';
-
-import { createHttpError } from './httpClientErrorCreation';
-import { executeResponseInterceptors } from './httpClientInterceptors';
-import { parseResponse } from './httpClientResponseParsing';
 
 /**
  * Process response and handle errors

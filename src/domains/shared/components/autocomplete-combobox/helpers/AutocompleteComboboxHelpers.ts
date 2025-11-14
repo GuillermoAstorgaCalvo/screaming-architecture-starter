@@ -1,6 +1,5 @@
+import type { AutocompleteOption } from '@domains/shared/components/autocomplete-combobox/AutocompleteCombobox';
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react';
-
-import type { AutocompleteOption } from './AutocompleteCombobox';
 
 export function filterOptions(
 	options: AutocompleteOption[],

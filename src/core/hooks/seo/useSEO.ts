@@ -1,6 +1,6 @@
 import { getDefaultSEO, mergeSEOConfig, type SEOConfig } from '@core/config/seo';
-import { applySEOToDocument } from '@core/utils/seoDomUtils';
-import type { MergedSEOConfig } from '@core/utils/seoDomUtils.helpers';
+import { applySEOToDocument } from '@core/utils/seo/seoDomUtils';
+import type { MergedSEOConfig } from '@core/utils/seo/seoDomUtils.helpers';
 import { useEffect, useRef } from 'react';
 
 /**

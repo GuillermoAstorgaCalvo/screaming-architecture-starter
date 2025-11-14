@@ -1,5 +1,5 @@
-import { useLogger } from '@core/providers/useLogger';
-import { useStorage } from '@core/providers/useStorage';
+import { useLogger } from '@core/providers/logger/useLogger';
+import { useStorage } from '@core/providers/storage/useStorage';
 import { useCallback, useEffect, useState } from 'react';
 import type { z } from 'zod';
 

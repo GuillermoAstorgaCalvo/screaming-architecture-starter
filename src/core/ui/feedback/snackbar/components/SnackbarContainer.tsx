@@ -1,4 +1,4 @@
-import { useSnackbar } from '@core/providers/useSnackbar';
+import { useSnackbar } from '@core/providers/snackbar/useSnackbar';
 import { SNACKBAR_POSITION_CLASSES } from '@core/ui/feedback/snackbar/constants/snackbar.constants';
 import Snackbar from '@core/ui/feedback/snackbar/Snackbar';
 import type {

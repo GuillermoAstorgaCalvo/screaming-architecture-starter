@@ -1,4 +1,4 @@
-import { debounce, type DebouncedFunction } from '@core/utils/debounce';
+import { debounce, type DebouncedFunction } from '@core/utils/debounce/debounce';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 /**

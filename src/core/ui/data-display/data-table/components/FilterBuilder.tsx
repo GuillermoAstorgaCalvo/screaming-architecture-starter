@@ -1,9 +1,9 @@
 import {
-	AddFilterForm,
 	FilterBuilderClosed,
 	FilterBuilderHeader,
-	FilterList,
-} from '@core/ui/data-display/data-table/components/FilterBuilderComponents';
+} from '@core/ui/data-display/data-table/components/FilterBuilderHeader';
+import { AddFilterForm } from '@core/ui/data-display/data-table/components/FilterFormComponents';
+import { FilterList } from '@core/ui/data-display/data-table/components/FilterList';
 import { useFilterBuilder } from '@core/ui/data-display/data-table/hooks/useFilterBuilder';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
 

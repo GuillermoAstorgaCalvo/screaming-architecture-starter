@@ -5,10 +5,11 @@
  * Domains can register their translations here without core needing to know about them.
  */
 
-import { DEFAULT_LANGUAGE, normalizeLanguage, type SupportedLanguage } from './constants';
+import { registerResourceLoader } from '@core/i18n/resourceLoader/registry';
+import type { ResourceLoader } from '@core/i18n/resourceLoader/types';
+
+import { DEFAULT_LANGUAGE, normalizeLanguage, type SupportedLanguage } from './constants/constants';
 import { InvalidResourceFormatError } from './errors';
-import { registerResourceLoader } from './resourceLoader.registry';
-import type { ResourceLoader } from './resourceLoader.types';
 
 /**
  * Validate module structure

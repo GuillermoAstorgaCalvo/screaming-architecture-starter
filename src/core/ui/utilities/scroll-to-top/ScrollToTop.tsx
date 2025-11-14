@@ -1,4 +1,4 @@
-import { useScrollPosition } from '@core/hooks/useScrollPosition';
+import { useScrollPosition } from '@core/hooks/scroll/useScrollPosition';
 import FloatingActionButton from '@core/ui/floating-action-button/FloatingActionButton';
 import ArrowUpIcon from '@core/ui/icons/arrow-up-icon/ArrowUpIcon';
 import type { StandardSize } from '@src-types/ui/base';

@@ -1,4 +1,4 @@
-import { focusFirstElement, handleTabNavigation, saveActiveElement } from '@core/a11y/focus';
+import { focusFirstElement, handleTabNavigation, saveActiveElement } from '@core/a11y/focus/focus';
 import { type RefObject, useEffect, useId, useRef } from 'react';
 
 /**

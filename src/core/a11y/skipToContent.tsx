@@ -1,6 +1,6 @@
 import { ARIA_LABELS } from '@core/constants/aria';
 import type { LoggerPort } from '@core/ports/LoggerPort';
-import { useLogger } from '@core/providers/useLogger';
+import { useLogger } from '@core/providers/logger/useLogger';
 import { classNames } from '@core/utils/classNames';
 import type { MouseEvent, ReactNode } from 'react';
 

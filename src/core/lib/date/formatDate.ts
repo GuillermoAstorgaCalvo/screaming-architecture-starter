@@ -5,8 +5,8 @@
  * across the application. All functions are SSR-safe.
  */
 
-import { toDate } from './date';
-import type { DateValue, FormatDateOptions } from './formatDate.types';
+import { toDate } from '@core/lib/date/date';
+import type { DateValue, FormatDateOptions } from '@core/lib/date/formatDate.types';
 
 /**
  * Format a date value to a readable string

@@ -3,11 +3,13 @@
  * Handles adding resources to i18next instance
  */
 
+import { loadResource } from '@core/i18n/resourceLoader/load';
+import type {
+	AddResourceOptions,
+	LoadAndAddResourceOptions,
+} from '@core/i18n/resourceLoader/types';
+import { validateAddResourceOptions } from '@core/i18n/resourceLoader/validation';
 import type { i18n as I18nInstance } from 'i18next';
-
-import { loadResource } from './resourceLoader.load';
-import type { AddResourceOptions, LoadAndAddResourceOptions } from './resourceLoader.types';
-import { validateAddResourceOptions } from './resourceLoader.validation';
 
 /**
  * Prepare resource bundle for addition (remove existing if not merging)

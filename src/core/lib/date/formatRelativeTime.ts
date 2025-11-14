@@ -5,8 +5,8 @@
  * (e.g., "2 hours ago", "in 3 days"). All functions are SSR-safe.
  */
 
-import { toDate } from './date';
-import type { DateValue } from './formatDate.types';
+import { toDate } from '@core/lib/date/date';
+import type { DateValue } from '@core/lib/date/formatDate.types';
 
 const MS_PER_SECOND = 1000;
 const SECONDS_PER_MINUTE = 60;

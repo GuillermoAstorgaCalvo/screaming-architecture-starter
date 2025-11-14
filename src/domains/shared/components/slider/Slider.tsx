@@ -1,8 +1,7 @@
+import { SliderView } from '@domains/shared/components/slider/components/SliderView';
+import { buildSliderModel } from '@domains/shared/components/slider/helpers/sliderModel';
+import type { SliderProps } from '@domains/shared/components/slider/types/slider.types';
 import { useId } from 'react';
-
-import type { SliderProps } from './slider.types';
-import { buildSliderModel } from './sliderModel';
-import { SliderView } from './SliderView';
 
 export default function Slider(props: Readonly<SliderProps>) {
 	const {

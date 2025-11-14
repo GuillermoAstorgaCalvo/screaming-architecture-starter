@@ -4,8 +4,8 @@
  * Internal helper functions for processing and sanitizing HTML elements.
  */
 
-import { DEFAULT_CONFIG } from './sanitizeHtmlConstants';
-import type { SanitizeConfig } from './sanitizeHtmlTypes';
+import { DEFAULT_CONFIG } from '@core/security/sanitize/sanitizeHtmlConstants';
+import type { SanitizeConfig } from '@core/security/sanitize/sanitizeHtmlTypes';
 
 /**
  * Merges sanitization config with defaults

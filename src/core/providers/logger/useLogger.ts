@@ -1,5 +1,5 @@
 import type { LoggerPort } from '@core/ports/LoggerPort';
-import { LoggerContext } from '@core/providers/LoggerContext';
+import { LoggerContext } from '@core/providers/logger/LoggerContext';
 import { useContext } from 'react';
 
 /**

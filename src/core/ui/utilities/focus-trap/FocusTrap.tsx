@@ -1,4 +1,4 @@
-import { handleTabNavigation } from '@core/a11y/focus';
+import { handleTabNavigation } from '@core/a11y/focus/focus';
 import type { FocusTrapProps } from '@src-types/ui/overlays/containers';
 import { useEffect, useRef } from 'react';
 import { twMerge } from 'tailwind-merge';

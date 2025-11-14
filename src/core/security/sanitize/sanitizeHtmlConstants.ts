@@ -4,7 +4,7 @@
  * Constants and default configuration for HTML sanitization utilities.
  */
 
-import type { SanitizeConfig } from './sanitizeHtmlTypes';
+import type { SanitizeConfig } from '@core/security/sanitize/sanitizeHtmlTypes';
 
 /**
  * Maximum text length for HTML escaping (1MB)

@@ -3,7 +3,7 @@
  * Handles registration and retrieval of resource loaders by namespace
  */
 
-import type { ResourceLoader } from './resourceLoader.types';
+import type { ResourceLoader } from '@core/i18n/resourceLoader/types';
 
 /**
  * Resource loader registry

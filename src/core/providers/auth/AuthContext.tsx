@@ -1,5 +1,5 @@
 import type { AuthPort, AuthTokens } from '@core/ports/AuthPort';
-import type { Permissions } from '@core/security/permissionsTypes';
+import type { Permissions } from '@core/security/permissions/permissionsTypes';
 import { createContext } from 'react';
 
 export interface AuthContextValue {

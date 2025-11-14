@@ -1,5 +1,5 @@
 import type { StoragePort } from '@core/ports/StoragePort';
-import { StorageContext, type StorageContextValue } from '@core/providers/StorageContext';
+import { StorageContext, type StorageContextValue } from '@core/providers/storage/StorageContext';
 import { type ReactNode, useMemo } from 'react';
 
 export interface StorageProviderProps {

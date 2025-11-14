@@ -1,5 +1,5 @@
 import type { AnalyticsPort } from '@core/ports/AnalyticsPort';
-import { AnalyticsContext } from '@core/providers/AnalyticsContext';
+import { AnalyticsContext } from '@core/providers/analytics/AnalyticsContext';
 import { useContext } from 'react';
 
 /**

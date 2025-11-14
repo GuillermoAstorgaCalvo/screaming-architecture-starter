@@ -1,14 +1,13 @@
-import { useCallback, useEffect, type useRef } from 'react';
-
-import i18n from './i18n';
-import { isResourceCached, isResourceLoading } from './resourceLoader.cache';
 import {
 	handleExistingLoad,
 	handleInitialLoad,
 	isResourceLoadedInI18n,
 	type StateUpdateFunctions,
 	updateLoadingState,
-} from './useTranslationHelpers';
+} from '@core/i18n/hooks/useTranslationHelpers';
+import i18n from '@core/i18n/i18n';
+import { isResourceCached, isResourceLoading } from '@core/i18n/resourceLoader/cache';
+import { useCallback, useEffect, type useRef } from 'react';
 
 /**
  * Options for resource loading effects

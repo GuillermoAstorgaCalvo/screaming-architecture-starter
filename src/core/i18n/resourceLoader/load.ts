@@ -3,7 +3,7 @@
  * Handles loading of translation resources with caching and error handling
  */
 
-import { InvalidResourceFormatError, ResourceLoaderNotFoundError } from './errors';
+import { InvalidResourceFormatError, ResourceLoaderNotFoundError } from '@core/i18n/errors';
 import {
 	deleteLoadingPromise,
 	getCachedResource,
@@ -11,10 +11,13 @@ import {
 	getLoadingPromise,
 	setCachedResource,
 	setLoadingPromise,
-} from './resourceLoader.cache';
-import { getResourceLoader } from './resourceLoader.registry';
-import type { ExecuteResourceLoadOptions, TranslationResource } from './resourceLoader.types';
-import { validateResource } from './resourceLoader.validation';
+} from '@core/i18n/resourceLoader/cache';
+import { getResourceLoader } from '@core/i18n/resourceLoader/registry';
+import type {
+	ExecuteResourceLoadOptions,
+	TranslationResource,
+} from '@core/i18n/resourceLoader/types';
+import { validateResource } from '@core/i18n/resourceLoader/validation';
 
 /**
  * Execute resource loading with error handling

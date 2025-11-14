@@ -2,7 +2,7 @@ import AppLayout from '@app/components/AppLayout';
 import { withTheme } from '@app/components/PageWrapper';
 import Error404 from '@app/pages/Error404';
 import type { AnalyticsPageView } from '@core/ports/AnalyticsPort';
-import { useAnalytics } from '@core/providers/useAnalytics';
+import { useAnalytics } from '@core/providers/analytics/useAnalytics';
 import { buildRoute } from '@core/router/routes.gen';
 import { DefaultLoadingFallback } from '@core/ui/utilities/loadable/components/loadableFallback';
 import { RouteTransition } from '@core/ui/utilities/motion/components/RouteTransition';

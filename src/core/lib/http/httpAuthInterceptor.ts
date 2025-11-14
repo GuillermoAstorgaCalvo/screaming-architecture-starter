@@ -1,4 +1,4 @@
-import type { RequestInterceptor } from '@core/lib/httpClientInterceptors';
+import type { RequestInterceptor } from '@core/lib/http/httpClientInterceptors';
 import type { AuthPort, AuthTokens } from '@core/ports/AuthPort';
 import type { HttpClientConfig } from '@core/ports/HttpPort';
 

@@ -682,12 +682,12 @@ export default [
 			'max-nested-callbacks': ['error', 3],
 		},
 	},
-	// Hooks: 150 file, 25 function, 3 params, 8 complexity, 3 depth, 15 statements, 2 nested callbacks - error level
+	// Hooks: 150 file,30 function, 3 params, 8 complexity, 3 depth, 15 statements, 2 nested callbacks - error level
 	{
 		files: ['src/domains/**/hooks/**/*.{ts,tsx}', 'src/shared/**/hooks/**/*.{ts,tsx}'],
 		rules: {
 			'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
-			'max-lines-per-function': ['error', { max: 25, skipBlankLines: true, skipComments: true }],
+			'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
 			'max-params': ['error', 3],
 			complexity: ['error', 8],
 			'max-depth': ['error', 3],

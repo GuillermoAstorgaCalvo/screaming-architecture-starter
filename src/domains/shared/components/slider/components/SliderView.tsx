@@ -2,14 +2,13 @@ import HelperText from '@core/ui/helper-text/HelperText';
 import Label from '@core/ui/label/Label';
 import Text from '@core/ui/text/Text';
 import { classNames } from '@core/utils/classNames';
-
+import { getPercentage } from '@domains/shared/components/slider/helpers/sliderModel';
 import type {
 	OptionalString,
 	SliderInputProps,
 	SliderMarksProps,
 	SliderViewProps,
-} from './slider.types';
-import { getPercentage } from './sliderModel';
+} from '@domains/shared/components/slider/types/slider.types';
 
 interface SliderHeaderProps {
 	readonly htmlFor: string;

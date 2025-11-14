@@ -4,7 +4,7 @@
  * Provides utilities for matching permissions using wildcard patterns.
  */
 
-import type { Permissions } from './permissionsTypes';
+import type { Permissions } from '@core/security/permissions/permissionsTypes';
 
 /**
  * Match middle parts of a pattern in a permission string

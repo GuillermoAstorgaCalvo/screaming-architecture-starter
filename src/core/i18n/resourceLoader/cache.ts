@@ -3,7 +3,7 @@
  * Handles caching of loaded resources and loading state tracking
  */
 
-import type { TranslationResource } from './resourceLoader.types';
+import type { TranslationResource } from '@core/i18n/resourceLoader/types';
 
 /**
  * Cache for loaded resources

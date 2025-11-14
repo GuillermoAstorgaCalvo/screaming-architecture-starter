@@ -15,15 +15,13 @@
  * with the hexagonal architecture port definition.
  */
 
+import { createDefaultConfig } from '@core/lib/http/httpClientConfig';
+import { handleHttpError } from '@core/lib/http/httpClientErrorHandler';
 import type {
 	ErrorInterceptor,
 	RequestInterceptor,
 	ResponseInterceptor,
-} from '@core/lib/httpClientInterceptors';
-import type { HttpClientConfig, HttpClientResponse, HttpPort } from '@core/ports/HttpPort';
-
-import { createDefaultConfig } from './httpClientConfig';
-import { handleHttpError } from './httpClientErrorHandler';
+} from '@core/lib/http/httpClientInterceptors';
 import {
 	createDeleteMethod,
 	createGetMethod,
@@ -32,14 +30,15 @@ import {
 	createPatchMethod,
 	createPostMethod,
 	createPutMethod,
-} from './httpClientMethods';
+} from '@core/lib/http/httpClientMethods';
 import {
 	clearTimeoutSafely,
 	createRequestTimeout,
 	prepareFetchConfig,
 	prepareRequestConfig,
-} from './httpClientRequest';
-import { processHttpResponse } from './httpClientResponse';
+} from '@core/lib/http/httpClientRequest';
+import { processHttpResponse } from '@core/lib/http/httpClientResponse';
+import type { HttpClientConfig, HttpClientResponse, HttpPort } from '@core/ports/HttpPort';
 
 export class HttpClient implements HttpPort {
 	private readonly requestInterceptors: RequestInterceptor[] = [];

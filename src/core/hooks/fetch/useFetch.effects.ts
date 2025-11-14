@@ -1,7 +1,6 @@
+import { cleanupAbortController } from '@core/hooks/fetch/useFetch.helpers';
+import type { AutoFetchOptions } from '@core/hooks/fetch/useFetch.types';
 import { useEffect, useRef } from 'react';
-
-import { cleanupAbortController } from './useFetch.helpers';
-import type { AutoFetchOptions } from './useFetch.types';
 
 /**
  * Setup auto-fetch effect

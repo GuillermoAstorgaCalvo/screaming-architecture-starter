@@ -1,7 +1,6 @@
+import AutocompleteComboboxBody from '@domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxBody';
+import { useAutocompleteComboboxSetup } from '@domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxSetup';
 import type { ReactNode } from 'react';
-
-import AutocompleteComboboxBody from './AutocompleteComboboxBody';
-import { useAutocompleteComboboxSetup } from './useAutocompleteComboboxSetup';
 
 export interface AutocompleteOption {
 	readonly value: string;

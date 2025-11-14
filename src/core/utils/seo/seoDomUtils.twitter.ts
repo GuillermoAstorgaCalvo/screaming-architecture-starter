@@ -13,7 +13,7 @@
  * For SSR safety, ensure this is only called in client-side code.
  */
 
-import { type MergedSEOConfig, updateMetaTag } from './seoDomUtils.helpers';
+import { type MergedSEOConfig, updateMetaTag } from '@core/utils/seo/seoDomUtils.helpers';
 
 /**
  * Update Twitter Card meta tags

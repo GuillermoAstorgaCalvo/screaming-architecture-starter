@@ -33,7 +33,7 @@ import { isFeatureEnabled, isFeatureEnabledAsync } from '@core/config/features';
 
 // SEO helpers
 import { DEFAULT_SEO, mergeSEOConfig, buildPageTitle } from '@core/config/seo';
-import { useSEO } from '@core/hooks/useSEO';
+import { useSEO } from '@core/hooks/seo/useSEO';
 
 // Initialization
 import { initConfig } from '@core/config/init';
@@ -203,7 +203,7 @@ SEO helpers enable per-route metadata updates and improve sharing/discoverabilit
 **Use the `useSEO` hook** in your page components:
 
 ```tsx
-import { useSEO } from '@core/hooks/useSEO';
+import { useSEO } from '@core/hooks/seo/useSEO';
 
 function MyPage() {
 	useSEO({

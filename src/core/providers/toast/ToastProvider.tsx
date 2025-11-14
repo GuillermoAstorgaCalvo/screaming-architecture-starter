@@ -1,7 +1,10 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
+import {
+	ToastContext,
+	type ToastContextValue,
+	type ToastItem,
+} from '@core/providers/toast/ToastContext';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';
-
-import { ToastContext, type ToastContextValue, type ToastItem } from './ToastContext';
 
 export interface ToastProviderProps {
 	readonly children: ReactNode;

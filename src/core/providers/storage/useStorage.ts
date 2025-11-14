@@ -1,5 +1,5 @@
 import type { StoragePort } from '@core/ports/StoragePort';
-import { StorageContext } from '@core/providers/StorageContext';
+import { StorageContext } from '@core/providers/storage/StorageContext';
 import { useContext } from 'react';
 
 /**

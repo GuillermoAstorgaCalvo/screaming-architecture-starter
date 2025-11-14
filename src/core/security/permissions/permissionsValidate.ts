@@ -4,8 +4,15 @@
  * Provides comprehensive permission checking with detailed results and validation.
  */
 
-import { hasAllPermissions, hasAnyPermission, hasPermission } from './permissionsCheck';
-import type { PermissionCheckResult, Permissions } from './permissionsTypes';
+import {
+	hasAllPermissions,
+	hasAnyPermission,
+	hasPermission,
+} from '@core/security/permissions/permissionsCheck';
+import type {
+	PermissionCheckResult,
+	Permissions,
+} from '@core/security/permissions/permissionsTypes';
 
 /**
  * Validate permissions input

@@ -1,6 +1,6 @@
 import { UI_TIMEOUTS } from '@core/constants/timeouts';
 import { loadGoogleMaps } from '@core/lib/googleMapsLoader';
-import { debounce } from '@core/utils/debounce';
+import { debounce } from '@core/utils/debounce/debounce';
 import type { MapProps } from '@src-types/ui/maps';
 
 /**

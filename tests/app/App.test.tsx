@@ -1,6 +1,6 @@
 import App from '@app/App';
 import { __resetRuntimeConfigCache } from '@core/config/runtime';
-import { httpClient } from '@core/lib/httpClient';
+import { httpClient } from '@core/lib/http/httpClient';
 import { render, screen, waitFor } from '@testing-library/react';
 import type { MockAnalyticsAdapter } from '@tests/utils/mocks/MockAnalyticsAdapter';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';

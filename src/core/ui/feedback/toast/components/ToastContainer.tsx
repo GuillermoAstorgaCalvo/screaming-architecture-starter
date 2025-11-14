@@ -1,5 +1,5 @@
-import type { ToastItem } from '@core/providers/ToastContext';
-import { useToast } from '@core/providers/useToast';
+import type { ToastItem } from '@core/providers/toast/ToastContext';
+import { useToast } from '@core/providers/toast/useToast';
 import Toast from '@core/ui/feedback/toast/Toast';
 import type { ToastAction } from '@core/ui/feedback/toast/types/toast.types';
 import { classNames } from '@core/utils/classNames';

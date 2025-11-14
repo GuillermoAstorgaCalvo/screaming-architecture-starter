@@ -5,10 +5,9 @@
  * for the HTTP client.
  */
 
+import { mergeHeaders } from '@core/lib/http/httpClientHeaders';
+import { buildURL } from '@core/lib/http/httpClientUrl';
 import type { HttpClientConfig } from '@core/ports/HttpPort';
-
-import { mergeHeaders } from './httpClientHeaders';
-import { buildURL } from './httpClientUrl';
 
 /**
  * Set default configuration

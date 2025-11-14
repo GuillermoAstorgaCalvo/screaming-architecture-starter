@@ -1,4 +1,4 @@
-import { focusFirstElement } from '@core/a11y/focus';
+import { focusFirstElement } from '@core/a11y/focus/focus';
 import {
 	buildUsePopoverReturn,
 	type UsePopoverReturn,

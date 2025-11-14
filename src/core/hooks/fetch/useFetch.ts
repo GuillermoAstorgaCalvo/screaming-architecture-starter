@@ -1,16 +1,15 @@
-import { useHttp } from '@core/providers/useHttp';
-import { useLogger } from '@core/providers/useLogger';
-import { getDependenciesKey } from '@core/utils/hookUtils';
-import { useCallback, useMemo, useRef, useState } from 'react';
-
-import { useAutoFetchEffect } from './useFetch.effects';
+import { useAutoFetchEffect } from '@core/hooks/fetch/useFetch.effects';
 import {
 	cleanupAbortController,
 	memoizeHttpConfig,
 	performFetch,
 	setupAbortController,
-} from './useFetch.helpers';
-import type { UseFetchOptions, UseFetchReturn } from './useFetch.types';
+} from '@core/hooks/fetch/useFetch.helpers';
+import type { UseFetchOptions, UseFetchReturn } from '@core/hooks/fetch/useFetch.types';
+import { useHttp } from '@core/providers/http/useHttp';
+import { useLogger } from '@core/providers/logger/useLogger';
+import { getDependenciesKey } from '@core/utils/hookUtils';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 /**
  * Generic data fetching hook

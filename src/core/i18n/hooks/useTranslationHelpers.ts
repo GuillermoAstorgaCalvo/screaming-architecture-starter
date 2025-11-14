@@ -1,6 +1,6 @@
-import i18n from './i18n';
-import { isResourceCached, isResourceLoading } from './resourceLoader.cache';
-import { loadAndAddResource } from './resourceLoader.i18n';
+import i18n from '@core/i18n/i18n';
+import { isResourceCached, isResourceLoading } from '@core/i18n/resourceLoader/cache';
+import { loadAndAddResource } from '@core/i18n/resourceLoader/i18n';
 
 /**
  * Options for state update functions

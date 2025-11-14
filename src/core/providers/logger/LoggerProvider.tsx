@@ -1,5 +1,5 @@
 import type { LoggerPort } from '@core/ports/LoggerPort';
-import { LoggerContext, type LoggerContextValue } from '@core/providers/LoggerContext';
+import { LoggerContext, type LoggerContextValue } from '@core/providers/logger/LoggerContext';
 import { type ReactNode, useMemo } from 'react';
 
 export interface LoggerProviderProps {

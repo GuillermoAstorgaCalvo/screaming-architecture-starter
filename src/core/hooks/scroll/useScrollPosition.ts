@@ -1,4 +1,4 @@
-import { useThrottledCallback } from '@core/hooks/useThrottle';
+import { useThrottledCallback } from '@core/hooks/throttle/useThrottle';
 import { useEffect, useState } from 'react';
 
 /**

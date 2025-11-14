@@ -1,4 +1,4 @@
-import { useAuth } from '@core/providers/useAuth';
+import { useAuth } from '@core/providers/auth/useAuth';
 import {
 	authenticatedGuard,
 	createPermissionGuard,

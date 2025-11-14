@@ -1,4 +1,4 @@
-import { throttle, type ThrottledFunction } from '@core/utils/throttle';
+import { throttle, type ThrottledFunction } from '@core/utils/throttle/throttle';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 /**

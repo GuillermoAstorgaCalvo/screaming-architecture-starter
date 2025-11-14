@@ -8,7 +8,7 @@
  * See: .cursor/rules/config/config.mdc
  */
 
-import { httpClient } from '@core/lib/httpClient';
+import { httpClient } from '@core/lib/http/httpClient';
 
 import { getRuntimeConfig } from './runtime';
 

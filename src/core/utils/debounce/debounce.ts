@@ -37,7 +37,7 @@ import {
 	scheduleMaxWait,
 	shouldInvoke,
 	validateWait,
-} from './debounceHelpers';
+} from '@core/utils/debounce/debounceHelpers';
 
 export interface DebounceOptions {
 	/**
