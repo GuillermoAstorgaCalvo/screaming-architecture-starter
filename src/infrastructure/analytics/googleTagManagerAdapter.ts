@@ -29,6 +29,7 @@ export class GoogleTagManagerAdapter implements AnalyticsPort {
 	private dataLayerName: string = DEFAULT_DATALAYER_NAME;
 	private initialized = false;
 	private scriptLoaded = false;
+	private noscriptInjected = false;
 
 	initialize(options: AnalyticsInitOptions): void {
 		const containerId = options.containerId ?? options.writeKey ?? null;
@@ -47,6 +48,7 @@ export class GoogleTagManagerAdapter implements AnalyticsPort {
 		});
 
 		this.injectScript(containerId, Boolean(options.debug));
+		this.injectNoscript(containerId);
 		this.initialized = true;
 	}
 
@@ -209,12 +211,34 @@ export class GoogleTagManagerAdapter implements AnalyticsPort {
 		return this.initialized && Boolean(this.containerId);
 	}
 
-	private getWindow(): GtmWindow | null {
-		if (!isBrowserEnvironment()) {
-			return null;
+	private injectNoscript(containerId: string): void {
+		if (
+			!isBrowserEnvironment() ||
+			this.noscriptInjected ||
+			document.querySelector(`noscript[id="gtm-noscript-${containerId}"]`)
+		) {
+			this.noscriptInjected = true;
+			return;
 		}
 
-		return globalThis.window as unknown as GtmWindow;
+		const iframe = document.createElement('iframe');
+		Object.assign(iframe, {
+			src: `https://www.googletagmanager.com/ns.html?id=${containerId}`,
+			height: '0',
+			width: '0',
+			title: 'Google Tag Manager',
+		});
+		Object.assign(iframe.style, { display: 'none', visibility: 'hidden' });
+
+		const noscript = document.createElement('noscript');
+		noscript.id = `gtm-noscript-${containerId}`;
+		noscript.append(iframe);
+		document.body.insertBefore(noscript, document.body.firstChild);
+		this.noscriptInjected = true;
+	}
+
+	private getWindow(): GtmWindow | null {
+		return isBrowserEnvironment() ? (globalThis.window as unknown as GtmWindow) : null;
 	}
 }
 
