@@ -24,7 +24,7 @@
 				},
 				{
 					"key": "Content-Security-Policy",
-					"value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://vercel.live 'sha256-whAL8/ab6qlbvCYAlFuecmtz4JhLetkVNnfTdEDGqKc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://vercel.live; frame-src 'self' https://www.googletagmanager.com; frame-ancestors 'none'"
+					"value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://vercel.live 'sha256-whAL8/ab6qlbvCYAlFuecmtz4JhLetkVNnfTdEDGqKc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://vercel.live; frame-src 'self' https://www.googletagmanager.com https://vercel.live; frame-ancestors 'none'"
 				}
 			]
 		},
