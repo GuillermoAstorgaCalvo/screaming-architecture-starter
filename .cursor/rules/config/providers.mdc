@@ -38,10 +38,10 @@ Composition: `app/App.tsx` wraps router with providers in order:
 7. `I18nProvider`
 8. `QueryProvider`
 9. `AnalyticsProvider`
-10. `MotionProvider` / `LayoutGroup` (from `core/ui/utilities/motion`)
+10. `LazyMotionProvider` / `LazyLayoutGroup` (lazy-loaded, from `core/ui/utilities/motion`)
 11. `ToastProvider`
 12. `BrowserRouter`
-13. `LayoutGroup` (route transitions)
+13. `LazyLayoutGroup` (lazy-loaded, route transitions)
 14. `Router` (renders routes) + `ToastContainer`
 
 ### Provider Hooks

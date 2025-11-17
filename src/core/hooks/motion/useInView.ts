@@ -41,7 +41,7 @@
  * ```
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Options for useInView hook
@@ -71,6 +71,10 @@ export interface UseInViewReturn {
 	entry?: IntersectionObserverEntry | undefined;
 }
 
+interface MutableRef<T> {
+	current: T;
+}
+
 /**
  * Setup intersection observer effect
  */
@@ -93,7 +97,7 @@ function setupObserver(
 
 	const handleIntersect = (entries: IntersectionObserverEntry[]) => {
 		const [intersectionEntry] = entries;
-		if (!intersectionEntry) {
+		if (intersectionEntry === undefined) {
 			return;
 		}
 
@@ -103,16 +107,25 @@ function setupObserver(
 			if (config.triggerOnce) {
 				config.hasTriggeredRef.current = true;
 			}
-		} else if (!config.triggerOnce) {
-			config.setInView(false);
+			return;
 		}
+
+		if (config.triggerOnce) {
+			return;
+		}
+
+		config.setInView(false);
 	};
 
-	const observer = new IntersectionObserver(handleIntersect, {
+	const observer = createObserver(handleIntersect, {
 		threshold: config.threshold,
 		rootMargin: config.rootMargin,
 		root: config.root,
 	});
+
+	if (observer === null) {
+		return;
+	}
 
 	observerRef.current = observer;
 	observer.observe(element);
@@ -130,44 +143,145 @@ function setupObserver(
  * Perfect for scroll-triggered animations with Framer Motion.
  */
 export function useInView(options: Readonly<UseInViewOptions> = {}): UseInViewReturn {
-	const {
-		threshold = 0,
-		rootMargin = '0px',
-		root = null,
-		triggerOnce = false,
-		enabled = true,
-	} = options;
-
-	const [inView, setInView] = useState(false);
-	const [entry, setEntry] = useState<IntersectionObserverEntry | undefined>(undefined);
-	const elementRef = useRef<Element | null>(null);
-	const observerRef = useRef<IntersectionObserver | null>(null);
-	const hasTriggeredRef = useRef(false);
-
-	const ref = (node: Element | null) => {
-		elementRef.current = node;
+	const resolvedOptions = {
+		threshold: options.threshold ?? 0,
+		rootMargin: options.rootMargin ?? '0px',
+		root: options.root ?? null,
+		triggerOnce: options.triggerOnce ?? false,
+		enabled: options.enabled ?? true,
 	};
 
-	useEffect(() => {
-		if (!enabled) {
+	return useObserverLifecycle(resolvedOptions);
+}
+
+interface ObserverLifecycleOptions extends Required<Omit<UseInViewOptions, 'root'>> {
+	root: Element | null;
+}
+
+function useObserverLifecycle(options: ObserverLifecycleOptions): UseInViewReturn {
+	const { threshold, rootMargin, root, triggerOnce, enabled } = options;
+	const [inView, setInView] = useState(false);
+	const [entry, setEntry] = useState<IntersectionObserverEntry | undefined>(undefined);
+	const observerRef = useRef<IntersectionObserver | null>(null);
+	const cleanupRef = useRef<(() => void) | null>(null);
+	const targetRef = useRef<Element | null>(null);
+	const hasTriggeredRef = useRef(false);
+
+	const reconnectObserver = useCallback(() => {
+		cleanupRef.current?.();
+		cleanupRef.current = null;
+
+		const element = targetRef.current;
+
+		if (element === null) {
 			return;
 		}
 
-		const element = elementRef.current;
-		if (!element || (triggerOnce && hasTriggeredRef.current)) {
+		if (triggerOnce && hasTriggeredRef.current) {
 			return;
 		}
 
-		return setupObserver(element, observerRef, {
-			threshold,
-			rootMargin,
-			root,
-			triggerOnce,
-			hasTriggeredRef,
-			setEntry,
-			setInView,
-		});
-	}, [threshold, rootMargin, root, triggerOnce, enabled]);
+		if (enabled) {
+			const cleanup = setupObserver(element, observerRef, {
+				threshold,
+				rootMargin,
+				root,
+				triggerOnce,
+				hasTriggeredRef,
+				setEntry,
+				setInView,
+			});
+
+			if (cleanup) {
+				cleanupRef.current = cleanup;
+			}
+		}
+	}, [enabled, threshold, rootMargin, root, triggerOnce]);
+
+	const ref = useCallback(
+		(node: Element | null) => {
+			targetRef.current = node;
+
+			if (node === null) {
+				cleanupRef.current?.();
+				cleanupRef.current = null;
+				observerRef.current = null;
+				return;
+			}
+
+			reconnectObserver();
+		},
+		[reconnectObserver]
+	);
+
+	useObserverCleanup({ reconnectObserver, cleanupRef, observerRef });
 
 	return { ref, inView, entry };
+}
+
+function useObserverCleanup({
+	reconnectObserver,
+	cleanupRef,
+	observerRef,
+}: {
+	reconnectObserver: () => void;
+	cleanupRef: MutableRef<(() => void) | null>;
+	observerRef: MutableRef<IntersectionObserver | null>;
+}) {
+	useEffect(() => {
+		reconnectObserver();
+
+		return () => {
+			cleanupRef.current?.();
+			cleanupRef.current = null;
+			observerRef.current = null;
+		};
+	}, [reconnectObserver, cleanupRef, observerRef]);
+}
+
+type ObserverFactory = typeof IntersectionObserver;
+
+function isConstructor(
+	fn: unknown
+): fn is new (...args: ConstructorParameters<ObserverFactory>) => IntersectionObserver {
+	return typeof fn === 'function' && Boolean((fn as ObserverFactory).prototype);
+}
+
+function createObserver(
+	callback: IntersectionObserverCallback,
+	options: IntersectionObserverInit
+): IntersectionObserver | null {
+	const globalObject = getGlobalObject();
+	const Observer = globalObject?.IntersectionObserver;
+
+	if (Observer) {
+		if (isConstructor(Observer)) {
+			try {
+				return new Observer(callback, options);
+			} catch (error) {
+				if (error instanceof TypeError) {
+					// Fallback to handling mocked implementations that behave like factories
+				} else {
+					throw error;
+				}
+			}
+		}
+
+		const factory = Observer as unknown as (
+			cb: IntersectionObserverCallback,
+			init: IntersectionObserverInit
+		) => IntersectionObserver;
+
+		return factory(callback, options);
+	}
+
+	return null;
+}
+
+function getGlobalObject(): typeof globalThis | undefined {
+	if (typeof globalThis === 'undefined') {
+		return undefined;
+	}
+
+	return globalThis;
 }

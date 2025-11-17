@@ -2,6 +2,7 @@ import App from '@app/App';
 import { __resetRuntimeConfigCache } from '@core/config/runtime';
 import { httpClient } from '@core/lib/http/httpClient';
 import { render, screen, waitFor } from '@testing-library/react';
+import { expectA11y } from '@tests/utils/a11y';
 import type { MockAnalyticsAdapter } from '@tests/utils/mocks/MockAnalyticsAdapter';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -9,7 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('@app/router', async () => {
 	const React = await import('react');
 	return {
-		default: () => React.createElement('div', { 'data-testid': 'router' }, 'Router'),
+		default: () => React.createElement('div', null, 'Router'),
 	};
 });
 
@@ -149,8 +150,16 @@ const resetTestMocks = () => {
 	httpClientWithFlag.__authInterceptorAttached = false;
 };
 
-// eslint-disable-next-line max-lines-per-function
-describe('App', () => {
+const waitForRouterRender = async () => {
+	await waitFor(
+		() => {
+			expect(screen.getByTestId('router')).toBeInTheDocument();
+		},
+		{ timeout: 5000 }
+	);
+};
+
+const setupAppTestEnv = () => {
 	beforeEach(() => {
 		resetTestMocks();
 	});
@@ -158,181 +167,196 @@ describe('App', () => {
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
+};
 
-	describe('rendering', () => {
-		it('renders without crashing', async () => {
+describe('App rendering', () => {
+	setupAppTestEnv();
+
+	it('renders without crashing', () => {
+		expect(() => {
 			render(<App />);
-			await waitFor(() => {
-				expect(screen.getByTestId('router')).toBeInTheDocument();
-			});
+		}).not.toThrow();
+	});
+
+	it('renders ErrorBoundaryWrapper with fallback', async () => {
+		render(<App />);
+		await waitForRouterRender();
+	});
+
+	it('renders Router component', async () => {
+		render(<App />);
+		await waitForRouterRender();
+	});
+
+	it('renders ToastContainer', async () => {
+		render(<App />);
+		await waitForRouterRender();
+	});
+});
+
+describe('App auth interceptor', () => {
+	setupAppTestEnv();
+
+	it('attaches auth interceptor to httpClient', () => {
+		const httpClientWithFlag = httpClient as typeof httpClient & {
+			__authInterceptorAttached?: boolean;
+		};
+
+		httpClientWithFlag.__authInterceptorAttached = false;
+
+		render(<App />);
+
+		expect(httpClientWithFlag.__authInterceptorAttached).toBe(true);
+	});
+
+	it('does not attach auth interceptor multiple times', () => {
+		const httpClientWithFlag = httpClient as typeof httpClient & {
+			__authInterceptorAttached?: boolean;
+		};
+
+		httpClientWithFlag.__authInterceptorAttached = true;
+		const initialInterceptorCount = httpClient['requestInterceptors']?.length ?? 0;
+
+		render(<App />);
+
+		expect(httpClientWithFlag.__authInterceptorAttached).toBe(true);
+		const finalInterceptorCount = httpClient['requestInterceptors']?.length ?? 0;
+		expect(finalInterceptorCount).toBe(initialInterceptorCount);
+	});
+});
+
+describe('App analytics configuration', () => {
+	setupAppTestEnv();
+
+	it('uses noopAnalyticsAdapter when analytics is disabled', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = false;
+		getMockGetCachedRuntimeConfig().mockReturnValue(null);
+
+		render(<App />);
+
+		await waitFor(() => {
+			expect(getMockNoopAnalyticsAdapter().initializedWith).toBeNull();
 		});
+	});
 
-		it('renders ErrorBoundaryWrapper with fallback', async () => {
-			render(<App />);
-			await waitFor(() => {
-				expect(screen.getByTestId('router')).toBeInTheDocument();
-			});
-		});
+	it('uses googleAnalyticsAdapter when analytics is enabled with env write key', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = true;
+		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
+		mockEnv.GA_DEBUG = undefined;
+		mockEnv.DEV = false;
+		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
-		it('renders Router component', async () => {
-			render(<App />);
-			await waitFor(() => {
-				expect(screen.getByTestId('router')).toBeInTheDocument();
-			});
-		});
+		render(<App />);
 
-		it('renders ToastContainer', async () => {
-			render(<App />);
-			await waitFor(() => {
-				expect(screen.getByTestId('router')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
+				writeKey: 'G-TEST123',
+				dataLayerName: 'dataLayer',
 			});
 		});
 	});
 
-	describe('auth interceptor', () => {
-		it('attaches auth interceptor to httpClient', () => {
-			const httpClientWithFlag = httpClient as typeof httpClient & {
-				__authInterceptorAttached?: boolean;
-			};
-
-			httpClientWithFlag.__authInterceptorAttached = false;
-
-			render(<App />);
-
-			expect(httpClientWithFlag.__authInterceptorAttached).toBe(true);
+	it('uses runtime config write key when available', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = true;
+		mockEnv.GA_MEASUREMENT_ID = 'G-ENV123';
+		getMockGetCachedRuntimeConfig().mockReturnValue({
+			ANALYTICS_WRITE_KEY: 'G-RUNTIME123',
 		});
 
-		it('does not attach auth interceptor multiple times', () => {
-			const httpClientWithFlag = httpClient as typeof httpClient & {
-				__authInterceptorAttached?: boolean;
-			};
+		render(<App />);
 
-			httpClientWithFlag.__authInterceptorAttached = true;
-			const initialInterceptorCount = httpClient['requestInterceptors']?.length ?? 0;
-
-			render(<App />);
-
-			expect(httpClientWithFlag.__authInterceptorAttached).toBe(true);
-			const finalInterceptorCount = httpClient['requestInterceptors']?.length ?? 0;
-			expect(finalInterceptorCount).toBe(initialInterceptorCount);
+		await waitFor(() => {
+			expect(getMockGoogleAnalyticsAdapter().initializedWith?.writeKey).toBe('G-RUNTIME123');
 		});
 	});
+});
 
-	describe('analytics configuration', () => {
-		it('uses noopAnalyticsAdapter when analytics is disabled', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = false;
-			getMockGetCachedRuntimeConfig().mockReturnValue(null);
+describe('App analytics debug mode', () => {
+	setupAppTestEnv();
 
-			render(<App />);
+	it('enables debug mode when GA_DEBUG is true', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = true;
+		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
+		mockEnv.GA_DEBUG = true;
+		mockEnv.DEV = false;
+		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
-			await waitFor(() => {
-				expect(getMockNoopAnalyticsAdapter().initializedWith).toBeNull();
-			});
-		});
+		render(<App />);
 
-		it('uses googleAnalyticsAdapter when analytics is enabled with env write key', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = true;
-			mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-			mockEnv.GA_DEBUG = undefined;
-			mockEnv.DEV = false;
-			getMockGetCachedRuntimeConfig().mockReturnValue(null);
-
-			render(<App />);
-
-			await waitFor(() => {
-				expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
-					writeKey: 'G-TEST123',
-					dataLayerName: 'dataLayer',
-				});
-			});
-		});
-
-		it('uses runtime config write key when available', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = true;
-			mockEnv.GA_MEASUREMENT_ID = 'G-ENV123';
-			getMockGetCachedRuntimeConfig().mockReturnValue({
-				ANALYTICS_WRITE_KEY: 'G-RUNTIME123',
-			});
-
-			render(<App />);
-
-			await waitFor(() => {
-				expect(getMockGoogleAnalyticsAdapter().initializedWith?.writeKey).toBe('G-RUNTIME123');
+		await waitFor(() => {
+			expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
+				writeKey: 'G-TEST123',
+				dataLayerName: 'dataLayer',
+				debug: true,
 			});
 		});
 	});
 
-	describe('analytics debug mode', () => {
-		it('enables debug mode when GA_DEBUG is true', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = true;
-			mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-			mockEnv.GA_DEBUG = true;
-			mockEnv.DEV = false;
-			getMockGetCachedRuntimeConfig().mockReturnValue(null);
+	it('enables debug mode when DEV is true and GA_DEBUG is not set', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = true;
+		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
+		mockEnv.GA_DEBUG = undefined;
+		mockEnv.DEV = true;
+		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
-			render(<App />);
+		render(<App />);
 
-			await waitFor(() => {
-				expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
-					writeKey: 'G-TEST123',
-					dataLayerName: 'dataLayer',
-					debug: true,
-				});
-			});
-		});
-
-		it('enables debug mode when DEV is true and GA_DEBUG is not set', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = true;
-			mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-			mockEnv.GA_DEBUG = undefined;
-			mockEnv.DEV = true;
-			getMockGetCachedRuntimeConfig().mockReturnValue(null);
-
-			render(<App />);
-
-			await waitFor(() => {
-				expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
-					writeKey: 'G-TEST123',
-					dataLayerName: 'dataLayer',
-					debug: true,
-				});
+		await waitFor(() => {
+			expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
+				writeKey: 'G-TEST123',
+				dataLayerName: 'dataLayer',
+				debug: true,
 			});
 		});
 	});
+});
 
-	describe('analytics initialization', () => {
-		it('does not initialize analytics when no write key is available', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = true;
-			mockEnv.GA_MEASUREMENT_ID = undefined;
-			getMockGetCachedRuntimeConfig().mockReturnValue(null);
+describe('App analytics initialization', () => {
+	setupAppTestEnv();
 
-			render(<App />);
+	it('does not initialize analytics when no write key is available', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = true;
+		mockEnv.GA_MEASUREMENT_ID = undefined;
+		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
-			await waitFor(() => {
-				expect(getMockGoogleAnalyticsAdapter().initializedWith).toBeNull();
-			});
+		render(<App />);
+
+		await waitFor(() => {
+			expect(getMockGoogleAnalyticsAdapter().initializedWith).toBeNull();
 		});
+	});
 
-		it('uses custom dataLayerName from env', async () => {
-			const mockEnv = getMockEnv();
-			mockEnv.ANALYTICS_ENABLED = true;
-			mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-			mockEnv.GA_DATALAYER_NAME = 'customDataLayer';
-			getMockGetCachedRuntimeConfig().mockReturnValue(null);
+	it('uses custom dataLayerName from env', async () => {
+		const mockEnv = getMockEnv();
+		mockEnv.ANALYTICS_ENABLED = true;
+		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
+		mockEnv.GA_DATALAYER_NAME = 'customDataLayer';
+		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
-			render(<App />);
+		render(<App />);
 
-			await waitFor(() => {
-				expect(getMockGoogleAnalyticsAdapter().initializedWith?.dataLayerName).toBe(
-					'customDataLayer'
-				);
-			});
+		await waitFor(() => {
+			expect(getMockGoogleAnalyticsAdapter().initializedWith?.dataLayerName).toBe(
+				'customDataLayer'
+			);
 		});
+	});
+});
+
+describe('App accessibility', () => {
+	setupAppTestEnv();
+
+	it('has no accessibility violations after render', async () => {
+		const { container } = render(<App />);
+
+		await waitForRouterRender();
+
+		await expectA11y(container);
 	});
 });

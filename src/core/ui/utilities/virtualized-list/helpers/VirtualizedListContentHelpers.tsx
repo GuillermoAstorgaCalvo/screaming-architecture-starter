@@ -1,6 +1,7 @@
 import { VirtualItem } from '@core/ui/utilities/virtualized-list/components/VirtualItem';
 import type { useVirtualizer } from '@tanstack/react-virtual';
 import type { CSSProperties, ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface GetVirtualItemsStyleParams {
 	readonly orientation: 'vertical' | 'horizontal';
@@ -102,4 +103,32 @@ export function mapVirtualItems<T>({
 			orientation,
 		});
 	});
+}
+
+interface GetContainerStyleParams {
+	readonly containerSize: number | string;
+	readonly orientation: 'vertical' | 'horizontal';
+	readonly smoothScroll: boolean;
+}
+
+/**
+ * Get container styles for the virtualized list
+ */
+export function getContainerStyle({
+	containerSize,
+	orientation,
+	smoothScroll,
+}: GetContainerStyleParams): CSSProperties {
+	const size = typeof containerSize === 'number' ? `${containerSize}px` : containerSize;
+	return {
+		[orientation === 'vertical' ? 'height' : 'width']: size,
+		scrollBehavior: smoothScroll ? ('smooth' as const) : ('auto' as const),
+	};
+}
+
+/**
+ * Get container classes for the virtualized list
+ */
+export function getContainerClasses(className?: string): string {
+	return twMerge('overflow-auto', className);
 }

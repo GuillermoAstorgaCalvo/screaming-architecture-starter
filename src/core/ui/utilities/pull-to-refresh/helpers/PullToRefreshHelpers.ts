@@ -19,8 +19,8 @@ export const INDICATOR_BASE_CLASSES =
 /**
  * Gets the first touch from a touch event
  */
-export function getFirstTouch(touches: TouchList): Touch | undefined {
-	return touches[0];
+export function getFirstTouch(touches: TouchList): Touch | null {
+	return touches[0] ?? null;
 }
 
 /**

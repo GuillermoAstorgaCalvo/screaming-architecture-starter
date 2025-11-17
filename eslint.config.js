@@ -581,14 +581,14 @@ export default [
 			// Disable security rules in tests (mocking patterns may trigger false positives)
 			'security/detect-non-literal-regexp': 'off',
 			'max-lines': [
-				'warn',
+				'error',
 				{
 					max: 500,
 					skipBlankLines: true,
 					skipComments: true,
 				},
 			],
-			'max-lines-per-function': ['warn', { max: 60, skipBlankLines: true, skipComments: true }],
+			'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
 			'max-params': ['warn', 5],
 			complexity: ['warn', 20],
 			'max-depth': ['warn', 5],

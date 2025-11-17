@@ -29,4 +29,3 @@ export const FLAG_SIZE_CLASSES = {
  * Language selector size variants
  */
 export type LanguageSelectorSize = keyof typeof SIZE_CLASSES;
-

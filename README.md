@@ -120,6 +120,7 @@ See `docs/structure.md` for detailed structure documentation.
 ### DevOps & CI/CD
 
 - [CI/CD Setup Guide](docs/ci-cd-setup.md) - Complete guide for understanding, setting up, and customizing CI/CD pipelines
+- [Vercel Deployment Guide](docs/vercel-deployment.md) - How to configure runtime config, caching, and regions for Vercel
 
 ## 🏗️ Architectural Goals
 

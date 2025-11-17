@@ -1,4 +1,6 @@
 {
 	"API_BASE_URL": null,
-	"ANALYTICS_WRITE_KEY": null
+	"ANALYTICS_WRITE_KEY": null,
+	"GOOGLE_MAPS_API_KEY": null,
+	"FEATURE_FLAGS": {}
 }

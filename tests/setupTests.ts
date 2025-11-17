@@ -119,3 +119,28 @@ Object.defineProperty(globalThis.window, 'matchMedia', {
 		dispatchEvent: vi.fn(),
 	})),
 });
+
+// Polyfill StorageEvent for jsdom (not implemented by default)
+if (globalThis.StorageEvent === undefined) {
+	class MockStorageEvent extends Event {
+		key: string | null;
+		newValue: string | null;
+		oldValue: string | null;
+		storageArea: Storage | null;
+		url: string;
+
+		constructor(type: string, eventInitDict: StorageEventInit = {}) {
+			super(type, eventInitDict);
+			this.key = eventInitDict.key ?? null;
+			this.newValue = eventInitDict.newValue ?? null;
+			this.oldValue = eventInitDict.oldValue ?? null;
+			this.storageArea = eventInitDict.storageArea ?? globalThis.window?.sessionStorage ?? null;
+			this.url = eventInitDict.url ?? '';
+		}
+	}
+
+	Object.defineProperty(globalThis, 'StorageEvent', {
+		value: MockStorageEvent,
+		writable: true,
+	});
+}

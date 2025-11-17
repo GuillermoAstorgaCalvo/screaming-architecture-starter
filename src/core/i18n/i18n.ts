@@ -10,6 +10,7 @@ import {
 	isRtlLanguage,
 	LANGUAGE_DETECTION_ORDER,
 	LANGUAGE_STORAGE_KEY,
+	normalizeLanguage,
 	SUPPORTED_LANGUAGES,
 	type SupportedLanguage,
 } from './constants/constants';
@@ -108,9 +109,9 @@ function getI18nConfig() {
 /**
  * Load common translations for all supported languages
  */
-async function loadCommonTranslations(): Promise<void> {
+async function loadCommonTranslations(languages: Iterable<SupportedLanguage>): Promise<void> {
 	await Promise.all(
-		SUPPORTED_LANGUAGES.map(async language => {
+		Array.from(languages).map(async language => {
 			try {
 				await loadAndAddResource({
 					i18nInstance: i18n,
@@ -165,7 +166,13 @@ async function initializeI18n(): Promise<void> {
 	await i18n.init(getI18nConfig());
 
 	// Load common translations for all supported languages
-	await loadCommonTranslations();
+	const initialLanguages = new Set<SupportedLanguage>();
+	const detectedLanguage = i18n.language ? normalizeLanguage(i18n.language) : DEFAULT_LANGUAGE;
+
+	initialLanguages.add(detectedLanguage);
+	initialLanguages.add(DEFAULT_LANGUAGE);
+
+	await loadCommonTranslations(initialLanguages);
 
 	// Set up RTL language support
 	setupRtlSupport();
@@ -175,11 +182,21 @@ async function initializeI18n(): Promise<void> {
 }
 
 // Initialize i18n and export the promise
-// Using top-level await pattern - initialize immediately and export promise
+let resolveInitialization: (() => void) | undefined;
+let rejectInitialization: ((reason?: unknown) => void) | undefined;
 
-export const i18nInitPromise = (async () => {
+export const i18nInitPromise = new Promise<void>((resolve, reject) => {
+	resolveInitialization = resolve;
+	rejectInitialization = reject;
+});
+
+try {
 	await initializeI18n();
-})();
+	resolveInitialization?.();
+} catch (error) {
+	rejectInitialization?.(error);
+	throw error;
+}
 
 // Export our configured i18n instance (direct export, not from i18next)
 // eslint-disable-next-line unicorn/prefer-export-from

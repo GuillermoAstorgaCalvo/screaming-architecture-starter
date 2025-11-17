@@ -102,7 +102,7 @@ export interface SidebarProps {
 	children: ReactNode;
 	/** @default 'left' */
 	position?: SidebarPosition;
-	/** @default '16rem' */
+	/** @default Uses design tokens: calc(var(--spacing-4xl)*4) (equivalent to 16rem/256px) */
 	width?: number | string;
 	/** @default false */
 	collapsed?: boolean;

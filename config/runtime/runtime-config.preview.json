@@ -1,0 +1,8 @@
+{
+	"API_BASE_URL": "https://api.preview.example.com",
+	"ANALYTICS_WRITE_KEY": "preview-analytics-key",
+	"GOOGLE_MAPS_API_KEY": null,
+	"FEATURE_FLAGS": {
+		"EXPERIMENTAL_CHECKOUT": true
+	}
+}

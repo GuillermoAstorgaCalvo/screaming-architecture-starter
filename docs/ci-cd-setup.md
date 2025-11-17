@@ -130,7 +130,7 @@ The pipeline sets these environment variables automatically:
 ```yaml
 env:
   CI: true
-  NODE_ENV: test  # or 'production' for nightly builds
+  NODE_ENV: test # or 'production' for nightly builds
 ```
 
 ## Workflow Details
@@ -142,9 +142,11 @@ env:
 **Runs on**: `ubuntu-latest`
 
 **Steps**:
+
 - Typecheck, lint, test, build, bundle size check
 
 **Artifacts**:
+
 - Test coverage reports (retained for 7 days)
 
 ### Nightly Workflow (`.github/workflows/nightly.yml`)
@@ -154,10 +156,12 @@ env:
 **Runs on**: Schedule (3 AM UTC daily) or manual trigger
 
 **Jobs**:
+
 - **E2E Tests** (currently disabled): Runs Playwright tests
 - **Lighthouse Audit**: Performance and accessibility audits
 
 **Artifacts**:
+
 - Playwright reports (if enabled)
 - Lighthouse reports (retained for 30 days)
 
@@ -172,7 +176,7 @@ To modify an existing step, edit the workflow file:
 - name: Setup Node.js
   uses: actions/setup-node@v6
   with:
-    node-version: 22.21.1  # Change this version
+    node-version: 22.21.1 # Change this version
     cache: 'pnpm'
 ```
 
@@ -184,7 +188,7 @@ Add project-specific environment variables:
 env:
   CI: true
   NODE_ENV: test
-  MY_CUSTOM_VAR: ${{ secrets.MY_CUSTOM_VAR }}  # Add your variable
+  MY_CUSTOM_VAR: ${{ secrets.MY_CUSTOM_VAR }} # Add your variable
 ```
 
 ### Changing Triggers
@@ -194,10 +198,10 @@ Modify when workflows run:
 ```yaml
 on:
   push:
-    branches: [main, develop, 'release/**']  # Add more branches
+    branches: [main, develop, 'release/**'] # Add more branches
   pull_request:
     branches: [main, develop]
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch: # Allow manual triggering
 ```
 
 ### Adjusting Timeouts
@@ -205,7 +209,7 @@ on:
 Change job timeouts based on your needs:
 
 ```yaml
-timeout-minutes: 45  # Increase for slower builds
+timeout-minutes: 45 # Increase for slower builds
 ```
 
 ### Modifying Bundle Size Thresholds
@@ -232,7 +236,7 @@ To add a new validation step:
 - name: Your New Check
   id: your-check
   run: pnpm run your-check-command
-  continue-on-error: false  # Set to true if it's optional
+  continue-on-error: false # Set to true if it's optional
 ```
 
 2. **Update the summary** to include your check:
@@ -252,7 +256,7 @@ For checks that should run in parallel:
 jobs:
   ci:
     # ... existing job ...
-  
+
   your-new-job:
     name: Your New Job
     runs-on: ubuntu-latest
@@ -405,4 +409,3 @@ jobs:
 - [pnpm Documentation](https://pnpm.io/)
 - [Playwright CI Guide](https://playwright.dev/docs/ci)
 - [Lighthouse CI Documentation](https://github.com/GoogleChrome/lighthouse-ci)
-

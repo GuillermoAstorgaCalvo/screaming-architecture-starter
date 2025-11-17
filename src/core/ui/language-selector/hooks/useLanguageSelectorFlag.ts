@@ -1,7 +1,7 @@
 import { useTranslation } from '@core/i18n/useTranslation';
 import {
-  getAllLanguageMetadata,
-  getLanguageMetadata,
+	getAllLanguageMetadata,
+	getLanguageMetadata,
 } from '@core/ui/language-selector/utils/languageMetadata';
 import type { DropdownMenuItemOrSeparator } from '@core/ui/overlays/dropdown-menu/types/DropdownMenu.types';
 import { createElement, useCallback, useMemo } from 'react';

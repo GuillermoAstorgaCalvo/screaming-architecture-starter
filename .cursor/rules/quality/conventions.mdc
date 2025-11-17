@@ -19,6 +19,10 @@ One responsibility per file; avoid overly large modules.
 Prefer explicit types for public APIs; avoid `any`.
 Keep domain types in `domains/<domain>/models/*` or `types/domains/*`.
 
+### ESLint Directives
+
+- Never add `eslint-disable` comments for `max-lines` or `max-lines-per-function`. Split files/functions instead.
+
 ### React
 
 Function components with hooks only; avoid legacy patterns.

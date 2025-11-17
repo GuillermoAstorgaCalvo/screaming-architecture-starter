@@ -59,11 +59,11 @@ src/
 │   │   #   7. I18nProvider (react-i18next context, preloaded core + domain namespaces)
 │   │   #   8. QueryProvider (TanStack Query v5, gcTime/staleTime tuned)
 │   │   #   9. AnalyticsProvider (Google Analytics adapter w/ runtime config fallback)
-│   │   #  10. MotionProvider (wraps Framer Motion LayoutGroup / reduced-motion handling)
+│   │   #  10. LazyMotionProvider (lazy-loaded, wraps Framer Motion LayoutGroup / reduced-motion handling)
 │   │   #  11. ToastProvider (queue + dismissal logic)
 │   │   #  12. BrowserRouter (React Router v7)
-│   │   #  13. LayoutGroup (Framer Motion route transition grouping, inside BrowserRouter)
-│   │   #  14. Router (App routes + transitions, inside LayoutGroup)
+│   │   #  13. LazyLayoutGroup (lazy-loaded, Framer Motion route transition grouping, inside BrowserRouter)
+│   │   #  14. Router (App routes + transitions, inside LazyLayoutGroup)
 │   │   #  15. ToastContainer (renders toast notifications, inside ToastProvider but outside BrowserRouter)
 │   │   # AnalyticsProvider toggles between googleAnalyticsAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED
 │   │   # Analytics configuration is determined by getAnalyticsConfig() which checks runtime config (ANALYTICS_WRITE_KEY) and environment variables (GA_MEASUREMENT_ID, GA_DEBUG, GA_DATALAYER_NAME)
@@ -86,10 +86,9 @@ src/
 │   │   # Supports lazy-loading using React.Suspense with DefaultLoadingFallback
 │   │   # Uses PageWrapper.withTheme() HOC to inject theme props
 │   │   # Uses AppLayout wrapper for consistent layout
-│   │   # Uses RouteTransition for route change animations
+│   │   # Uses LazyRouteTransition (lazy-loaded) for route change animations
 │   │   # Tracks page views via useAnalytics hook on route changes
 │   │   # Uses buildRoute() from @core/router/routes.gen for type-safe routes
-│   │   # Wraps routes in LayoutGroup for Framer Motion route transitions
 │   │   # Uses React Router v7 Routes and Route components
 │   │
 │   ├── components/                       # ✅ App-level components
@@ -498,7 +497,7 @@ src/
 │   │   │   ├── infinite-scroll/               # ✅ Infinite scroll component
 │   │   │   ├── loadable/                      # ✅ Code splitting wrapper (Loadable, loadableFallback, loadableUtils; moved from root)
 │   │   │   ├── loading-wrapper/               # ✅ Loading wrapper component
-│   │   │   ├── motion/                        # ✅ Motion/animation components (MotionProvider, LayoutGroup, AnimatePresence, MotionBox, and various motion variants)
+│   │   │   ├── motion/                        # ✅ Motion/animation components (LazyMotionProvider, LazyLayoutGroup, AnimatePresence, MotionBox, RouteTransition.lazy, and various motion variants)
 │   │   │   ├── pull-to-refresh/               # ✅ Pull to refresh component
 │   │   │   ├── resizable/                     # ✅ Resizable component (moved from root)
 │   │   │   ├── scroll-area/                   # ✅ Scroll area component
@@ -507,6 +506,31 @@ src/
 │   │   │   ├── splitter/                     # ✅ Splitter component
 │   │   │   ├── swipeable/                    # ✅ Swipeable component
 │   │   │   └── virtualized-list/              # ✅ Virtualized list component
+│   │   │       ├── VirtualizedList.tsx         # ✅ Main component entry point
+│   │   │       ├── components/                # ✅ Component sub-components
+│   │   │       │   ├── VirtualItem.tsx         # ✅ Individual virtual item renderer
+│   │   │       │   ├── VirtualizedListContainer.tsx # ✅ Container for populated list
+│   │   │       │   ├── VirtualizedListContent.tsx  # ✅ Content renderer for virtual items
+│   │   │       │   ├── VirtualizedListEmpty.tsx    # ✅ Empty state component
+│   │   │       │   └── VirtualizedListWrapper.tsx  # ✅ Wrapper handling empty/populated states
+│   │   │       ├── helpers/                   # ✅ Helper functions
+│   │   │       │   ├── VirtualizedListContentHelpers.tsx # ✅ Content rendering helpers
+│   │   │       │   └── VirtualizedListPropsHelpers.ts    # ✅ Props extraction and normalization
+│   │   │       ├── hooks/                     # ✅ Custom hooks organized by concern
+│   │   │       │   ├── configuration/         # ✅ Configuration hooks
+│   │   │       │   │   ├── useVirtualizedListConfiguration.ts # ✅ Configuration setup
+│   │   │       │   │   └── useVirtualizedListSetupAndProps.ts  # ✅ Setup and props preparation
+│   │   │       │   ├── scroll/                # ✅ Scroll-related hooks
+│   │   │       │   │   ├── useInitialScroll.ts    # ✅ Initial scroll position handling
+│   │   │       │   │   └── useScrollHandler.ts    # ✅ Scroll event handling
+│   │   │       │   ├── utils/                 # ✅ Utility hooks
+│   │   │       │   │   └── useVirtualizedListRef.ts # ✅ Ref management
+│   │   │       │   └── virtualizer/           # ✅ Virtualizer hooks
+│   │   │       │       ├── useVirtualizedListSetup.ts # ✅ Virtualizer setup hook
+│   │   │       │       └── useVirtualizerInstance.ts   # ✅ Virtualizer instance creation
+│   │   │       └── types/                     # ✅ Type definitions
+│   │   │           ├── VirtualizedListContentTypes.ts # ✅ Content-related types
+│   │   │           └── VirtualizedListTypes.ts        # ✅ Main component types
 │   │   │
 │   │   └── layout/                           # ✅ Layout primitives
 │   │       ├── aspect-ratio/                  # ✅ Aspect ratio component

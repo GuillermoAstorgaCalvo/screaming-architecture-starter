@@ -40,11 +40,11 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 
 - `App.tsx`: Root component. Pure composition:
   1. `useHttpClientAuth(new JwtAuthAdapter({ storage: localStorageAdapter }))` wires AuthPort tokens into HttpPort interceptors.
-  2. Providers order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `AuthProvider` → `StorageProvider` → `ThemeProvider` → `I18nProvider` → `QueryProvider` → `AnalyticsProvider` → `MotionProvider` (Framer Motion layout context) → `ToastProvider` → `BrowserRouter` → `LayoutGroup` → `Router` → `ToastContainer` (inside BrowserRouter).
+  2. Providers order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `AuthProvider` → `StorageProvider` → `ThemeProvider` → `I18nProvider` → `QueryProvider` → `AnalyticsProvider` → `LazyMotionProvider` (lazy-loaded, Framer Motion layout context) → `ToastProvider` → `BrowserRouter` → `LazyLayoutGroup` (lazy-loaded) → `Router` → `ToastContainer` (inside BrowserRouter).
   3. Analytics toggles between `googleAnalyticsAdapter` and `noopAnalyticsAdapter` based on `env.ANALYTICS_ENABLED` / runtime config (prefers runtime ANALYTICS_WRITE_KEY, otherwise GA env vars).
   4. No domain logic; only composition + DI wiring.
 - `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Awaits `i18nInitPromise` from `@core/i18n/i18n` to ensure translations are loaded before rendering. Calls `reportWebVitals()` from `@core/perf/reportWebVitals` with logger adapter (only runs in production). Imports domain i18n registrations (e.g., `@domains/landing/i18n`). Creates React root, renders `<App />` wrapped in `StrictMode`, imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization.
-- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense` using `DefaultLoadingFallback` from `@core/ui/utilities/loadable/components/loadableFallback`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Uses `RouteTransition` from `@core/ui/utilities/motion/components/RouteTransition` for route change animations. Tracks page views via `useAnalytics()` hook on route changes (tracks path, title, and location). Paths derive from `core/config/routes.ts` via the generated helpers in `@core/router/routes.gen` (`buildRoute`, `ROUTE_KEYS`). Includes catch-all route (`path="*"`) for `Error404`.
+- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense` using `DefaultLoadingFallback` from `@core/ui/utilities/loadable/components/loadableFallback`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Uses `LazyRouteTransition` (lazy-loaded) from `@core/ui/utilities/motion/components/RouteTransition.lazy` for route change animations. Tracks page views via `useAnalytics()` hook on route changes (tracks path, title, and location). Paths derive from `core/config/routes.ts` via the generated helpers in `@core/router/routes.gen` (`buildRoute`, `ROUTE_KEYS`). Includes catch-all route (`path="*"`) for `Error404`.
 - `pages/*`: App-level system pages:
   - `Error404.tsx`: Not Found page (404 error)
   - `Error500.tsx`: Internal Server Error page (500 error)
@@ -86,8 +86,8 @@ import { LoggerProvider } from '@core/providers/logger/LoggerProvider';
 import { StorageProvider } from '@core/providers/storage/StorageProvider';
 import { ToastProvider } from '@core/providers/toast/ToastProvider';
 import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
-import { LayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup';
-import { MotionProvider } from '@core/ui/utilities/motion/components/MotionProvider';
+import { LazyLayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup.lazy';
+import { LazyMotionProvider } from '@core/ui/utilities/motion/components/MotionProvider.lazy';
 import {
 	googleAnalyticsAdapter,
 	noopAnalyticsAdapter,
@@ -116,16 +116,16 @@ export default function App() {
 								<I18nProvider>
 									<QueryProvider>
 										<AnalyticsProvider analytics={analyticsAdapter} config={analyticsConfig}>
-											<MotionProvider reducedMotion="user">
+											<LazyMotionProvider reducedMotion="user">
 												<ToastProvider>
 													<BrowserRouter>
-														<LayoutGroup id="app-route-transitions">
+														<LazyLayoutGroup id="app-route-transitions">
 															<Router />
-														</LayoutGroup>
+														</LazyLayoutGroup>
 													</BrowserRouter>
 													<ToastContainer />
 												</ToastProvider>
-											</MotionProvider>
+											</LazyMotionProvider>
 										</AnalyticsProvider>
 									</QueryProvider>
 								</I18nProvider>
@@ -172,9 +172,9 @@ The composition order matters:
 7. `I18nProvider` exposes the configured i18n instance.
 8. `QueryProvider` supplies TanStack Query client.
 9. `AnalyticsProvider` injects AnalyticsPort implementation (noop vs Google Analytics).
-10. `MotionProvider` controls reduced-motion + provides `LayoutGroup`.
+10. `LazyMotionProvider` (lazy-loaded) controls reduced-motion + provides `LazyLayoutGroup`.
 11. `ToastProvider` manages toast queue; `ToastContainer` must render inside it.
-12. `BrowserRouter` enables routing; `LayoutGroup` wraps `Router` for motion transitions.
+12. `BrowserRouter` enables routing; `LazyLayoutGroup` (lazy-loaded) wraps `Router` for motion transitions.
 13. `Router` renders domain routes; `ToastContainer` renders notifications.
 
 ### Routing Principles

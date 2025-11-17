@@ -1,4 +1,8 @@
-import type { ErrorContext, FetchContext, PerformFetchContext } from '@core/hooks/fetch/useFetch.types';
+import type {
+	ErrorContext,
+	FetchContext,
+	PerformFetchContext,
+} from '@core/hooks/fetch/useFetch.types';
 import type { HttpClientResponse } from '@core/ports/HttpPort';
 
 /**

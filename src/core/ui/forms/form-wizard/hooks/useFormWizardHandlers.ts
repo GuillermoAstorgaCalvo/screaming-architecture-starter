@@ -32,18 +32,9 @@ interface HandlerDependencies<T extends FieldValues> {
  * Hook to manage form wizard handlers
  * Separated into smaller handler functions for better maintainability
  */
-// eslint-disable-next-line max-lines-per-function
-export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
-	deps: HandlerDependencies<T>
-): {
-	readonly handleNext: () => Promise<void>;
-	readonly handlePrevious: () => void;
-	readonly handleStepClick: (stepIndex: number) => void;
-	readonly handleComplete: () => Promise<void>;
-	readonly handleCancel: () => void;
-	readonly validateCurrentStep: () => Promise<boolean>;
-} {
-	const validateCurrentStep = useCallback(async (): Promise<boolean> => {
+
+function useValidateCurrentStep<T extends FieldValues>(deps: HandlerDependencies<T>) {
+	return useCallback(async (): Promise<boolean> => {
 		const currentStep = deps.steps[deps.state.activeStep];
 		if (!currentStep) {
 			return false;
@@ -55,6 +46,7 @@ export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
 			stepIndex: deps.state.activeStep,
 			markStepError: deps.markStepError,
 		};
+
 		const fieldsValid = await validateStepFields(deps.formControls, currentStep, validationContext);
 		if (!fieldsValid) {
 			return false;
@@ -72,8 +64,13 @@ export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
 
 		return true;
 	}, [deps]);
+}
 
-	const handleNext = useCallback(async () => {
+function useHandleNext<T extends FieldValues>(
+	deps: HandlerDependencies<T>,
+	validateCurrentStep: () => Promise<boolean>
+) {
+	return useCallback(async () => {
 		if (deps.state.activeStep >= deps.steps.length - 1) {
 			return;
 		}
@@ -94,8 +91,10 @@ export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
 		deps.setActiveStep(nextStep);
 		deps.onStepChange?.(nextStep);
 	}, [deps, validateCurrentStep]);
+}
 
-	const handlePrevious = useCallback(() => {
+function useHandlePrevious<T extends FieldValues>(deps: HandlerDependencies<T>) {
+	return useCallback(() => {
 		if (deps.state.activeStep <= 0 || !deps.allowBackNavigation) {
 			return;
 		}
@@ -107,8 +106,10 @@ export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
 		deps.setActiveStep(previousStep);
 		deps.onStepChange?.(previousStep);
 	}, [deps]);
+}
 
-	const handleStepClick = useCallback(
+function useHandleStepClick<T extends FieldValues>(deps: HandlerDependencies<T>) {
+	return useCallback(
 		(stepIndex: number) => {
 			if (!canNavigateToStep(stepIndex, deps.state.activeStep, deps.allowBackNavigation ?? true)) {
 				return;
@@ -122,8 +123,13 @@ export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
 		},
 		[deps]
 	);
+}
 
-	const handleComplete = useCallback(async () => {
+function useHandleComplete<T extends FieldValues>(
+	deps: HandlerDependencies<T>,
+	validateCurrentStep: () => Promise<boolean>
+) {
+	return useCallback(async () => {
 		const isValid = await validateCurrentStep();
 		if (!isValid) {
 			return;
@@ -139,10 +145,30 @@ export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
 			deps.setIsSubmitting(false);
 		}
 	}, [deps, validateCurrentStep]);
+}
 
-	const handleCancel = useCallback(() => {
+function useHandleCancel<T extends FieldValues>(deps: HandlerDependencies<T>) {
+	return useCallback(() => {
 		deps.onCancel?.();
 	}, [deps]);
+}
+
+export function useFormWizardHandlers<T extends FieldValues = FieldValues>(
+	deps: HandlerDependencies<T>
+): {
+	readonly handleNext: () => Promise<void>;
+	readonly handlePrevious: () => void;
+	readonly handleStepClick: (stepIndex: number) => void;
+	readonly handleComplete: () => Promise<void>;
+	readonly handleCancel: () => void;
+	readonly validateCurrentStep: () => Promise<boolean>;
+} {
+	const validateCurrentStep = useValidateCurrentStep(deps);
+	const handleNext = useHandleNext(deps, validateCurrentStep);
+	const handlePrevious = useHandlePrevious(deps);
+	const handleStepClick = useHandleStepClick(deps);
+	const handleComplete = useHandleComplete(deps, validateCurrentStep);
+	const handleCancel = useHandleCancel(deps);
 
 	return {
 		handleNext,

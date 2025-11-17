@@ -142,8 +142,10 @@
 	--animation-easing-spring: cubic-bezier(0.68, -0.6, 0.32, 1.6);
 
 	/* Typography tokens */
-	--font-family-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-	--font-family-mono: ui-monospace, SF Mono, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+	--font-family-sans:
+		ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+	--font-family-mono:
+		ui-monospace, SF Mono, Monaco, Consolas, Liberation Mono, Courier New, monospace;
 	--font-size-xs: 0.75rem;
 	--line-height-xs: 1rem;
 	--font-size-sm: 0.875rem;

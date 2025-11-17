@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Test Coverage Roadmap: From 3.1% to Full Coverage
 
-**Last Verified**: 2025-11-14 - Roadmap has been comprehensively verified against actual project structure. All file paths, component structures, directory hierarchies, and test file specifications have been validated and confirmed accurate. All mentioned files exist, all directory structures match, and all test file paths are correctly specified.
+**Last Verified**: 2025-11-15 - Roadmap has been comprehensively verified against actual project structure. All file paths, component structures, directory hierarchies, and test file specifications have been validated and confirmed accurate. All mentioned files exist, all directory structures match, and all test file paths are correctly specified. Added missing VirtualizedList component (Task 15.7.1) with all 17 files verified.
 
 ## Current State
 
@@ -2064,6 +2064,72 @@ describe('httpClient', () => {
 - `tests/core/ui/affix/Affix.test.tsx`
 - `tests/core/ui/utilities/resizable/Resizable.test.tsx`
 - `tests/core/ui/utilities/scroll-area/ScrollArea.test.tsx`
+
+---
+
+### Task 15.7.1: VirtualizedList Component
+
+**Components** (verified):
+
+- `src/core/ui/utilities/virtualized-list/VirtualizedList.tsx` ✅ (main component)
+- `src/core/ui/utilities/virtualized-list/components/VirtualizedListWrapper.tsx` ✅
+- `src/core/ui/utilities/virtualized-list/components/VirtualizedListContainer.tsx` ✅
+- `src/core/ui/utilities/virtualized-list/components/VirtualizedListEmpty.tsx` ✅
+- `src/core/ui/utilities/virtualized-list/components/VirtualizedListContent.tsx` ✅
+- `src/core/ui/utilities/virtualized-list/components/VirtualItem.tsx` ✅
+- `src/core/ui/utilities/virtualized-list/helpers/VirtualizedListPropsHelpers.ts` ✅
+- `src/core/ui/utilities/virtualized-list/helpers/VirtualizedListContentHelpers.tsx` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListConfiguration.ts` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListSetupAndProps.ts` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/scroll/useScrollHandler.ts` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/scroll/useInitialScroll.ts` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/utils/useVirtualizedListRef.ts` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizedListSetup.ts` ✅
+- `src/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizerInstance.ts` ✅
+- `src/core/ui/utilities/virtualized-list/types/VirtualizedListTypes.ts` ✅
+- `src/core/ui/utilities/virtualized-list/types/VirtualizedListContentTypes.ts` ✅
+
+**Current Coverage**: 0% (no test files exist)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test main VirtualizedList component rendering
+- Test vertical and horizontal orientation
+- Test fixed and dynamic item sizes
+- Test overscan configuration
+- Test empty state rendering
+- Test scroll handling (useScrollHandler)
+- Test initial scroll offset (useInitialScroll)
+- Test virtualizer instance creation (useVirtualizerInstance)
+- Test virtualizer setup (useVirtualizedListSetup)
+- Test configuration hooks (useVirtualizedListConfiguration, useVirtualizedListSetupAndProps)
+- Test props extraction and normalization (VirtualizedListPropsHelpers)
+- Test content helpers (VirtualizedListContentHelpers)
+- Test wrapper, container, content, and empty components
+- Test VirtualItem component rendering and positioning
+- Test accessibility (ARIA attributes)
+- Test smooth scrolling option
+- Test getItemKey functionality
+- Test large list performance
+
+**Test Files**:
+
+- `tests/core/ui/utilities/virtualized-list/VirtualizedList.test.tsx` (main component)
+- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListWrapper.test.tsx`
+- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListContainer.test.tsx`
+- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListEmpty.test.tsx`
+- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListContent.test.tsx`
+- `tests/core/ui/utilities/virtualized-list/components/VirtualItem.test.tsx`
+- `tests/core/ui/utilities/virtualized-list/helpers/VirtualizedListPropsHelpers.test.ts`
+- `tests/core/ui/utilities/virtualized-list/helpers/VirtualizedListContentHelpers.test.tsx`
+- `tests/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListConfiguration.test.ts`
+- `tests/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListSetupAndProps.test.ts`
+- `tests/core/ui/utilities/virtualized-list/hooks/scroll/useScrollHandler.test.ts`
+- `tests/core/ui/utilities/virtualized-list/hooks/scroll/useInitialScroll.test.ts`
+- `tests/core/ui/utilities/virtualized-list/hooks/utils/useVirtualizedListRef.test.ts`
+- `tests/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizedListSetup.test.ts`
+- `tests/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizerInstance.test.ts`
 
 ---
 

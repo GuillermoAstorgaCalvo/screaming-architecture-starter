@@ -1,5 +1,14 @@
 import type { HttpClientConfig, HttpClientResponse, HttpPort } from '@core/ports/HttpPort';
 
+type MockResponseInput =
+	| HttpClientResponse
+	| ((
+			url: string,
+			method: string,
+			config?: HttpClientConfig,
+			body?: unknown
+	  ) => Promise<HttpClientResponse> | HttpClientResponse);
+
 /**
  * Mock HttpPort implementation for testing
  * Records requests for assertions and allows configuring responses
@@ -32,7 +41,7 @@ export class MockHttpAdapter implements HttpPort {
 	mockResponse(
 		urlPattern: string | RegExp | ((url: string) => boolean),
 		method: string,
-		response: HttpClientResponse | (() => Promise<HttpClientResponse>)
+		response: MockResponseInput
 	): void {
 		let matchFn: (url: string) => boolean;
 		if (typeof urlPattern === 'string') {
@@ -53,7 +62,7 @@ export class MockHttpAdapter implements HttpPort {
 				_body?: unknown
 			) => {
 				if (typeof response === 'function') {
-					return response();
+					return response(_url, _method_, _config, _body);
 				}
 				return response;
 			},
@@ -63,12 +72,17 @@ export class MockHttpAdapter implements HttpPort {
 	/**
 	 * Configure default response for all requests
 	 */
-	mockDefaultResponse(response: HttpClientResponse | (() => Promise<HttpClientResponse>)): void {
+	mockDefaultResponse(response: MockResponseInput): void {
 		this.responseHandlers.push({
 			match: () => true,
-			handler: async () => {
+			handler: async (
+				_url: string,
+				_method_: string,
+				_config?: HttpClientConfig,
+				_body?: unknown
+			) => {
 				if (typeof response === 'function') {
-					return response();
+					return response(_url, _method_, _config, _body);
 				}
 				return response;
 			},

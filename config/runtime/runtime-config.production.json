@@ -1,0 +1,6 @@
+{
+	"API_BASE_URL": "https://api.production.example.com",
+	"ANALYTICS_WRITE_KEY": "prod-analytics-key",
+	"GOOGLE_MAPS_API_KEY": "prod-maps-key",
+	"FEATURE_FLAGS": {}
+}

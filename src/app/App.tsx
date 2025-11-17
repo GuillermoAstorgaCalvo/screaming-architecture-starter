@@ -68,7 +68,9 @@ export default function App() {
 												<ToastProvider>
 													<BrowserRouter>
 														<LazyLayoutGroup id="app-route-transitions">
-															<Router />
+															<div data-testid="router">
+																<Router />
+															</div>
 														</LazyLayoutGroup>
 													</BrowserRouter>
 													<ToastContainer />

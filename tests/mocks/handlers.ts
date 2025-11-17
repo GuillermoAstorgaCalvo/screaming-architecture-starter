@@ -11,7 +11,7 @@
  * 2. Import and override handlers in your test files as needed
  */
 
-import { buildApiResponse } from '@tests/factories/apiFactories';
+import { defaultSlideshowResponse, emptySlideshowResponse } from '@tests/mocks/payloads';
 import { http, HttpResponse } from 'msw';
 
 /**
@@ -30,17 +30,10 @@ export const handlers = [
 		const empty = url.searchParams.get('empty');
 
 		if (empty === 'true') {
-			return HttpResponse.json({
-				slideshow: {
-					author: '',
-					date: new Date().toISOString(),
-					slides: [],
-					title: '',
-				},
-			});
+			return HttpResponse.json(emptySlideshowResponse);
 		}
 
-		return HttpResponse.json(buildApiResponse());
+		return HttpResponse.json(defaultSlideshowResponse);
 	}),
 ] as const;
 
