@@ -82,11 +82,11 @@ export class GoogleTagManagerAdapter implements AnalyticsPort {
 		const payload: DataLayerPayload = { event: 'identify' };
 
 		if (identity.userId) {
-			payload.user_id = identity.userId;
+			payload['user_id'] = identity.userId;
 		}
 
 		if (identity.traits) {
-			payload.user_traits = identity.traits;
+			payload['user_traits'] = identity.traits;
 		}
 
 		this.pushToDataLayer(payload);
