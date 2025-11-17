@@ -67,10 +67,10 @@ const envSchema = z.object({
 		.default(false),
 
 	/**
-	 * Google Analytics measurement ID fallback
+	 * Google Tag Manager container ID fallback
 	 * Used when runtime configuration does not provide one
 	 */
-	GA_MEASUREMENT_ID: z
+	GTM_CONTAINER_ID: z
 		.preprocess(val => {
 			if (typeof val === 'string') {
 				const trimmed = val.trim();
@@ -81,10 +81,10 @@ const envSchema = z.object({
 		.optional(),
 
 	/**
-	 * Google Analytics debug flag override
-	 * Defaults to false; set to true to enable GA debug mode regardless of DEV
+	 * Google Tag Manager debug flag override
+	 * Defaults to false; set to true to enable GTM debug mode regardless of DEV
 	 */
-	GA_DEBUG: z
+	GTM_DEBUG: z
 		.preprocess(val => {
 			if (typeof val === 'boolean') return val;
 			if (typeof val === 'string') return val.toLowerCase().trim() === 'true';
@@ -93,10 +93,10 @@ const envSchema = z.object({
 		.optional(),
 
 	/**
-	 * Google Analytics data layer name override
+	 * Google Tag Manager data layer name override
 	 * Defaults to 'dataLayer'
 	 */
-	GA_DATALAYER_NAME: z.preprocess(val => {
+	GTM_DATALAYER_NAME: z.preprocess(val => {
 		if (typeof val === 'string') {
 			const trimmed = val.trim();
 			return trimmed.length > 0 ? trimmed : undefined;
@@ -128,9 +128,9 @@ function parseEnv() {
 			PROD: import.meta.env.PROD,
 			MODE: import.meta.env.MODE,
 			ANALYTICS_ENABLED: import.meta.env['VITE_ANALYTICS_ENABLED'],
-			GA_MEASUREMENT_ID: import.meta.env['VITE_GA_MEASUREMENT_ID'],
-			GA_DEBUG: import.meta.env['VITE_GA_DEBUG'],
-			GA_DATALAYER_NAME: import.meta.env['VITE_GA_DATALAYER_NAME'],
+			GTM_CONTAINER_ID: import.meta.env['VITE_GTM_CONTAINER_ID'],
+			GTM_DEBUG: import.meta.env['VITE_GTM_DEBUG'],
+			GTM_DATALAYER_NAME: import.meta.env['VITE_GTM_DATALAYER_NAME'],
 			GOOGLE_MAPS_API_KEY: import.meta.env['VITE_GOOGLE_MAPS_API_KEY'],
 		});
 	} catch (error) {

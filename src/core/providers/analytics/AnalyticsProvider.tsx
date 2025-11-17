@@ -69,7 +69,7 @@ export interface AnalyticsProviderProps {
  *
  * The analytics implementation is injected at the app level (infrastructure layer).
  * This provider optionally runs initialization when configuration is provided
- * (e.g., measurement ID for Google Analytics) and exposes the port via context.
+ * (e.g., GTM container ID or analytics measurement ID) and exposes the port via context.
  */
 function useAnalyticsInitialization(
 	analytics: AnalyticsPort,

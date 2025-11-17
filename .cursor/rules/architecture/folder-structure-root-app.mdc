@@ -41,7 +41,7 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 - `App.tsx`: Root component. Pure composition:
   1. `useHttpClientAuth(new JwtAuthAdapter({ storage: localStorageAdapter }))` wires AuthPort tokens into HttpPort interceptors.
   2. Providers order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `AuthProvider` → `StorageProvider` → `ThemeProvider` → `I18nProvider` → `QueryProvider` → `AnalyticsProvider` → `LazyMotionProvider` (lazy-loaded, Framer Motion layout context) → `ToastProvider` → `BrowserRouter` → `LazyLayoutGroup` (lazy-loaded) → `Router` → `ToastContainer` (inside BrowserRouter).
-  3. Analytics toggles between `googleAnalyticsAdapter` and `noopAnalyticsAdapter` based on `env.ANALYTICS_ENABLED` / runtime config (prefers runtime ANALYTICS_WRITE_KEY, otherwise GA env vars).
+  3. Analytics toggles between `googleTagManagerAdapter` and `noopAnalyticsAdapter` based on `env.ANALYTICS_ENABLED` / runtime config (prefers runtime ANALYTICS_WRITE_KEY, otherwise GTM env vars).
   4. No domain logic; only composition + DI wiring.
 - `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Awaits `i18nInitPromise` from `@core/i18n/i18n` to ensure translations are loaded before rendering. Calls `reportWebVitals()` from `@core/perf/reportWebVitals` with logger adapter (only runs in production). Imports domain i18n registrations (e.g., `@domains/landing/i18n`). Creates React root, renders `<App />` wrapped in `StrictMode`, imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization.
 - `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense` using `DefaultLoadingFallback` from `@core/ui/utilities/loadable/components/loadableFallback`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Uses `LazyRouteTransition` (lazy-loaded) from `@core/ui/utilities/motion/components/RouteTransition.lazy` for route change animations. Tracks page views via `useAnalytics()` hook on route changes (tracks path, title, and location). Paths derive from `core/config/routes.ts` via the generated helpers in `@core/router/routes.gen` (`buildRoute`, `ROUTE_KEYS`). Includes catch-all route (`path="*"`) for `Error404`.
@@ -89,9 +89,9 @@ import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
 import { LazyLayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup.lazy';
 import { LazyMotionProvider } from '@core/ui/utilities/motion/components/MotionProvider.lazy';
 import {
-	googleAnalyticsAdapter,
+	googleTagManagerAdapter,
 	noopAnalyticsAdapter,
-} from '@infra/analytics/googleAnalyticsAdapter';
+} from '@infra/analytics/googleTagManagerAdapter';
 import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
@@ -103,7 +103,7 @@ export default function App() {
 	useHttpClientAuth(authAdapter);
 
 	const analyticsEnabled = env.ANALYTICS_ENABLED;
-	const analyticsAdapter = analyticsEnabled ? googleAnalyticsAdapter : noopAnalyticsAdapter;
+	const analyticsAdapter = analyticsEnabled ? googleTagManagerAdapter : noopAnalyticsAdapter;
 	const analyticsConfig = getAnalyticsConfig(analyticsEnabled);
 
 	return (
@@ -144,15 +144,16 @@ function getAnalyticsConfig(isEnabled: boolean): AnalyticsInitOptions | null {
 	}
 	const runtimeConfig = getCachedRuntimeConfig();
 	const runtimeKey = runtimeConfig?.ANALYTICS_WRITE_KEY?.trim();
-	const writeKey = runtimeKey ?? env.GA_MEASUREMENT_ID;
-	if (!writeKey) {
+	const containerId = runtimeKey ?? env.GTM_CONTAINER_ID;
+	if (!containerId) {
 		return null;
 	}
 	const config: AnalyticsInitOptions = {
-		writeKey,
-		dataLayerName: env.GA_DATALAYER_NAME,
+		writeKey: containerId,
+		containerId,
+		dataLayerName: env.GTM_DATALAYER_NAME,
 	};
-	if ((env.GA_DEBUG ?? env.DEV) === true) {
+	if ((env.GTM_DEBUG ?? env.DEV) === true) {
 		config.debug = true;
 	}
 	return config;

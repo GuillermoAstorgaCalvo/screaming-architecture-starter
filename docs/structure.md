@@ -58,15 +58,15 @@ src/
 │   │   #   6. ThemeProvider (light/dark/system + persisted choice)
 │   │   #   7. I18nProvider (react-i18next context, preloaded core + domain namespaces)
 │   │   #   8. QueryProvider (TanStack Query v5, gcTime/staleTime tuned)
-│   │   #   9. AnalyticsProvider (Google Analytics adapter w/ runtime config fallback)
+│   │   #   9. AnalyticsProvider (Google Tag Manager adapter w/ runtime config fallback)
 │   │   #  10. LazyMotionProvider (lazy-loaded, wraps Framer Motion LayoutGroup / reduced-motion handling)
 │   │   #  11. ToastProvider (queue + dismissal logic)
 │   │   #  12. BrowserRouter (React Router v7)
 │   │   #  13. LazyLayoutGroup (lazy-loaded, Framer Motion route transition grouping, inside BrowserRouter)
 │   │   #  14. Router (App routes + transitions, inside LazyLayoutGroup)
 │   │   #  15. ToastContainer (renders toast notifications, inside ToastProvider but outside BrowserRouter)
-│   │   # AnalyticsProvider toggles between googleAnalyticsAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED
-│   │   # Analytics configuration is determined by getAnalyticsConfig() which checks runtime config (ANALYTICS_WRITE_KEY) and environment variables (GA_MEASUREMENT_ID, GA_DEBUG, GA_DATALAYER_NAME)
+│   │   # AnalyticsProvider toggles between googleTagManagerAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED
+│   │   # Analytics configuration is determined by getAnalyticsConfig() which checks runtime config (ANALYTICS_WRITE_KEY) and environment variables (GTM_CONTAINER_ID, GTM_DEBUG, GTM_DATALAYER_NAME)
 │   │   # ToastContainer is placed inside ToastProvider but outside BrowserRouter for proper context access
 │   │   # useHttpClientAuth hook is called at App component level (before providers) to sync AuthPort tokens with HttpPort interceptor
 │   │
@@ -234,7 +234,7 @@ src/
 │   │   ├── http/                         # HttpProvider, context, hook
 │   │   ├── auth/                         # AuthProvider exposes AuthPort to the tree
 │   │   ├── storage/                      # StorageProvider + useStorage hook
-│   │   ├── analytics/                    # AnalyticsProvider + useAnalytics hook (Google Analytics, Segment, etc.)
+│   │   ├── analytics/                    # AnalyticsProvider + useAnalytics hook (Google Tag Manager, Segment, etc.)
 │   │   ├── toast/                        # ToastProvider, ToastContext, useToast hook (queue mgmt, matches UI toast components)
 │   │   └── snackbar/                     # SnackbarProvider + hook (optional lightweight notifications)
 │   │
@@ -608,12 +608,12 @@ src/
 │
 ├── infrastructure/                        # Technical adapters & framework-specific code
 │   ├── analytics/                        # ✅ Analytics adapters
-│   │   └── googleAnalyticsAdapter.ts     # ✅ Google Analytics (GA4) adapter implementation
+│   │   └── googleTagManagerAdapter.ts    # ✅ Google Tag Manager adapter implementation
 │   │       # Implements AnalyticsPort interface
-│   │       # Uses gtag.js for Google Analytics 4 tracking
+│   │       # Loads GTM container + dataLayer events for GA4, Ads, and future tags
 │   │       # Supports page views, events, user identification, user properties, reset
 │   │       # SSR-safe with browser environment checks
-│   │       # Exports googleAnalyticsAdapter instance and noopAnalyticsAdapter for testing
+│   │       # Exports googleTagManagerAdapter instance and noopAnalyticsAdapter for testing
 │   │       # Can be extended/replaced with other analytics providers (Segment, Mixpanel, etc.)
 │   ├── auth/                             # ✅ Auth adapters
 │   │   ├── jwtAuthAdapter.ts             # ✅ AuthPort implementation with JWT decode/persistence helpers

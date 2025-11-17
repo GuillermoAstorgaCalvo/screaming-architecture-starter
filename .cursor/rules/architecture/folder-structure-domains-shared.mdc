@@ -78,7 +78,7 @@ src/domains/shared/
     ├── hooks/ (useAnalytics)
     ├── models/ (analytics.ts)
     ├── services/ (analyticsService.ts)
-    └── adapters/ (googleAnalyticsAdapter.ts, customAdapter.ts)
+    └── adapters/ (googleTagManagerAdapter.ts, customAdapter.ts)
 ```
 
 Guidance:

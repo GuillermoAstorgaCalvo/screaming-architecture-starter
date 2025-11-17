@@ -1818,7 +1818,7 @@ describe('httpClient', () => {
 
 ### Task 14.1: Analytics Adapter
 
-**File** (verified): `src/infrastructure/analytics/googleAnalyticsAdapter.ts` ✅
+**File** (verified): `src/infrastructure/analytics/googleTagManagerAdapter.ts` ✅
 **Current Coverage**: 0%
 **Priority**: MEDIUM
 
@@ -1828,7 +1828,7 @@ describe('httpClient', () => {
 - Test event tracking
 - Test initialization
 
-**Test File**: `tests/infrastructure/analytics/googleAnalyticsAdapter.test.ts`
+**Test File**: `tests/infrastructure/analytics/googleTagManagerAdapter.test.ts`
 
 ---
 

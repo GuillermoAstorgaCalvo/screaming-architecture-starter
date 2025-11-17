@@ -26,25 +26,25 @@ type RuntimeConfig = {
 // Mock the analytics adapters module
 // Note: require() in vi.mock factories doesn't resolve path aliases, so we use relative paths
 // Using async factory to allow proper module resolution
-vi.mock('@infra/analytics/googleAnalyticsAdapter', async () => {
+vi.mock('@infra/analytics/googleTagManagerAdapter', async () => {
 	const { MockAnalyticsAdapter } = await import('../utils/mocks/MockAnalyticsAdapter.js');
-	const mockGoogleAnalyticsAdapter = new MockAnalyticsAdapter();
+	const mockGoogleTagManagerAdapter = new MockAnalyticsAdapter();
 	const mockNoopAnalyticsAdapter = new MockAnalyticsAdapter();
 	// Store references globally for test access
 	(
 		globalThis as {
-			mockGoogleAnalyticsAdapter?: MockAnalyticsAdapter;
+			mockGoogleTagManagerAdapter?: MockAnalyticsAdapter;
 			mockNoopAnalyticsAdapter?: MockAnalyticsAdapter;
 		}
-	).mockGoogleAnalyticsAdapter = mockGoogleAnalyticsAdapter;
+	).mockGoogleTagManagerAdapter = mockGoogleTagManagerAdapter;
 	(
 		globalThis as {
-			mockGoogleAnalyticsAdapter?: MockAnalyticsAdapter;
+			mockGoogleTagManagerAdapter?: MockAnalyticsAdapter;
 			mockNoopAnalyticsAdapter?: MockAnalyticsAdapter;
 		}
 	).mockNoopAnalyticsAdapter = mockNoopAnalyticsAdapter;
 	return {
-		googleAnalyticsAdapter: mockGoogleAnalyticsAdapter,
+		googleTagManagerAdapter: mockGoogleTagManagerAdapter,
 		noopAnalyticsAdapter: mockNoopAnalyticsAdapter,
 	};
 });
@@ -64,9 +64,9 @@ vi.mock('@core/config/env.client', () => {
 	const mockEnv = {
 		ANALYTICS_ENABLED: false,
 		DEV: false,
-		GA_MEASUREMENT_ID: undefined as string | undefined,
-		GA_DEBUG: undefined as boolean | undefined,
-		GA_DATALAYER_NAME: 'dataLayer',
+		GTM_CONTAINER_ID: undefined as string | undefined,
+		GTM_DEBUG: undefined as boolean | undefined,
+		GTM_DATALAYER_NAME: 'dataLayer',
 	};
 	// Store reference globally for test access
 	(globalThis as { mockEnv?: typeof mockEnv }).mockEnv = mockEnv;
@@ -90,11 +90,11 @@ vi.mock('@core/config/runtime', async () => {
 });
 
 // Access mocked modules from globalThis (set in vi.mock factories)
-const getMockGoogleAnalyticsAdapter = () => {
-	const adapter = (globalThis as { mockGoogleAnalyticsAdapter?: MockAnalyticsAdapter })
-		.mockGoogleAnalyticsAdapter;
+const getMockGoogleTagManagerAdapter = () => {
+	const adapter = (globalThis as { mockGoogleTagManagerAdapter?: MockAnalyticsAdapter })
+		.mockGoogleTagManagerAdapter;
 	if (!adapter) {
-		throw new Error('mockGoogleAnalyticsAdapter not initialized');
+		throw new Error('mockGoogleTagManagerAdapter not initialized');
 	}
 	return adapter;
 };
@@ -112,9 +112,9 @@ const getMockEnv = () => {
 			mockEnv?: {
 				ANALYTICS_ENABLED: boolean;
 				DEV: boolean;
-				GA_MEASUREMENT_ID?: string | undefined;
-				GA_DEBUG?: boolean | undefined;
-				GA_DATALAYER_NAME: string;
+				GTM_CONTAINER_ID?: string | undefined;
+				GTM_DEBUG?: boolean | undefined;
+				GTM_DATALAYER_NAME: string;
 			};
 		}
 	).mockEnv;
@@ -135,14 +135,14 @@ const getMockGetCachedRuntimeConfig = () => {
 // Helper function to reset test mocks
 const resetTestMocks = () => {
 	__resetRuntimeConfigCache();
-	getMockGoogleAnalyticsAdapter().clear();
+	getMockGoogleTagManagerAdapter().clear();
 	getMockNoopAnalyticsAdapter().clear();
 	const mockEnv = getMockEnv();
 	mockEnv.ANALYTICS_ENABLED = false;
 	mockEnv.DEV = false;
-	mockEnv.GA_MEASUREMENT_ID = undefined;
-	mockEnv.GA_DEBUG = undefined;
-	mockEnv.GA_DATALAYER_NAME = 'dataLayer';
+	mockEnv.GTM_CONTAINER_ID = undefined;
+	mockEnv.GTM_DEBUG = undefined;
+	mockEnv.GTM_DATALAYER_NAME = 'dataLayer';
 	getMockGetCachedRuntimeConfig().mockReturnValue(null);
 	const httpClientWithFlag = httpClient as typeof httpClient & {
 		__authInterceptorAttached?: boolean;
@@ -240,19 +240,20 @@ describe('App analytics configuration', () => {
 		});
 	});
 
-	it('uses googleAnalyticsAdapter when analytics is enabled with env write key', async () => {
+	it('uses googleTagManagerAdapter when analytics is enabled with env write key', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-		mockEnv.GA_DEBUG = undefined;
+		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_DEBUG = undefined;
 		mockEnv.DEV = false;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
 		render(<App />);
 
 		await waitFor(() => {
-			expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
-				writeKey: 'G-TEST123',
+			expect(getMockGoogleTagManagerAdapter().initializedWith).toEqual({
+				writeKey: 'GTM-TEST123',
+				containerId: 'GTM-TEST123',
 				dataLayerName: 'dataLayer',
 			});
 		});
@@ -261,7 +262,7 @@ describe('App analytics configuration', () => {
 	it('uses runtime config write key when available', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GA_MEASUREMENT_ID = 'G-ENV123';
+		mockEnv.GTM_CONTAINER_ID = 'GTM-ENV123';
 		getMockGetCachedRuntimeConfig().mockReturnValue({
 			ANALYTICS_WRITE_KEY: 'G-RUNTIME123',
 		});
@@ -269,7 +270,7 @@ describe('App analytics configuration', () => {
 		render(<App />);
 
 		await waitFor(() => {
-			expect(getMockGoogleAnalyticsAdapter().initializedWith?.writeKey).toBe('G-RUNTIME123');
+			expect(getMockGoogleTagManagerAdapter().initializedWith?.writeKey).toBe('G-RUNTIME123');
 		});
 	});
 });
@@ -277,38 +278,40 @@ describe('App analytics configuration', () => {
 describe('App analytics debug mode', () => {
 	setupAppTestEnv();
 
-	it('enables debug mode when GA_DEBUG is true', async () => {
+	it('enables debug mode when GTM_DEBUG is true', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-		mockEnv.GA_DEBUG = true;
+		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_DEBUG = true;
 		mockEnv.DEV = false;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
 		render(<App />);
 
 		await waitFor(() => {
-			expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
-				writeKey: 'G-TEST123',
+			expect(getMockGoogleTagManagerAdapter().initializedWith).toEqual({
+				writeKey: 'GTM-TEST123',
+				containerId: 'GTM-TEST123',
 				dataLayerName: 'dataLayer',
 				debug: true,
 			});
 		});
 	});
 
-	it('enables debug mode when DEV is true and GA_DEBUG is not set', async () => {
+	it('enables debug mode when DEV is true and GTM_DEBUG is not set', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-		mockEnv.GA_DEBUG = undefined;
+		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_DEBUG = undefined;
 		mockEnv.DEV = true;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
 		render(<App />);
 
 		await waitFor(() => {
-			expect(getMockGoogleAnalyticsAdapter().initializedWith).toEqual({
-				writeKey: 'G-TEST123',
+			expect(getMockGoogleTagManagerAdapter().initializedWith).toEqual({
+				writeKey: 'GTM-TEST123',
+				containerId: 'GTM-TEST123',
 				dataLayerName: 'dataLayer',
 				debug: true,
 			});
@@ -322,27 +325,27 @@ describe('App analytics initialization', () => {
 	it('does not initialize analytics when no write key is available', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GA_MEASUREMENT_ID = undefined;
+		mockEnv.GTM_CONTAINER_ID = undefined;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
 		render(<App />);
 
 		await waitFor(() => {
-			expect(getMockGoogleAnalyticsAdapter().initializedWith).toBeNull();
+			expect(getMockGoogleTagManagerAdapter().initializedWith).toBeNull();
 		});
 	});
 
 	it('uses custom dataLayerName from env', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GA_MEASUREMENT_ID = 'G-TEST123';
-		mockEnv.GA_DATALAYER_NAME = 'customDataLayer';
+		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_DATALAYER_NAME = 'customDataLayer';
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 
 		render(<App />);
 
 		await waitFor(() => {
-			expect(getMockGoogleAnalyticsAdapter().initializedWith?.dataLayerName).toBe(
+			expect(getMockGoogleTagManagerAdapter().initializedWith?.dataLayerName).toBe(
 				'customDataLayer'
 			);
 		});

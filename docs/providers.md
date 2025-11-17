@@ -314,7 +314,7 @@ All providers are composed in `app/App.tsx` in this order:
 6. `ThemeProvider` - Theme (app-specific, light/dark/system with persistence)
 7. `I18nProvider` - Internationalization (app-specific, provides i18next instance)
 8. `QueryProvider` - React Query (app-specific, TanStack Query v5 with optimized defaults: staleTime 30s, gcTime 5min, retry 3)
-9. `AnalyticsProvider` - Analytics (toggles between googleAnalyticsAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED, config determined by getAnalyticsConfig() checking runtime config and environment variables)
+9. `AnalyticsProvider` - Analytics (toggles between googleTagManagerAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED, config determined by getAnalyticsConfig() checking runtime config and environment variables)
 10. `LazyMotionProvider` (lazy-loaded) - Animations (Framer Motion with reduced-motion support)
 11. `ToastProvider` - Toast notifications (queue management)
 12. `BrowserRouter` - Routing (React Router v7)
@@ -327,8 +327,8 @@ All providers are composed in `app/App.tsx` in this order:
 **Important Notes:**
 
 - The `useHttpClientAuth` hook is called at the App component level (before providers) to sync AuthPort tokens with HttpPort interceptor
-- `AnalyticsProvider` conditionally uses `googleAnalyticsAdapter` or `noopAnalyticsAdapter` based on `env.ANALYTICS_ENABLED`
-- Analytics configuration is determined by `getAnalyticsConfig()` helper function in `App.tsx` which checks runtime config (`ANALYTICS_WRITE_KEY` from `runtime-config.json`) and environment variables (`GA_MEASUREMENT_ID`, `GA_DEBUG`, `GA_DATALAYER_NAME`)
+- `AnalyticsProvider` conditionally uses `googleTagManagerAdapter` or `noopAnalyticsAdapter` based on `env.ANALYTICS_ENABLED`
+- Analytics configuration is determined by `getAnalyticsConfig()` helper function in `App.tsx` which checks runtime config (`ANALYTICS_WRITE_KEY` from `runtime-config.json`) and environment variables (`GTM_CONTAINER_ID`, `GTM_DEBUG`, `GTM_DATALAYER_NAME`)
 - Runtime config takes precedence over environment variables for the analytics write key
 - `ToastContainer` is placed inside `ToastProvider` but outside `BrowserRouter` to ensure proper context access
 - All adapters are instantiated at the App level and injected via providers (respects hexagonal architecture boundaries)

@@ -91,21 +91,24 @@ The analysis report will be generated at `dist/stats.html` with treemap visualiz
 
 ### Analytics Configuration
 
-| Variable                 | Type    | Default     | Description                                                         |
-| ------------------------ | ------- | ----------- | ------------------------------------------------------------------- |
-| `VITE_ANALYTICS_ENABLED` | boolean | `false`     | Enable analytics instrumentation                                    |
-| `VITE_GA_MEASUREMENT_ID` | string  | -           | Google Analytics measurement ID (fallback if not in runtime config) |
-| `VITE_GA_DEBUG`          | boolean | `false`     | Enable Google Analytics debug mode (overrides DEV mode detection)   |
-| `VITE_GA_DATALAYER_NAME` | string  | `dataLayer` | Google Analytics data layer name                                    |
+| Variable                  | Type    | Default     | Description                                                                     |
+| ------------------------- | ------- | ----------- | ------------------------------------------------------------------------------- |
+| `VITE_ANALYTICS_ENABLED`  | boolean | `false`     | Enable analytics instrumentation                                                |
+| `VITE_GTM_CONTAINER_ID`   | string  | -           | Google Tag Manager container ID (fallback if not in runtime config)             |
+| `VITE_GTM_DEBUG`          | boolean | `false`     | Enable Google Tag Manager debug mode (appends `gtm_debug=x` query string param) |
+| `VITE_GTM_DATALAYER_NAME` | string  | `dataLayer` | Google Tag Manager data layer name (override only if you configured custom one) |
 
 **Usage Example:**
 
 ```bash
 # Enable analytics with debug mode
-VITE_ANALYTICS_ENABLED=true VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX VITE_GA_DEBUG=true pnpm run dev
+VITE_ANALYTICS_ENABLED=true VITE_GTM_CONTAINER_ID=GTM-XXXXXXX VITE_GTM_DEBUG=true pnpm run dev
 ```
 
-**Note**: For production, prefer setting these in `runtime-config.json` to avoid rebuilds.
+**Notes**:
+
+- For production, prefer setting the container ID in `runtime-config.json` to avoid rebuilds.
+- `index.html` renders the GTM `<noscript>` iframe using `VITE_GTM_CONTAINER_ID`. Keep this value in sync with any runtime container overrides so the fallback matches your active workspace.
 
 ### Google Maps Configuration
 
@@ -149,12 +152,12 @@ Location: `public/runtime-config.json`
 
 ### Available Runtime Variables
 
-| Variable              | Type         | Description                                                  |
-| --------------------- | ------------ | ------------------------------------------------------------ |
-| `API_BASE_URL`        | string (URL) | Base URL for all HTTP requests (validated as proper URL)     |
-| `ANALYTICS_WRITE_KEY` | string       | Analytics write key for tracking                             |
-| `GOOGLE_MAPS_API_KEY` | string       | Google Maps API key (overrides build-time value)             |
-| `FEATURE_FLAGS`       | object       | Feature flag overrides (see [Feature Flags](#feature-flags)) |
+| Variable              | Type         | Description                                                                  |
+| --------------------- | ------------ | ---------------------------------------------------------------------------- |
+| `API_BASE_URL`        | string (URL) | Base URL for all HTTP requests (validated as proper URL)                     |
+| `ANALYTICS_WRITE_KEY` | string       | Analytics container ID (e.g., GTM-XXXXXXX) used when build-time env is blank |
+| `GOOGLE_MAPS_API_KEY` | string       | Google Maps API key (overrides build-time value)                             |
+| `FEATURE_FLAGS`       | object       | Feature flag overrides (see [Feature Flags](#feature-flags))                 |
 
 ### Runtime Config Format
 
@@ -296,7 +299,7 @@ For production builds, set variables in your CI/CD environment or `.env.producti
 ```bash
 # .env.production
 VITE_ANALYTICS_ENABLED=true
-VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+VITE_GTM_CONTAINER_ID=GTM-XXXXXXX
 VITE_BUILD_TARGET=es2023
 VITE_MINIFY=esbuild
 VITE_SOURCEMAP=false

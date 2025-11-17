@@ -19,9 +19,9 @@ import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
 import { LazyLayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup.lazy';
 import { LazyMotionProvider } from '@core/ui/utilities/motion/components/MotionProvider.lazy';
 import {
-	googleAnalyticsAdapter,
+	googleTagManagerAdapter,
 	noopAnalyticsAdapter,
-} from '@infra/analytics/googleAnalyticsAdapter';
+} from '@infra/analytics/googleTagManagerAdapter';
 import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
@@ -51,7 +51,7 @@ export default function App() {
 	useHttpClientAuth(authAdapter);
 
 	const analyticsEnabled = env.ANALYTICS_ENABLED;
-	const analyticsAdapter = analyticsEnabled ? googleAnalyticsAdapter : noopAnalyticsAdapter;
+	const analyticsAdapter = analyticsEnabled ? googleTagManagerAdapter : noopAnalyticsAdapter;
 	const analyticsConfig = getAnalyticsConfig(analyticsEnabled);
 
 	return (
@@ -94,20 +94,21 @@ function getAnalyticsConfig(isAnalyticsEnabled: boolean): AnalyticsInitOptions |
 	}
 
 	const runtimeConfig = getCachedRuntimeConfig();
-	const runtimeWriteKey = runtimeConfig?.ANALYTICS_WRITE_KEY?.trim();
-	const envWriteKey = env.GA_MEASUREMENT_ID;
-	const writeKey = runtimeWriteKey ?? envWriteKey;
+	const runtimeContainerId = runtimeConfig?.ANALYTICS_WRITE_KEY?.trim();
+	const envContainerId = env.GTM_CONTAINER_ID;
+	const containerId = runtimeContainerId ?? envContainerId;
 
-	if (!writeKey) {
+	if (!containerId) {
 		return null;
 	}
 
-	const debugOverride = env.GA_DEBUG;
+	const debugOverride = env.GTM_DEBUG;
 	const debug = debugOverride ?? env.DEV;
 
 	const config: AnalyticsInitOptions = {
-		writeKey,
-		dataLayerName: env.GA_DATALAYER_NAME,
+		writeKey: containerId,
+		containerId,
+		dataLayerName: env.GTM_DATALAYER_NAME,
 	};
 
 	if (debug) {

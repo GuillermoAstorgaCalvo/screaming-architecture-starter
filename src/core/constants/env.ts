@@ -54,16 +54,16 @@ export const { ANALYTICS_ENABLED } = env;
 export const isAnalyticsEnabled = (): boolean => ANALYTICS_ENABLED;
 
 /**
- * Google Analytics measurement ID fallback from build-time env
+ * Google Tag Manager container ID fallback from build-time env
  */
-export const { GA_MEASUREMENT_ID } = env;
+export const { GTM_CONTAINER_ID } = env;
 
 /**
- * Google Analytics debug flag override from build-time env
+ * Google Tag Manager debug flag override from build-time env
  */
-export const { GA_DEBUG } = env;
+export const { GTM_DEBUG } = env;
 
 /**
- * Google Analytics data layer name override from build-time env
+ * Google Tag Manager data layer name override from build-time env
  */
-export const { GA_DATALAYER_NAME } = env;
+export const { GTM_DATALAYER_NAME } = env;

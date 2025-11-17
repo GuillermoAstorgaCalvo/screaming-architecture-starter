@@ -17,6 +17,11 @@ export interface AnalyticsInitOptions {
 	writeKey?: string;
 
 	/**
+	 * Tag manager container identifier (e.g., GTM-XXXXXX)
+	 */
+	containerId?: string;
+
+	/**
 	 * Data layer name used by tag managers (if applicable)
 	 */
 	dataLayerName?: string;
