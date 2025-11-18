@@ -11,6 +11,8 @@ The route protection system provides:
 - **Custom Guards**: Create your own guard logic
 - **Flexible Configuration**: Combine multiple guards with different requirements
 
+> ℹ️ **Current implementation snapshot:** The router in `src/app/router.tsx` currently exposes only the public landing page. The examples below reference placeholder pages such as `DashboardPage` to show how `ProtectedRoute` is intended to be used once you add authenticated domains.
+
 ## ProtectedRoute Component
 
 The `ProtectedRoute` component wraps routes that require protection. It evaluates guards and either renders the protected content or redirects/renders a fallback.

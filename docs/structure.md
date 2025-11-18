@@ -60,8 +60,8 @@ src/
 │   │   #   6. ThemeProvider (light/dark/system + persisted choice)
 │   │   #   7. I18nProvider (react-i18next context, preloaded core + domain namespaces)
 │   │   #   8. QueryProvider (TanStack Query v5, gcTime/staleTime tuned)
-│   │   #   9. AnalyticsProvider (Google Tag Manager adapter w/ runtime config fallback)
-│   │   #  10. LazyMotionProvider (lazy-loaded, wraps Framer Motion LayoutGroup / reduced-motion handling)
+│   │   #   9. AnalyticsProvider (Google Tag Manager adapter w/ runtime config fallback, lazy-loaded when enabled)
+│   │   #  10. DeferredMotionProvider (wraps lazy-loaded LazyMotionProvider, defers Framer Motion loading until user interaction)
 │   │   #  11. ToastProvider (queue + dismissal logic)
 │   │   #  12. BrowserRouter (React Router v7)
 │   │   #  13. LazyLayoutGroup (lazy-loaded, Framer Motion route transition grouping, inside BrowserRouter)
@@ -69,16 +69,17 @@ src/
 │   │   #  15. ToastContainer (renders toast notifications, inside ToastProvider but outside BrowserRouter)
 │   │   # AnalyticsProvider toggles between googleTagManagerAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED
 │   │   # Analytics configuration is determined by getAnalyticsConfig() which checks runtime config (ANALYTICS_WRITE_KEY) and environment variables (GTM_CONTAINER_ID, GTM_DEBUG, GTM_DATALAYER_NAME)
+│   │   # Analytics adapter is lazy-loaded when enabled via useAnalytics hook
 │   │   # ToastContainer is placed inside ToastProvider but outside BrowserRouter for proper context access
 │   │   # useHttpClientAuth hook is called at App component level (before providers) to sync AuthPort tokens with HttpPort interceptor
 │   │
 │   ├── main.tsx                          # ✅ Application bootstrap
-│   │   # Initializes config (await initConfig()) - loads runtime config and sets up httpClient
-│   │   # Initializes i18n (await i18nInitPromise) - ensures translations are loaded
+│   │   # Initializes config and i18n in parallel (Promise.all([initConfig(), i18nInitPromise])) - loads runtime config, sets up httpClient, ensures translations are loaded
 │   │   # Initializes Web Vitals tracking (reportWebVitals) - only runs in production
 │   │   # Imports domain i18n registrations (@domains/landing/i18n)
 │   │   # Imports global CSS (@styles/globals.css)
 │   │   # Creates React root and renders <App /> into DOM wrapped in StrictMode
+│   │   # Conditionally renders <SpeedInsightsLoader /> (only in production when feature flag enabled)
 │   │   # Throws error if root element #root not found
 │   │   # Uses createRoot from react-dom/client (React 19+ API)
 │   │   # All initialization is async and awaited before rendering
@@ -101,10 +102,13 @@ src/
 │   │   │   # withTheme() - Injects theme props into page components
 │   │   │   # Allows domains to receive theme via props (respects boundaries)
 │   │   │   # Bridges app-level theme context → domain pages via props
-│   │   └── ProtectedRoute.tsx            # ✅ Route protection component
-│   │       # Provides authentication and permission-based route guards
-│   │       # Uses route guard utilities from @core/router/routes.guards
-│   │       # Uses useAuth hook from @core/providers/auth/useAuth
+│   │   ├── ProtectedRoute.tsx            # ✅ Route protection component
+│   │   │   # Provides authentication and permission-based route guards
+│   │   │   # Uses route guard utilities from @core/router/routes.guards
+│   │   │   # Uses useAuth hook from @core/providers/auth/useAuth
+│   │   └── SpeedInsightsLoader.tsx      # ✅ Lazy-loads Vercel Speed Insights component
+│   │       # Only loads in production when feature flag enabled
+│   │       # Dynamically imports @vercel/speed-insights/react
 │   │
 │   ├── pages/                            # ✅ App-level system pages
 │   │   ├── Error404.tsx                  # ✅ Not Found page (404 error)
@@ -122,9 +126,13 @@ src/
 │       │   # Uses StoragePort via useStorage hook to respect hexagonal architecture boundaries
 │       ├── ThemeContext.tsx              # ✅ Theme context definition
 │       ├── useTheme.ts                   # ✅ Hook to access theme context
-│       └── I18nProvider.tsx              # ✅ Provides i18next instance for translations
-│           # Wraps application with I18nextProvider from react-i18next
-│           # Uses configured i18n instance from @core/i18n/i18n
+│       ├── I18nProvider.tsx             # ✅ Provides i18next instance for translations
+│       │   # Wraps application with I18nextProvider from react-i18next
+│       │   # Uses configured i18n instance from @core/i18n/i18n
+│       └── DeferredMotionProvider.tsx   # ✅ Wraps LazyMotionProvider and defers loading
+│           # Defers Framer Motion bundle loading until user interaction or timeout
+│           # Uses useDeferredActivation hook for deferred activation
+│           # Wraps LazyMotionProvider with reducedMotion="user"
 │       # Core providers (Logger, Http, Auth, Storage, Analytics, Toast, Snackbar) live in @core/providers/**
 │       # App composes those adapters/providers directly rather than re-exporting them here
 │

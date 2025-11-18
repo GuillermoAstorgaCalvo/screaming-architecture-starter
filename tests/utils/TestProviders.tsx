@@ -12,7 +12,7 @@ import { HttpProvider } from '@core/providers/http/HttpProvider';
 import { LoggerProvider } from '@core/providers/logger/LoggerProvider';
 import { StorageProvider } from '@core/providers/storage/StorageProvider';
 import { ToastProvider } from '@core/providers/toast/ToastProvider';
-import type { ReactElement, ReactNode } from 'react';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 /**
@@ -31,6 +31,8 @@ export function TestProviders({
 	defaultTheme,
 	analytics,
 	analyticsConfig = null,
+	router: Router = BrowserRouter,
+	routerProps,
 }: {
 	readonly children: ReactNode;
 	readonly storage: StoragePort;
@@ -40,6 +42,8 @@ export function TestProviders({
 	readonly defaultTheme: 'light' | 'dark' | 'system';
 	readonly analytics: AnalyticsPort;
 	readonly analyticsConfig?: AnalyticsInitOptions | null;
+	readonly router?: ComponentType<{ children: ReactNode; [key: string]: unknown }>;
+	readonly routerProps?: Record<string, unknown>;
 }): ReactElement {
 	return (
 		<LoggerProvider logger={logger}>
@@ -51,7 +55,7 @@ export function TestProviders({
 								<QueryProvider>
 									<AnalyticsProvider analytics={analytics} config={analyticsConfig}>
 										<ToastProvider>
-											<BrowserRouter>{children}</BrowserRouter>
+											<Router {...routerProps}>{children}</Router>
 										</ToastProvider>
 									</AnalyticsProvider>
 								</QueryProvider>

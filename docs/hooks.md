@@ -11,9 +11,9 @@ The application provides various custom hooks organized by category:
 - **HTTP**: `useHttpClientAuth`
 - **UI**: `useMediaQuery`, `useToggle`, `usePrevious`, `useWindowSize`
 - **Scroll**: `useScrollPosition`
-- **Motion**: `useInView`, `useMotionValue`, `useScrollProgress`, etc.
+- **Motion**: `useInView`, `useMotionValue`, `useScrollProgress`, `useMotionSpring`, `useMotionTransform`, `useMotionVelocity`, `useMotionAnimationFrame`, `useScrollMotionValue`
 - **SEO**: `useSEO`
-- **Utilities**: `useDebounce`, `useThrottle`, `useInterval`
+- **Utilities**: `useDebounce`, `useThrottle`, `useInterval`, `useDeferredActivation`
 
 ## Data Fetching Hooks
 
@@ -22,10 +22,11 @@ The application provides various custom hooks organized by category:
 Generic data fetching hook with automatic loading and error state management.
 
 ```tsx
+import type { DemoContentResponse } from '@domains/landing/services/api/getDemoContentService';
 import { useFetch } from '@core/hooks/fetch/useFetch';
 
-function UserList() {
-	const { data, loading, error, fetch, reset } = useFetch<User[]>('/api/users', {
+function LandingMessage() {
+	const { data, loading, error, fetch, reset } = useFetch<DemoContentResponse>('/api/demo', {
 		autoFetch: true, // Automatically fetch on mount
 	});
 
@@ -35,10 +36,9 @@ function UserList() {
 
 	return (
 		<div>
-			{data.map(user => (
-				<div key={user.id}>{user.name}</div>
-			))}
+			<p>{data.message}</p>
 			<button onClick={fetch}>Refresh</button>
+			<button onClick={reset}>Reset</button>
 		</div>
 	);
 }
@@ -452,10 +452,10 @@ const [theme, setTheme] = useState('light'); // Lost on refresh
 
 ```tsx
 // ✅ Good - React Query for server data
-const { data } = useQuery({ queryKey: ['users'], queryFn: fetchUsers });
+const { data } = useQuery({ queryKey: ['demo-content'], queryFn: fetchDemoContent });
 
 // ⚠️ Less ideal - useFetch for server data (no caching)
-const { data } = useFetch('/api/users', { autoFetch: true });
+const { data } = useFetch('/api/demo', { autoFetch: true });
 ```
 
 ### 3. Debounce Expensive Operations
@@ -479,6 +479,42 @@ const [theme, setTheme] = useLocalStorage('theme', 'light', themeSchema);
 // ⚠️ Less safe - no validation
 const [theme, setTheme] = useLocalStorage('theme', 'light');
 ```
+
+### useDeferredActivation
+
+Hook that returns `true` once the user has interacted with the page or an optional timeout elapses. Useful for deferring non-critical UI or scripts until the page is interactive.
+
+```tsx
+import { useDeferredActivation } from '@core/hooks/useDeferredActivation';
+
+function MyComponent() {
+	const isReady = useDeferredActivation({
+		timeout: 1500, // Default: 1500ms
+		events: ['pointerdown', 'keydown', 'mousemove', 'touchstart'], // Default events
+		triggerOnVisibilityHidden: false, // Default: false
+	});
+
+	if (!isReady) {
+		return <div>Loading...</div>;
+	}
+
+	return <ExpensiveComponent />;
+}
+```
+
+**Options**:
+
+- `timeout`: Timeout in milliseconds before activation (default: `1500`)
+- `events`: Array of events to listen for (default: `['pointerdown', 'keydown', 'mousemove', 'touchstart']`)
+- `triggerOnVisibilityHidden`: Activate when page becomes hidden (default: `false`)
+
+**When to Use**:
+
+- Deferring heavy animations or libraries (e.g., Framer Motion)
+- Loading non-critical features after user interaction
+- Improving initial page load performance
+
+**Example**: Used by `DeferredMotionProvider` to delay Framer Motion bundle loading until user interaction.
 
 ## Related Documentation
 

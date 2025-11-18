@@ -133,18 +133,19 @@ const envSchema = z.object({
  * Parse and validate environment variables
  * Uses safe defaults if values are missing
  */
-function parseEnv() {
+export function parseClientEnv(readEnv: () => Record<string, unknown> = () => import.meta.env) {
 	try {
+		const source = readEnv();
 		return envSchema.parse({
-			DEV: import.meta.env.DEV,
-			PROD: import.meta.env.PROD,
-			MODE: import.meta.env.MODE,
-			ANALYTICS_ENABLED: import.meta.env['VITE_ANALYTICS_ENABLED'],
-			SPEED_INSIGHTS_ENABLED: import.meta.env['VITE_SPEED_INSIGHTS_ENABLED'],
-			GTM_CONTAINER_ID: import.meta.env['VITE_GTM_CONTAINER_ID'],
-			GTM_DEBUG: import.meta.env['VITE_GTM_DEBUG'],
-			GTM_DATALAYER_NAME: import.meta.env['VITE_GTM_DATALAYER_NAME'],
-			GOOGLE_MAPS_API_KEY: import.meta.env['VITE_GOOGLE_MAPS_API_KEY'],
+			DEV: source['DEV'],
+			PROD: source['PROD'],
+			MODE: source['MODE'],
+			ANALYTICS_ENABLED: source['VITE_ANALYTICS_ENABLED'],
+			SPEED_INSIGHTS_ENABLED: source['VITE_SPEED_INSIGHTS_ENABLED'],
+			GTM_CONTAINER_ID: source['VITE_GTM_CONTAINER_ID'],
+			GTM_DEBUG: source['VITE_GTM_DEBUG'],
+			GTM_DATALAYER_NAME: source['VITE_GTM_DATALAYER_NAME'],
+			GOOGLE_MAPS_API_KEY: source['VITE_GOOGLE_MAPS_API_KEY'],
 		});
 	} catch (error) {
 		console.warn('Failed to parse environment variables, using defaults:', error);
@@ -156,7 +157,7 @@ function parseEnv() {
  * Client-safe environment configuration
  * All environment variable access should go through this export
  */
-export const env = parseEnv();
+export const env = parseClientEnv();
 
 /**
  * Type for the validated environment configuration

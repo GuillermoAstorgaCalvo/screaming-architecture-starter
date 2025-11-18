@@ -63,8 +63,8 @@ function MyComponent() {
 
 	const fetchData = async () => {
 		try {
-			const response = await http.get('/api/users');
-			console.log(response.data);
+			const response = await http.get('/api/demo');
+			console.log(response.data.message);
 		} catch (error) {
 			console.error('Request failed:', error);
 		}
@@ -314,8 +314,8 @@ All providers are composed in `app/App.tsx` in this order:
 6. `ThemeProvider` - Theme (app-specific, light/dark/system with persistence)
 7. `I18nProvider` - Internationalization (app-specific, provides i18next instance)
 8. `QueryProvider` - React Query (app-specific, TanStack Query v5 with optimized defaults: staleTime 30s, gcTime 5min, retry 3)
-9. `AnalyticsProvider` - Analytics (toggles between googleTagManagerAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED, config determined by getAnalyticsConfig() checking runtime config and environment variables)
-10. `LazyMotionProvider` (lazy-loaded) - Animations (Framer Motion with reduced-motion support)
+9. `AnalyticsProvider` - Analytics (toggles between googleTagManagerAdapter and noopAnalyticsAdapter based on env.ANALYTICS_ENABLED, config determined by getAnalyticsConfig() checking runtime config and environment variables). Analytics adapter is lazy-loaded when enabled.
+10. `DeferredMotionProvider` (wraps lazy-loaded `LazyMotionProvider`) - Animations (Framer Motion with reduced-motion support, defers loading until user interaction)
 11. `ToastProvider` - Toast notifications (queue management)
 12. `BrowserRouter` - Routing (React Router v7)
 13. `LazyLayoutGroup` (lazy-loaded) - Framer Motion route transitions (inside BrowserRouter, groups route transitions with id="app-route-transitions")

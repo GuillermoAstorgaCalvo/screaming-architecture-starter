@@ -85,10 +85,10 @@ See `docs/structure.md` for detailed structure documentation.
 - **Vite 7.2.2** - Build tool and dev server
 - **TailwindCSS 4.1.17** - Utility-first CSS framework
 - **React Router 7.9.6** - Client-side routing
-- **TanStack Query 5.90.8** - Server state management
+- **TanStack Query 5.90.10** - Server state management
 - **Zustand 5.0.8** - Lightweight client-side state stores
 - **i18next 25.6.2** - Internationalization
-- **React Hook Form 7.66.0** - Form handling with Zod validation
+- **React Hook Form 7.66.1** - Form handling with Zod validation
 - **Zod 4.1.12** - Schema validation
 - **Web Vitals 5.1.0** - Performance monitoring
 - **Lucide React 0.553.0** - Icon library

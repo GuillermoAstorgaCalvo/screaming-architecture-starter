@@ -76,9 +76,13 @@ function useAnalyticsInitialization(
 	config: AnalyticsInitOptions | null | undefined
 ) {
 	const serializedConfigRef = useRef<string | null>(null);
+	const initializedAnalyticsRef = useRef<AnalyticsPort | null>(null);
 
 	useEffect(() => {
-		if (!prepareInitialization(serializedConfigRef, config)) {
+		const shouldInitializeConfig = prepareInitialization(serializedConfigRef, config);
+		const analyticsChanged = initializedAnalyticsRef.current !== analytics;
+
+		if (!config || (!shouldInitializeConfig && !analyticsChanged)) {
 			return;
 		}
 
@@ -89,6 +93,8 @@ function useAnalyticsInitialization(
 
 		let isMounted = true;
 		const handleError = createInitializationErrorHandler(serializedConfigRef, () => isMounted);
+
+		initializedAnalyticsRef.current = analytics;
 
 		executeInitialize({
 			initialize,

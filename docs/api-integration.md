@@ -2,6 +2,8 @@
 
 This guide provides step-by-step instructions for integrating APIs using `createApiService`, including error handling patterns, request/response patterns, and mocking strategies for development and testing.
 
+> ℹ️ **Current implementation snapshot:** The template ships with a single production-ready example in `src/domains/landing/services/api/getDemoContentService.ts`, which exposes a typed `createDemoContentService` pointing at `/api/demo`. The extended walkthrough below keeps using a hypothetical `users` domain so you can see how the same patterns scale to CRUD-style modules—replace the `domains/users/*` imports with your own domains when you scaffold new features.
+
 ## Table of Contents
 
 1. [Step-by-Step API Integration](#step-by-step-api-integration)

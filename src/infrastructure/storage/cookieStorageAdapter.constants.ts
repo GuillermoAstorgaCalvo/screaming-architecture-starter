@@ -15,7 +15,7 @@ import type { CookieOptions } from '@src-types/ports';
 export function getDefaultCookieOptions(): Required<
 	Pick<CookieOptions, 'path' | 'sameSite' | 'secure'>
 > {
-	const isSecure = globalThis.window?.location.protocol === 'https:';
+	const isSecure = globalThis.window?.location?.protocol === 'https:';
 	return {
 		path: '/',
 		sameSite: 'Lax',

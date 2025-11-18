@@ -30,9 +30,9 @@ export default function Router() {
 			pageView.title = documentTitle;
 		}
 
-		const windowLocation = 'window' in globalThis ? globalThis.window.location.href : undefined;
-
-		if (windowLocation !== undefined) {
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		const windowLocation = globalThis.window?.location?.href;
+		if (windowLocation) {
 			pageView.location = windowLocation;
 		}
 

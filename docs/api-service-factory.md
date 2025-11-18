@@ -28,20 +28,18 @@ import type { ApiService } from '@core/api/createApiService.types';
 import type { HttpPort } from '@core/ports/HttpPort';
 import { z } from 'zod';
 
-const userSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	email: z.string().email(),
+const demoContentSchema = z.object({
+	message: z.string(),
 });
 
-export type User = z.infer<typeof userSchema>;
+export type DemoContentResponse = z.infer<typeof demoContentSchema>;
 
-export function createGetUserService(http: HttpPort): ApiService<{ id: string }, User> {
-	return createApiService<{ id: string }, User>(http, {
-		endpoint: request => `/api/users/${request.id}`,
+export function createDemoContentService(http: HttpPort): ApiService<void, DemoContentResponse> {
+	return createApiService<void, DemoContentResponse>(http, {
+		endpoint: '/api/demo',
 		method: 'GET',
-		responseSchema: userSchema,
-		defaultErrorMessage: 'Failed to load user',
+		responseSchema: demoContentSchema,
+		defaultErrorMessage: 'errors.unableToLoadDemoContent',
 	});
 }
 ```

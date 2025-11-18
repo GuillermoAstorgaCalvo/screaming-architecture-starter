@@ -2,6 +2,8 @@
 
 This guide explains how to write and run tests in the Screaming Architecture starter.
 
+> ℹ️ **Current implementation snapshot:** The repository ships with landing-page tests under `tests/app` plus example component/provider specs and the Playwright scenario in `e2e/example.spec.ts`. Many of the patterns below keep using a hypothetical `users` domain to show more complex cases—swap those imports for your own domains when you start adding new business features.
+
 ## Overview
 
 The project uses:
@@ -314,20 +316,29 @@ const users = buildUserList(5);
 
 ```ts
 // tests/factories/userFactories.ts
-import type { User } from '@domains/users/types';
+export interface User {
+	id: string;
+	name: string;
+	email: string;
+	createdAt: string;
+	updatedAt: string;
+}
 
-export function buildUser(overrides?: Partial<User>): User {
+export function buildUser(overrides: Partial<User> = {}): User {
+	const now = new Date().toISOString();
+
 	return {
-		id: '1',
-		name: 'Test User',
-		email: 'test@example.com',
-		...overrides,
+		id: overrides.id ?? `user-${Math.random().toString(36).slice(2, 9)}`,
+		name: overrides.name ?? 'John Doe',
+		email: overrides.email ?? 'john.doe@example.com',
+		createdAt: overrides.createdAt ?? now,
+		updatedAt: overrides.updatedAt ?? now,
 	};
 }
 
 export function buildUserList(count: number): User[] {
 	return Array.from({ length: count }, (_, i) =>
-		buildUser({ id: String(i + 1), name: `User ${i + 1}` })
+		buildUser({ id: `user-${i + 1}`, name: `User ${i + 1}` })
 	);
 }
 ```
@@ -359,16 +370,27 @@ renderWithProviders(<Component />, { auth });
 ### Writing E2E Tests
 
 ```ts
-// e2e/user-flow.spec.ts
-import { test, expect } from '@playwright/test';
+// e2e/example.spec.ts
+import { expect, test } from '@playwright/test';
+import { expectA11y } from './utils/a11y';
 
-test('user can log in', async ({ page }) => {
-	await page.goto('/');
-	await page.click('text=Login');
-	await page.fill('[name="email"]', 'test@example.com');
-	await page.fill('[name="password"]', 'password123');
-	await page.click('button[type="submit"]');
-	await expect(page).toHaveURL('/dashboard');
+test.describe('Home Page', () => {
+	test('should load the home page', async ({ page }) => {
+		await page.goto('/');
+		await expect(page).toHaveTitle(/./);
+	});
+
+	test('should navigate without errors', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await expect(page.locator('body')).toBeVisible();
+	});
+
+	test('should be accessible', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await expectA11y(page);
+	});
 });
 ```
 

@@ -96,6 +96,7 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 - `useWindowSize.ts`: ✅ Hook to track window dimensions. Provides responsive window dimensions (`width`, `height`) that update on window resize events. SSR-safe with initial fallback values (defaults to 0 for SSR). Returns `{ width, height }` object.
 - `usePrevious.ts`: ✅ Hook that returns the previous value of a state or prop. Useful for comparing current vs previous values or implementing undo/redo functionality. Takes a value of generic type `T` and returns `T | undefined` (undefined on first render).
 - `useSEO.ts`: ✅ Hook to update document head metadata (SEO). Updates title, meta tags, Open Graph, and Twitter Card tags. Uses `mergeSEOConfig` from `@core/config/seo` to merge custom config with defaults. Supports per-route metadata updates. Takes `SEOConfig` object with optional properties (title, description, indexable, canonicalUrl, ogType, ogImage, ogImageWidth, ogImageHeight, ogImageAlt, ogLocale, twitterCard, twitterImage, twitterImageAlt, keywords, author, customMeta).
+- `useDeferredActivation.ts`: ✅ Hook that returns true once the user has interacted with the page or an optional timeout elapses. Useful for deferring non-critical UI or scripts until the page is interactive. Supports configurable events (default: pointerdown, keydown, mousemove, touchstart), timeout (default: 1500ms), and visibility change trigger.
 
 **Guidelines**: React-specific. Should use ports/providers for dependencies (not direct infrastructure imports). May use `utils/` for pure logic.
 

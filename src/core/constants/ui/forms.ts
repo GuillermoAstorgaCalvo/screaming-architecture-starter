@@ -5,39 +5,42 @@
 
 import type { StandardSize } from '@src-types/ui/base';
 
+export const FORM_CONTROL_BASE_CLASSES =
+	'w-full rounded-md border bg-surface text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-surface-dark dark:text-text-primary-dark dark:placeholder:text-text-muted-dark';
+
+export const FORM_CONTROL_SIZE_CLASSES = {
+	sm: 'px-sm py-xs text-sm',
+	md: 'px-md py-sm text-base',
+	lg: 'px-lg py-md text-lg',
+} as const satisfies Record<StandardSize, string>;
+
 /**
  * Input base classes
  * Uses design tokens for colors, spacing, and radius
  */
-export const INPUT_BASE_CLASSES =
-	'w-full rounded-md border bg-surface text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-surface-dark dark:text-text-primary-dark dark:placeholder:text-text-muted-dark';
+export const INPUT_BASE_CLASSES = FORM_CONTROL_BASE_CLASSES;
 
 /**
  * Input size classes (padding + text size)
  * Uses design tokens for spacing
  */
-export const INPUT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-sm py-xs text-sm',
-	md: 'px-md py-sm text-base',
-	lg: 'px-lg py-md text-lg',
-} as const;
+export const INPUT_SIZE_CLASSES = FORM_CONTROL_SIZE_CLASSES;
 
 /**
  * Textarea base classes (extends input but with resize handling)
  * Uses design tokens for colors, spacing, and radius
  */
-export const TEXTAREA_BASE_CLASSES =
-	'w-full rounded-md border bg-surface text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed resize-y dark:bg-surface-dark dark:text-text-primary-dark dark:placeholder:text-text-muted-dark';
+export const TEXTAREA_BASE_CLASSES = `${FORM_CONTROL_BASE_CLASSES} resize-y`;
 
 /**
  * Textarea size classes (padding + text size)
  * Uses design tokens for spacing and customizable min-height
  */
-export const TEXTAREA_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-sm py-xs text-sm min-h-[calc(var(--spacing-4xl)+var(--spacing-2xl))]',
-	md: 'px-md py-sm text-base min-h-[calc(var(--spacing-4xl)*1.5625)]',
-	lg: 'px-lg py-md text-lg min-h-[calc(var(--spacing-4xl)*1.875)]',
-} as const;
+export const TEXTAREA_SIZE_CLASSES = {
+	sm: `${FORM_CONTROL_SIZE_CLASSES.sm} min-h-[calc(var(--spacing-4xl)+var(--spacing-2xl))]`,
+	md: `${FORM_CONTROL_SIZE_CLASSES.md} min-h-[calc(var(--spacing-4xl)*1.5625)]`,
+	lg: `${FORM_CONTROL_SIZE_CLASSES.lg} min-h-[calc(var(--spacing-4xl)*1.875)]`,
+} as const satisfies Record<StandardSize, string>;
 
 /**
  * Textarea error state classes
@@ -58,11 +61,11 @@ export const SELECT_BASE_CLASSES =
  * Select size classes (padding + text size)
  * Uses design tokens for spacing
  */
-export const SELECT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'px-sm py-xs text-sm pr-8',
-	md: 'px-md py-sm text-base pr-10',
-	lg: 'px-lg py-md text-lg pr-12',
-} as const;
+export const SELECT_SIZE_CLASSES = {
+	sm: `${FORM_CONTROL_SIZE_CLASSES.sm} pr-8`,
+	md: `${FORM_CONTROL_SIZE_CLASSES.md} pr-10`,
+	lg: `${FORM_CONTROL_SIZE_CLASSES.lg} pr-12`,
+} as const satisfies Record<StandardSize, string>;
 
 /**
  * Select error state classes

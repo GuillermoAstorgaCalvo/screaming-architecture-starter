@@ -2,6 +2,8 @@
 
 This guide explains how to manage state in this application using React Query and Zustand.
 
+> ℹ️ **Current implementation snapshot:** The starter template currently ships with the `landing` domain only. Its Zustand store lives at `src/domains/landing/store/landingStore.ts` and demonstrates the patterns described below. The longer walkthroughs continue to reference a hypothetical `users` domain to illustrate authenticated flows—swap in your own domain names when you create new features.
+
 ## Overview
 
 This project uses two complementary state management solutions:
@@ -315,8 +317,8 @@ Keep Zustand stores scoped to domains:
 
 ```tsx
 // ✅ Good - domain-scoped
-domains / users / store / userStore.ts;
-domains / products / store / productStore.ts;
+domains/landing/store/landingStore.ts;
+domains/<next-domain>/store/<nextDomain>Store.ts;
 
 // ❌ Bad - global store
 store / globalStore.ts;

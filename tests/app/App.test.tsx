@@ -7,6 +7,31 @@ import type { MockAnalyticsAdapter } from '@tests/utils/mocks/MockAnalyticsAdapt
 import type { MockAuthAdapter } from '@tests/utils/mocks/MockAuthAdapter';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+interface TestGlobalState {
+	mockGoogleTagManagerAdapter?: MockAnalyticsAdapter;
+	mockNoopAnalyticsAdapter?: MockAnalyticsAdapter;
+	mockEnv?: {
+		ANALYTICS_ENABLED: boolean;
+		DEV: boolean;
+		GTM_CONTAINER_ID?: string | undefined;
+		GTM_DEBUG?: boolean | undefined;
+		GTM_DATALAYER_NAME: string;
+	};
+	mockGetCachedRuntimeConfig?: ReturnType<typeof vi.fn>;
+	mockJwtAuthAdapterInstance?: MockAuthAdapter;
+}
+
+const getTestGlobals = () => globalThis as typeof globalThis & TestGlobalState;
+
+const { MockAnalyticsAdapter: MockAnalyticsAdapterClass } = await import(
+	'../utils/mocks/MockAnalyticsAdapter.js'
+);
+const mockGoogleTagManagerAdapter = new MockAnalyticsAdapterClass();
+const mockNoopAnalyticsAdapter = new MockAnalyticsAdapterClass();
+const initialGlobals = getTestGlobals();
+initialGlobals.mockGoogleTagManagerAdapter = mockGoogleTagManagerAdapter;
+initialGlobals.mockNoopAnalyticsAdapter = mockNoopAnalyticsAdapter;
+
 // Mock the router FIRST to ensure it's hoisted before App imports it
 vi.mock('@app/router', async () => {
 	const React = await import('react');
@@ -25,30 +50,10 @@ type RuntimeConfig = {
 } | null;
 
 // Mock the analytics adapters module
-// Note: require() in vi.mock factories doesn't resolve path aliases, so we use relative paths
-// Using async factory to allow proper module resolution
-vi.mock('@infra/analytics/googleTagManagerAdapter', async () => {
-	const { MockAnalyticsAdapter } = await import('../utils/mocks/MockAnalyticsAdapter.js');
-	const mockGoogleTagManagerAdapter = new MockAnalyticsAdapter();
-	const mockNoopAnalyticsAdapter = new MockAnalyticsAdapter();
-	// Store references globally for test access
-	(
-		globalThis as {
-			mockGoogleTagManagerAdapter?: MockAnalyticsAdapter;
-			mockNoopAnalyticsAdapter?: MockAnalyticsAdapter;
-		}
-	).mockGoogleTagManagerAdapter = mockGoogleTagManagerAdapter;
-	(
-		globalThis as {
-			mockGoogleTagManagerAdapter?: MockAnalyticsAdapter;
-			mockNoopAnalyticsAdapter?: MockAnalyticsAdapter;
-		}
-	).mockNoopAnalyticsAdapter = mockNoopAnalyticsAdapter;
-	return {
-		googleTagManagerAdapter: mockGoogleTagManagerAdapter,
-		noopAnalyticsAdapter: mockNoopAnalyticsAdapter,
-	};
-});
+vi.mock('@infra/analytics/googleTagManagerAdapter', () => ({
+	googleTagManagerAdapter: mockGoogleTagManagerAdapter,
+	noopAnalyticsAdapter: mockNoopAnalyticsAdapter,
+}));
 
 // Mock the auth adapter
 // Note: require() in vi.mock factories doesn't resolve path aliases, so we use relative paths
@@ -97,7 +102,6 @@ vi.mock('@core/config/runtime', async () => {
 	};
 });
 
-// Access mocked modules from globalThis (set in vi.mock factories)
 const getMockGoogleTagManagerAdapter = () => {
 	const adapter = (globalThis as { mockGoogleTagManagerAdapter?: MockAnalyticsAdapter })
 		.mockGoogleTagManagerAdapter;
@@ -151,15 +155,17 @@ const getMockJwtAuthAdapterInstance = () => {
 // Helper function to reset test mocks
 const resetTestMocks = () => {
 	__resetRuntimeConfigCache();
-	getMockGoogleTagManagerAdapter().clear();
-	getMockNoopAnalyticsAdapter().clear();
-	const mockEnv = getMockEnv();
-	mockEnv.ANALYTICS_ENABLED = false;
-	mockEnv.DEV = false;
-	mockEnv.GTM_CONTAINER_ID = undefined;
-	mockEnv.GTM_DEBUG = undefined;
-	mockEnv.GTM_DATALAYER_NAME = 'dataLayer';
-	getMockGetCachedRuntimeConfig().mockReturnValue(null);
+	const globals = getTestGlobals();
+	globals.mockGoogleTagManagerAdapter?.clear();
+	globals.mockNoopAnalyticsAdapter?.clear();
+	if (globals.mockEnv) {
+		globals.mockEnv.ANALYTICS_ENABLED = false;
+		globals.mockEnv.DEV = false;
+		globals.mockEnv.GTM_CONTAINER_ID = undefined;
+		globals.mockEnv.GTM_DEBUG = undefined;
+		globals.mockEnv.GTM_DATALAYER_NAME = 'dataLayer';
+	}
+	globals.mockGetCachedRuntimeConfig?.mockReturnValue(null);
 	const httpClientWithFlag = httpClient as typeof httpClient & {
 		__authInterceptorAttached?: boolean;
 		__authInterceptorAdapter?: unknown;

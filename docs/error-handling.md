@@ -2,6 +2,8 @@
 
 This guide explains how to handle errors consistently throughout the application using the Result type pattern and error adapters.
 
+> ℹ️ **Current implementation snapshot:** The repo currently ships with the `landing` domain and the `createDemoContentService` factory located at `src/domains/landing/services/api/getDemoContentService.ts`. The more elaborate snippets below continue to use a hypothetical `users` domain to demonstrate advanced patterns—replace those imports with your real domains whenever you build additional features.
+
 ## Overview
 
 The application uses a functional error handling approach with:
@@ -72,7 +74,7 @@ const chained = flatMap(result, data => {
 });
 
 // Convert Promise to Result
-const result = await toResult(fetch('/api/users'));
+const result = await toResult(fetch('/api/demo'));
 
 // Combine multiple results
 const results = [result1, result2, result3];
@@ -280,7 +282,7 @@ The HTTP error adapter normalizes errors from different sources:
 import { httpErrorAdapter } from '@core/http/errorAdapter';
 
 try {
-	await http.get('/api/users');
+	await http.get('/api/demo');
 } catch (error) {
 	// Normalize any error to DomainError
 	const domainError = httpErrorAdapter.adapt(error);

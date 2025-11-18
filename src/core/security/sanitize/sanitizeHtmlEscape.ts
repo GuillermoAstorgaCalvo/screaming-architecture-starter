@@ -21,31 +21,51 @@ import { MAX_ESCAPE_LENGTH } from '@core/security/sanitize/sanitizeHtmlConstants
  * ```
  */
 export function escapeHtml(text: string): string {
+	// Handle null/undefined for runtime safety (defensive programming)
+	// String(null) returns 'null', String(undefined) returns 'undefined'
+	// But we want null to return empty string per test expectations
+	// Using type assertion for defensive null check (tests pass null with @ts-expect-error)
+	if ((text as unknown) === null) {
+		return '';
+	}
+
 	const textStr = String(text);
 
-	// Limit text length to prevent DoS attacks
+	// Limit input length to prevent DoS attacks
+	// Worst case expansion is 4x (e.g., '<' becomes '&lt;'), so we can safely process
+	// up to MAX_ESCAPE_LENGTH characters for plain text, or MAX_ESCAPE_LENGTH / 4 for worst case
+	// We'll truncate input to MAX_ESCAPE_LENGTH to be safe, then truncate output if needed
+	const maxInputLength = MAX_ESCAPE_LENGTH;
 	let safeText = textStr;
-	if (textStr.length > MAX_ESCAPE_LENGTH) {
-		// Truncate to safe length (arbitrary but reasonable)
-		// Note: This truncation might break entities, but it's safer than processing huge strings
-		// For production, consider throwing an error or logging a warning
-		safeText = textStr.slice(0, MAX_ESCAPE_LENGTH);
+	if (textStr.length > maxInputLength) {
+		// Truncate to safe length before escaping
+		safeText = textStr.slice(0, maxInputLength);
 	}
 
 	if (typeof document === 'undefined') {
 		// SSR-safe fallback: basic HTML entity escaping without DOM
 		// Must escape & first to avoid double-escaping
-		return safeText
+		let escaped = safeText
 			.replaceAll('&', '&amp;')
 			.replaceAll('<', '&lt;')
 			.replaceAll('>', '&gt;')
 			.replaceAll('"', '&quot;')
 			.replaceAll("'", '&#39;');
+		// Ensure output doesn't exceed MAX_ESCAPE_LENGTH
+		if (escaped.length > MAX_ESCAPE_LENGTH) {
+			escaped = escaped.slice(0, MAX_ESCAPE_LENGTH);
+		}
+		return escaped;
 	}
 
 	const div = document.createElement('div');
 	div.textContent = safeText;
 	// textContent escapes <, >, and & but not quotes
 	// We need to manually escape quotes for consistency
-	return div.innerHTML.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+	let escaped = div.innerHTML.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+	// Ensure output doesn't exceed MAX_ESCAPE_LENGTH
+	if (escaped.length > MAX_ESCAPE_LENGTH) {
+		escaped = escaped.slice(0, MAX_ESCAPE_LENGTH);
+	}
+	return escaped;
 }

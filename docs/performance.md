@@ -2,6 +2,8 @@
 
 This guide covers performance optimization strategies, code splitting, bundle size management, lazy loading patterns, and Web Vitals monitoring for the Screaming Architecture starter.
 
+> ℹ️ **Current implementation snapshot:** The router currently exposes a single domain page (`src/domains/landing/pages/LandingPage.tsx`). Any references to additional routes such as `DashboardPage` in this document are illustrative—use them as templates when you add new domains.
+
 ## Table of Contents
 
 - [Optimization Strategies](#optimization-strategies)

@@ -437,8 +437,8 @@ This guide covers common issues and solutions when working with the Screaming Ar
 1. **Use `import type` for type-only imports:**
 
    ```typescript
-   import type { User } from '@domains/users/types';
-   import { getUser } from '@domains/users/services';
+   import type { DemoContentResponse } from '@domains/landing/services/api/getDemoContentService';
+   import { createDemoContentService } from '@domains/landing/services/api/getDemoContentService';
    ```
 
 2. **Fix ESLint configuration:**

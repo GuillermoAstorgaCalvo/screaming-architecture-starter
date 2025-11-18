@@ -13,7 +13,7 @@ import { MockHttpAdapter } from '@tests/utils/mocks/MockHttpAdapter';
 import { MockLoggerAdapter } from '@tests/utils/mocks/MockLoggerAdapter';
 import { MockStorageAdapter } from '@tests/utils/mocks/MockStorageAdapter';
 import { TestProviders } from '@tests/utils/TestProviders';
-import type { ReactElement, ReactNode } from 'react';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 
 /**
  * Test utilities for rendering components with all providers
@@ -87,6 +87,18 @@ export interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 	 * Optional analytics configuration passed to AnalyticsProvider
 	 */
 	analyticsConfig?: AnalyticsInitOptions | null;
+
+	/**
+	 * Custom router component (defaults to BrowserRouter)
+	 * Useful for tests that need MemoryRouter or other router implementations
+	 */
+	router?: ComponentType<{ children: ReactNode; [key: string]: unknown }>;
+
+	/**
+	 * Props to pass to the router component
+	 * For example: { initialEntries: ['/'] } for MemoryRouter
+	 */
+	routerProps?: Record<string, unknown>;
 }
 
 /**
@@ -128,6 +140,8 @@ export function renderWithProviders(
 		analytics = defaultProviders.analytics,
 		defaultTheme = defaultProviders.defaultTheme,
 		analyticsConfig = null,
+		router,
+		routerProps,
 		...renderOptions
 	} = options;
 
@@ -141,6 +155,7 @@ export function renderWithProviders(
 				defaultTheme={defaultTheme}
 				analytics={analytics}
 				analyticsConfig={analyticsConfig}
+				{...(router && { router, routerProps })}
 			>
 				{children}
 			</TestProviders>
