@@ -4,7 +4,9 @@ globs: ['**/*']
 alwaysApply: false
 ---
 
-## Scaffolding & Generators (scripts/generate.ts)
+## Scaffolding & Generators (add as needed)
+
+This repo does not ship with `scripts/generate.ts`. When you need scaffolding, create your own script (e.g., using Plop, Hygen, or a custom Node CLI) following the conventions below.
 
 ### Purpose
 

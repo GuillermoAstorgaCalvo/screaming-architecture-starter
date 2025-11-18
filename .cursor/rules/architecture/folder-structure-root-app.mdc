@@ -23,14 +23,16 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 ├── vite.config.ts / vitest.config.ts # Vite + Vitest configs (env-aware, tsconfig paths)
 ├── tailwind.config.ts / postcss.config.cjs
 │                                     # Tailwind v4 + PostCSS (design tokens wired through CSS variables)
-├── playwright.config.ts              # Playwright (dotenv, pnpm dev server, retries, baseURL inference)
+├── playwright.config.ts              # Playwright (dotenv, pnpm run dev server, retries, baseURL inference)
 ├── eslint.config.js                  # ESLint flat config (boundaries, jsx-a11y, testing-library, unicorn, security)
 ├── .prettierrc / .editorconfig       # Formatting baselines
 ├── .gitattributes / .gitignore       # Git normalization and ignores
 ├── .env.example / .cursorignore      # Env template + AI ignore file
 ├── .nvmrc / .npmrc                   # Node 22.21.1 + pnpm 10.22.0 enforcement
 ├── docs/                             # Markdown docs (structure, config-files, tsconfig, docker, UI customization, wizard utilities)
-├── scripts/                          # Repo automation (currently `check-bundle-size.js`)
+├── config/                           # Runtime configuration templates (mirrors public/runtime-config.json surface)
+│   └── runtime/                      # `runtime-config.<env>.json` variants synchronized via scripts/apply-runtime-config.mjs
+├── scripts/                          # Repo automation (`apply-runtime-config.mjs`, `check-bundle-size.js`, `sync-design-tokens.js`)
 ├── Dockerfile*, docker-compose*.yml  # Local + prod container setups
 ├── LICENSE / CODEOWNERS / SECURITY.md# Governance + disclosure
 └── README.md                         # Overview + quick start (links back to docs)
@@ -60,9 +62,9 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
   - `QueryProvider.tsx`: React Query client provider with optimized defaults
   - Note: Port providers (`logger/`, `http/`, `auth/`, `storage/`, `analytics/`, `toast/`, `snackbar/`) live under `core/providers/**` and are composed directly from there.
 
-### PWA (optional)
+- ### PWA (optional)
 
-- `app/pwa/registerSW.ts`, `app/pwa/serviceWorker.ts`: Opt-in. Disabled by default.
+- The template does not ship with a PWA shell or service worker. When needed, create `src/app/pwa/*`, add a service worker registration entry point, and wire it from `main.tsx` behind a feature flag.
 
 ### Example App Composition
 
@@ -120,7 +122,9 @@ export default function App() {
 												<ToastProvider>
 													<BrowserRouter>
 														<LazyLayoutGroup id="app-route-transitions">
-															<Router />
+															<div data-testid="router">
+																<Router />
+															</div>
 														</LazyLayoutGroup>
 													</BrowserRouter>
 													<ToastContainer />

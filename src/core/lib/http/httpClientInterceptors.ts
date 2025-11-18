@@ -13,7 +13,7 @@
  * These interceptors are used internally by HttpClient but are exported for advanced
  * use cases such as custom client implementations or testing scenarios.
  *
- * See: @core/lib/httpClient for the HttpClient implementation that uses these interceptors
+ * See: @core/lib/http/httpClient for the HttpClient implementation that uses these interceptors
  */
 
 import type { HttpClientConfig, HttpClientError, HttpClientResponse } from '@core/ports/HttpPort';

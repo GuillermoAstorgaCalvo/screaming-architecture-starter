@@ -11,116 +11,121 @@
 export const designTokens = {
 	color: {
 		// Primary brand color
-		primary: { DEFAULT: '#2563eb', foreground: '#ffffff' },
+		primary: {
+			DEFAULT: '#2dd4ff',
+			foreground: '#01060f',
+			light: '#67e8f9',
+			dark: '#0284c7',
+		},
 
 		// Secondary color for supporting actions
 		secondary: {
-			DEFAULT: '#64748b',
-			foreground: '#ffffff',
-			light: '#f1f5f9',
-			dark: '#475569',
+			DEFAULT: '#818cf8',
+			foreground: '#0f172a',
+			light: '#c7d2fe',
+			dark: '#4c1d95',
 		},
 
 		// Accent color for highlights and emphasis
 		accent: {
-			DEFAULT: '#8b5cf6',
-			foreground: '#ffffff',
-			light: '#f3e8ff',
-			dark: '#7c3aed',
+			DEFAULT: '#f0abfc',
+			foreground: '#0f172a',
+			light: '#fce7f3',
+			dark: '#c026d3',
 		},
 
 		// Muted colors for subtle backgrounds and borders
 		muted: {
-			DEFAULT: '#f1f5f9',
-			foreground: '#0f172a',
-			dark: '#1e293b',
-			darkForeground: '#f1f5f9',
+			DEFAULT: '#1e293b',
+			foreground: '#e2e8f0',
+			dark: '#0b1220',
+			darkForeground: '#f8fafc',
 		},
 
 		// Destructive/danger color for errors and destructive actions
 		destructive: {
-			DEFAULT: '#ef4444',
-			foreground: '#ffffff',
-			light: '#fee2e2',
-			dark: '#dc2626',
+			DEFAULT: '#fb7185',
+			foreground: '#0f172a',
+			light: '#fecdd3',
+			dark: '#be123c',
 		},
 
 		// Success color for positive feedback
 		success: {
-			DEFAULT: '#10b981',
-			foreground: '#ffffff',
-			light: '#d1fae5',
-			dark: '#059669',
+			DEFAULT: '#34d399',
+			foreground: '#022c22',
+			light: '#bbf7d0',
+			dark: '#065f46',
 		},
 
 		// Warning color for cautionary states
 		warning: {
-			DEFAULT: '#f59e0b',
-			foreground: '#ffffff',
+			DEFAULT: '#fbbf24',
+			foreground: '#0f172a',
 			light: '#fef3c7',
-			dark: '#d97706',
+			dark: '#b45309',
 		},
 
 		// Info color for informational states
 		info: {
-			DEFAULT: '#3b82f6',
-			foreground: '#ffffff',
+			DEFAULT: '#60a5fa',
+			foreground: '#0f172a',
 			light: '#dbeafe',
-			dark: '#2563eb',
+			dark: '#1d4ed8',
 		},
 
 		// Surface colors (backgrounds)
 		surface: {
-			DEFAULT: '#ffffff',
-			dark: '#0b0f19',
-			elevated: '#ffffff',
-			elevatedDark: '#1a1f2e',
+			DEFAULT: '#0b1220',
+			dark: '#03060d',
+			elevated: '#0f172a',
+			elevatedDark: '#111826',
 		},
 
 		// Overlay/backdrop colors for modals, drawers, etc.
 		overlay: {
-			DEFAULT: 'rgba(0, 0, 0, 0.5)',
-			light: 'rgba(0, 0, 0, 0.3)',
-			lightDark: 'rgba(0, 0, 0, 0.4)',
-			medium: 'rgba(0, 0, 0, 0.5)',
-			mediumDark: 'rgba(0, 0, 0, 0.6)',
-			dark: 'rgba(0, 0, 0, 0.7)',
-			darkDark: 'rgba(0, 0, 0, 0.8)',
-			defaultDark: 'rgba(0, 0, 0, 0.7)',
+			DEFAULT: 'rgba(1, 6, 15, 0.7)',
+			light: 'rgba(1, 6, 15, 0.4)',
+			lightDark: 'rgba(1, 6, 15, 0.55)',
+			medium: 'rgba(2, 10, 22, 0.7)',
+			mediumDark: 'rgba(2, 10, 22, 0.8)',
+			dark: 'rgba(2, 6, 15, 0.9)',
+			darkDark: 'rgba(2, 6, 15, 0.95)',
+			defaultDark: 'rgba(1, 6, 15, 0.85)',
 		},
 
 		// Border colors
 		border: {
-			DEFAULT: '#e2e8f0',
-			dark: '#334155',
-			light: '#f1f5f9',
-			darkLight: '#475569',
+			DEFAULT: '#1e293b',
+			dark: '#0f172a',
+			light: '#334155',
+			darkLight: '#64748b',
 		},
 
 		// Text colors
 		text: {
-			primary: '#0f172a',
-			primaryDark: '#f8fafc',
-			secondary: '#475569',
-			secondaryDark: '#cbd5e1',
-			muted: '#64748b',
-			mutedDark: '#94a3b8',
-			disabled: '#94a3b8',
-			disabledDark: '#475569',
-			onPrimary: '#ffffff',
-			onSecondary: '#ffffff',
-			onDestructive: '#ffffff',
+			primary: '#f8fafc',
+			primaryDark: '#e2e8f0',
+			secondary: '#cbd5f5',
+			secondaryDark: '#94a3b8',
+			muted: '#8aa3c7',
+			mutedDark: '#7488a6',
+			disabled: '#475569',
+			disabledDark: '#1f2937',
+			onPrimary: '#020617',
+			onSecondary: '#020617',
+			onDestructive: '#020617',
 		},
 	},
 
 	// Border radius tokens
 	radius: {
 		none: '0',
-		sm: '0.25rem',
-		md: '0.375rem',
-		lg: '0.5rem',
-		xl: '0.75rem',
-		'2xl': '1rem',
+		sm: '0.375rem',
+		md: '0.625rem',
+		lg: '0.875rem',
+		xl: '1.25rem',
+		'2xl': '1.75rem',
 		full: '9999px',
 	},
 
@@ -139,19 +144,19 @@ export const designTokens = {
 	// Shadow/elevation tokens
 	shadow: {
 		none: 'none',
-		sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-		md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-		lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-		xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-		'2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-		inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+		sm: '0 10px 20px -10px rgba(15, 23, 42, 0.4)',
+		md: '0 20px 45px -25px rgba(15, 23, 42, 0.6)',
+		lg: '0 30px 60px -30px rgba(15, 23, 42, 0.65)',
+		xl: '0 40px 90px -45px rgba(15, 23, 42, 0.75)',
+		'2xl': '0 25px 50px -12px rgba(15, 23, 42, 0.65), 0 35px 80px -20px rgba(45, 212, 191, 0.25)',
+		inner: 'inset 0 2px 8px 0 rgba(15, 23, 42, 0.5)',
 		// Dark mode shadows (lighter, more subtle)
 		dark: {
-			sm: '0 1px 2px 0 rgb(0 0 0 / 0.3)',
-			md: '0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3)',
-			lg: '0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3)',
-			xl: '0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3)',
-			'2xl': '0 25px 50px -12px rgb(0 0 0 / 0.5)',
+			sm: '0 10px 20px -12px rgba(2, 6, 23, 0.6)',
+			md: '0 18px 40px -20px rgba(2, 6, 23, 0.7)',
+			lg: '0 25px 55px -25px rgba(2, 6, 23, 0.75)',
+			xl: '0 35px 70px -30px rgba(2, 6, 23, 0.8)',
+			'2xl': '0 45px 100px -40px rgba(2, 6, 23, 0.85)',
 		},
 	},
 
@@ -159,6 +164,8 @@ export const designTokens = {
 	typography: {
 		fontFamily: {
 			sans: [
+				'Space Grotesk',
+				'Inter',
 				'ui-sans-serif',
 				'system-ui',
 				'-apple-system',
@@ -169,6 +176,7 @@ export const designTokens = {
 				'sans-serif',
 			].join(', '),
 			mono: [
+				'JetBrains Mono',
 				'ui-monospace',
 				'SF Mono',
 				'Monaco',
@@ -179,16 +187,16 @@ export const designTokens = {
 			].join(', '),
 		},
 		fontSize: {
-			xs: ['0.75rem', { lineHeight: '1rem' }],
-			sm: ['0.875rem', { lineHeight: '1.25rem' }],
-			base: ['1rem', { lineHeight: '1.5rem' }],
-			lg: ['1.125rem', { lineHeight: '1.75rem' }],
-			xl: ['1.25rem', { lineHeight: '1.75rem' }],
-			'2xl': ['1.5rem', { lineHeight: '2rem' }],
-			'3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-			'4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-			'5xl': ['3rem', { lineHeight: '1' }],
-			'6xl': ['3.75rem', { lineHeight: '1' }],
+			xs: ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.02em' }],
+			sm: ['0.875rem', { lineHeight: '1.3rem', letterSpacing: '0.015em' }],
+			base: ['1rem', { lineHeight: '1.6rem', letterSpacing: '0.01em' }],
+			lg: ['1.125rem', { lineHeight: '1.8rem', letterSpacing: '0.005em' }],
+			xl: ['1.35rem', { lineHeight: '2rem', letterSpacing: '-0.005em' }],
+			'2xl': ['1.65rem', { lineHeight: '2.2rem', letterSpacing: '-0.01em' }],
+			'3xl': ['2rem', { lineHeight: '2.4rem', letterSpacing: '-0.015em' }],
+			'4xl': ['2.5rem', { lineHeight: '2.8rem', letterSpacing: '-0.02em' }],
+			'5xl': ['3.5rem', { lineHeight: '3.5rem', letterSpacing: '-0.04em' }],
+			'6xl': ['4.5rem', { lineHeight: '4.2rem', letterSpacing: '-0.06em' }],
 		},
 		fontWeight: {
 			normal: '400',
@@ -305,30 +313,30 @@ export const designTokens = {
 	componentSize: {
 		// Button heights
 		button: {
-			sm: '32px',
-			md: '40px',
-			lg: '48px',
+			sm: '36px',
+			md: '48px',
+			lg: '56px',
 		},
 		// Input heights
 		input: {
-			sm: '32px',
-			md: '40px',
-			lg: '48px',
+			sm: '36px',
+			md: '48px',
+			lg: '56px',
 		},
 		// Icon sizes
 		icon: {
-			xs: '12px',
-			sm: '16px',
-			md: '20px',
-			lg: '24px',
-			xl: '32px',
+			xs: '14px',
+			sm: '18px',
+			md: '22px',
+			lg: '28px',
+			xl: '36px',
 		},
 		// Avatar sizes
 		avatar: {
-			sm: '32px',
-			md: '40px',
-			lg: '48px',
-			xl: '64px',
+			sm: '36px',
+			md: '48px',
+			lg: '60px',
+			xl: '80px',
 		},
 	},
 

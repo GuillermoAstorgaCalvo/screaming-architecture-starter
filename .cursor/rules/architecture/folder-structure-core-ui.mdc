@@ -20,6 +20,10 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 - `seo.ts`: ✅ SEO & Metadata configuration. Centralized SEO defaults (`DEFAULT_SEO`) and helper functions (`mergeSEOConfig`, `buildPageTitle`, `buildAbsoluteUrl`, `buildCanonicalUrl`, `buildOgImageUrl`, `buildTwitterImageUrl`, `buildRobotsContent`, `getDefaultSEO`). Enables per-route metadata updates and improves sharing/discoverability.
 - `init.ts`: Configuration initialization that sets up runtime configuration and configures `httpClient` baseURL. Should be called early in app lifecycle (main.tsx).
 
+### auth
+
+- `authTokenStorage.ts`: Reactive cache for auth tokens shared across adapters/providers. Provides `subscribe`, `unsubscribe`, and mutation helpers that fan out token changes to listeners (e.g., `JwtAuthAdapter`, `useHttpClientAuth`). Persists tokens via injected `StoragePort` implementation while keeping mutation + notification logic centralized inside `core`.
+
 ### lib (Framework-Specific Libraries)
 
 **Purpose**: React/framework-specific implementations and components that integrate with the framework ecosystem.

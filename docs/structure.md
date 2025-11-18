@@ -25,12 +25,14 @@ alwaysApply: false
 ├── pnpm-workspace.yaml              # Workspace settings (onlyBuiltDependencies, ignoredBuiltDependencies)
 ├── tsconfig*.json                   # Base + app/node/vitest/build project references
 ├── vite.config.ts / vitest.config.ts# Vite + Vitest configs (path aliases, env-aware server/build)
-├── playwright.config.ts             # Playwright config (dotenv loading, pnpm dev server, retries)
+├── playwright.config.ts             # Playwright config (dotenv loading, pnpm run dev server, retries)
 ├── eslint.config.js                 # ESLint flat config (boundaries, jsx-a11y, testing-library, unicorn, security)
 ├── tailwind.config.ts / postcss.config.cjs
 │                                    # Tailwind v4 + PostCSS pipeline wired to design tokens
 ├── docs/                            # Markdown docs (structure, tsconfig, config-files, docker, UI guide, wizard utilities)
-├── scripts/                         # Repo automation (`check-bundle-size.js`)
+├── config/                          # Runtime configuration templates (see docs/config-files.md)
+│   └── runtime/                     # `runtime-config.<env>.json` profiles consumed by apply-runtime-config.mjs
+├── scripts/                         # Repo automation (`apply-runtime-config.mjs`, `check-bundle-size.js`, `sync-design-tokens.js`)
 ├── Dockerfile* / docker-compose*.yml# Local + production docker definitions
 ├── public/                          # Manifest, icons, runtime-config.json, SEO assets
 ├── src/                             # Application source (see below)
@@ -159,6 +161,12 @@ src/
 │   │   ├── createApiService.types.ts    # ✅ Type definitions (ApiService, ApiServiceConfig, ApiHttpMethod, etc.)
 │   │   ├── createApiService.helpers.ts  # ✅ Helper functions (error context, mapper context, response processing)
 │   │   └── createApiService.request.ts  # ✅ Request preparation utilities
+│   │
+│   ├── auth/                             # ✅ Auth utilities shared across adapters/providers
+│   │   └── authTokenStorage.ts           # ✅ Reactive token cache and listeners
+│   │       # Persists access/refresh tokens via injected StoragePort implementation
+│   │       # Exposes subscribe/unsubscribe helpers used by JwtAuthAdapter
+│   │       # Ensures token updates fan out to listeners (domains, interceptors, providers)
 │   │
 │   ├── lib/                              # ✅ Framework-specific utilities
 │   │   ├── http/                         # ✅ Fetch-based HTTP client implementation (HttpPort)
@@ -759,32 +767,22 @@ src/
 │       # Documents all type categories (API, callbacks, common, config, datetime, errors, forms, hooks, http, layout, pagination, ports, react, result, router, ui)
 │   # generated/, zod/, branding.ts, events.ts - Optional, not yet implemented
 │
-├── tests/                                 # ✅ Unit testing infrastructure and example specs
-│   ├── setupTests.ts                      # ✅ Vitest setup file
+├── tests/                                 # ✅ Vitest unit tests, helpers, and mocks
+│   ├── setupTests.ts                      # ✅ Vitest setup (Testing Library, MSW, vitest-axe, matchMedia mocks)
 │   ├── vitest-env.d.ts                    # ✅ Vitest type definitions
-│   ├── core/                              # ✅ Core-specific tests
-│   │   └── router/
-│   │       └── routes.gen.test.ts         # ✅ buildRoute/getRouteTemplate/isRouteKey tests with mocked routes
-│   ├── shared/                            # ✅ Shared component tests
-│   │   └── components/
-│   │       └── layout/
-│   │           ├── Layout.test.tsx        # ✅ Layout component rendering and provider integration tests
-│   │           └── Navbar.test.tsx        # ✅ Navbar accessibility and routing behaviour tests
-│   ├── factories/                         # ✅ Test data factories
-│   │   ├── apiFactories.ts                # ✅ API response factories (buildApiResponse)
-│   │   └── userFactories.ts               # ✅ User factories (buildUser, buildUserList)
-│   ├── mocks/                             # ✅ MSW mocks
-│   │   ├── handlers.ts                    # ✅ MSW request handlers (includes /api/demo and /api/slideshow handlers)
-│   │   ├── payloads.ts                   # ✅ MSW payload helpers (defaultSlideshowResponse, etc.)
-│   │   └── server.ts                      # ✅ MSW server setup helper (setupMSWServer, getMSWSetupInstructions)
-│   └── utils/                              # ✅ Test utilities
-│       ├── testUtils.tsx                  # ✅ Custom render with providers (renderWithProviders)
-│       │   # Includes MockStorageAdapter, MockLoggerAdapter, and MockHttpAdapter exports
-│       ├── TestProviders.tsx             # ✅ React component composing all providers for testing
-│       └── mocks/
-│           ├── MockStorageAdapter.ts      # ✅ Mock StoragePort implementation
-│           ├── MockLoggerAdapter.ts       # ✅ Mock LoggerPort implementation
-│           └── MockHttpAdapter.ts         # ✅ Mock HttpPort implementation
+│   ├── app/
+│   │   ├── App.test.tsx                   # ✅ App composition, analytics toggles, accessibility regression tests
+│   │   └── components/PageWrapper.test.tsx# ✅ PageWrapper.withTheme HOC tests
+│   ├── core/
+│   │   ├── hooks/                         # ✅ Extensive suites for async, debounce, fetch, http, interval, motion, scroll, SEO, storage, throttle, and UI hooks
+│   │   └── utils/                         # ✅ Coverage for classNames, hookUtils, debounce/throttle helpers, themeCustomization, seoDomUtils
+│   ├── factories/                         # ✅ `apiFactories.ts`, `userFactories.ts` test data builders
+│   ├── mocks/                             # ✅ MSW handlers/payloads/server
+│   └── utils/
+│       ├── a11y.ts                        # ✅ vitest-axe helpers
+│       ├── TestProviders.tsx             # ✅ Provider composition for tests
+│       ├── testUtils.tsx                 # ✅ renderWithProviders + adapter overrides
+│       └── mocks/                        # ✅ MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter, MockAuthAdapter, MockAnalyticsAdapter
 │
 ├── e2e/                                   # ✅ End-to-end tests
 │   └── example.spec.ts                    # ✅ Example Playwright spec

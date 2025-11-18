@@ -50,19 +50,13 @@ export interface UseTranslationReturn<N extends keyof TranslationNamespaces> {
  * Hook for creating typed translation function
  */
 function useTypedTranslation<N extends keyof TranslationNamespaces>(
-	namespace: string
+	namespace: string,
+	translate: ReturnType<typeof useI18nextTranslation>['t']
 ): TypedTFunction<N> {
 	return useCallback(
-		(key, options) => {
-			// Always use direct i18n.t call with explicit namespace to ensure translations are found
-			// This works even when resources are added dynamically
-			const { language } = i18n;
-			if (options) {
-				return i18n.t(key, { ...options, ns: namespace, lng: language });
-			}
-			return i18n.t(key, { ns: namespace, lng: language });
-		},
-		[namespace]
+		(key, options) =>
+			options ? translate(key, { ...options, ns: namespace }) : translate(key, { ns: namespace }),
+		[namespace, translate]
 	);
 }
 
@@ -92,7 +86,7 @@ export function useTranslation<N extends keyof TranslationNamespaces = 'common'>
 
 	useResourceLoadingEffects({ loadResource, currentLanguageRef, setCurrentLanguage });
 
-	const typedT = useTypedTranslation<N>(namespace);
+	const typedT = useTypedTranslation<N>(namespace, result.t);
 
 	return {
 		t: typedT,

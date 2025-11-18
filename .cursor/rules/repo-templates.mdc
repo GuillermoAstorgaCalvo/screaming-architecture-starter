@@ -416,7 +416,7 @@ export default defineConfig({
 		{ name: 'webkit', use: { ...devices['Desktop Safari'] } },
 	],
 	webServer: {
-		command: 'pnpm dev',
+		command: 'pnpm run dev',
 		url: baseUrl,
 		reuseExistingServer: !process.env['CI'],
 	},
@@ -441,10 +441,10 @@ jobs:
           node-version: 22.21.1
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm lint
-      - run: pnpm test -- --reporter=verbose
-      - run: pnpm build
+      - run: pnpm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run test -- --reporter=verbose
+      - run: pnpm run build
 ```
 
 ### Notes

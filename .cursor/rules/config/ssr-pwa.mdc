@@ -12,7 +12,7 @@ This template targets SPA by default. You can extend it for SSR/SSG or enable PW
 
 - Keep `core/` framework-agnostic to ease SSR adoption later
 - Introduce a separate SSR entry (e.g., `server.ts`) without changing domain boundaries
-- Data fetching: keep domain services pure and IO behind `core/lib/httpClient.ts`
+- Data fetching: keep domain services pure and IO behind `src/core/lib/http/httpClient.ts`
 - Routing: ensure routes are serializable (no implicit globals)
 
 Considerations:
@@ -22,15 +22,14 @@ Considerations:
 
 ### PWA (Opt-in)
 
-- PWA shell lives under `src/app/pwa/*` (disabled by default)
-- Register service worker from an opt-in entry (e.g., `registerSW.ts`)
-- Cache strategy: start with network-first for HTML, stale-while-revalidate for assets
+- The template currently does **not** include a PWA shell or service worker files.
+- When you need install/offline behaviour, add `src/app/pwa/*` with your registration entry (e.g., `registerSW.ts`) and service worker implementation, then import the registration file from `main.tsx` behind a feature flag.
 
-Checklist:
+Checklist once you implement it:
 
-- Manifest in `public/manifest.json`
-- Icons and maskable icons in `public/`
-- Respect updates: prompt users and allow reload when a new SW is available
+- Manifest in `public/manifest.json` (already present)
+- Icons and maskable icons in `public/` (already present)
+- Runtime update flow: prompt users when a new SW is available so reloads stay explicit
 
 ### When to Choose What
 

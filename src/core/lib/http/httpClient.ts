@@ -9,7 +9,7 @@
  * - Type-safe API calls
  *
  * Domain services should use this client instead of calling fetch directly.
- * Interceptors are defined in core/lib/httpClientInterceptors.ts.
+ * Interceptors are defined in core/lib/http/httpClientInterceptors.ts.
  *
  * Note: This client implements HttpPort interface to ensure contract compliance
  * with the hexagonal architecture port definition.
@@ -59,6 +59,17 @@ export class HttpClient implements HttpPort {
 	 */
 	addRequestInterceptor(interceptor: RequestInterceptor): void {
 		this.requestInterceptors.push(interceptor);
+	}
+
+	/**
+	 * Remove a request interceptor
+	 * Useful for hooks/components that need to attach temporary interceptors
+	 */
+	removeRequestInterceptor(interceptor: RequestInterceptor): void {
+		const index = this.requestInterceptors.indexOf(interceptor);
+		if (index !== -1) {
+			this.requestInterceptors.splice(index, 1);
+		}
 	}
 
 	/**

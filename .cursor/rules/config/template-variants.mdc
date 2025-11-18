@@ -20,18 +20,18 @@ Scale the same architecture by choosing the minimal viable set of capabilities.
 
 - Multiple domains; `domains/shared/*` for cross-domain features
 - Providers: Theme, Query, Auth; Analytics optional
-- Forms abstraction with Zod
+- Forms abstraction with Zod (already in `core/forms/*`)
 - Testing: unit + selective E2E for key flows
-- Observability: optional error tracking adapter
+- Observability: add adapters under a new `src/infrastructure/observability/*` folder when you need error tracking beyond the default logger
 
 ### Large (Complex, Multi-domain)
 
 - Strong domain boundaries; avoid coupling to infra
 - Providers: Theme, Query, Auth, Analytics
-- Observability: error tracking + Web Vitals adapters
-- Storybook for shared/core UI
+- Observability: implement external sinks (e.g., Sentry, DataDog) plus Web Vitals forwarding via `src/core/perf/reportWebVitals.ts`
+- Storybook for shared/core UI once the library grows
 - E2E for critical journeys; Lighthouse in CI periodically
-- PWA only if offline/install needed
+- PWA only if offline/install needed (not included by default—add `src/app/pwa/*` yourself)
 
 ### Migration Notes
 

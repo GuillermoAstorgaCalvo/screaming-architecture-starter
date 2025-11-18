@@ -16,14 +16,14 @@ alwaysApply: false
 1. Scaffold `src/domains/<name>/` with pages, components, hooks, models, services, store, i18n.
 2. Define routes in `<domain>/routes.ts`; import into `app/router.tsx`.
 3. Define Zod schemas in `<domain>/models/*`; infer types for services/UI.
-4. Implement services over `@core/lib/httpClient`; validate IO at boundaries.
+4. Implement services over `@core/lib/http/httpClient`; validate IO at boundaries.
 5. Keep state minimal in `<domain>/store/*`; derive as needed.
 
 ### New Domain Checklist
 
 - [ ] Routes declared in `<domain>/routes.ts` and aggregated in `app/router.tsx`
 - [ ] i18n JSON added under `<domain>/i18n/*` with namespaced keys
-- [ ] Services use `@core/lib/httpClient` and validate IO with Zod
+- [ ] Services use `@core/lib/http/httpClient` and validate IO with Zod
 - [ ] Zustand store scoped under `<domain>/store/*`; no cross-domain coupling
 - [ ] Unit tests added (services/hooks/pages) with MSW where applicable
 - [ ] Imports respect boundaries; no `@infra/*` or `@app/*` inside domains

@@ -42,14 +42,14 @@ alwaysApply: false
 ### Routing and Providers
 
 - Centralized routes in `src/app/router.tsx` aggregating domain routes.
-- Global providers (Query, Auth, Theme, Analytics) live in `src/app/providers/*`.
-- Optional route guards (`src/app/routes.guards.ts`) enforce auth/feature flags as pure functions.
+- App-scoped providers (Theme, I18n, Query) live in `src/app/providers/*`; port adapters (Logger, Http, Auth, Storage, Analytics, Toast/Snackbar) live under `src/core/providers/*` and are composed directly in `app/App.tsx`.
+- Route guards reside in `src/core/router/routes.guards.ts` and are consumed via `@core/router/routes.guards`.
 
 ### Styling and Design System
 
-- TailwindCSS + design tokens in `src/core/constants/designTokens.ts` and `tailwind.config.ts`.
+- TailwindCSS + design tokens live in `src/core/constants/designTokens.ts`, `tailwind.config.ts`, and `scripts/sync-design-tokens.js`.
 - UI atoms in `src/core/ui/*`; domain-specific UI in `src/domains/<domain>/components/*`.
-- Optional `scripts/sync-design-tokens.ts` keeps tokens and Tailwind config aligned.
+- `scripts/sync-design-tokens.js` keeps Tailwind tokens aligned with `designTokens`.
 
 ### Testing Strategy
 
@@ -59,10 +59,10 @@ alwaysApply: false
 
 ### Optional Capabilities (Opt-in, library-agnostic)
 
-- Forms abstraction under `src/core/forms/*` to decouple domain code from form libraries; Zod as the default validator.
-- Observability adapters under `src/infrastructure/observability/*` for error tracking and Web Vitals.
-- Security helpers in `src/core/security/*` and adapters in `src/infrastructure/security/*` (sanitization, CSP hints, crypto).
-- PWA shell under `src/app/pwa/*` disabled by default; enable per project needs.
+- Forms abstraction under `src/core/forms/*` to decouple domain code from form libraries; Zod as the default validator (already implemented).
+- Observability adapters can be added under a future `src/infrastructure/observability/*`; today Web Vitals are reported via `src/core/perf/reportWebVitals.ts` to the logger adapter only.
+- Security helpers live in `src/core/security/*`; there is no dedicated `src/infrastructure/security` directory yet.
+- PWA shell is not part of the template. Add `src/app/pwa/*` + service worker registration when you need offline/installable behaviour.
 
 ### Governance & DX
 

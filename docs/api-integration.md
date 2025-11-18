@@ -1150,7 +1150,8 @@ export function UserList() {
 
 ## See Also
 
-- [API Service Factory README](../src/core/api/README.md) - Detailed API service factory documentation
+- [API Service Factory Guide](./api-service-factory.md) - High-level overview + quick reference
+- [In-source README](../src/core/api/README.md) - Full reference co-located with the implementation
 - [Error Handling Guide](./error-handling.md) - Comprehensive error handling patterns
 - [State Management Guide](./state-management.md) - React Query and Zustand usage
 - [Testing Guide](./testing.md) - Testing strategies and MSW setup

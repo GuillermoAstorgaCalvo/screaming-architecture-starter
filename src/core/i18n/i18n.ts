@@ -1,4 +1,5 @@
 import { env } from '@core/config/env.client';
+import { resourceLoaderBackend } from '@core/i18n/resourceLoader/backend';
 import { loadAndAddResource } from '@core/i18n/resourceLoader/i18n';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -15,6 +16,7 @@ import {
 	type SupportedLanguage,
 } from './constants/constants';
 import { registerCommonTranslations } from './registry';
+import { getRegisteredNamespaces } from './resourceLoader/registry';
 
 /**
  * Common translation loader factory
@@ -50,7 +52,7 @@ const commonTranslationLoader = async (language: SupportedLanguage) => {
  *
  * Resources are loaded dynamically as needed, allowing for scalable translation management.
  */
-i18n.use(LanguageDetector).use(initReactI18next);
+i18n.use(LanguageDetector).use(resourceLoaderBackend).use(initReactI18next);
 
 /**
  * Get i18n configuration options
@@ -127,6 +129,40 @@ async function loadCommonTranslations(languages: Iterable<SupportedLanguage>): P
 }
 
 /**
+ * Preload registered namespaces so the first render has translations available.
+ * Skips the 'common' namespace since it is handled separately.
+ */
+async function preloadRegisteredNamespaces(languages: Iterable<SupportedLanguage>): Promise<void> {
+	const namespaces: string[] = getRegisteredNamespaces().filter(
+		namespace => namespace !== 'common'
+	);
+	if (namespaces.length === 0) {
+		return;
+	}
+
+	await Promise.all(
+		namespaces.map(namespace =>
+			Promise.all(
+				Array.from(languages).map(async language => {
+					try {
+						await loadAndAddResource({
+							i18nInstance: i18n,
+							namespace,
+							language,
+						});
+					} catch (error) {
+						console.error(
+							`Failed to preload namespace "${namespace}" for language "${language}":`,
+							error
+						);
+					}
+				})
+			)
+		)
+	);
+}
+
+/**
  * Set up RTL language support
  * Updates HTML dir and lang attributes when language changes
  */
@@ -173,6 +209,7 @@ async function initializeI18n(): Promise<void> {
 	initialLanguages.add(DEFAULT_LANGUAGE);
 
 	await loadCommonTranslations(initialLanguages);
+	await preloadRegisteredNamespaces(initialLanguages);
 
 	// Set up RTL language support
 	setupRtlSupport();

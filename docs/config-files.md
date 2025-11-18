@@ -76,7 +76,7 @@ Vite configuration with environment-aware settings:
 
 Vitest test configuration:
 
-**Note**: Example unit tests live under `tests/` (e.g., `tests/shared/components/layout/Layout.test.tsx`, `tests/shared/components/layout/Navbar.test.tsx`, `tests/core/router/routes.gen.test.ts`). The Vitest configuration powers those specs alongside the shared test infrastructure (`setupTests.ts`, factories, mocks, utilities).
+**Note**: Example unit tests live under `tests/` (e.g., `tests/app/App.test.tsx`, `tests/app/components/PageWrapper.test.tsx`, `tests/core/hooks/async/useAsync.test.tsx`, `tests/core/utils/classNames.test.ts`). The Vitest configuration powers those specs alongside the shared test infrastructure (`setupTests.ts`, factories, mocks, utilities).
 
 - **Plugins**:
   - `@vitejs/plugin-react-swc`: React with SWC for fast compilation
@@ -126,7 +126,7 @@ Playwright E2E test configuration:
   - `video: 'retain-on-failure'` - Keeps video only on test failures
   - `screenshot: 'only-on-failure'` - Captures screenshots only on failures
 - **Web Server**:
-  - Command: `pnpm dev`
+  - Command: `pnpm run dev`
   - URL: Uses the same `baseUrl` as tests
   - `reuseExistingServer: !process.env['CI']` - Reuses existing server in local development, always starts fresh in CI
 
@@ -414,6 +414,20 @@ Template for environment variables. See [Environment Variables Reference](./envi
 - Playwright loads `.env` first, then `.env.local` (which overrides `.env` values)
 - See [Environment Variables Reference](./environment-variables.md) for complete documentation including defaults, runtime configuration, and production setup
 
+**Runtime configuration templates**
+
+- `config/runtime/runtime-config.development.json`
+- `config/runtime/runtime-config.preview.json`
+- `config/runtime/runtime-config.production.json`
+
+Each profile mirrors the shape consumed by `@core/config/runtime` (`API_BASE_URL`, `ANALYTICS_WRITE_KEY`, future toggles). Run `pnpm run runtime-config:apply` (or `pnpm run prebuild`, which calls it automatically) to copy the appropriate template into `public/runtime-config.json` before building or serving. The loader merges runtime values with `.env` variables, preferring runtime config when both specify the same key.
+
+**public/runtime-config.json**
+
+- Generated file committed for local dev but overwritten at build time by `scripts/apply-runtime-config.mjs`
+- Must stay in `public/` because the app fetches it at boot via `getRuntimeConfig()`
+- Keep secrets out of this file; it ships to the browser. Use server-only env vars for anything sensitive.
+
 #### IDE & Tools
 
 **.cursorignore**
@@ -467,8 +481,8 @@ Main HTML entry point with comprehensive metadata and PWA configuration:
 
 **Theme & Color Scheme:**
 
-- Theme color (light): `#2563eb`
-- Theme color (dark): `#0b0f19`
+- Theme color (light): `var(--color-primary)` (defaults to `designTokens.color.primary.DEFAULT` → `#2dd4ff`)
+- Theme color (dark): `var(--color-surface-dark)` (defaults to `designTokens.color.surface.dark` → `#03060d`)
 - Color scheme: `light dark`
 
 **PWA Configuration:**
@@ -484,8 +498,8 @@ Main HTML entry point with comprehensive metadata and PWA configuration:
 - Favicon: `/favicon.ico` (default fallback)
 - Standard icons: 96x96, 192x192, 384x384, 512x512 (PNG)
 - Apple touch icons: 180x180, 192x192
-- Safari pinned tab: `/safari-pinned-tab.svg` (color: `#2563eb`)
-- Microsoft tiles: Tile color `#2563eb`, Tile image `/icon-192.png`
+- Safari pinned tab: `/safari-pinned-tab.svg` (color: `var(--color-primary)` → `#2dd4ff` by default)
+- Microsoft tiles: Tile color `var(--color-primary)` (`#2dd4ff` default), Tile image `/icon-192.png`
 
 **Manifest Link:**
 
@@ -530,8 +544,8 @@ Progressive Web App (PWA) manifest configuration:
 
 **Colors:**
 
-- Background color: `#ffffff` (white)
-- Theme color: `#2563eb` (blue)
+- Background color: `var(--color-surface)` (defaults to `designTokens.color.surface.DEFAULT` → `#0b1220`)
+- Theme color: `var(--color-primary)` (defaults to `designTokens.color.primary.DEFAULT` → `#2dd4ff`)
 
 **Orientation & Localization:**
 

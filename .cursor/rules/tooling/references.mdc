@@ -505,7 +505,7 @@ export default defineConfig({
 		{ name: 'webkit', use: { ...devices['Desktop Safari'] } },
 	],
 	webServer: {
-		command: 'pnpm dev',
+		command: 'pnpm run dev',
 		url: baseUrl,
 		reuseExistingServer: !process.env['CI'],
 	},
@@ -551,10 +551,10 @@ jobs:
           node-version: 22.21.1
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm lint
-      - run: pnpm test -- --reporter=verbose
-      - run: pnpm build
+      - run: pnpm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run test -- --reporter=verbose
+      - run: pnpm run build
 ```
 
 ### Notes
@@ -579,7 +579,7 @@ Short description of the app.
 
 1. corepack enable && corepack prepare pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c --activate
 2. pnpm install
-3. pnpm dev
+3. pnpm run dev
 
 ## Scripts
 

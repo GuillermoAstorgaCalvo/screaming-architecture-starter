@@ -496,10 +496,10 @@ Google's recommended thresholds:
 
 ### Extending to Analytics Services
 
-To send metrics to analytics services, extend the logger adapter:
+To forward metrics to analytics services, wrap the logger before passing it into `reportWebVitals`. This repository does not ship an observability adapter out of the box, but you can add one under `src/infrastructure/observability/webVitalsAdapter.ts`:
 
 ```typescript
-// infrastructure/observability/webVitalsAdapter.ts
+// src/infrastructure/observability/webVitalsAdapter.ts (add when needed)
 import type { LoggerPort } from '@core/ports/LoggerPort';
 import type { AnalyticsPort } from '@core/ports/AnalyticsPort';
 

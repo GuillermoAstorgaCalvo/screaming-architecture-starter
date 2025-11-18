@@ -15,13 +15,32 @@ Suggested package scripts (pnpm):
 - `lint:fix`: ESLint with auto-fix
 - `format`: Prettier write
 - `typecheck`: TypeScript type checking (`tsc -b`)
-- `clean`: Remove dist, node_modules and prune pnpm store (`pnpm dlx rimraf dist node_modules pnpm store prune`)
+- `runtime-config:apply`: Copy `config/runtime/runtime-config.<env>.json` into `public/runtime-config.json`
+- `prebuild`: Runs `runtime-config:apply` before invoking the build
+- `clean`: Remove `dist`, `node_modules`, then prune the pnpm store (`rimraf dist node_modules && pnpm store prune`)
 - `test`: Run unit tests (`vitest run`) - Use Docker on Windows
 - `test:watch`: Run unit tests in watch mode (`vitest`)
+- `test:ui`: Run Vitest UI (`vitest --ui`)
 - `test:coverage`: Run unit tests with coverage (`vitest run --coverage`)
 - `test:e2e`: Run e2e tests (Playwright)
+- `test:e2e:ui`: Run Playwright with the inspector UI
 - `docker:test`: Run unit tests with Docker (recommended on Windows)
 - `docker:test:watch`: Run unit tests in watch mode with Docker
 - `docker:test:e2e`: Run e2e tests with Docker
+- `check:bundle-size`: Analyze bundle sizes after a build
+- `sync-tokens`: Sync design tokens into Tailwind and component theme layers
+- `docker:build`: Build the dev docker-compose image
+- `docker:dev`: Start the dev docker-compose stack
+- `docker:down`: Stop the dev docker-compose stack
+- `docker:shell`: Open a shell inside the dev container
+- `docker:prod:build`: Build the production image (`Dockerfile.prod`)
+- `docker:prod:up`: Start the production docker-compose stack
+- `docker:prod:down`: Stop the production docker-compose stack
 
-Place custom generators in `scripts/codegen.ts` and mock server in `scripts/mockServer.ts`.
+Custom automation currently lives in:
+
+- `scripts/check-bundle-size.js`
+- `scripts/sync-design-tokens.js`
+- `scripts/apply-runtime-config.mjs`
+
+Add new generators or mock servers as fresh files (there is no `scripts/codegen.ts` or `scripts/mockServer.ts` in this repo).

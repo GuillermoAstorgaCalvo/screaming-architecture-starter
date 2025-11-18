@@ -217,7 +217,7 @@ import { customTokens as designTokens } from './path/to/customTokens';
 **Example:**
 
 ```tsx
-<Button variant="primary" className="bg-purple-600 hover:bg-purple-700">
+<Button variant="primary" className="bg-primary text-primary-foreground hover:bg-primary/90">
 	Custom Button
 </Button>
 ```

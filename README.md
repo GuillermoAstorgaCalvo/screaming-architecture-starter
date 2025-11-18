@@ -42,15 +42,26 @@ The application will be available at `http://localhost:5173` (port configurable 
 - `pnpm run lint:fix` - Fix ESLint issues automatically
 - `pnpm run format` - Format code with Prettier
 - `pnpm run typecheck` - Run TypeScript type checking
+- `pnpm run runtime-config:apply` - Copy the active `.env` config into `public/runtime-config.json`
+- `pnpm run prebuild` - Runs `runtime-config:apply` before `pnpm run build`
 - `pnpm run test` - Run unit tests with Vitest (use Docker on Windows)
 - `pnpm run test:watch` - Run unit tests in watch mode
 - `pnpm run test:ui` - Run unit tests with Vitest UI
 - `pnpm run test:coverage` - Run unit tests with coverage report
 - `pnpm run test:e2e` - Run end-to-end tests with Playwright
 - `pnpm run test:e2e:ui` - Run end-to-end tests with Playwright UI
+- `pnpm run check:bundle-size` - Report bundle sizes using `dist/` output (requires build)
+- `pnpm run sync-tokens` - Sync design tokens into Tailwind/theme layers
 - `pnpm run docker:test` - Run unit tests with Docker (recommended on Windows)
 - `pnpm run docker:test:watch` - Run unit tests in watch mode with Docker
 - `pnpm run docker:test:e2e` - Run E2E tests with Docker
+- `pnpm run docker:build` - Build the local Docker image
+- `pnpm run docker:dev` - Start the dev docker-compose stack
+- `pnpm run docker:down` - Stop and remove the dev docker-compose stack
+- `pnpm run docker:shell` - Open a shell inside the dev container
+- `pnpm run docker:prod:build` - Build the production Docker image with `Dockerfile.prod`
+- `pnpm run docker:prod:up` - Start the production docker-compose stack
+- `pnpm run docker:prod:down` - Stop the production docker-compose stack
 - `pnpm run clean` - Clean build artifacts and dependencies
 
 ## 📁 Project Structure

@@ -51,40 +51,24 @@ src/domains/landing/
 
 **Note**: The landing domain demonstrates the core domain structure with pages, services, i18n, and store. Optional directories (`components/`, `hooks/`, `models/`) can be added as the domain grows. See "Optional/Planned" section below for guidance on when to add these.
 
-<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
-read_file
+### Shared Domains (cross-domain composites)
 
-### Shared Domains (cross-domain features)
-
-`src/domains/shared/*` hosts reusable domains (auth, notifications, analytics) consumed by multiple domains.
-
-Example structure:
+`src/domains/shared/*` currently exposes reusable composites that do not belong to a single business domain.
 
 ```
 src/domains/shared/
-├── auth/
-│   ├── pages/ (optional)
-│   ├── components/
-│   ├── hooks/
-│   ├── services/
-│   └── store/
-├── notifications/
-│   ├── components/ (Banner - Note: Alert and Toast moved to @core/ui)
-│   ├── hooks/ (useNotifications, useToastQueue)
-│   ├── models/ (notification.ts)
-│   ├── store/ (notificationStore.ts)
-│   └── services/ (notificationService.ts)
-└── analytics/
-    ├── hooks/ (useAnalytics)
-    ├── models/ (analytics.ts)
-    ├── services/ (analyticsService.ts)
-    └── adapters/ (googleTagManagerAdapter.ts, customAdapter.ts)
+└── components/
+    ├── autocomplete-combobox/   # Combobox surface (state + handlers + typed parts)
+    ├── date-picker/             # Date picker wrapper (ISO parsing, validation helpers)
+    └── slider/                  # Slider widget (model, helpers, typed components)
 ```
+
+Add new shared subdomains (auth, notifications, analytics, etc.) beside `components/` only when implementation exists; until then, keep the folder slim so documentation mirrors reality.
 
 Guidance:
 
-- Adapter-driven flows (e.g., Auth) via ports; avoid infra imports in domains.
-- Shared features remain domain-agnostic and configurable via props/adapters.
+- Keep composites domain-agnostic and configurable via props (no direct service imports).
+- When adding future shared domains, restrict dependencies to `@core` + `@shared`, never `@app` or `@infra`.
 
 ## src/shared: Cross-cutting Composites and Helpers
 
@@ -124,7 +108,7 @@ Conventions:
 - Styling: Tailwind-first; pull from `core/constants/designTokens.ts`.
 - A11y: Keyboard-navigable; provide aria escape hatches.
 - i18n: Accept copy via props/children; no hard-coded strings.
-- Testing: Integration-style tests under `tests/shared/*`.
+- Testing: Integration-style tests live under `tests/app/components/*` today; create `tests/shared/*` only when multiple domains share composites that need dedicated specs.
 - Imports: `shared` may import `core` and `core/ui`; must not import `app` or `infrastructure`.
 
 Example `EmptyState` composite:

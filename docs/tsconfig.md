@@ -237,8 +237,8 @@ When scaling to workspaces, keep aliases in `tsconfig.base.json` at the repo roo
 
 #### DX Scripts
 
-- `pnpm typecheck`: `tsc -b` for project references support
-- `pnpm build`: `tsc -b && vite build` to ensure type safety before bundling
+- `pnpm run typecheck`: `tsc -b` for project references support
+- `pnpm run build`: `tsc -b && vite build` to ensure type safety before bundling
 
 #### Common Pitfalls
 

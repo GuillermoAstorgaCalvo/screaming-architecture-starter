@@ -15,12 +15,12 @@ alwaysApply: false
 
 ### Logging
 
-- ✅ Use `LoggerPort` interface from `core/ports/LoggerPort.ts` for structured logs (debug, info, warn, error).
-- ✅ Adapter implementation in `infrastructure/logging/loggerAdapter.ts` (console-based, can be extended to Sentry/LogRocket/etc).
-- ✅ Access via `useLogger()` hook from `core/providers/useLogger.ts` (injected via `LoggerProvider`).
+- ✅ Use `LoggerPort` interface from `src/core/ports/LoggerPort.ts` for structured logs (debug, info, warn, error).
+- ✅ Adapter implementation in `src/infrastructure/logging/loggerAdapter.ts` (console-based, can be extended to Sentry/LogRocket/etc).
+- ✅ Access via `useLogger()` hook from `@core/providers/logger/useLogger`.
 
 ### Analytics
 
-- Use `domains/shared/analytics` for types and hooks.
-- Adapter pattern in `infrastructure/analytics/googleTagManagerAdapter.ts` with provider-specific adapters (exports `googleTagManagerAdapter` and `noopAnalyticsAdapter`).
+- Access analytics via `@core/providers/analytics/useAnalytics`.
+- Adapter pattern lives in `src/infrastructure/analytics/googleTagManagerAdapter.ts` (ships both GTM and noop adapters).
 - Fire events from domain boundaries (pages/interactions), not low-level components.

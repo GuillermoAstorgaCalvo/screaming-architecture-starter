@@ -100,7 +100,7 @@ export default [
 - Do (domain → core):
 
 ```ts
-import { httpClient } from '@core/lib/httpClient';
+import { httpClient } from '@core/lib/http/httpClient';
 ```
 
 - Don’t (domain → infrastructure):
@@ -117,7 +117,7 @@ error  boundaries/element-types: "domains" is not allowed to import from "infra"
   at src/domains/billing/services/invoices.ts:3:1
   > import { axiosInstance } from '@infra/api/axiosInstance';
     ^^^^^^
-Hint: Use `@core/lib/httpClient` in domains; keep provider specifics in `@infra/api`.
+Hint: Use `@core/lib/http/httpClient` in domains; keep provider specifics in `@infra/api`.
 ```
 
 ### CI Enforcement

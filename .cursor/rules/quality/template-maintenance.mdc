@@ -33,7 +33,7 @@ This template is intended to seed many repositories. Use this guide to keep new 
 ### Rolling Out Changes
 
 1. Prepare: update this template (docs + sample configs). Add an ADR if the change is architectural or cross-cutting.
-2. Validate: create a sandbox repo from the template; run `pnpm typecheck && pnpm lint && pnpm test && pnpm build`.
+2. Validate: create a sandbox repo from the template; run `pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build`.
 3. Communicate: summarize changes and risks. Include migration notes and code mods if available.
 4. Rollout: apply to target repos (PRs). Keep PR scope focused: config updates, dependency bumps, and minimal code fixes.
 

@@ -244,11 +244,4 @@ export class GoogleTagManagerAdapter implements AnalyticsPort {
 
 export const googleTagManagerAdapter = new GoogleTagManagerAdapter();
 
-export const noopAnalyticsAdapter: AnalyticsPort = {
-	initialize: () => undefined,
-	trackPageView: () => undefined,
-	trackEvent: () => undefined,
-	identify: () => undefined,
-	setUserProperties: () => undefined,
-	reset: () => undefined,
-};
+export { noopAnalyticsAdapter } from './noopAnalyticsAdapter';

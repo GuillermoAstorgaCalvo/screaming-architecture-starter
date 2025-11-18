@@ -346,6 +346,6 @@ As your domain grows:
 ## See Also
 
 - [Folder Structure](structure.md) - Detailed project structure
-- [API Service Factory](../src/core/api/README.md) - Creating type-safe API services
+- [API Service Factory](./api-service-factory.md) - Creating type-safe API services
 - [Store Guidelines](../src/domains/landing/store/README.md) - Zustand store best practices
 - [i18n Guide](../src/core/i18n/README.md) - Internationalization setup

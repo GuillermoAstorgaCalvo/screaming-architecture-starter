@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build && pnpm preview &
+      - run: pnpm run build && pnpm run preview &
       - uses: treosh/lighthouse-ci-action@v10
         with:
           configPath: ./.lighthouserc.json
@@ -65,5 +65,5 @@ jobs:
 
 ### Monitoring
 
-- Optional `core/perf/reportWebVitals.ts` with adapter in `infrastructure/observability/*`
-- Track Web Vitals and regressions; set team alerts if adopting observability
+- `src/core/perf/reportWebVitals.ts` ships today and logs metrics via the logger adapter.
+- Add observers under a new `src/infrastructure/observability/*` folder if you need to forward metrics/errors to external tooling; otherwise track regressions via Lighthouse and bundle stats.

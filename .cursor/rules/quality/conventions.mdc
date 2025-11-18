@@ -37,7 +37,7 @@ Server state: React Query.
 
 ### HTTP
 
-Centralize HTTP in `core/lib/httpClient.ts`; domain services wrap it.
+Centralize HTTP in `src/core/lib/http/httpClient.ts`; domain services wrap it.
 Avoid direct `fetch`/axios from components.
 
 ### Errors & Logging
@@ -47,8 +47,8 @@ Log via `core/lib/logger.ts` (adapters in `infrastructure/logging`).
 
 ### Observability
 
-- Web Vitals reporting via `core/perf/reportWebVitals.ts` with an adapter in `infrastructure/observability/webVitalsAdapter.ts`.
-- Error tracking via `infrastructure/observability/errorTrackingAdapter.ts`; default to noop in small apps.
+- Web Vitals reporting via `src/core/perf/reportWebVitals.ts` (already wired to the logger adapter). Add your own sinks under `src/infrastructure/observability/*` if you need to forward metrics.
+- Error tracking is not implemented; add an adapter (e.g., Sentry) under `src/infrastructure/observability/*` and inject it via a provider when needed. Default to noop until then.
 
 ### Styling
 

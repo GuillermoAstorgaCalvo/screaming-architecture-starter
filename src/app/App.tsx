@@ -1,4 +1,5 @@
 import Error500 from '@app/pages/Error500';
+import { DeferredMotionProvider } from '@app/providers/DeferredMotionProvider';
 import { I18nProvider } from '@app/providers/I18nProvider';
 import { QueryProvider } from '@app/providers/QueryProvider';
 import { ThemeProvider } from '@app/providers/ThemeProvider';
@@ -8,7 +9,7 @@ import { getCachedRuntimeConfig } from '@core/config/runtime';
 import { useHttpClientAuth } from '@core/hooks/http/useHttpClientAuth';
 import { ErrorBoundaryWrapper } from '@core/lib/ErrorBoundaryWrapper';
 import { httpClient } from '@core/lib/http/httpClient';
-import type { AnalyticsInitOptions } from '@core/ports/AnalyticsPort';
+import type { AnalyticsInitOptions, AnalyticsPort } from '@core/ports/AnalyticsPort';
 import { AnalyticsProvider } from '@core/providers/analytics/AnalyticsProvider';
 import { AuthProvider } from '@core/providers/auth/AuthProvider';
 import { HttpProvider } from '@core/providers/http/HttpProvider';
@@ -17,14 +18,11 @@ import { StorageProvider } from '@core/providers/storage/StorageProvider';
 import { ToastProvider } from '@core/providers/toast/ToastProvider';
 import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
 import { LazyLayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup.lazy';
-import { LazyMotionProvider } from '@core/ui/utilities/motion/components/MotionProvider.lazy';
-import {
-	googleTagManagerAdapter,
-	noopAnalyticsAdapter,
-} from '@infra/analytics/googleTagManagerAdapter';
+import { noopAnalyticsAdapter } from '@infra/analytics/noopAnalyticsAdapter';
 import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
+import { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 const authAdapter = new JwtAuthAdapter({
@@ -35,7 +33,7 @@ const authAdapter = new JwtAuthAdapter({
  * App component - Root composition
  * Composition order: LoggerProvider > ErrorBoundary > HttpProvider > AuthProvider >
  * StorageProvider > ThemeProvider > I18nProvider > QueryProvider > AnalyticsProvider >
- * MotionProvider > ToastProvider > BrowserRouter > LayoutGroup > Router > ToastContainer
+ * DeferredMotionProvider > ToastProvider > BrowserRouter > LayoutGroup > Router > ToastContainer
  * - LoggerProvider must be outermost to provide logger to all components including ErrorBoundary
  * - ErrorBoundaryWrapper uses logger from context and wraps the rest of the app with Error500 as fallback UI
  * - HttpProvider provides HTTP client for domain services and hooks
@@ -51,8 +49,35 @@ export default function App() {
 	useHttpClientAuth(authAdapter);
 
 	const analyticsEnabled = env.ANALYTICS_ENABLED;
-	const analyticsAdapter = analyticsEnabled ? googleTagManagerAdapter : noopAnalyticsAdapter;
-	const analyticsConfig = getAnalyticsConfig(analyticsEnabled);
+	const analyticsConfig = useMemo(() => getAnalyticsConfig(analyticsEnabled), [analyticsEnabled]);
+	const shouldLoadAnalytics = Boolean(analyticsConfig);
+	const [analyticsAdapter, setAnalyticsAdapter] = useState<AnalyticsPort>(noopAnalyticsAdapter);
+
+	useEffect(() => {
+		if (!shouldLoadAnalytics) {
+			setAnalyticsAdapter(noopAnalyticsAdapter);
+			return;
+		}
+
+		let isMounted = true;
+
+		void import('@infra/analytics/googleTagManagerAdapter')
+			.then(module => {
+				if (isMounted) {
+					setAnalyticsAdapter(module.googleTagManagerAdapter);
+				}
+			})
+			.catch(error => {
+				console.warn('Failed to load analytics adapter', error);
+				if (isMounted) {
+					setAnalyticsAdapter(noopAnalyticsAdapter);
+				}
+			});
+
+		return () => {
+			isMounted = false;
+		};
+	}, [shouldLoadAnalytics]);
 
 	return (
 		<LoggerProvider logger={loggerAdapter}>
@@ -63,8 +88,11 @@ export default function App() {
 							<ThemeProvider>
 								<I18nProvider>
 									<QueryProvider>
-										<AnalyticsProvider analytics={analyticsAdapter} config={analyticsConfig}>
-											<LazyMotionProvider reducedMotion="user">
+										<AnalyticsProvider
+											analytics={analyticsAdapter}
+											config={shouldLoadAnalytics ? analyticsConfig : null}
+										>
+											<DeferredMotionProvider>
 												<ToastProvider>
 													<BrowserRouter>
 														<LazyLayoutGroup id="app-route-transitions">
@@ -75,7 +103,7 @@ export default function App() {
 													</BrowserRouter>
 													<ToastContainer />
 												</ToastProvider>
-											</LazyMotionProvider>
+											</DeferredMotionProvider>
 										</AnalyticsProvider>
 									</QueryProvider>
 								</I18nProvider>

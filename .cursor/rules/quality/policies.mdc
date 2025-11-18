@@ -134,7 +134,7 @@ Note: This rule is complementary; it does not by itself detect folder-wide re-ex
 - Do (domain importing core):
 
 ```ts
-import { httpClient } from '@core/lib/httpClient';
+import { httpClient } from '@core/lib/http/httpClient';
 ```
 
 - Don’t (domain importing infrastructure):

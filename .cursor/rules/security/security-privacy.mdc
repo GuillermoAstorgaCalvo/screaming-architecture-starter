@@ -54,12 +54,12 @@ Notes:
 
 - Keep auth adapter under `infrastructure/auth/*` (e.g., JWT adapter)
 - Store tokens via storage adapters (localStorage/cookies) behind SSR-safe guards
-- Attach tokens via HTTP interceptors in `infrastructure/api/interceptors.ts`
+- Attach tokens via the auth interceptor in `src/core/lib/http/httpAuthInterceptor.ts` (wired via `useHttpClientAuth`)
 - Handle refresh/rotation and clock skew in adapters; surface domain-friendly errors
 
 ### Network & Transport
 
-- Use `core/lib/httpClient.ts` as the sole HTTP boundary
+- Use `src/core/lib/http/httpClient.ts` as the sole HTTP boundary
 - Validate request/response with Zod schemas in domain `models/*`
 - Normalize errors; map to domain error types; avoid leaking transport details into UI
 

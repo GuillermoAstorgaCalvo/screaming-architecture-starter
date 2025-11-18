@@ -4,6 +4,7 @@ import { httpClient } from '@core/lib/http/httpClient';
 import { render, screen, waitFor } from '@testing-library/react';
 import { expectA11y } from '@tests/utils/a11y';
 import type { MockAnalyticsAdapter } from '@tests/utils/mocks/MockAnalyticsAdapter';
+import type { MockAuthAdapter } from '@tests/utils/mocks/MockAuthAdapter';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the router FIRST to ensure it's hoisted before App imports it
@@ -54,8 +55,15 @@ vi.mock('@infra/analytics/googleTagManagerAdapter', async () => {
 // Using async factory to allow proper module resolution
 vi.mock('@infra/auth/jwtAuthAdapter', async () => {
 	const { MockAuthAdapter } = await import('../utils/mocks/MockAuthAdapter.js');
+	class TestJwtAuthAdapter extends MockAuthAdapter {
+		constructor(...args: unknown[]) {
+			super(...(args as []));
+			(globalThis as { mockJwtAuthAdapterInstance?: MockAuthAdapter }).mockJwtAuthAdapterInstance =
+				this;
+		}
+	}
 	return {
-		JwtAuthAdapter: class extends MockAuthAdapter {},
+		JwtAuthAdapter: TestJwtAuthAdapter,
 	};
 });
 
@@ -131,6 +139,14 @@ const getMockGetCachedRuntimeConfig = () => {
 	}
 	return config;
 };
+const getMockJwtAuthAdapterInstance = () => {
+	const instance = (globalThis as { mockJwtAuthAdapterInstance?: MockAuthAdapter })
+		.mockJwtAuthAdapterInstance;
+	if (!instance) {
+		throw new Error('mockJwtAuthAdapterInstance not initialized');
+	}
+	return instance;
+};
 
 // Helper function to reset test mocks
 const resetTestMocks = () => {
@@ -146,9 +162,17 @@ const resetTestMocks = () => {
 	getMockGetCachedRuntimeConfig().mockReturnValue(null);
 	const httpClientWithFlag = httpClient as typeof httpClient & {
 		__authInterceptorAttached?: boolean;
+		__authInterceptorAdapter?: unknown;
+		__authInterceptorCleanup?: (() => void) | null;
+		__authInterceptorSubscribers?: number;
 	};
 	httpClientWithFlag.__authInterceptorAttached = false;
+	httpClientWithFlag.__authInterceptorAdapter = undefined;
+	httpClientWithFlag.__authInterceptorCleanup = null;
+	httpClientWithFlag.__authInterceptorSubscribers = 0;
 };
+
+const DEFAULT_GTM_CONTAINER_ID = 'GTM-TEST123';
 
 const waitForRouterRender = async () => {
 	await waitFor(
@@ -212,9 +236,16 @@ describe('App auth interceptor', () => {
 	it('does not attach auth interceptor multiple times', () => {
 		const httpClientWithFlag = httpClient as typeof httpClient & {
 			__authInterceptorAttached?: boolean;
+			__authInterceptorAdapter?: unknown;
+			__authInterceptorCleanup?: (() => void) | null;
+			__authInterceptorSubscribers?: number;
 		};
 
+		const mockAuthAdapter = getMockJwtAuthAdapterInstance();
 		httpClientWithFlag.__authInterceptorAttached = true;
+		httpClientWithFlag.__authInterceptorAdapter = mockAuthAdapter;
+		httpClientWithFlag.__authInterceptorCleanup = vi.fn();
+		httpClientWithFlag.__authInterceptorSubscribers = 1;
 		const initialInterceptorCount = httpClient['requestInterceptors']?.length ?? 0;
 
 		render(<App />);
@@ -243,7 +274,7 @@ describe('App analytics configuration', () => {
 	it('uses googleTagManagerAdapter when analytics is enabled with env write key', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_CONTAINER_ID = DEFAULT_GTM_CONTAINER_ID;
 		mockEnv.GTM_DEBUG = undefined;
 		mockEnv.DEV = false;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
@@ -252,8 +283,8 @@ describe('App analytics configuration', () => {
 
 		await waitFor(() => {
 			expect(getMockGoogleTagManagerAdapter().initializedWith).toEqual({
-				writeKey: 'GTM-TEST123',
-				containerId: 'GTM-TEST123',
+				writeKey: DEFAULT_GTM_CONTAINER_ID,
+				containerId: DEFAULT_GTM_CONTAINER_ID,
 				dataLayerName: 'dataLayer',
 			});
 		});
@@ -281,7 +312,7 @@ describe('App analytics debug mode', () => {
 	it('enables debug mode when GTM_DEBUG is true', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_CONTAINER_ID = DEFAULT_GTM_CONTAINER_ID;
 		mockEnv.GTM_DEBUG = true;
 		mockEnv.DEV = false;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
@@ -290,8 +321,8 @@ describe('App analytics debug mode', () => {
 
 		await waitFor(() => {
 			expect(getMockGoogleTagManagerAdapter().initializedWith).toEqual({
-				writeKey: 'GTM-TEST123',
-				containerId: 'GTM-TEST123',
+				writeKey: DEFAULT_GTM_CONTAINER_ID,
+				containerId: DEFAULT_GTM_CONTAINER_ID,
 				dataLayerName: 'dataLayer',
 				debug: true,
 			});
@@ -301,7 +332,7 @@ describe('App analytics debug mode', () => {
 	it('enables debug mode when DEV is true and GTM_DEBUG is not set', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_CONTAINER_ID = DEFAULT_GTM_CONTAINER_ID;
 		mockEnv.GTM_DEBUG = undefined;
 		mockEnv.DEV = true;
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
@@ -310,8 +341,8 @@ describe('App analytics debug mode', () => {
 
 		await waitFor(() => {
 			expect(getMockGoogleTagManagerAdapter().initializedWith).toEqual({
-				writeKey: 'GTM-TEST123',
-				containerId: 'GTM-TEST123',
+				writeKey: DEFAULT_GTM_CONTAINER_ID,
+				containerId: DEFAULT_GTM_CONTAINER_ID,
 				dataLayerName: 'dataLayer',
 				debug: true,
 			});
@@ -338,7 +369,7 @@ describe('App analytics initialization', () => {
 	it('uses custom dataLayerName from env', async () => {
 		const mockEnv = getMockEnv();
 		mockEnv.ANALYTICS_ENABLED = true;
-		mockEnv.GTM_CONTAINER_ID = 'GTM-TEST123';
+		mockEnv.GTM_CONTAINER_ID = DEFAULT_GTM_CONTAINER_ID;
 		mockEnv.GTM_DATALAYER_NAME = 'customDataLayer';
 		getMockGetCachedRuntimeConfig().mockReturnValue(null);
 

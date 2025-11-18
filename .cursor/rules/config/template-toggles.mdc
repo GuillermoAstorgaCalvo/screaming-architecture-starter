@@ -24,18 +24,18 @@ Use these toggles when bootstrapping a new repo to scale from a simple landing t
 
 ### Optional Features
 
-- Forms abstraction (`@core/forms/*`) with Zod resolver
-- Observability (`infrastructure/observability/*`)
-- PWA Shell (`src/app/pwa/*`)
-- Storybook (`storybook/*`)
-- E2E (`e2e/*` with Playwright)
-- Mock Server (`scripts/mockServer.ts` + MSW)
+- Forms abstraction (`@core/forms/*`) with Zod resolver (already included)
+- Observability adapters (add `src/infrastructure/observability/*` if you need external sinks; today only `core/perf/reportWebVitals.ts` + logger ship)
+- PWA shell (not included; create `src/app/pwa/*` + SW registration when offline/install required)
+- Storybook (not included; add `storybook/*` and wire it when design reviews need it)
+- E2E (`e2e/*` with Playwright) – already scaffolded via `e2e/example.spec.ts`
+- Mock server (MSW is configured under `tests/mocks/*`; no `scripts/mockServer.ts` file exists—extend MSW handlers instead)
 
 ### How to Decide
 
-- Small landing: providers OFF (except Theme), forms OFF, observability OFF, PWA OFF, E2E optional.
-- App with auth/server state: Query + Auth ON, forms ON, analytics optionally ON.
-- Large/complex: enable observability, E2E, Storybook; consider PWA if offline required.
+- Small landing: keep only Theme + minimal providers; leave Query/Auth/Analytics off until needed; skip adding observability adapters or PWA.
+- App with auth/server state: keep the shipped Query/Auth/Storage/Analytics providers enabled; extend MSW handlers per domain.
+- Large/complex: add observability adapters, Storybook, additional providers, and consider PWA if offline behaviour is required.
 
 ### Enforcement
 

@@ -20,4 +20,4 @@ alwaysApply: false
 ### Server State
 
 - Query client provided via `app/providers/QueryProvider.tsx`.
-- Domain services define queries/mutations wrapping `core/lib/httpClient`.
+- Domain services define queries/mutations wrapping `src/core/lib/http/httpClient`.

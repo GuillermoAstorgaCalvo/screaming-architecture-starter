@@ -1,10 +1,15 @@
 import { ROUTES } from '@core/config/routes';
+import { useDeferredActivation } from '@core/hooks/useDeferredActivation';
 import { useTranslation } from '@core/i18n/useTranslation';
-import LanguageSelectorFlag from '@core/ui/language-selector/LanguageSelectorFlag';
-import ThemeToggle from '@core/ui/theme-toggle/ThemeToggle';
 import { classNames } from '@core/utils/classNames';
 import type { NavbarProps } from '@src-types/layout';
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
+
+const LanguageSelectorFlagLazy = lazy(
+	() => import('@core/ui/language-selector/LanguageSelectorFlag')
+);
+const ThemeToggleLazy = lazy(() => import('@core/ui/theme-toggle/ThemeToggle'));
 
 /**
  * Navbar - Main navigation component with optional theme toggle and language selector
@@ -14,6 +19,7 @@ import { Link } from 'react-router-dom';
  */
 export default function Navbar({ theme: themeConfig, className }: Readonly<NavbarProps>) {
 	const { t } = useTranslation('common');
+	const showControls = useDeferredActivation({ timeout: 1200 });
 
 	return (
 		<nav
@@ -32,13 +38,17 @@ export default function Navbar({ theme: themeConfig, className }: Readonly<Navba
 				</Link>
 			</div>
 			<div className="flex items-center gap-3">
-				<LanguageSelectorFlag size="sm" />
-				{themeConfig ? (
-					<ThemeToggle
-						theme={themeConfig.theme}
-						resolvedTheme={themeConfig.resolvedTheme}
-						setTheme={themeConfig.setTheme}
-					/>
+				{showControls ? (
+					<Suspense fallback={null}>
+						<LanguageSelectorFlagLazy size="sm" />
+						{themeConfig ? (
+							<ThemeToggleLazy
+								theme={themeConfig.theme}
+								resolvedTheme={themeConfig.resolvedTheme}
+								setTheme={themeConfig.setTheme}
+							/>
+						) : null}
+					</Suspense>
 				) : null}
 			</div>
 		</nav>

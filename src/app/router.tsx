@@ -1,6 +1,7 @@
 import AppLayout from '@app/components/AppLayout';
 import { withTheme } from '@app/components/PageWrapper';
 import Error404 from '@app/pages/Error404';
+import { useDeferredActivation } from '@core/hooks/useDeferredActivation';
 import type { AnalyticsPageView } from '@core/ports/AnalyticsPort';
 import { useAnalytics } from '@core/providers/analytics/useAnalytics';
 import { buildRoute } from '@core/router/routes.gen';
@@ -16,6 +17,7 @@ const LandingPage = withTheme(LandingPageBase);
 export default function Router() {
 	const analytics = useAnalytics();
 	const location = useLocation();
+	const transitionsReady = useDeferredActivation({ timeout: 0 });
 
 	useEffect(() => {
 		const path = `${location.pathname}${location.search}${location.hash}`;
@@ -40,12 +42,19 @@ export default function Router() {
 	return (
 		<AppLayout>
 			<Suspense fallback={<DefaultLoadingFallback />}>
-				<LazyRouteTransition locationKey={location.pathname}>
+				{transitionsReady ? (
+					<LazyRouteTransition locationKey={location.pathname}>
+						<Routes location={location}>
+							<Route path={buildRoute('HOME')} element={<LandingPage />} />
+							<Route path="*" element={<Error404 />} />
+						</Routes>
+					</LazyRouteTransition>
+				) : (
 					<Routes location={location}>
 						<Route path={buildRoute('HOME')} element={<LandingPage />} />
 						<Route path="*" element={<Error404 />} />
 					</Routes>
-				</LazyRouteTransition>
+				)}
 			</Suspense>
 		</AppLayout>
 	);

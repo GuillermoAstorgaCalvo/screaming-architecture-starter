@@ -18,7 +18,7 @@
 
 import { env } from '@core/config/env.client';
 import type { LoggerPort } from '@core/ports/LoggerPort';
-import { type MetricType, onCLS, onFCP, onINP, onLCP, onTTFB } from 'web-vitals';
+import type { MetricType } from 'web-vitals';
 
 /**
  * Format metric data for logging
@@ -52,7 +52,7 @@ function createMetricHandler(vitalName: string, logger: LoggerPort) {
  *
  * @param logger - LoggerPort instance for logging metrics (required)
  */
-export function reportWebVitals(logger: LoggerPort): void {
+export async function reportWebVitals(logger: LoggerPort): Promise<void> {
 	// Only track in production
 	if (!env.PROD) {
 		return;
@@ -64,6 +64,7 @@ export function reportWebVitals(logger: LoggerPort): void {
 	}
 
 	try {
+		const { onCLS, onFCP, onINP, onLCP, onTTFB } = await import('web-vitals');
 		onLCP(createMetricHandler('LCP', logger));
 		onINP(createMetricHandler('INP', logger));
 		onCLS(createMetricHandler('CLS', logger));

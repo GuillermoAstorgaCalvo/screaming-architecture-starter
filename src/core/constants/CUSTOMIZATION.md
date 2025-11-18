@@ -141,18 +141,18 @@ All components accept `className` and `style` props for per-component customizat
 ```tsx
 import Button from '@core/ui/button/Button';
 
-// Override with className
-<Button className="bg-red-500 hover:bg-red-600">
-  Custom Button
+// Override with className using semantic tokens
+<Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+  Custom Primary Button
 </Button>
 
-// Override with style
-<Button style={{ backgroundColor: '#ff0000' }}>
-  Custom Button
+// Override with style using CSS variables
+<Button style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}>
+  Custom Accent Button
 </Button>
 
-// Combine with variants
-<Button variant="primary" className="rounded-full">
+// Combine with variants while keeping semantic tokens
+<Button variant="primary" className="rounded-full shadow-lg shadow-primary/40">
   Rounded Primary Button
 </Button>
 ```
@@ -256,16 +256,19 @@ customizeTheme({
 ### Component-Specific Customization
 
 ```tsx
-// Custom button with unique styling
+// Custom button with unique styling (still driven by tokens)
 <Button
   variant="primary"
-  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+  className="text-primary-foreground"
+  style={{
+    backgroundImage: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
+  }}
 >
   Gradient Button
 </Button>
 
 // Custom card with elevated shadow
-<Card className="shadow-2xl border-2 border-primary">
+<Card className="shadow-2xl border-2 border-primary bg-surface">
   Elevated Card
 </Card>
 ```
@@ -286,18 +289,10 @@ customizeTheme({
 
 ## Migration from Hardcoded Values
 
-If you have components using hardcoded values (e.g., `bg-gray-500`), migrate them to semantic tokens:
+If you have components using hardcoded palette values (like Tailwind's `bg-gray-500`), migrate them to semantic tokens so they stay in sync with the design system:
 
 ```tsx
-// Before
-<div className="bg-gray-500 text-gray-900">
-  Content
-</div>
-
-// After
-<div className="bg-secondary text-text-primary">
-  Content
-</div>
+<div className="bg-secondary text-text-primary">Content</div>
 ```
 
-This ensures your components automatically adapt to theme changes.
+By referencing semantic utilities, your components automatically adapt when tokens change.

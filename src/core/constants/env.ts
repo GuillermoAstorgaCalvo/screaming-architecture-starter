@@ -54,6 +54,16 @@ export const { ANALYTICS_ENABLED } = env;
 export const isAnalyticsEnabled = (): boolean => ANALYTICS_ENABLED;
 
 /**
+ * Check if Vercel Speed Insights should run
+ */
+export const { SPEED_INSIGHTS_ENABLED } = env;
+
+/**
+ * Helper to check Speed Insights enable flag
+ */
+export const isSpeedInsightsEnabled = (): boolean => SPEED_INSIGHTS_ENABLED;
+
+/**
  * Google Tag Manager container ID fallback from build-time env
  */
 export const { GTM_CONTAINER_ID } = env;

@@ -67,6 +67,18 @@ const envSchema = z.object({
 		.default(false),
 
 	/**
+	 * Vercel Speed Insights enable flag
+	 * Allows opting into the client-side script per environment
+	 */
+	SPEED_INSIGHTS_ENABLED: z
+		.preprocess(val => {
+			if (typeof val === 'boolean') return val;
+			if (typeof val === 'string') return val.toLowerCase().trim() === 'true';
+			return false;
+		}, z.boolean())
+		.default(false),
+
+	/**
 	 * Google Tag Manager container ID fallback
 	 * Used when runtime configuration does not provide one
 	 */
@@ -128,6 +140,7 @@ function parseEnv() {
 			PROD: import.meta.env.PROD,
 			MODE: import.meta.env.MODE,
 			ANALYTICS_ENABLED: import.meta.env['VITE_ANALYTICS_ENABLED'],
+			SPEED_INSIGHTS_ENABLED: import.meta.env['VITE_SPEED_INSIGHTS_ENABLED'],
 			GTM_CONTAINER_ID: import.meta.env['VITE_GTM_CONTAINER_ID'],
 			GTM_DEBUG: import.meta.env['VITE_GTM_DEBUG'],
 			GTM_DATALAYER_NAME: import.meta.env['VITE_GTM_DATALAYER_NAME'],

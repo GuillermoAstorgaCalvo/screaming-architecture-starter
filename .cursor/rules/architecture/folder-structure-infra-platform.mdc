@@ -45,7 +45,7 @@ Technical adapters and framework-specific code that implement `core` ports.
 ### Optional/Planned Infrastructure Adapters
 
 - `api/`: (Optional) Additional API client adapters if needed beyond the core httpClient.
-- `observability/`: (Optional) Error tracking adapter, Web Vitals adapter.
+- `observability/`: (Optional) Error tracking/Web Vitals forwarding. This folder does not exist yet—add it when integrating external monitoring.
 - `security/`: (Optional) Crypto helpers (hashing, uuid).
 
 ## src/workers (optional)

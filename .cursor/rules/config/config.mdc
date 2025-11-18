@@ -82,14 +82,14 @@ Example keys in `public/runtime-config.json`:
 
 ### API Layer & Validation
 
-- Wrap HTTP in `core/lib/httpClient.ts`; interceptors are defined in `core/lib/httpClientInterceptors.ts` (not in infrastructure).
+- Wrap HTTP in `src/core/lib/http/httpClient.ts`; interceptors are defined in `src/core/lib/http/httpClientInterceptors.ts` (not in infrastructure).
 - Validate request/response at the boundary with Zod (schemas colocated in domain `models/*`).
 - Map transport DTOs to domain models to avoid leaking API shapes into UI.
 
 ### HTTP Client
 
-- `core/lib/httpClient.ts` exports a `HttpClient` class that implements `HttpPort` interface. The default instance is exported as `httpClient`.
-- Interceptors are defined in `core/lib/httpClientInterceptors.ts` with types `RequestInterceptor`, `ResponseInterceptor`, and `ErrorInterceptor`, along with execution utilities.
+- `src/core/lib/http/httpClient.ts` exports a `HttpClient` class that implements `HttpPort` interface. The default instance is exported as `httpClient`.
+- Interceptors are defined in `src/core/lib/http/httpClientInterceptors.ts` with types `RequestInterceptor`, `ResponseInterceptor`, and `ErrorInterceptor`, along with execution utilities.
 - Helper utilities are split across multiple modules:
   - `httpClientUrl.ts` - URL building utilities
   - `httpClientHeaders.ts` - Header manipulation and merging utilities
@@ -109,5 +109,5 @@ Example keys in `public/runtime-config.json`:
   - Automatic body serialization (JSON for objects, preserves FormData/Blob/etc.)
   - Timeout support via AbortController
   - Error handling with typed `HttpClientError`
-- Domain services consume `core/lib/httpClient.ts` and must validate IO at boundaries; avoid re-export barrels.
-- The httpClient implements `HttpPort` interface from `core/ports/HttpPort.ts`.
+- Domain services consume `src/core/lib/http/httpClient.ts` and must validate IO at boundaries; avoid re-export barrels.
+- The httpClient implements `HttpPort` interface from `src/core/ports/HttpPort.ts`.

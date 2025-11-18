@@ -46,9 +46,9 @@ Composition: `app/App.tsx` wraps router with providers in order:
 
 ### Provider Hooks
 
-- `useLogger()` (from `core/providers/useLogger.ts`): Access `LoggerPort` from `LoggerProvider` context. Throws if used outside provider.
-- `useStorage()` (from `core/providers/useStorage.ts`): Access `StoragePort` from `StorageProvider` context. Throws if used outside provider.
-- `useHttp()` (from `core/providers/useHttp.ts`): Access `HttpPort` from `HttpProvider` context. Throws if used outside provider.
+- `useLogger()` (from `core/providers/logger/useLogger.ts`): Access `LoggerPort` from `LoggerProvider` context. Throws if used outside provider.
+- `useStorage()` (from `core/providers/storage/useStorage.ts`): Access `StoragePort` from `StorageProvider` context. Throws if used outside provider.
+- `useHttp()` (from `core/providers/http/useHttp.ts`): Access `HttpPort` from `HttpProvider` context. Throws if used outside provider.
 - `useTheme()` (from `app/providers/useTheme.ts`): Access theme state and controls from `ThemeProvider` context. Returns object with `theme`, `resolvedTheme`, and `setTheme` function.
 - `useAuth()` (from `core/providers/auth/useAuth.ts`): Access auth state, tokens, and helpers.
 - `useAnalytics()` (from `core/providers/analytics/useAnalytics.ts`): Track events/page views without touching adapters.
