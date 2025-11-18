@@ -33,35 +33,35 @@ createRoot(container).render(
 
 const WEB_VITAL_TRIGGER_EVENTS = ['pointerdown', 'keydown', 'touchstart', 'mousemove'] as const;
 
-/**
- * Initialize Core Web Vitals tracking
- * Deferred until the user interacts with the page or the tab loses visibility.
- */
-function scheduleWebVitals() {
-	const run = async () => {
-		try {
-			await Promise.resolve(reportWebVitals(loggerAdapter));
-		} catch (error) {
-			loggerAdapter.warn('reportWebVitals failed', {
-				error: error instanceof Error ? error.message : String(error),
-			});
-		}
-	};
+async function runWebVitalsReporter() {
+	await Promise.resolve(reportWebVitals(loggerAdapter));
+}
 
-	if (typeof globalThis.addEventListener !== 'function') {
-		void run();
-		return;
-	}
+function triggerWebVitalsReport() {
+	runWebVitalsReporter().catch(error => {
+		loggerAdapter.warn('reportWebVitals failed', {
+			error: error instanceof Error ? error.message : String(error),
+		});
+	});
+}
 
-	const doc = globalThis.document;
+function hasWebVitalSupport(doc: Document | null): doc is Document {
+	return (
+		typeof globalThis.addEventListener === 'function' &&
+		typeof globalThis.removeEventListener === 'function' &&
+		Boolean(doc)
+	);
+}
+
+function createWebVitalActivation(doc: Document) {
 	let activated = false;
 
 	function removeListeners() {
 		for (const eventName of WEB_VITAL_TRIGGER_EVENTS) {
-			globalThis.removeEventListener?.(eventName, activate);
+			globalThis.removeEventListener(eventName, activate);
 		}
-		doc?.removeEventListener('visibilitychange', handleVisibilityChange);
-		globalThis.removeEventListener?.('pagehide', activate);
+		doc.removeEventListener('visibilitychange', handleVisibilityChange);
+		globalThis.removeEventListener('pagehide', activate);
 	}
 
 	function activate() {
@@ -70,23 +70,43 @@ function scheduleWebVitals() {
 		}
 		activated = true;
 		removeListeners();
-		void run();
+		triggerWebVitalsReport();
 	}
 
 	function handleVisibilityChange() {
-		if (doc?.visibilityState === 'hidden') {
+		if (doc.visibilityState === 'hidden') {
 			activate();
 		}
 	}
 
-	for (const eventName of WEB_VITAL_TRIGGER_EVENTS) {
-		globalThis.addEventListener?.(eventName, activate, { once: true, passive: true });
+	function register() {
+		for (const eventName of WEB_VITAL_TRIGGER_EVENTS) {
+			globalThis.addEventListener(eventName, activate, { once: true, passive: true });
+		}
+		doc.addEventListener('visibilitychange', handleVisibilityChange, { once: true });
+		globalThis.addEventListener('pagehide', activate, { once: true });
 	}
 
-	doc?.addEventListener('visibilitychange', handleVisibilityChange, { once: true });
-	globalThis.addEventListener?.('pagehide', activate, { once: true });
+	return { activate, register };
+}
 
-	if (doc?.visibilityState === 'hidden') {
+/**
+ * Initialize Core Web Vitals tracking
+ * Deferred until the user interacts with the page or the tab loses visibility.
+ */
+function scheduleWebVitals() {
+	const doc = 'document' in globalThis ? globalThis.document : null;
+
+	if (!hasWebVitalSupport(doc)) {
+		triggerWebVitalsReport();
+		return;
+	}
+
+	const { activate, register } = createWebVitalActivation(doc);
+
+	register();
+
+	if (doc.visibilityState === 'hidden') {
 		activate();
 	}
 }

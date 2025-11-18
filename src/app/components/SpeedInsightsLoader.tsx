@@ -1,5 +1,5 @@
-import type { ComponentType } from 'react';
-import { useEffect, useState } from 'react';
+import { env } from '@core/config/env.client';
+import { type ComponentType, useEffect, useState } from 'react';
 
 /**
  * Lazily loads the Vercel Speed Insights component so that the analytics
@@ -11,17 +11,24 @@ export function SpeedInsightsLoader() {
 	useEffect(() => {
 		let isMounted = true;
 
-		void import('@vercel/speed-insights/react')
-			.then(module => {
+		const loadSpeedInsights = async () => {
+			try {
+				const module = await import('@vercel/speed-insights/react');
 				if (isMounted) {
 					setSpeedInsights(() => module.SpeedInsights);
 				}
-			})
-			.catch(error => {
-				if (import.meta.env.DEV) {
+			} catch (error) {
+				if (env.DEV) {
 					console.warn('Failed to load Speed Insights', error);
 				}
-			});
+			}
+		};
+
+		loadSpeedInsights().catch(error => {
+			if (env.DEV) {
+				console.error('Unexpected Speed Insights error', error);
+			}
+		});
 
 		return () => {
 			isMounted = false;

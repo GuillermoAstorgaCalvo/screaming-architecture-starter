@@ -22,12 +22,18 @@ import { noopAnalyticsAdapter } from '@infra/analytics/noopAnalyticsAdapter';
 import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
-import { useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 const authAdapter = new JwtAuthAdapter({
 	storage: localStorageAdapter,
 });
+
+interface AppProvidersProps {
+	readonly analytics: AnalyticsPort;
+	readonly config: AnalyticsInitOptions | null;
+	readonly children: ReactNode;
+}
 
 /**
  * App component - Root composition
@@ -48,37 +54,25 @@ const authAdapter = new JwtAuthAdapter({
 export default function App() {
 	useHttpClientAuth(authAdapter);
 
-	const analyticsEnabled = env.ANALYTICS_ENABLED;
-	const analyticsConfig = useMemo(() => getAnalyticsConfig(analyticsEnabled), [analyticsEnabled]);
-	const shouldLoadAnalytics = Boolean(analyticsConfig);
-	const [analyticsAdapter, setAnalyticsAdapter] = useState<AnalyticsPort>(noopAnalyticsAdapter);
+	const { analyticsAdapter, analyticsConfig, shouldLoadAnalytics } = useAnalytics(
+		env.ANALYTICS_ENABLED
+	);
+	const analyticsProviderConfig = shouldLoadAnalytics ? analyticsConfig : null;
 
-	useEffect(() => {
-		if (!shouldLoadAnalytics) {
-			setAnalyticsAdapter(noopAnalyticsAdapter);
-			return;
-		}
+	return (
+		<AppProviders analytics={analyticsAdapter} config={analyticsProviderConfig}>
+			<BrowserRouter>
+				<LazyLayoutGroup id="app-route-transitions">
+					<div data-testid="router">
+						<Router />
+					</div>
+				</LazyLayoutGroup>
+			</BrowserRouter>
+		</AppProviders>
+	);
+}
 
-		let isMounted = true;
-
-		void import('@infra/analytics/googleTagManagerAdapter')
-			.then(module => {
-				if (isMounted) {
-					setAnalyticsAdapter(module.googleTagManagerAdapter);
-				}
-			})
-			.catch(error => {
-				console.warn('Failed to load analytics adapter', error);
-				if (isMounted) {
-					setAnalyticsAdapter(noopAnalyticsAdapter);
-				}
-			});
-
-		return () => {
-			isMounted = false;
-		};
-	}, [shouldLoadAnalytics]);
-
+function AppProviders({ analytics, config, children }: AppProvidersProps) {
 	return (
 		<LoggerProvider logger={loggerAdapter}>
 			<ErrorBoundaryWrapper fallback={<Error500 />}>
@@ -88,19 +82,10 @@ export default function App() {
 							<ThemeProvider>
 								<I18nProvider>
 									<QueryProvider>
-										<AnalyticsProvider
-											analytics={analyticsAdapter}
-											config={shouldLoadAnalytics ? analyticsConfig : null}
-										>
+										<AnalyticsProvider analytics={analytics} config={config}>
 											<DeferredMotionProvider>
 												<ToastProvider>
-													<BrowserRouter>
-														<LazyLayoutGroup id="app-route-transitions">
-															<div data-testid="router">
-																<Router />
-															</div>
-														</LazyLayoutGroup>
-													</BrowserRouter>
+													{children}
 													<ToastContainer />
 												</ToastProvider>
 											</DeferredMotionProvider>
@@ -114,6 +99,48 @@ export default function App() {
 			</ErrorBoundaryWrapper>
 		</LoggerProvider>
 	);
+}
+
+function useAnalytics(isAnalyticsEnabled: boolean) {
+	const analyticsConfig = useMemo(
+		() => getAnalyticsConfig(isAnalyticsEnabled),
+		[isAnalyticsEnabled]
+	);
+	const shouldLoadAnalytics = Boolean(analyticsConfig);
+	const [analyticsAdapter, setAnalyticsAdapter] = useState<AnalyticsPort>(noopAnalyticsAdapter);
+
+	useEffect(() => {
+		if (!shouldLoadAnalytics) {
+			setAnalyticsAdapter(noopAnalyticsAdapter);
+			return;
+		}
+
+		let isMounted = true;
+
+		const loadAnalyticsAdapter = async () => {
+			try {
+				const module = await import('@infra/analytics/googleTagManagerAdapter');
+				if (isMounted) {
+					setAnalyticsAdapter(module.googleTagManagerAdapter);
+				}
+			} catch (error) {
+				console.warn('Failed to load analytics adapter', error);
+				if (isMounted) {
+					setAnalyticsAdapter(noopAnalyticsAdapter);
+				}
+			}
+		};
+
+		loadAnalyticsAdapter().catch(error => {
+			console.error('Unexpected analytics adapter error', error);
+		});
+
+		return () => {
+			isMounted = false;
+		};
+	}, [shouldLoadAnalytics]);
+
+	return { analyticsAdapter, analyticsConfig, shouldLoadAnalytics };
 }
 
 function getAnalyticsConfig(isAnalyticsEnabled: boolean): AnalyticsInitOptions | null {

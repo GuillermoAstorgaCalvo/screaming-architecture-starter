@@ -17,69 +17,89 @@ export function useDeferredActivation({
 	events = DEFAULT_EVENTS,
 	triggerOnVisibilityHidden = false,
 }: UseDeferredActivationOptions = {}): boolean {
-	const [isReady, setIsReady] = useState(false);
+	const supportsEventListeners = typeof globalThis.addEventListener === 'function';
+	const documentRef = typeof document === 'undefined' ? null : document;
+	const [isReady, setIsReady] = useState(() => !supportsEventListeners);
 
 	useEffect(() => {
-		if (isReady) {
+		if (isReady || !supportsEventListeners) {
 			return;
 		}
 
-		if (typeof globalThis.addEventListener !== 'function') {
-			setIsReady(true);
-			return;
-		}
-
-		let activated = false;
-		const doc = globalThis.document;
-		let timeoutId: ReturnType<typeof globalThis.setTimeout> | null = null;
-
-		function cleanup() {
-			for (const eventName of events) {
-				globalThis.removeEventListener?.(eventName, activate);
-			}
-
-			if (timeoutId !== null) {
-				globalThis.clearTimeout(timeoutId);
-			}
-
-			if (triggerOnVisibilityHidden) {
-				doc?.removeEventListener('visibilitychange', handleVisibilityChange);
-			}
-		}
-
-		function activate() {
-			if (activated) {
-				return;
-			}
-			activated = true;
-			cleanup();
-			setIsReady(true);
-		}
-
-		function handleVisibilityChange() {
-			if (doc?.visibilityState === 'hidden') {
-				activate();
-			}
-		}
-
-		if (timeout > 0) {
-			timeoutId = globalThis.setTimeout(activate, timeout);
-		}
-
-		for (const eventName of events) {
-			globalThis.addEventListener?.(eventName, activate, { once: true, passive: true });
-		}
-
-		if (triggerOnVisibilityHidden) {
-			doc?.addEventListener('visibilitychange', handleVisibilityChange, { once: true });
-
-			if (doc?.visibilityState === 'hidden') {
-				activate();
-			}
-		}
-
-		return cleanup;
-	}, [events, isReady, timeout, triggerOnVisibilityHidden]);
+		return setupDeferredActivation({
+			events,
+			timeout,
+			triggerOnVisibilityHidden,
+			documentRef,
+			onActivate: () => setIsReady(true),
+		});
+	}, [documentRef, events, isReady, supportsEventListeners, timeout, triggerOnVisibilityHidden]);
 
 	return isReady;
+}
+
+interface DeferredActivationOptions {
+	readonly events: readonly string[];
+	readonly timeout: number;
+	readonly triggerOnVisibilityHidden: boolean;
+	readonly documentRef: Document | null;
+	readonly onActivate: () => void;
+}
+
+function setupDeferredActivation({
+	events,
+	timeout,
+	triggerOnVisibilityHidden,
+	documentRef,
+	onActivate,
+}: DeferredActivationOptions) {
+	let activated = false;
+	let timeoutId: ReturnType<typeof globalThis.setTimeout> | null = null;
+
+	function cleanup() {
+		for (const eventName of events) {
+			globalThis.removeEventListener(eventName, activate);
+		}
+
+		if (timeoutId !== null) {
+			globalThis.clearTimeout(timeoutId);
+		}
+
+		if (triggerOnVisibilityHidden && documentRef) {
+			documentRef.removeEventListener('visibilitychange', handleVisibilityChange);
+		}
+	}
+
+	function activate() {
+		if (activated) {
+			return;
+		}
+		activated = true;
+		cleanup();
+		onActivate();
+	}
+
+	function handleVisibilityChange() {
+		if (documentRef?.visibilityState === 'hidden') {
+			activate();
+		}
+	}
+
+	if (timeout > 0) {
+		timeoutId = globalThis.setTimeout(activate, timeout);
+	}
+
+	for (const eventName of events) {
+		globalThis.addEventListener(eventName, activate, { once: true, passive: true });
+	}
+
+	if (triggerOnVisibilityHidden && documentRef) {
+		documentRef.addEventListener('visibilitychange', handleVisibilityChange, { once: true });
+
+		if (documentRef.visibilityState === 'hidden') {
+			activate();
+		}
+	}
+
+	return cleanup;
 }
