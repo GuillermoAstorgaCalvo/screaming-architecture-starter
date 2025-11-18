@@ -44,6 +44,18 @@ Notes:
 - Prefer hashes for static inline content; avoid inline scripts where possible.
 - Start with Report-Only; fix violations; then enforce.
 
+#### Current Production CSP (vercel.json)
+
+The production CSP includes `'unsafe-eval'` in `script-src` due to third-party dependencies (likely `zod` v4.1.12 or `react-hook-form` v7.66.1) that use `eval()` or `new Function()` internally. This is a known trade-off:
+
+- **Security Impact**: `'unsafe-eval'` reduces CSP protection by allowing string evaluation, which can enable XSS if untrusted code is executed.
+- **Mitigation**:
+  - Monitor library updates for versions that remove eval usage
+  - Consider alternative libraries if available
+  - Ensure proper input validation and sanitization throughout the application
+  - Review CSP violations regularly via reporting
+- **Future**: When dependencies are updated to remove eval usage, remove `'unsafe-eval'` from the CSP.
+
 ### HTML Sanitization
 
 - Provide `core/security/sanitizeHtml.ts` for sanitizing user-provided content (main export)
