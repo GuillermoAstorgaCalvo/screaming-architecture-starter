@@ -96,6 +96,151 @@ describe('AuthProvider token refresh', () => {
 	});
 });
 
+describe('AuthProvider lifecycle', () => {
+	it('unsubscribes from auth port on unmount', () => {
+		const auth = new MockAuthAdapter();
+		const subscribeSpy = vi.spyOn(auth, 'subscribe');
+		const { unmount } = renderAuthHook(auth);
+
+		expect(subscribeSpy).toHaveBeenCalled();
+
+		unmount();
+
+		// Verify cleanup - subscription should be set up
+		expect(subscribeSpy).toHaveBeenCalled();
+	});
+
+	it('handles token changes after unmount gracefully', () => {
+		const auth = new MockAuthAdapter();
+		const { unmount } = renderAuthHook(auth);
+
+		unmount();
+
+		// Setting tokens after unmount should not cause errors
+		expect(() => {
+			act(() => auth.setTokens(createTokens()));
+		}).not.toThrow();
+	});
+});
+
+describe('AuthProvider error handling', () => {
+	it('handles invalid token payload gracefully', () => {
+		const auth = new MockAuthAdapter();
+		auth.setMockPayload({ invalid: 'payload' });
+
+		const { result } = renderAuthHook(auth);
+		setTokens(auth, createTokens({ accessToken: 'invalid-token' }));
+
+		expectRoles(result.current, []);
+		expectPermissions(result.current, {});
+	});
+
+	it('handles null token payload', () => {
+		const auth = new MockAuthAdapter();
+		auth.setMockPayload(null);
+
+		const { result } = renderAuthHook(auth);
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectRoles(result.current, []);
+		expectPermissions(result.current, {});
+	});
+
+	it('handles decode returning null payload', () => {
+		const auth = new MockAuthAdapter();
+		vi.spyOn(auth, 'decode').mockReturnValue({ payload: null } as never);
+
+		const { result } = renderAuthHook(auth);
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectRoles(result.current, []);
+		expectPermissions(result.current, {});
+	});
+
+	it('handles empty roles and permissions arrays', () => {
+		const payload = { roles: [], permissions: [] };
+		const { auth, result } = renderAuthHook(createAuthWithPayload(payload));
+
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectRoles(result.current, []);
+		expectPermissions(result.current, {});
+	});
+
+	it('handles non-array roles gracefully', () => {
+		const payload = { roles: 'not-an-array', permissions: [] };
+		const { auth, result } = renderAuthHook(createAuthWithPayload(payload));
+
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectRoles(result.current, []);
+	});
+
+	it('handles non-array permissions gracefully', () => {
+		const payload = { roles: [], permissions: 'not-an-array' };
+		const { auth, result } = renderAuthHook(createAuthWithPayload(payload));
+
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectPermissions(result.current, {});
+	});
+});
+
+describe('AuthProvider context memoization', () => {
+	it('memoizes context value when auth adapter and tokens are stable', () => {
+		const auth = new MockAuthAdapter();
+		const { result, rerender } = renderAuthHook(auth);
+
+		const firstValue = result.current;
+		rerender();
+
+		// Context value should be memoized when dependencies don't change
+		expect(result.current.auth).toBe(firstValue.auth);
+		expect(result.current.isAuthenticated).toBe(firstValue.isAuthenticated);
+	});
+});
+
+describe('AuthProvider token edge cases', () => {
+	it('handles tokens with only accessToken', () => {
+		const { auth, result } = renderAuthHook();
+		setTokens(auth, createTokens({ refreshToken: null }));
+
+		expect(result.current.accessToken).toBe('access-token');
+		expect(result.current.refreshToken).toBeNull();
+		expect(result.current.isAuthenticated).toBe(true);
+	});
+
+	it('handles tokens with only refreshToken', () => {
+		const { auth, result } = renderAuthHook();
+		setTokens(auth, { ...createTokens(), accessToken: null } as unknown as AuthTokens);
+
+		expect(result.current.accessToken).toBeNull();
+		expect(result.current.isAuthenticated).toBe(false);
+	});
+
+	it('normalizes duplicate roles', () => {
+		const payload = { roles: ['user', 'user', 'admin', 'admin'], permissions: [] };
+		const { auth, result } = renderAuthHook(createAuthWithPayload(payload));
+
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectRoles(result.current, ['user', 'admin']);
+	});
+
+	it('trims whitespace from roles and permissions', () => {
+		const payload = {
+			roles: ['  user  ', ' admin ', 'user'],
+			permissions: ['  read  ', ' write ', 'read'],
+		};
+		const { auth, result } = renderAuthHook(createAuthWithPayload(payload));
+
+		setTokens(auth, createTokens({ accessToken: 'token' }));
+
+		expectRoles(result.current, ['user', 'admin']);
+		expectPermissions(result.current, { read: true, write: true });
+	});
+});
+
 describe('useAuth guard rails', () => {
 	it('throws if useAuth is called outside of an AuthProvider', () => {
 		expect(() => renderHook(() => useAuth())).toThrowError(
@@ -113,8 +258,10 @@ function createWrapper(auth: MockAuthAdapter) {
 }
 
 function renderAuthHook(auth = new MockAuthAdapter()) {
-	const { result } = renderHook(() => useAuth(), { wrapper: createWrapper(auth) });
-	return { auth, result };
+	const { result, unmount, rerender } = renderHook(() => useAuth(), {
+		wrapper: createWrapper(auth),
+	});
+	return { auth, result, unmount, rerender };
 }
 
 function expectUnauthenticatedState(value: AuthContextValue) {

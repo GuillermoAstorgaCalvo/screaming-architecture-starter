@@ -1,6 +1,6 @@
 import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from 'react';
 
-export interface CheckboxWrapperProps extends HTMLAttributes<HTMLDivElement> {
+export interface CheckboxWrapperProps extends Omit<HTMLAttributes<HTMLDivElement>, 'fullWidth'> {
 	readonly fullWidth: boolean;
 	readonly children: ReactNode;
 }
@@ -13,6 +13,7 @@ export interface CheckboxFieldProps {
 	readonly id: string | undefined;
 	readonly className: string;
 	readonly ariaDescribedBy: string | undefined;
+	readonly hasError: boolean;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
 	readonly checked?: boolean | undefined;
@@ -27,6 +28,7 @@ export interface CheckboxFieldProps {
 			| 'disabled'
 			| 'required'
 			| 'aria-describedby'
+			| 'aria-invalid'
 			| 'checked'
 			| 'defaultChecked'
 		>
@@ -50,6 +52,7 @@ export interface CheckboxContentProps {
 	readonly checkboxId: string | undefined;
 	readonly checkboxClasses: string;
 	readonly ariaDescribedBy: string | undefined;
+	readonly hasError: boolean;
 	readonly label?: string | undefined;
 	readonly error?: string | undefined;
 	readonly helperText?: string | undefined;
@@ -68,6 +71,7 @@ export interface CheckboxContentProps {
 			| 'disabled'
 			| 'required'
 			| 'aria-describedby'
+			| 'aria-invalid'
 			| 'checked'
 			| 'defaultChecked'
 		>
@@ -80,6 +84,7 @@ export interface CheckboxFieldWithLabelProps
 		| 'checkboxId'
 		| 'checkboxClasses'
 		| 'ariaDescribedBy'
+		| 'hasError'
 		| 'label'
 		| 'required'
 		| 'disabled'

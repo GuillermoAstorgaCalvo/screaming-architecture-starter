@@ -19,8 +19,8 @@ export function getAriaDescribedBy(
 	helperText?: string
 ): string | undefined {
 	const ids: string[] = [];
-	if (error) ids.push(`${timePickerId}-error`);
-	if (helperText) ids.push(`${timePickerId}-helper`);
+	if (error !== undefined) ids.push(`${timePickerId}-error`);
+	if (helperText !== undefined) ids.push(`${timePickerId}-helper`);
 	return ids.length > 0 ? ids.join(' ') : undefined;
 }
 

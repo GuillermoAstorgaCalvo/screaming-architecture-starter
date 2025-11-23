@@ -25,6 +25,7 @@ alwaysApply: false
 ├── pnpm-workspace.yaml              # Workspace settings (onlyBuiltDependencies, ignoredBuiltDependencies)
 ├── tsconfig*.json                   # Base + app/node/vitest/build project references
 ├── vite.config.ts / vitest.config.ts# Vite + Vitest configs (path aliases, env-aware server/build)
+├── vite-plugin-source-tagger.ts     # Vite plugin for adding source file attributes to DOM elements
 ├── playwright.config.ts             # Playwright config (dotenv loading, pnpm run dev server, retries)
 ├── eslint.config.js                 # ESLint flat config (boundaries, jsx-a11y, testing-library, unicorn, security)
 ├── tailwind.config.ts / postcss.config.cjs
@@ -34,12 +35,14 @@ alwaysApply: false
 │   └── runtime/                     # `runtime-config.<env>.json` profiles consumed by apply-runtime-config.mjs
 ├── scripts/                         # Repo automation (`apply-runtime-config.mjs`, `check-bundle-size.js`, `sync-design-tokens.js`)
 ├── Dockerfile* / docker-compose*.yml# Local + production docker definitions
+├── index.html                       # HTML entry point (Vite)
 ├── public/                          # Manifest, icons, runtime-config.json, SEO assets
 ├── src/                             # Application source (see below)
 ├── tests/ / e2e/                    # Vitest unit tests + Playwright specs/utilities
 ├── coverage/ / dist/ / test-results/# Generated artifacts (gitignored)
 ├── LICENSE / CODEOWNERS / SECURITY.md
 │                                    # Governance + disclosure
+├── vercel.json                      # Vercel deployment configuration (caching, headers, regions)
 └── README.md                        # High-level overview + quickstart (links back to docs index)
 # Notes:
 # - .lighthouserc.json keeps performance budgets for CI audits
@@ -76,7 +79,7 @@ src/
 │   ├── main.tsx                          # ✅ Application bootstrap
 │   │   # Initializes config and i18n in parallel (Promise.all([initConfig(), i18nInitPromise])) - loads runtime config, sets up httpClient, ensures translations are loaded
 │   │   # Initializes Web Vitals tracking (reportWebVitals) - only runs in production
-│   │   # Imports domain i18n registrations (@domains/landing/i18n)
+│   │   # Imports domain i18n registrations (e.g., @domains/my-domain/i18n) when domain translations exist
 │   │   # Imports global CSS (@styles/globals.css)
 │   │   # Creates React root and renders <App /> into DOM wrapped in StrictMode
 │   │   # Conditionally renders <SpeedInsightsLoader /> (only in production when feature flag enabled)
@@ -106,6 +109,11 @@ src/
 │   │   │   # Provides authentication and permission-based route guards
 │   │   │   # Uses route guard utilities from @core/router/routes.guards
 │   │   │   # Uses useAuth hook from @core/providers/auth/useAuth
+│   │   ├── RightsLoader.tsx              # ✅ Loads user rights/permissions from API
+│   │   │   # Fetches additional rights data from API endpoint
+│   │   │   # Provides loading and error states
+│   │   │   # Renders children when rights are loaded
+│   │   │   # Uses useAuth, useHttp, and useLogger hooks
 │   │   └── SpeedInsightsLoader.tsx      # ✅ Lazy-loads Vercel Speed Insights component
 │   │       # Only loads in production when feature flag enabled
 │   │       # Dynamically imports @vercel/speed-insights/react
@@ -269,7 +277,8 @@ src/
 │   │   ├── ui/useWindowSize.ts           # Window size tracking (debounced, SSR defaults)
 │   │   ├── ui/useToggle.ts               # Boolean helper
 │   │   ├── ui/usePrevious.ts             # Previous value ref helper
-│   │   └── seo/useSEO.ts                 # Document head orchestration built on core/config/seo + seoDomUtils
+│   │   ├── seo/useSEO.ts                 # Document head orchestration built on core/config/seo + seoDomUtils
+│   │   └── useDeferredActivation.ts      # ✅ Deferred activation hook (defers non-critical features until user interaction)
 │   │
 │   ├── a11y/                             # ✅ Accessibility utilities
 │   │   ├── focus/                        # ✅ Focus management utilities
@@ -331,6 +340,7 @@ src/
 │   │   ├── resourceLoader.ts              # ✅ Dynamic resource loading system (main export)
 │   │   │   # Main entry point for resource loading, imports from sub-modules
 │   │   ├── resourceLoader/                # ✅ Resource loading sub-modules
+│   │   │   ├── backend.ts                 # ✅ i18next backend adapter for resource loading (ResourceLoaderBackend)
 │   │   │   ├── cache.ts                   # ✅ Resource caching utilities (clearResourceCacheFor, isResourceCached, isResourceLoading)
 │   │   │   ├── i18n.ts                    # ✅ i18next integration functions (addResourceToI18n, loadAndAddResource)
 │   │   │   ├── load.ts                    # ✅ Resource loading functions (loadResource)
@@ -566,6 +576,28 @@ src/
 │   │   ├── ui.ts                         # ✅ UI component constants
 │   │   │   # Size classes for icons, text, buttons, inputs, spinners, modals
 │   │   │   # Uses types from @src-types/ui
+│   │   ├── ui/                           # ✅ UI component constants organized by category
+│   │   │   ├── buttons.ts                # ✅ Button and IconButton constants
+│   │   │   ├── controls.ts               # ✅ Checkbox, Switch, and Radio constants
+│   │   │   ├── data.ts                   # ✅ Table, Pagination, and Avatar constants
+│   │   │   ├── display/                  # ✅ Display component constants
+│   │   │   │   ├── badge.ts              # ✅ Badge constants
+│   │   │   │   ├── card.ts               # ✅ Card constants
+│   │   │   │   ├── divider.ts            # ✅ Divider constants
+│   │   │   │   ├── link.ts               # ✅ Link constants
+│   │   │   │   ├── list.ts               # ✅ List constants
+│   │   │   │   ├── progress.ts           # ✅ Progress constants
+│   │   │   │   ├── skeleton.ts           # ✅ Skeleton constants
+│   │   │   │   ├── stat-card.ts          # ✅ Stat card constants
+│   │   │   │   ├── status-indicator.ts   # ✅ Status indicator constants
+│   │   │   │   ├── stepper.ts            # ✅ Stepper constants
+│   │   │   │   ├── timeline.ts           # ✅ Timeline constants
+│   │   │   │   └── typography.ts         # ✅ Typography constants
+│   │   │   ├── forms.ts                  # ✅ Input, Textarea, and Select constants
+│   │   │   ├── navigation.ts             # ✅ Breadcrumbs, Drawer, Tabs, and Accordion constants
+│   │   │   ├── overlays.ts               # ✅ Modal and Spinner constants
+│   │   │   ├── rating.ts                 # ✅ Rating constants
+│   │   │   └── shared.ts                 # ✅ Shared constants used across multiple components
 │   │   ├── endpoints.ts                  # ✅ API endpoint constants
 │   │   │   # Central source of truth for API endpoint paths (API_ENDPOINTS)
 │   │   │   # Provides buildApiUrl() helper to combine with baseURL
@@ -582,44 +614,83 @@ src/
 │   │   ├── regex.ts                       # ✅ Regular expression patterns for validation
 │   │   │   # Central source of truth for validation patterns (EMAIL, URL, PHONE, UUID, etc.)
 │   │   │   # Provides testRegex() helper function
-│   │   └── timeouts.ts                    # ✅ Timeout constants for network and UI operations
-│   │       # Exports HTTP_TIMEOUTS, UI_TIMEOUTS, RETRY_TIMEOUTS
-│   │       # All values in milliseconds with type-safe exports
+│   │   ├── timeouts.ts                    # ✅ Timeout constants for network and UI operations
+│   │   │   # Exports HTTP_TIMEOUTS, UI_TIMEOUTS, RETRY_TIMEOUTS
+│   │   │   # All values in milliseconds with type-safe exports
+│   │   └── CUSTOMIZATION.md               # ✅ Design tokens customization guide
 │   │
 │   └── README.md                         # ✅ Documentation explaining lib/ vs utils/ distinction
 │
 │   # All core directories are implemented
 │
 ├── domains/                              # Self-contained business domains
-│   └── landing/                          # ✅ Landing domain (minimal demonstration domain)
+│   └── landing/                          # ✅ Landing domain (component library showcase)
 │       ├── pages/                         # ✅ Full-page components for routing
-│       │   └── LandingPage.tsx             # ✅ Landing page component
+│       │   └── LandingPage.tsx             # ✅ Landing page component (component library showcase)
 │       │       # Receives theme via props (from PageWrapper.withTheme)
-│       │       # Uses useTranslation hook for i18n
-│       │       # Minimal implementation demonstrating domain structure
+│       │       # Uses useTranslation hook for i18n (uses common translations)
+│       │       # Showcases all UI components organized by categories with search and filtering
 │       │       # Never imports from @app or @infra - respects boundaries
 │       │
-│       ├── services/                       # ✅ Domain services
-│       │   └── api/                        # ✅ API service implementations
-│       │       └── getDemoContentService.ts # ✅ Example API service using createApiService (exports createDemoContentService factory)
+│       ├── components/                     # ✅ Domain-specific UI components
+│       │   ├── categories/                 # ✅ Component category showcase components
+│       │   │   ├── RootComponentsCategory.tsx
+│       │   │   ├── FormsCategory.tsx       # ✅ Organized into 7 subcategories
+│       │   │   ├── DataDisplayCategory.tsx
+│       │   │   ├── FeedbackCategory.tsx
+│       │   │   ├── NavigationCategory.tsx
+│       │   │   ├── OverlaysCategory.tsx    # ✅ Organized into 5 subcategories
+│       │   │   ├── MediaCategory.tsx
+│       │   │   ├── LayoutCategory.tsx
+│       │   │   ├── HooksCategory.tsx
+│       │   │   └── UtilitiesCategory.tsx
+│       │   └── shared/                     # ✅ Shared component showcase utilities
+│       │       ├── ComponentSearchBar.tsx   # ✅ Component search and tag filtering UI
+│       │       ├── ShowcaseSection.tsx      # ✅ Reusable showcase section wrapper
+│       │       └── SubcategoryNavigation.tsx # ✅ Navigation component for subcategories within a category
 │       │
-│       ├── store/                         # ✅ Domain state management (Zustand)
-│       │   ├── landingStore.ts            # ✅ Counter example store with typed actions, selectors, initial state
-│       │   │   # Demonstrates selectors (count, isLoading, error) and actions (increment, decrement, reset)
-│       │   └── README.md                  # ✅ Store usage guidelines and best practices
-│       └── i18n/                          # ✅ Domain translations
-│           ├── index.ts                    # ✅ Registration file using registerDomainTranslations() with async IIFE pattern
-│           ├── en.json                     # ✅ English translations
-│           ├── es.json                     # ✅ Spanish translations
-│           └── ar.json                     # ✅ Arabic translations (RTL)
-│       # components/, hooks/, routes.ts, models/, constants.ts - Optional, not yet implemented
+│       ├── context/                        # ✅ React context providers
+│       │   └── ComponentFilterContext.tsx  # ✅ Component filtering context for search and tag filtering
+│       │
+│       ├── hooks/                          # ✅ Domain-specific hooks
+│       │   ├── useComponentFilter.ts        # ✅ Component filtering hook
+│       │   └── useShowcaseFilter.ts        # ✅ Showcase filtering hook
+│       │
+│       └── IMPLEMENTATION_STATUS.md        # ✅ Component showcase implementation status
+│       # services/, store/, i18n/, routes.ts, models/, constants.ts - Optional, not yet implemented
+│       # Note: Landing domain uses common translations from @core/i18n/locales/ instead of domain-specific translations
 │
 │   └── shared/                              # ✅ Cross-domain shared features
 │       └── components/                      # ✅ Shared composite components
-│           ├── autocomplete-combobox/       # Accessible combobox built on core/ui primitives
-│           │   # Includes body/field/parts components + helpers + hooks (state, handlers, ids, setup)
-│           ├── date-picker/                 # Date picker surface (ISO parsing, validation)
-│           └── slider/                      # Slider widget (model, view, helpers, types)
+│           ├── autocomplete-combobox/       # ✅ Accessible combobox built on core/ui primitives
+│           │   ├── AutocompleteCombobox.tsx # ✅ Main component
+│           │   ├── components/              # ✅ Component sub-components
+│           │   │   ├── AutocompleteComboboxBody.tsx
+│           │   │   ├── AutocompleteComboboxField.tsx
+│           │   │   └── AutocompleteComboboxParts.tsx
+│           │   ├── helpers/                  # ✅ Helper functions
+│           │   │   └── AutocompleteComboboxHelpers.ts
+│           │   └── hooks/                   # ✅ Custom hooks organized by concern
+│           │       ├── useAutocompleteCombobox.ts
+│           │       ├── useAutocompleteComboboxEffects.ts
+│           │       ├── useAutocompleteComboboxHandlers.ts
+│           │       ├── useAutocompleteComboboxHandlers.input.ts
+│           │       ├── useAutocompleteComboboxHandlers.keyboard.ts
+│           │       ├── useAutocompleteComboboxHandlers.list.ts
+│           │       ├── useAutocompleteComboboxHandlers.option.ts
+│           │       ├── useAutocompleteComboboxIds.ts
+│           │       ├── useAutocompleteComboboxSetup.ts
+│           │       └── useAutocompleteComboboxState.ts
+│           ├── date-picker/                 # ✅ Date picker surface (ISO parsing, validation)
+│           │   └── DatePicker.tsx
+│           └── slider/                      # ✅ Slider widget (model, view, helpers, types)
+│               ├── Slider.tsx
+│               ├── components/              # ✅ Component sub-components
+│               │   └── SliderView.tsx
+│               ├── helpers/                  # ✅ Helper functions
+│               │   └── sliderModel.ts
+│               └── types/                   # ✅ Type definitions
+│                   └── slider.types.ts
 │       # auth/, notifications/, analytics/ - Optional, not yet implemented
 │
 ├── infrastructure/                        # Technical adapters & framework-specific code
@@ -703,18 +774,62 @@ src/
 │
 ├── types/                                 # ✅ Cross-cutting type definitions
 │   ├── ui/                                # ✅ UI component type definitions
-│   │   ├── base.ts                        # Shared props (children, className, data-testid, etc.)
-│   │   ├── buttons.ts / controls.ts       # Button/IconButton + checkbox/radio/switch props
-│   │   ├── data.ts                        # Table, pagination, avatar, stat cards
-│   │   ├── display/                       # Badge, card, divider, list, progress, skeleton, stepper, timeline, typography
-│   │   ├── forms.ts                       # Input/Textarea/Select prop contracts
-│   │   ├── icons.ts                        # Icon registry + props
-│   │   ├── layout.ts / navigation.ts      # Layout + nav primitives
-│   │   ├── overlays.ts                    # Modal/Popover/Tooltip props
-│   │   ├── rating.ts                      # Rating/star components
-│   │   ├── shared.ts                      # Shared tokens/common tokens bridging types
-│   │   ├── theme.ts                       # Theme + token mapping
-│   │   └── typography.ts                  # Heading/Text props
+│   │   ├── base.ts                        # ✅ Shared props (children, className, data-testid, etc.)
+│   │   ├── buttons.ts                     # ✅ Button/IconButton props
+│   │   ├── dataTable.ts                   # ✅ Advanced data table types
+│   │   ├── data/                          # ✅ Data display component types
+│   │   │   ├── calendar.ts                # ✅ Calendar and date picker types
+│   │   │   ├── chart.ts                   # ✅ Chart component types
+│   │   │   ├── description-list.ts       # ✅ Description list types
+│   │   │   ├── infinite-scroll.ts         # ✅ Infinite scroll types
+│   │   │   ├── pagination.ts              # ✅ Pagination types
+│   │   │   ├── table.ts                   # ✅ Table types
+│   │   │   └── transfer.ts                # ✅ Transfer component types
+│   │   ├── feedback.ts                    # ✅ Error, Helper, feedback types, Avatar, Badge, Skeleton, Spinner, Progress types
+│   │   ├── forms.ts                       # ✅ Basic form input types (Input, Textarea, Select)
+│   │   ├── forms-advanced.ts              # ✅ Advanced form types
+│   │   ├── forms-dates.ts                 # ✅ Date-related form types (date picker, time picker, etc.)
+│   │   ├── forms-editors.ts               # ✅ Editor form types (rich text editor, etc.)
+│   │   ├── forms-inputs.ts                # ✅ Specialized input types (autocomplete, combobox, etc.)
+│   │   ├── forms-specialized.ts           # ✅ Specialized form types (OTP, phone, currency, etc.)
+│   │   ├── icons.ts                       # ✅ Icon types
+│   │   ├── languageSelector.ts            # ✅ Language selector types
+│   │   ├── layout/                        # ✅ Layout component types
+│   │   │   ├── card.ts                    # ✅ Card component types
+│   │   │   ├── carousel.ts                # ✅ Carousel types
+│   │   │   ├── common.ts                  # ✅ Common layout types
+│   │   │   ├── divider.ts                 # ✅ Divider types
+│   │   │   ├── list.ts                    # ✅ List component types
+│   │   │   ├── marquee.ts                 # ✅ Marquee types
+│   │   │   ├── primitives.ts              # ✅ Layout primitive types
+│   │   │   ├── scroll.ts                  # ✅ Scroll area types
+│   │   │   ├── splitter.ts                # ✅ Splitter types
+│   │   │   └── timeline.ts                # ✅ Timeline types
+│   │   ├── maps.ts                        # ✅ Map component types
+│   │   ├── media.ts                       # ✅ Media component types (image, video, etc.)
+│   │   ├── navigation/                    # ✅ Navigation component types
+│   │   │   ├── accordion.ts               # ✅ Accordion types
+│   │   │   ├── appBar.ts                  # ✅ App bar types
+│   │   │   ├── bottomNavigation.ts       # ✅ Bottom navigation types
+│   │   │   ├── breadcrumbs.ts             # ✅ Breadcrumbs types
+│   │   │   ├── floatingActionButton.ts    # ✅ FAB types
+│   │   │   ├── link.ts                    # ✅ Link types
+│   │   │   ├── menubar.ts                 # ✅ Menubar types
+│   │   │   ├── navigationMenu.ts           # ✅ Navigation menu types
+│   │   │   ├── notificationBell.ts        # ✅ Notification bell types
+│   │   │   ├── segmentedControl.ts        # ✅ Segmented control types
+│   │   │   ├── stepper.ts                 # ✅ Stepper types
+│   │   │   ├── tabs.ts                    # ✅ Tabs types
+│   │   │   ├── treeView.ts                # ✅ Tree view types
+│   │   │   └── wizard.ts                  # ✅ Wizard types
+│   │   ├── overlays/                      # ✅ Overlay component types
+│   │   │   ├── containers.ts              # ✅ Container overlay types (modal, dialog, etc.)
+│   │   │   ├── floating.ts                # ✅ Floating overlay types (tooltip, popover, etc.)
+│   │   │   ├── interactions.ts           # ✅ Interaction overlay types
+│   │   │   └── panels.ts                 # ✅ Panel overlay types (drawer, sheet, etc.)
+│   │   ├── advancedFilter.ts              # ✅ Advanced filter types
+│   │   ├── theme.ts                       # ✅ Theme types
+│   │   └── typography.ts                  # ✅ Heading, Text types
 │   │   # All UI components import from @src-types/ui/<category>
 │   ├── common.ts                          # ✅ Common utility types
 │   │   # Exports Optional, Required, DeepPartial, DeepRequired, ValueOf, KeysOfType
@@ -762,6 +877,8 @@ src/
 │   │   │   # Exports ApiResponse, ApiErrorResponse, ApiResponseWithMeta, ApiError
 │   │   │   # ApiEndpoint, ApiRequestOptions, ApiService
 │   │   │   # Import types directly from specific files, not from this index
+│   │   ├── apiResponse.schemas.ts          # ✅ Zod schemas for API responses and metadata
+│   │   │   # Provides apiMetadataSchema, apiResponseSchema, apiErrorResponseSchema
 │   │   └── auth.ts                        # ✅ Auth API types
 │   │       # Authentication-related API types
 │   ├── domains/                           # ✅ Domain-related types
@@ -775,25 +892,119 @@ src/
 │       # Documents all type categories (API, callbacks, common, config, datetime, errors, forms, hooks, http, layout, pagination, ports, react, result, router, ui)
 │   # generated/, zod/, branding.ts, events.ts - Optional, not yet implemented
 │
-├── tests/                                 # ✅ Vitest unit tests, helpers, and mocks
+├── tests/                                 # ✅ Comprehensive Vitest unit tests (1000+ test files)
 │   ├── setupTests.ts                      # ✅ Vitest setup (Testing Library, MSW, vitest-axe, matchMedia mocks)
 │   ├── vitest-env.d.ts                    # ✅ Vitest type definitions
-│   ├── app/
-│   │   ├── App.test.tsx                   # ✅ App composition, analytics toggles, accessibility regression tests
-│   │   └── components/PageWrapper.test.tsx# ✅ PageWrapper.withTheme HOC tests
-│   ├── core/
-│   │   ├── hooks/                         # ✅ Extensive suites for async, debounce, fetch, http, interval, motion, scroll, SEO, storage, throttle, and UI hooks
-│   │   └── utils/                         # ✅ Coverage for classNames, hookUtils, debounce/throttle helpers, themeCustomization, seoDomUtils
-│   ├── factories/                         # ✅ `apiFactories.ts`, `userFactories.ts` test data builders
+│   ├── app/                               # ✅ App-level tests (18 files)
+│   │   ├── App.test.tsx                   # ✅ App composition tests
+│   │   ├── App.analytics.test.tsx         # ✅ Analytics integration tests
+│   │   ├── App.providers.test.tsx        # ✅ Provider composition tests
+│   │   ├── main.test.tsx                  # ✅ Bootstrap tests
+│   │   ├── router.test.tsx                # ✅ Router tests
+│   │   ├── components/                    # ✅ Component tests (7 files)
+│   │   │   ├── AppLayout.test.tsx
+│   │   │   ├── PageWrapper.test.tsx
+│   │   │   ├── ProtectedRoute.test.tsx
+│   │   │   ├── ProtectedRoute.advanced.test.tsx
+│   │   │   ├── ProtectedRoute.test.utils.tsx
+│   │   │   ├── RightsLoader.test.tsx
+│   │   │   └── SpeedInsightsLoader.test.tsx
+│   │   ├── pages/                         # ✅ Page tests (2 files)
+│   │   │   ├── Error404.test.tsx
+│   │   │   └── Error500.test.tsx
+│   │   └── providers/                     # ✅ Provider tests (4 files)
+│   │       ├── DeferredMotionProvider.test.tsx
+│   │       ├── I18nProvider.test.tsx
+│   │       ├── QueryProvider.test.tsx
+│   │       └── ThemeProvider.test.tsx
+│   ├── core/                              # ✅ Core module tests (extensive coverage)
+│   │   ├── a11y/                          # ✅ Accessibility utility tests (17 files)
+│   │   │   ├── focus/                     # ✅ Focus management tests (16 files)
+│   │   │   └── skipToContent.test.tsx
+│   │   ├── api/                           # ✅ API service factory tests (15+ files)
+│   │   │   ├── createApiService.test.ts
+│   │   │   ├── createApiService.error-handling.test.ts
+│   │   │   ├── createApiService.type-safety.test.ts
+│   │   │   ├── createApiService.validation.test.ts
+│   │   │   └── ... (edge cases, request mapping, helpers, etc.)
+│   │   ├── auth/                          # ✅ Auth utility tests
+│   │   ├── config/                        # ✅ Configuration tests
+│   │   ├── constants/                     # ✅ Constants tests (including UI constants, 20+ files)
+│   │   ├── forms/                         # ✅ Form adapter tests (15+ files)
+│   │   │   ├── formAdapter.core.test.ts
+│   │   │   ├── formAdapter.advanced.test.ts
+│   │   │   ├── controller.test.tsx
+│   │   │   └── useController.*.test.tsx (multiple files)
+│   │   ├── hooks/                         # ✅ Hook tests (50+ files)
+│   │   │   ├── async/                     # ✅ useAsync tests
+│   │   │   ├── debounce/                  # ✅ useDebounce tests
+│   │   │   ├── fetch/                     # ✅ useFetch tests
+│   │   │   ├── http/                      # ✅ useHttpClientAuth tests
+│   │   │   ├── interval/                  # ✅ useInterval tests
+│   │   │   ├── motion/                    # ✅ Motion hook tests (8 files)
+│   │   │   ├── scroll/                    # ✅ useScrollPosition tests
+│   │   │   ├── seo/                       # ✅ useSEO tests
+│   │   │   ├── storage/                   # ✅ Storage hook tests
+│   │   │   ├── throttle/                  # ✅ useThrottle tests
+│   │   │   └── ui/                        # ✅ UI hook tests
+│   │   ├── http/                          # ✅ HTTP error adapter tests
+│   │   ├── i18n/                          # ✅ i18n system tests (21 files)
+│   │   ├── lib/                           # ✅ Framework-specific library tests (26 files)
+│   │   │   ├── date/                      # ✅ Date utility tests
+│   │   │   └── http/                      # ✅ HTTP client tests
+│   │   ├── perf/                          # ✅ Performance utility tests (4 files)
+│   │   ├── providers/                     # ✅ Provider tests (7 files)
+│   │   ├── router/                        # ✅ Router utility tests (7 files)
+│   │   ├── security/                      # ✅ Security utility tests (16 files)
+│   │   ├── ui/                            # ✅ UI component tests (700+ files)
+│   │   │   ├── data-display/              # ✅ Data display component tests
+│   │   │   ├── feedback/                  # ✅ Feedback component tests
+│   │   │   ├── forms/                     # ✅ Form component tests (extensive coverage)
+│   │   │   ├── navigation/                # ✅ Navigation component tests
+│   │   │   ├── overlays/                  # ✅ Overlay component tests
+│   │   │   ├── media/                     # ✅ Media component tests
+│   │   │   ├── utilities/                 # ✅ Utility component tests
+│   │   │   └── layout/                     # ✅ Layout component tests
+│   │   └── utils/                         # ✅ Utility function tests (18 files)
+│   ├── domains/                           # ✅ Domain tests
+│   │   ├── landing/                       # ✅ Landing domain tests
+│   │   └── shared/                        # ✅ Shared domain tests (14 files)
+│   ├── infrastructure/                    # ✅ Infrastructure adapter tests (32 files)
+│   │   ├── analytics/                     # ✅ Analytics adapter tests (6 files)
+│   │   ├── auth/                          # ✅ Auth adapter tests (4 files)
+│   │   ├── logging/                       # ✅ Logging adapter tests (5 files)
+│   │   ├── maps/                          # ✅ Maps adapter tests (4 files)
+│   │   └── storage/                       # ✅ Storage adapter tests (13 files)
+│   ├── types/                             # ✅ Type definition tests (19 files)
+│   │   ├── api/
+│   │   └── ui/
+│   ├── shared/                            # ✅ Shared component tests
+│   ├── factories/                         # ✅ Test data factories
+│   │   ├── apiFactories.ts
+│   │   └── userFactories.ts
 │   ├── mocks/                             # ✅ MSW handlers/payloads/server
-│   └── utils/
-│       ├── a11y.ts                        # ✅ vitest-axe helpers
-│       ├── TestProviders.tsx             # ✅ Provider composition for tests
-│       ├── testUtils.tsx                 # ✅ renderWithProviders + adapter overrides
-│       └── mocks/                        # ✅ MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter, MockAuthAdapter, MockAnalyticsAdapter
+│   │   ├── handlers.ts                    # ✅ MSW request handlers + helper functions (createNotFoundHandler, createErrorHandler)
+│   │   ├── payloads.ts                    # ✅ Pre-defined response payloads (defaultSlideshowResponse, emptySlideshowResponse, error payloads: notFoundError, internalServerError, unauthorizedError, forbiddenError, validationError)
+│   │   └── server.ts                      # ✅ MSW server setup helper
+│   └── utils/                             # ✅ Test utilities
+│       ├── a11y.ts                        # ✅ vitest-axe helpers (expectA11y, getA11yViolations, defaultAxeConfig)
+│       ├── TestProviders.tsx              # ✅ Provider composition for tests
+│       ├── testUtils.tsx                  # ✅ renderWithProviders + adapter overrides + throwTestError utility
+│       ├── mocks/                         # ✅ Mock adapters (5 files)
+│       │   ├── MockStorageAdapter.ts
+│       │   ├── MockLoggerAdapter.ts
+│       │   ├── MockHttpAdapter.ts
+│       │   ├── MockAuthAdapter.ts
+│       │   └── MockAnalyticsAdapter.ts
+│       └── polyfills/                     # ✅ Test polyfills for jsdom (3 files)
+│           ├── DataTransfer.polyfill.ts    # ✅ DataTransfer API polyfill (for drag-and-drop tests)
+│           ├── DragEvent.polyfill.ts      # ✅ DragEvent API polyfill
+│           └── StorageEvent.polyfill.ts    # ✅ StorageEvent API polyfill (for cross-tab storage sync tests)
 │
 ├── e2e/                                   # ✅ End-to-end tests
-│   └── example.spec.ts                    # ✅ Example Playwright spec
+│   ├── example.spec.ts                    # ✅ Example Playwright spec
+│   └── utils/                             # ✅ E2E test utilities
+│       └── a11y.ts                        # ✅ Accessibility testing helpers for Playwright
 │   # Domain-specific specs - Can be organized as domains grow
 │
 # Optional directories not yet implemented:

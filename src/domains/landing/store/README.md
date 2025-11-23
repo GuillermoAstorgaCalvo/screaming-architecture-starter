@@ -1,115 +1,147 @@
 # Landing Domain Store
 
-This directory contains Zustand stores for the landing domain, following the project's state management guidelines.
+This directory contains Zustand stores for managing client-side state in the landing domain.
 
-## Architecture
+## Store Structure
 
-- **Location**: `domains/<domain>/store/*`
-- **Pattern**: One store per domain concern
-- **Naming**: Stores end with `Store` (e.g., `landingStore.ts`)
+### `landingStore.ts`
 
-## Best Practices
+The main store for the landing domain, managing component filtering state.
 
-### 1. Type Safety
+**State:**
 
-- Define clear TypeScript interfaces for state and actions
-- Use proper typing with Zustand's `create` function
+- `activeCategory: CategoryId` - Active category for component showcase navigation
+- `searchQuery: string` - Search query for filtering components
+- `selectedTags: string[]` - Selected tags for filtering components
 
-### 2. Selectors for Performance
+**Actions:**
 
-- Use selectors to prevent unnecessary re-renders
-- Prefer granular selectors over selecting entire state
+- `setActiveCategory(category: CategoryId)` - Sets the active category
+- `setSearchQuery(query: string)` - Sets the search query
+- `toggleTag(tag: string)` - Toggles a tag in the selected tags array
+- `clearFilters()` - Clears all filters (search query and selected tags)
 
-```tsx
-// ✅ Good - only re-renders when count changes
-const count = useLandingStore(state => state.count);
+**Selectors:**
 
-// ❌ Avoid - re-renders on any state change
-const { count } = useLandingStore();
-```
+- `landingSelectors.activeCategory` - Get active category
+- `landingSelectors.setActiveCategory` - Get setActiveCategory action
+- `landingSelectors.searchQuery` - Get search query
+- `landingSelectors.setSearchQuery` - Get setSearchQuery action
+- `landingSelectors.selectedTags` - Get selected tags
+- `landingSelectors.toggleTag` - Get toggleTag action
+- `landingSelectors.clearFilters` - Get clearFilters action
+- `landingSelectors.hasActiveFilters` - Derived: checks if any filters are active
+- `landingSelectors.selectedTagsCount` - Derived: gets the count of selected tags
 
-### 3. Immutability
+## Usage Examples
 
-- Zustand handles immutability automatically
-- Always return new state objects in actions
-
-### 4. Minimal State
-
-- Keep only necessary state in the store
-- Derive computed values when possible
-- Use React Query for server state
-
-### 5. Domain Scoping
-
-- Keep stores domain-specific
-- Avoid global mega-stores
-- Use selector-only bridges for cross-domain composition if needed
-
-## Usage Example
+### Using Selectors (Recommended)
 
 ```tsx
-import { useLandingStore, landingSelectors } from '@domains/landing/store/landingStore';
+import { landingSelectors, useLandingStore } from '@domains/landing/store/landingStore';
 
-function MyComponent() {
-	// Using inline selector
-	const count = useLandingStore(state => state.count);
-	const increment = useLandingStore(state => state.increment);
-
-	// Using pre-defined selector
-	const isLoading = useLandingStore(landingSelectors.isLoading);
+function ComponentSearchBar() {
+	// Using pre-defined selectors (prevents unnecessary re-renders)
+	const searchQuery = useLandingStore(landingSelectors.searchQuery);
+	const setSearchQuery = useLandingStore(landingSelectors.setSearchQuery);
+	const hasActiveFilters = useLandingStore(landingSelectors.hasActiveFilters);
+	const clearFilters = useLandingStore(landingSelectors.clearFilters);
 
 	return (
 		<div>
-			<p>Count: {count}</p>
-			<button onClick={increment} disabled={isLoading}>
-				Increment
-			</button>
+			<input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+			{hasActiveFilters && <button onClick={clearFilters}>Clear</button>}
+		</div>
+	);
+}
+
+function CategoryNavigation() {
+	// Managing navigation state with Zustand
+	const activeCategory = useLandingStore(landingSelectors.activeCategory);
+	const setActiveCategory = useLandingStore(landingSelectors.setActiveCategory);
+
+	return (
+		<nav>
+			{categories.map(category => (
+				<button
+					key={category.id}
+					onClick={() => setActiveCategory(category.id)}
+					className={activeCategory === category.id ? 'active' : ''}
+				>
+					{category.label}
+				</button>
+			))}
+		</nav>
+	);
+}
+```
+
+### Using Inline Selectors
+
+```tsx
+import { useLandingStore } from '@domains/landing/store/landingStore';
+
+function TagFilter() {
+	// Inline selector (also prevents unnecessary re-renders)
+	const selectedTags = useLandingStore(state => state.selectedTags);
+	const toggleTag = useLandingStore(state => state.toggleTag);
+
+	return (
+		<div>
+			{tags.map(tag => (
+				<button
+					key={tag}
+					onClick={() => toggleTag(tag)}
+					className={selectedTags.includes(tag) ? 'active' : ''}
+				>
+					{tag}
+				</button>
+			))}
 		</div>
 	);
 }
 ```
 
-## Store Structure
+### Integration with React Context
 
-```typescript
-// 1. Define state interface
-interface MyState {
-	// state properties
-}
+The store is integrated with `ComponentFilterContext` to maintain backward compatibility:
 
-// 2. Define actions interface
-interface MyActions {
-	// action methods
-}
-
-// 3. Combine types
-type MyStore = MyState & MyActions;
-
-// 4. Create store
-export const useMyStore = create<MyStore>(set => ({
-	// initial state
-	// actions
-}));
-
-// 5. Export selectors (optional but recommended)
-export const mySelectors = {
-	// selector functions
-};
+```tsx
+// ComponentFilterContext.tsx uses the store internally
+const searchQuery = useLandingStore(landingSelectors.searchQuery);
+const setSearchQuery = useLandingStore(landingSelectors.setSearchQuery);
+// ... provides context value that wraps store state
 ```
 
-## Current Implementation
+This allows components to use either:
 
-The existing `landingStore.ts` demonstrates these patterns with a simple counter domain:
+- Direct store access: `useLandingStore(landingSelectors.searchQuery)`
+- Context access: `useComponentFilterContext().searchQuery`
 
-- **State**: `count`, `isLoading`, and `error`
-- **Actions**: `increment`, `decrement`, `reset`, `setLoading`, `setError`
-- **Selectors**: `landingSelectors.count`, `landingSelectors.isLoading`, `landingSelectors.error`, `landingSelectors.countWithIncrement`
-- **Typing**: Re-uses `StoreSelector` from `@core/lib/storeUtils` for selector return types
+## Best Practices
 
-Use it as a reference when adding new stores or extending the landing domain.
+1. **Always use selectors** - Prevents unnecessary re-renders by subscribing only to needed state slices
+2. **Use pre-defined selectors** - Better for reusability and type safety
+3. **Derive state when possible** - Use computed selectors instead of storing derived values
+4. **Keep state minimal** - Only store what's necessary, derive the rest
+5. **Domain-scoped** - Keep stores scoped to their domain, avoid global stores
 
-## Related Documentation
+## Type Safety
 
-- State Management Guidelines: `.cursor/rules/architecture/state.mdc`
-- Domain Structure: `.cursor/rules/architecture/folder-structure-domains-shared.mdc`
-- Conventions: `.cursor/rules/quality/conventions.mdc`
+The store uses TypeScript with `StoreSelector` types from `@core/lib/storeUtils` to ensure type-safe selectors:
+
+```tsx
+export const landingSelectors = {
+	searchQuery: ((state: LandingStore) => state.searchQuery) satisfies StoreSelector<
+		LandingStore,
+		string
+	>,
+	// ... other selectors
+} as const;
+```
+
+## References
+
+- See `docs/state-management.md` for comprehensive state management guidelines
+- See `.cursor/rules/architecture/state.mdc` for state management architecture
+- See `docs/creating-domains.md` for domain store patterns

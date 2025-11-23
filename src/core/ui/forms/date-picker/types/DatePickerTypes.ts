@@ -16,7 +16,8 @@ export interface DatePickerContentProps {
 	readonly fieldProps: Readonly<DatePickerInputProps>;
 }
 
-export interface DatePickerWrapperProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {
+export interface DatePickerWrapperProps
+	extends Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'fullWidth'> {
 	readonly fullWidth: boolean;
 	readonly children: ReactNode;
 	readonly className?: string | undefined;

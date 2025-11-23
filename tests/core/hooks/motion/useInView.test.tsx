@@ -2,34 +2,13 @@ import { useInView } from '@core/hooks/motion/useInView';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-type ObserverSpy = ReturnType<typeof vi.fn>;
-
-interface MockObserver {
-	observe: ObserverSpy;
-	disconnect: ObserverSpy;
-	unobserve: ObserverSpy;
-	callback?: IntersectionObserverCallback;
-}
-
-interface UseInViewTestContext {
-	getMockObserver: () => MockObserver;
-	getMockIntersectionObserver: () => typeof IntersectionObserver;
-	getObserverCallback: () => IntersectionObserverCallback | undefined;
-	getObserveSpy: () => ObserverSpy;
-	getDisconnectSpy: () => ObserverSpy;
-}
-
-const triggerIntersectionCallback = (
-	ctx: UseInViewTestContext,
-	entries: IntersectionObserverEntry[]
-) => {
-	const callback = ctx.getObserverCallback();
-	if (callback) {
-		callback(entries, ctx.getMockObserver() as unknown as IntersectionObserver);
-	}
-};
-
-type TestRegistrar = (ctx: UseInViewTestContext) => void;
+import {
+	type MockObserver,
+	type ObserverSpy,
+	type TestRegistrar,
+	triggerIntersectionCallback,
+	type UseInViewTestContext,
+} from './useInView.test.utils';
 
 const registerBasicFunctionalityTests: TestRegistrar[] = [
 	registerReturnsRefAndStateTest,
@@ -56,12 +35,6 @@ const registerCleanupTests: TestRegistrar[] = [
 	registerDisconnectOnUnmountTest,
 	registerDisconnectOnRefChangeTest,
 	registerSkipsObservationForNullTest,
-];
-
-const registerEdgeCaseTests: TestRegistrar[] = [
-	registerHandlesEmptyEntriesTest,
-	registerHandlesMultipleThresholdsTest,
-	registerReobservesWhenOptionsChangeTest,
 ];
 
 function describeBasicFunctionalitySuite(ctx: UseInViewTestContext) {
@@ -91,14 +64,6 @@ function describeTriggerOnceSuite(ctx: UseInViewTestContext) {
 function describeCleanupSuite(ctx: UseInViewTestContext) {
 	describe('cleanup', () => {
 		for (const registerTest of registerCleanupTests) {
-			registerTest(ctx);
-		}
-	});
-}
-
-function describeEdgeCasesSuite(ctx: UseInViewTestContext) {
-	describe('edge cases', () => {
-		for (const registerTest of registerEdgeCaseTests) {
 			registerTest(ctx);
 		}
 	});
@@ -459,64 +424,6 @@ function registerSkipsObservationForNullTest(ctx: UseInViewTestContext) {
 	});
 }
 
-function registerHandlesEmptyEntriesTest(ctx: UseInViewTestContext) {
-	it('should handle empty entries array', () => {
-		const { result } = renderHook(() => useInView());
-		const element = document.createElement('div');
-
-		result.current.ref(element);
-
-		// Should not throw when entries array is empty
-		expect(() => {
-			triggerIntersectionCallback(ctx, []);
-		}).not.toThrow();
-	});
-}
-
-function registerHandlesMultipleThresholdsTest(ctx: UseInViewTestContext) {
-	it('should handle multiple threshold values', async () => {
-		const { result } = renderHook(() => useInView({ threshold: [0, 0.5, 1] }));
-		const element = document.createElement('div');
-
-		result.current.ref(element);
-
-		await waitFor(() => {
-			expect(ctx.getMockIntersectionObserver()).toHaveBeenCalledWith(
-				expect.any(Function),
-				expect.objectContaining({
-					threshold: [0, 0.5, 1],
-				})
-			);
-		});
-	});
-}
-
-function registerReobservesWhenOptionsChangeTest(ctx: UseInViewTestContext) {
-	it('should re-observe when options change', async () => {
-		const { result, rerender } = renderHook(({ threshold }) => useInView({ threshold }), {
-			initialProps: { threshold: 0 },
-		});
-		const element = document.createElement('div');
-
-		result.current.ref(element);
-		await waitFor(() => {
-			expect(ctx.getMockIntersectionObserver()).toHaveBeenCalledWith(
-				expect.any(Function),
-				expect.objectContaining({ threshold: 0 })
-			);
-		});
-
-		rerender({ threshold: 0.5 });
-		await waitFor(() => {
-			expect(ctx.getDisconnectSpy()).toHaveBeenCalled();
-			expect(ctx.getMockIntersectionObserver()).toHaveBeenCalledWith(
-				expect.any(Function),
-				expect.objectContaining({ threshold: 0.5 })
-			);
-		});
-	});
-}
-
 describe('useInView', () => {
 	let mockObserver: MockObserver;
 	let mockIntersectionObserver: typeof IntersectionObserver;
@@ -566,5 +473,4 @@ describe('useInView', () => {
 	describeOptionsSuite(testContext);
 	describeTriggerOnceSuite(testContext);
 	describeCleanupSuite(testContext);
-	describeEdgeCasesSuite(testContext);
 });

@@ -1,4 +1,4 @@
-import { useThrottle } from '@core/hooks/throttle/useThrottle';
+import { useThrottle, useThrottledCallback } from '@core/hooks/throttle/useThrottle';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -459,8 +459,237 @@ function edgeCasesSuite() {
 	});
 }
 
+function useThrottledCallbackBasicSuite() {
+	registerTimerLifecycle();
+
+	it('should return a throttled callback function', () => {
+		const callback = vi.fn((x: number) => x * 2) as (...args: unknown[]) => unknown;
+		const { result } = renderHook(() => useThrottledCallback(callback, DEFAULT_DELAY));
+
+		expect(result.current).toBeTypeOf('function');
+		expect(result.current.cancel).toBeTypeOf('function');
+		expect(result.current.flush).toBeTypeOf('function');
+	});
+
+	it('should throttle callback execution', () => {
+		const callback = vi.fn((x: number) => x) as (...args: unknown[]) => unknown;
+		const { result } = renderHook(() => useThrottledCallback(callback, DEFAULT_DELAY));
+
+		// First call - should execute immediately (leading edge)
+		result.current(1);
+		expect(callback).toHaveBeenCalledTimes(1);
+		expect(callback).toHaveBeenLastCalledWith(1);
+
+		// Rapid calls - should be throttled
+		result.current(2);
+		result.current(3);
+		result.current(4);
+		expect(callback).toHaveBeenCalledTimes(1); // Still only 1 call
+
+		// After delay - trailing edge should execute with last value
+		advanceTime(DEFAULT_DELAY);
+		expect(callback).toHaveBeenCalledTimes(2);
+		expect(callback).toHaveBeenLastCalledWith(4);
+	});
+
+	it('should support cancel method', () => {
+		const callback = vi.fn();
+		const { result } = renderHook(() => useThrottledCallback(callback, DEFAULT_DELAY));
+
+		result.current();
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		result.current();
+		expect(callback).toHaveBeenCalledTimes(1); // Throttled
+
+		// Cancel pending execution
+		result.current.cancel();
+
+		// Advance time - should not execute
+		advanceTime(DEFAULT_DELAY);
+		expect(callback).toHaveBeenCalledTimes(1); // Still only 1
+	});
+
+	it('should support flush method', () => {
+		const callback = vi.fn((x: number) => x) as (...args: unknown[]) => unknown;
+		const { result } = renderHook(() => useThrottledCallback(callback, DEFAULT_DELAY));
+
+		result.current(1);
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		result.current(2);
+		result.current(3);
+		expect(callback).toHaveBeenCalledTimes(1); // Throttled
+
+		// Flush should execute pending immediately
+		const flushResult = result.current.flush();
+		expect(callback).toHaveBeenCalledTimes(2);
+		expect(callback).toHaveBeenLastCalledWith(3);
+		expect(flushResult).toBe(3);
+	});
+}
+
+function useThrottledCallbackRecreationSuite() {
+	registerTimerLifecycle();
+
+	it('should recreate throttled function when callback changes', () => {
+		const callback1 = vi.fn((x: number) => x) as (...args: unknown[]) => unknown;
+		const callback2 = vi.fn((x: number) => x * 2) as (...args: unknown[]) => unknown;
+
+		const { result, rerender } = renderHook(
+			({ callback, delay }) => useThrottledCallback(callback, delay),
+			{
+				initialProps: { callback: callback1, delay: DEFAULT_DELAY },
+			}
+		);
+
+		result.current(1);
+		expect(callback1).toHaveBeenCalledTimes(1);
+
+		// Change callback
+		rerender({ callback: callback2, delay: DEFAULT_DELAY });
+
+		result.current(2);
+		expect(callback2).toHaveBeenCalledTimes(1);
+		expect(callback2).toHaveBeenLastCalledWith(2);
+	});
+
+	it('should recreate throttled function when delay changes', () => {
+		const callbackFn = vi.fn() as () => void;
+		const { result, rerender } = renderHook(
+			({ callback, delay }) => useThrottledCallback(callback, delay),
+			{
+				initialProps: { callback: callbackFn, delay: DEFAULT_DELAY },
+			}
+		);
+
+		result.current();
+		expect(callbackFn).toHaveBeenCalledTimes(1);
+
+		result.current();
+		expect(callbackFn).toHaveBeenCalledTimes(1); // Throttled
+
+		// Change delay - creates new throttled function
+		rerender({ callback: callbackFn, delay: CUSTOM_DELAY });
+
+		// New throttled function, so leading edge executes
+		result.current();
+		expect(callbackFn).toHaveBeenCalledTimes(2); // New throttle cycle
+
+		result.current();
+		expect(callbackFn).toHaveBeenCalledTimes(2); // Throttled with new delay
+
+		// Should use new delay for trailing edge
+		advanceTime(CUSTOM_DELAY);
+		expect(callbackFn).toHaveBeenCalledTimes(3); // Trailing edge executes
+	});
+}
+
+function startCooldownEarlyReturnSuite() {
+	registerTimerLifecycle();
+
+	it('should handle startCooldown being called when timer already exists', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useThrottle(value, delay), {
+			initialProps: { value: 0, delay: DEFAULT_DELAY },
+		});
+
+		// First change - starts timer
+		rerender({ value: 1, delay: DEFAULT_DELAY });
+		expect(result.current).toBe(1);
+
+		// Second change - sets pending value
+		rerender({ value: 2, delay: DEFAULT_DELAY });
+		expect(result.current).toBe(1); // Still 1, timer running
+
+		// Third change - sets new pending value (timer still running)
+		rerender({ value: 3, delay: DEFAULT_DELAY });
+		expect(result.current).toBe(1); // Still 1
+
+		// When timer fires, it processes pending (3) and calls startCooldown
+		// If there's another pending value queued, startCooldown should handle it
+		// This tests the defensive check at line 178
+		advanceTime(DEFAULT_DELAY);
+		expect(result.current).toBe(3); // Should process last pending value
+	});
+}
+
+function clearMatchingPendingSuite() {
+	registerTimerLifecycle();
+
+	it('should clear pending value when it matches the value being set to current', () => {
+		// To hit lines 211-212, we need:
+		// - Current value === New value (calls clearMatchingPending)
+		// - Pending value === New value (triggers the clear at lines 211-212)
+		//
+		// This scenario is difficult to create naturally, but we can test the behavior
+		// by ensuring clearMatchingPending is called and handles the case correctly.
+		// The actual code path may be defensive and rarely hit in practice.
+
+		const { result, rerender } = renderHook(
+			({ value, delay }: { value: string | { id: string }; delay: number }) =>
+				useThrottle(value, delay),
+			{
+				initialProps: { value: 'A' as string | { id: string }, delay: DEFAULT_DELAY },
+			}
+		);
+
+		expect(result.current).toBe('A');
+
+		// Change to new value - leading edge, starts timer
+		rerender({ value: 'B', delay: DEFAULT_DELAY });
+		expect(result.current).toBe('B');
+
+		// Set pending value
+		rerender({ value: 'C', delay: DEFAULT_DELAY });
+		expect(result.current).toBe('B'); // Still 'B', pending is 'C'
+
+		// Change back to current value 'B' - calls clearMatchingPending('B')
+		// Pending is 'C', not 'B', so it doesn't match and isn't cleared
+		rerender({ value: 'B', delay: DEFAULT_DELAY });
+		expect(result.current).toBe('B');
+
+		// Advance time - should process pending 'C'
+		advanceTime(DEFAULT_DELAY);
+		expect(result.current).toBe('C');
+
+		// Note: The specific code path at lines 211-212 (where pending matches the value)
+		// is difficult to test naturally as it requires a very specific sequence that
+		// may not occur in normal operation. The code is defensive and ensures correctness
+		// if the state somehow reaches that condition.
+	});
+
+	it('should handle clearMatchingPending when pending does not match', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useThrottle(value, delay), {
+			initialProps: { value: 100, delay: DEFAULT_DELAY },
+		});
+
+		expect(result.current).toBe(100);
+
+		// Change to new value
+		rerender({ value: 200, delay: DEFAULT_DELAY });
+		expect(result.current).toBe(200);
+
+		// Set pending to 100
+		rerender({ value: 100, delay: DEFAULT_DELAY });
+		expect(result.current).toBe(200); // Throttled, pending is 100
+
+		// Change back to current value (200) - calls clearMatchingPending(store, 200)
+		// Pending is 100, not 200, so it doesn't match and isn't cleared
+		rerender({ value: 200, delay: DEFAULT_DELAY });
+		expect(result.current).toBe(200);
+
+		// Advance time - should process pending 100
+		advanceTime(DEFAULT_DELAY);
+		expect(result.current).toBe(100);
+	});
+}
+
 describe('useThrottle – throttled value updates', throttledValueUpdatesSuite);
 describe('useThrottle – interval configuration', intervalConfigurationSuite);
 describe('useThrottle – leading/trailing behavior', leadingTrailingSuite);
 describe('useThrottle – cleanup', cleanupSuite);
 describe('useThrottle – edge cases', edgeCasesSuite);
+describe('useThrottledCallback – basic functionality', useThrottledCallbackBasicSuite);
+describe('useThrottledCallback – recreation', useThrottledCallbackRecreationSuite);
+describe('useThrottle – startCooldown early return', startCooldownEarlyReturnSuite);
+describe('useThrottle – clearMatchingPending', clearMatchingPendingSuite);

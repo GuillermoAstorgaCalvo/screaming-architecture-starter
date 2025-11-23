@@ -14,6 +14,7 @@ export interface SearchInputFieldProps {
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
 	readonly value?: string | undefined;
+	readonly defaultValue?: string | undefined;
 	readonly onClear: () => void;
 	readonly showClearButton: boolean;
 	readonly props: Readonly<
@@ -28,6 +29,7 @@ export interface SearchInputFieldProps {
 			| 'aria-describedby'
 			| 'type'
 			| 'value'
+			| 'defaultValue'
 		>
 	>;
 }

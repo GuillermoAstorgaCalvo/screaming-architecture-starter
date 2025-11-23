@@ -33,6 +33,9 @@ export function renderSearchSection<T>(
 	setup: TransferListSetup<T>,
 	props: TransferListContentProps<T>
 ) {
+	if (!props.showSearch) {
+		return null;
+	}
 	return renderSearch({
 		showSearch: props.showSearch,
 		searchId: setup.searchId,

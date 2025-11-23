@@ -34,9 +34,34 @@ export function buildStateOptions<T>(props: Readonly<DataTableProps<T>>): DataTa
 }
 
 /**
- * Extracts table props, excluding columns and data
+ * Extracts table props, excluding columns, data, and DataTable-specific props
  */
 export function extractTableProps<T>(props: Readonly<DataTableProps<T>>): Record<string, unknown> {
-	const { columns: _columns, data: _data, ...rest } = props;
+	const {
+		columns: _columns,
+		data: _data,
+		enableSorting: _enableSorting,
+		enableGlobalFilter: _enableGlobalFilter,
+		enableColumnFilter: _enableColumnFilter,
+		enablePagination: _enablePagination,
+		enableRowSelection: _enableRowSelection,
+		enableColumnResize: _enableColumnResize,
+		enableColumnReorder: _enableColumnReorder,
+		initialSort: _initialSort,
+		initialFilter: _initialFilter,
+		initialPage: _initialPage,
+		pageSize: _pageSize,
+		selectedRowIds: _selectedRowIds,
+		onSortChange: _onSortChange,
+		onFilterChange: _onFilterChange,
+		onPageChange: _onPageChange,
+		onSelectionChange: _onSelectionChange,
+		onColumnsReorder: _onColumnsReorder,
+		getRowId: _getRowId,
+		globalSearchPlaceholder: _globalSearchPlaceholder,
+		selectAllLabel: _selectAllLabel,
+		showPaginationInfo: _showPaginationInfo,
+		...rest
+	} = props;
 	return rest;
 }

@@ -19,13 +19,14 @@ export function BarChartWrapper({
 	props,
 }: Readonly<BarChartWrapperProps>) {
 	return (
-		<div className={className} {...props}>
+		<div className={className} data-testid="bar-chart-root" {...props}>
 			<ChartHeader title={title} description={description} />
 			<ChartContainer
 				chartClassName={chartClassName}
 				description={description}
 				title={title}
 				chartType="Bar"
+				testId="bar-chart-container"
 			>
 				{children}
 			</ChartContainer>

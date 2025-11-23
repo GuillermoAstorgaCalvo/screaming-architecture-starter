@@ -11,7 +11,7 @@ export function FileUploadProgress({ progress, size }: Readonly<FileUploadProgre
 				max={100}
 				size={size}
 				showValue
-				aria-label={t('fileUpload.uploadProgress', { progress: progress.toString() })}
+				aria-label={t('fileUpload.uploadProgress', { progress })}
 			/>
 		</div>
 	);

@@ -15,12 +15,14 @@ alwaysApply: false
 - `useTranslation.ts`: Custom hook wrapper with automatic resource loading. Provides type-safe translation function with autocomplete.
 - `useRtl.ts`: Hook to check if current language is RTL. Automatically updates when language changes.
 - `resourceLoader.ts`: Dynamic resource loading system (main export, re-exports from sub-modules) with caching.
-- `resourceLoader.cache.ts`: Resource caching utilities (`clearResourceCacheFor`, `isResourceCached`, `isResourceLoading`)
-- `resourceLoader.i18n.ts`: i18next integration functions (`addResourceToI18n`, `loadAndAddResource`)
-- `resourceLoader.load.ts`: Resource loading functions (`loadResource`)
-- `resourceLoader.registry.ts`: Resource loader registry (`registerResourceLoader`, `getRegisteredNamespaces`, `clearResourceLoaders`)
-- `resourceLoader.types.ts`: Type definitions for resource loading (`ResourceLoader`, `TranslationResource`, `AddResourceOptions`, etc.)
-- `resourceLoader.validation.ts`: Resource validation utilities
+- `resourceLoader/`: Resource loading sub-modules:
+  - `backend.ts`: i18next backend adapter for resource loading (ResourceLoaderBackend)
+  - `cache.ts`: Resource caching utilities (`clearResourceCacheFor`, `isResourceCached`, `isResourceLoading`)
+  - `i18n.ts`: i18next integration functions (`addResourceToI18n`, `loadAndAddResource`)
+  - `load.ts`: Resource loading functions (`loadResource`)
+  - `registry.ts`: Resource loader registry (`registerResourceLoader`, `getRegisteredNamespaces`, `clearResourceLoaders`)
+  - `types.ts`: Type definitions for resource loading (`ResourceLoader`, `TranslationResource`, `AddResourceOptions`, etc.)
+  - `validation.ts`: Resource validation utilities
 - `registry.ts`: Domain translation registration system. Exports `registerDomainTranslations()` and `registerCommonTranslations()`.
 - `constants.ts`: Centralized i18n constants (supported languages, RTL languages, default namespace, etc.) and helper functions.
 - `errors.ts`: Custom error classes for i18n resource loading (`ResourceLoaderNotFoundError`, `InvalidResourceFormatError`).
@@ -31,7 +33,8 @@ alwaysApply: false
 
 **Domain Translations**:
 
-- Domain translations co-located under `domains/<domain>/i18n/` (e.g., `domains/landing/i18n/en.json`, `domains/landing/i18n/index.ts`).
+- Domain translations co-located under `domains/<domain>/i18n/` (e.g., `domains/my-domain/i18n/en.json`, `domains/my-domain/i18n/index.ts`).
+- **Note**: The `landing` domain uses common translations from `@core/i18n/locales/` instead of domain-specific translations, so it does not have an `i18n/` folder.
 - Each domain registers its translations via `registerDomainTranslations()` in its `i18n/index.ts` file using async IIFE pattern:
 
   ```ts

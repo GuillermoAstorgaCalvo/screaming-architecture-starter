@@ -108,13 +108,18 @@ function useGuardList({
 }
 
 function useGuardContext(auth: ReturnType<typeof useAuth>) {
+	// Use the entire auth object as dependency to ensure we only recreate
+	// when the auth context actually changes. The auth object from AuthProvider
+	// is already memoized, so this should be stable.
+	// We can't use individual properties because they may have new references
+	// even when values are the same, causing infinite loops.
 	return useMemo(
 		() => ({
 			isAuthenticated: auth.isAuthenticated,
 			permissions: auth.permissions,
 			roles: auth.roles,
 		}),
-		[auth.isAuthenticated, auth.permissions, auth.roles]
+		[auth]
 	);
 }
 

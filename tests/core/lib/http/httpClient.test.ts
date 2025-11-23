@@ -387,4 +387,135 @@ describe('HttpClient - Error Handling', () => {
 		expect(translateSpy).toHaveBeenCalledWith('errors.requestTimeout', { ns: 'common' });
 		translateSpy.mockRestore();
 	});
+
+	it('handles HTTP error responses (non-2xx status)', async () => {
+		fetchSpy.mockResolvedValueOnce(
+			createJsonResponse({ error: 'Not found' }, { status: 404, statusText: 'Not Found' })
+		);
+
+		await expect(client.get('/api/not-found')).rejects.toMatchObject({
+			status: 404,
+			message: expect.stringContaining('404'),
+		});
+	});
+
+	it('handles multiple error interceptors', async () => {
+		const error1 = vi.fn(() => {
+			throw new Error('Error 1');
+		});
+		const error2 = vi.fn(() => {
+			throw new Error('Error 2');
+		});
+		client.addErrorInterceptor(error1);
+		client.addErrorInterceptor(error2);
+
+		fetchSpy.mockResolvedValueOnce(
+			createJsonResponse({ error: 'Server error' }, { status: 500, statusText: 'Server Error' })
+		);
+
+		await expect(client.get('/api/error')).rejects.toThrow('Error 2');
+		expect(error1).toHaveBeenCalledTimes(1);
+		expect(error2).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe('HttpClient - Core Request Method', () => {
+	let client: HttpClient;
+	let fetchSpy: ReturnType<typeof vi.spyOn>;
+
+	beforeEach(() => {
+		({ client, fetchSpy } = setupHttpClient());
+	});
+
+	afterEach(() => {
+		fetchSpy.mockRestore();
+	});
+
+	it('makes request with full config', async () => {
+		fetchSpy.mockResolvedValueOnce(createJsonResponse({ data: 'test' }));
+		const response = await client.request('/api/test', {
+			method: 'POST',
+			body: { key: 'value' },
+			headers: { 'X-Custom': 'header' },
+		});
+
+		const [, config] = getLastFetchCall(fetchSpy);
+		expect(config?.method).toBe('POST');
+		expect(response.data).toEqual({ data: 'test' });
+	});
+
+	it('handles request with empty config', async () => {
+		fetchSpy.mockResolvedValueOnce(createJsonResponse({ data: 'test' }));
+		const response = await client.request('/api/test', {});
+
+		expect(response.data).toEqual({ data: 'test' });
+		expect(response.status).toBe(200);
+	});
+
+	it('handles request with no config parameter', async () => {
+		fetchSpy.mockResolvedValueOnce(createJsonResponse({ data: 'test' }));
+		const response = await client.request('/api/test');
+
+		expect(response.data).toEqual({ data: 'test' });
+		expect(response.status).toBe(200);
+	});
+
+	it('clears timeout when request succeeds', async () => {
+		const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+		client.setDefaultConfig({ timeout: 5000 });
+		fetchSpy.mockResolvedValueOnce(createJsonResponse({ data: 'test' }));
+
+		await client.request('/api/test');
+
+		expect(clearTimeoutSpy).toHaveBeenCalled();
+		clearTimeoutSpy.mockRestore();
+	});
+
+	it('clears timeout when request fails', async () => {
+		const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+		client.setDefaultConfig({ timeout: 5000 });
+		fetchSpy.mockRejectedValueOnce(new Error('Network error'));
+
+		await expect(client.request('/api/test')).rejects.toThrow();
+
+		expect(clearTimeoutSpy).toHaveBeenCalled();
+		clearTimeoutSpy.mockRestore();
+	});
+});
+
+describe('HttpClient - Default Instance', () => {
+	let fetchSpy: ReturnType<typeof vi.spyOn>;
+
+	beforeEach(() => {
+		fetchSpy = vi
+			.spyOn(globalThis, 'fetch')
+			.mockResolvedValue(createJsonResponse({ default: true }));
+	});
+
+	afterEach(() => {
+		fetchSpy.mockRestore();
+	});
+
+	it('exports default httpClient instance', async () => {
+		const { httpClient } = await import('@core/lib/http/httpClient');
+		fetchSpy.mockResolvedValueOnce(createJsonResponse({ data: 'test' }));
+
+		const response = await httpClient.get('/api/test');
+
+		expect(response.data).toEqual({ data: 'test' });
+		expect(fetchSpy).toHaveBeenCalled();
+	});
+
+	it('default instance can be configured', async () => {
+		const { httpClient } = await import('@core/lib/http/httpClient');
+		httpClient.setDefaultConfig({
+			baseURL: 'https://api.example.com',
+		});
+		fetchSpy.mockResolvedValueOnce(createJsonResponse({ data: 'test' }));
+
+		await httpClient.get('/users');
+
+		const [url] = getLastFetchCall(fetchSpy);
+		expect(url).toBe('https://api.example.com/users');
+	});
 });

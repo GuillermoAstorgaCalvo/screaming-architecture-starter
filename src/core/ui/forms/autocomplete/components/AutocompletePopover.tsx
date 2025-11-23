@@ -1,4 +1,3 @@
-import type { AutocompleteOption } from '@core/ui/forms/autocomplete/Autocomplete';
 import { AutocompleteField } from '@core/ui/forms/autocomplete/components/AutocompleteField';
 import { AutocompleteListbox } from '@core/ui/forms/autocomplete/components/AutocompleteListbox';
 import type { AutocompleteListboxProps } from '@core/ui/forms/autocomplete/helpers/AutocompleteContentHelpers';
@@ -35,7 +34,6 @@ function AutocompletePopoverContent(props: Readonly<AutocompletePopoverContentPr
 
 interface AutocompletePopoverProps {
 	readonly isOpen: boolean;
-	readonly filteredOptions: AutocompleteOption[];
 	readonly setIsOpen: (open: boolean) => void;
 	readonly triggerRef: RefObject<HTMLDivElement | null>;
 	readonly fieldProps: AutocompleteContentProps['fieldProps'];
@@ -45,14 +43,14 @@ interface AutocompletePopoverProps {
 
 export function AutocompletePopover({
 	isOpen,
-	filteredOptions,
 	setIsOpen,
 	triggerRef,
 	fieldProps,
 	inputRef,
 	listboxProps,
 }: Readonly<AutocompletePopoverProps>) {
-	const popoverIsOpen = isOpen && filteredOptions.length > 0;
+	// Show popover when open, even if there are no filtered options (to show empty state)
+	const popoverIsOpen = isOpen;
 	const trigger = (
 		<AutocompletePopoverTrigger
 			triggerRef={triggerRef}

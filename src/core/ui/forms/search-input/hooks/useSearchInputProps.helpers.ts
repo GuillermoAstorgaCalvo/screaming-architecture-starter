@@ -51,7 +51,11 @@ export function buildFieldProps({
 	onChange?: ((value: string) => void) | undefined;
 }>): Readonly<SearchInputFieldProps> {
 	const handleClear = () => onChange?.('');
-	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value);
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (!extracted.disabled) {
+			onChange?.(e.target.value);
+		}
+	};
 
 	return {
 		id: state.finalId,
@@ -61,6 +65,7 @@ export function buildFieldProps({
 		disabled: extracted.disabled,
 		required: extracted.required,
 		value: extracted.value,
+		defaultValue: extracted.defaultValue,
 		onClear: handleClear,
 		showClearButton,
 		props: {

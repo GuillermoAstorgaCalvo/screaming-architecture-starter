@@ -64,8 +64,23 @@ export function useMotionTransform<O>(
 	inputOrTransform: number[] | ((...values: number[]) => O),
 	output?: O[]
 ): MotionValue<O> {
-	// Type assertion needed because TypeScript can't narrow the overloads properly
-	// framer-motion's useTransform handles the runtime logic
+	// TypeScript cannot narrow union types in parameters to match function overloads.
+	// When wrapping a library function with complex overloads (like framer-motion's useTransform),
+	// we must use type assertions. The `as never` pattern is a standard workaround that allows
+	// passing union types to functions with multiple overloads.
+	//
+	// Why this is safe:
+	// 1. Our overload signatures ensure callers provide correct types at compile time
+	// 2. framer-motion's useTransform validates and dispatches correctly at runtime
+	// 3. This is a well-established pattern for library wrapper functions
+	//
+	// Alternative approaches considered:
+	// - Runtime type checks: Violates React's Rules of Hooks (hooks must be called unconditionally)
+	// - Separate functions: Would break the API and reduce type safety
+	// - @ts-expect-error: TypeScript doesn't error here, so this wouldn't work
+	//
+	// The ESLint disable is necessary because the rule correctly identifies this as "unnecessary"
+	// from a type system perspective, but it's actually necessary for overload resolution to work.
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 	return useTransform(
 		valueOrValues as never,

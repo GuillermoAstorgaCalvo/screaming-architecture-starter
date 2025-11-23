@@ -54,8 +54,8 @@ export function useKeyDownHandler(params: KeyDownHandlerParams) {
 			} else if (e.key === 'Escape') {
 				e.preventDefault();
 				resetToOriginal();
-				onCancel?.();
 				setIsEditing(false);
+				onCancel?.();
 			}
 		},
 		[editValueRef, setIsEditing, resetToOriginal, onSave, onCancel]

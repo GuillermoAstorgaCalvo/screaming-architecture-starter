@@ -4,6 +4,9 @@ import 'vitest-axe/extend-expect';
 
 import { i18nInitPromise } from '@core/i18n/i18n';
 import { handlers } from '@tests/mocks/handlers';
+import { setupDataTransferPolyfill } from '@tests/utils/polyfills/DataTransfer.polyfill';
+import { setupDragEventPolyfill } from '@tests/utils/polyfills/DragEvent.polyfill';
+import { setupStorageEventPolyfill } from '@tests/utils/polyfills/StorageEvent.polyfill';
 import { setupServer } from 'msw/node';
 import { expect, vi } from 'vitest';
 import * as matchers from 'vitest-axe/matchers';
@@ -30,6 +33,8 @@ console.warn = (...args: unknown[]) => {
 // Suppress React act() warnings from async effects in useTranslation tests
 // These warnings occur because async effects trigger state updates outside React's batching.
 // This is expected behavior with async resource loading and is handled correctly by waitFor().
+// Also suppress React warnings about unrecognized DOM props (e.g., fullWidth, reducedMotionStrategy)
+// These are false positives - the props are correctly destructured and not passed to DOM elements
 console.error = (...args: unknown[]) => {
 	if (
 		typeof args[0] === 'string' &&
@@ -37,6 +42,16 @@ console.error = (...args: unknown[]) => {
 		args[0].includes('inside a test was not wrapped in act(...)')
 	) {
 		// Suppress act() warnings from async effects - these are expected with async resource loading
+		return;
+	}
+	if (
+		typeof args[0] === 'string' &&
+		args[0].includes('React does not recognize the') &&
+		args[0].includes('prop on a DOM element')
+	) {
+		// Suppress warnings about custom props (fullWidth, reducedMotionStrategy, etc.)
+		// These props are correctly destructured and never passed to DOM elements
+		// The warnings are false positives from React's development mode prop validation
 		return;
 	}
 	originalError(...args);
@@ -120,27 +135,8 @@ Object.defineProperty(globalThis.window, 'matchMedia', {
 	})),
 });
 
-// Polyfill StorageEvent for jsdom (not implemented by default)
-if (globalThis.StorageEvent === undefined) {
-	class MockStorageEvent extends Event {
-		key: string | null;
-		newValue: string | null;
-		oldValue: string | null;
-		storageArea: Storage | null;
-		url: string;
-
-		constructor(type: string, eventInitDict: StorageEventInit = {}) {
-			super(type, eventInitDict);
-			this.key = eventInitDict.key ?? null;
-			this.newValue = eventInitDict.newValue ?? null;
-			this.oldValue = eventInitDict.oldValue ?? null;
-			this.storageArea = eventInitDict.storageArea ?? globalThis.window?.sessionStorage ?? null;
-			this.url = eventInitDict.url ?? '';
-		}
-	}
-
-	Object.defineProperty(globalThis, 'StorageEvent', {
-		value: MockStorageEvent,
-		writable: true,
-	});
-}
+// Setup jsdom polyfills (StorageEvent, DataTransfer, DragEvent)
+// These are not implemented by default in jsdom
+setupStorageEventPolyfill();
+setupDataTransferPolyfill();
+setupDragEventPolyfill();

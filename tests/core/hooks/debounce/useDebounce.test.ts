@@ -397,3 +397,217 @@ describeUseDebounceSection('edge cases (boolean values)', () => {
 		expect(result.current).toBe(true);
 	});
 });
+
+describeUseDebounceSection('edge cases (zero delay)', () => {
+	it('should throw error for zero delay', () => {
+		expect(() => {
+			renderHook(({ value, delay }) => useDebounce(value, delay), {
+				initialProps: { value: 'initial', delay: 0 },
+			});
+		}).toThrow('debounce: wait must be a positive finite number');
+	});
+});
+
+describeUseDebounceSection('edge cases (first render branch)', () => {
+	it('should not cancel on first render when debouncedRef is null', () => {
+		// This test ensures the branch where debouncedRef.current is null (first render)
+		// is covered - line 32 false branch
+		const { result } = renderHook(() => useDebounce('first', DEFAULT_DELAY));
+
+		// On first render, debouncedRef.current should be null, so cancel() shouldn't be called
+		// The value should still be set correctly
+		expect(result.current).toBe('first');
+	});
+});
+
+describeUseDebounceSection('cleanup (cancelling previous on value change)', () => {
+	it('should cancel previous debounced function when value changes', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+			initialProps: { value: 'initial', delay: DEFAULT_DELAY },
+		});
+
+		// Trigger first update
+		rerender({ value: 'first', delay: DEFAULT_DELAY });
+		act(() => {
+			advanceTime(50);
+		});
+
+		// Change value again - this should cancel the previous debounced function
+		// This tests the branch where debouncedRef.current exists (line 32 true branch)
+		rerender({ value: 'second', delay: DEFAULT_DELAY });
+
+		act(() => {
+			advanceTime(DEFAULT_DELAY);
+		});
+
+		// Should only have the last value
+		expect(result.current).toBe('second');
+	});
+
+	it('should explicitly call cancel on line 33 when debouncedRef.current exists', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+			initialProps: { value: 'initial', delay: DEFAULT_DELAY },
+		});
+
+		// First render: debouncedRef.current is null, so line 33 is NOT executed
+		expect(result.current).toBe('initial');
+		expect(vi.getTimerCount()).toBeGreaterThan(0); // Timer exists from first render
+
+		// Second render: debouncedRef.current now exists, so line 33 SHOULD be executed
+		// This triggers the useEffect which calls cancel() on line 33, canceling the previous timer
+		rerender({ value: 'first', delay: DEFAULT_DELAY });
+
+		// After rerender, a new timer should be created (old one was canceled on line 33)
+		// The timer count should be the same or reset, proving cancel was called
+		expect(vi.getTimerCount()).toBeGreaterThan(0);
+
+		// Advance time partially to ensure a pending debounce exists
+		act(() => {
+			advanceTime(50);
+		});
+
+		// Third render: debouncedRef.current exists, so cancel() on line 33 is called again
+		// This explicitly exercises line 33
+		rerender({ value: 'second', delay: DEFAULT_DELAY });
+
+		// If cancel wasn't called on line 33, 'first' would have been set
+		// But since cancel was called, only 'second' should be set after delay
+		act(() => {
+			advanceTime(DEFAULT_DELAY);
+		});
+
+		// Verify only the last value was set, proving cancel was called on line 33
+		expect(result.current).toBe('second');
+	});
+});
+
+describeUseDebounceSection('cleanup (cancelling previous on delay change)', () => {
+	it('should cancel previous debounced function when delay changes', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+			initialProps: { value: 'initial', delay: DEFAULT_DELAY },
+		});
+
+		// Trigger update with first delay
+		rerender({ value: 'updated', delay: DEFAULT_DELAY });
+		act(() => {
+			advanceTime(50);
+		});
+
+		// Change delay - this should cancel the previous debounced function
+		rerender({ value: 'updated', delay: LONG_DELAY });
+
+		act(() => {
+			advanceTime(50);
+		});
+
+		// Should not have updated yet due to new delay
+		expect(result.current).toBe('initial');
+
+		act(() => {
+			advanceTime(LONG_DELAY);
+		});
+
+		expect(result.current).toBe('updated');
+	});
+});
+
+describeUseDebounceSection('cleanup (cleanup function edge cases)', () => {
+	it('should handle cleanup when debouncedRef is already null', () => {
+		const { unmount } = renderHook(() => useDebounce('test', DEFAULT_DELAY));
+
+		// Unmount once
+		unmount();
+
+		// Cleanup should handle the case where debouncedRef.current is already null
+		// This tests line 46 where we set it to null
+		expect(() => unmount()).not.toThrow();
+	});
+
+	it('should cancel and clear ref in cleanup function', () => {
+		const { result, rerender, unmount } = renderHook(
+			({ value, delay }) => useDebounce(value, delay),
+			{
+				initialProps: { value: 'initial', delay: DEFAULT_DELAY },
+			}
+		);
+
+		rerender({ value: 'updated', delay: DEFAULT_DELAY });
+
+		// Verify timer exists
+		expect(vi.getTimerCount()).toBeGreaterThan(0);
+
+		unmount();
+
+		// Timer should be cleared
+		expect(vi.getTimerCount()).toBe(0);
+
+		// Advance time - value should not change
+		act(() => {
+			advanceTime(DEFAULT_DELAY);
+		});
+
+		expect(result.current).toBe('initial');
+	});
+});
+
+describeUseDebounceSection('edge cases (very small delay)', () => {
+	it('should handle very small delay values', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+			initialProps: { value: 'initial', delay: 1 },
+		});
+
+		rerender({ value: 'updated', delay: 1 });
+
+		act(() => {
+			advanceTime(1);
+		});
+
+		expect(result.current).toBe('updated');
+	});
+});
+
+describeUseDebounceSection('edge cases (same value multiple times)', () => {
+	it('should handle same value being set multiple times', () => {
+		const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+			initialProps: { value: 'same', delay: DEFAULT_DELAY },
+		});
+
+		rerender({ value: 'same', delay: DEFAULT_DELAY });
+		rerender({ value: 'same', delay: DEFAULT_DELAY });
+		rerender({ value: 'same', delay: DEFAULT_DELAY });
+
+		act(() => {
+			advanceTime(DEFAULT_DELAY);
+		});
+
+		expect(result.current).toBe('same');
+	});
+});
+
+describeUseDebounceSection('edge cases (function values)', () => {
+	it('should handle function values', () => {
+		// Note: React's useState treats function arguments as lazy initializers,
+		// so we wrap functions in an object to preserve the function reference
+		const fn1 = () => 'first';
+		const fn2 = () => 'second';
+		const fn1Wrapper = { fn: fn1 };
+		const fn2Wrapper = { fn: fn2 };
+
+		const { result, rerender } = renderHook(({ value, delay }) => useDebounce(value, delay), {
+			initialProps: { value: fn1Wrapper, delay: DEFAULT_DELAY },
+		});
+
+		expect(result.current).toBe(fn1Wrapper);
+		expect(result.current.fn).toBe(fn1);
+
+		rerender({ value: fn2Wrapper, delay: DEFAULT_DELAY });
+
+		act(() => {
+			advanceTime(DEFAULT_DELAY);
+		});
+
+		// Function reference should be preserved
+		expect(result.current).toBe(fn2Wrapper);
+		expect(result.current.fn).toBe(fn2);
+	});
+});

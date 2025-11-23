@@ -72,7 +72,16 @@ export function useThrottledCallback<T extends (...args: unknown[]) => unknown>(
 	callback: T,
 	delay: number
 ): ThrottledFunction<T> {
-	return useMemo(() => throttle(callback, delay), [callback, delay]);
+	const throttled = useMemo(() => throttle(callback, delay), [callback, delay]);
+
+	useEffect(() => {
+		const previous = throttled;
+		return () => {
+			previous.cancel();
+		};
+	}, [throttled]);
+
+	return throttled;
 }
 
 function useThrottleStore<T>(value: T, delay: number) {

@@ -7,6 +7,7 @@ import { clearResourceCache } from '@core/i18n/resourceLoader/cache';
 import { loadResource } from '@core/i18n/resourceLoader/load';
 import { clearResourceLoaders, registerResourceLoader } from '@core/i18n/resourceLoader/registry';
 import type { ResourceLoader, TranslationResource } from '@core/i18n/resourceLoader/types';
+import { throwTestError } from '@tests/utils/testUtils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 const delay = (ms: number): Promise<void> =>
@@ -303,8 +304,7 @@ describe('resourceLoader/load - loadResource - error handling - loader errors', 
 
 	it('should handle loader throwing non-Error objects', async () => {
 		const loader: ResourceLoader = async () => {
-			// eslint-disable-next-line no-throw-literal
-			throw { message: 'Object error' };
+			throwTestError({ message: 'Object error' });
 		};
 		registerResourceLoader('test', loader);
 

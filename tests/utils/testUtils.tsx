@@ -164,3 +164,31 @@ export function renderWithProviders(
 
 	return render(ui, { ...renderOptions, wrapper });
 }
+
+/**
+ * Test helper to throw non-Error values for testing error handling.
+ *
+ * This is intentionally used to test defensive error handling in various parts
+ * of the codebase, which gracefully handle Error instances, string errors, and
+ * unknown error types. In production code, always throw Error instances.
+ *
+ * Note: This function throws variables (not literals), so the no-throw-literal
+ * rule doesn't apply. The rule only flags literal throws like `throw 'string'`.
+ *
+ * @param error - The error value to throw (string, object, Error, null, number, etc.)
+ * @throws The provided error value
+ *
+ * @example
+ * ```ts
+ * import { throwTestError } from '@tests/utils/testUtils';
+ *
+ * it('handles string errors', () => {
+ *   const loader = async () => {
+ *     throwTestError('String error');
+ *   };
+ * });
+ * ```
+ */
+export function throwTestError(error: unknown): never {
+	throw error;
+}

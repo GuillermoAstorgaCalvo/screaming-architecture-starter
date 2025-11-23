@@ -22,6 +22,60 @@ export interface SwipeableContainerProps
 }
 
 /**
+ * Gets the container className with merged styles
+ */
+function getContainerClassName(className?: string | undefined): string {
+	return twMerge('relative overflow-hidden', className);
+}
+
+/**
+ * Props for rendering swipeable actions
+ */
+interface RenderActionsProps {
+	showActions: boolean;
+	actions: readonly SwipeableAction[];
+	actionsContainerStyle: CSSProperties;
+	handleActionClick: (action: SwipeableAction) => Promise<void>;
+}
+
+/**
+ * Renders the swipeable actions if they should be shown
+ */
+function renderActions({
+	showActions,
+	actions,
+	actionsContainerStyle,
+	handleActionClick,
+}: Readonly<RenderActionsProps>) {
+	if (!showActions) {
+		return null;
+	}
+
+	return (
+		<SwipeableActions
+			actions={actions}
+			actionsContainerStyle={actionsContainerStyle}
+			onActionClick={handleActionClick}
+		/>
+	);
+}
+
+/**
+ * Renders the swipeable content wrapper
+ */
+function renderContent(contentStyle: CSSProperties, children: ReactNode) {
+	return (
+		<div
+			className="relative transition-transform duration-normal ease-out"
+			style={contentStyle}
+			data-testid="swipeable-content"
+		>
+			{children}
+		</div>
+	);
+}
+
+/**
  * Container component for swipeable content
  *
  * Handles touch events and renders action buttons when swiped.
@@ -57,7 +111,7 @@ export function SwipeableContainer({
 	children,
 	...props
 }: Readonly<SwipeableContainerProps>) {
-	const containerClassName = twMerge('relative overflow-hidden', className);
+	const containerClassName = getContainerClassName(className);
 
 	return (
 		<div
@@ -68,16 +122,8 @@ export function SwipeableContainer({
 			onTouchEnd={handleTouchEnd}
 			{...props}
 		>
-			{showActions ? (
-				<SwipeableActions
-					actions={actions}
-					actionsContainerStyle={actionsContainerStyle}
-					onActionClick={handleActionClick}
-				/>
-			) : null}
-			<div className="relative transition-transform duration-normal ease-out" style={contentStyle}>
-				{children}
-			</div>
+			{renderActions({ showActions, actions, actionsContainerStyle, handleActionClick })}
+			{renderContent(contentStyle, children)}
 		</div>
 	);
 }

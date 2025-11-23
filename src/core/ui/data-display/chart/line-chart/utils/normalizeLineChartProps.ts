@@ -19,8 +19,28 @@ function withDefault<T>(value: T | undefined, fallback: T): T {
  * @internal
  */
 export function normalizeLineChartProps(props: Readonly<LineChartProps>): NormalizedLineChartProps {
-	const { data, title, description, emptyMessage, chartClassName, className, ...restDivProps } =
-		props;
+	const {
+		data,
+		title,
+		description,
+		emptyMessage,
+		chartClassName,
+		className,
+		width,
+		height,
+		showLegend,
+		showTooltip,
+		showGrid,
+		colorScheme: _colorScheme,
+		dataKey: _dataKey,
+		showDots: _showDots,
+		filled: _filled,
+		strokeWidth: _strokeWidth,
+		curveType: _curveType,
+		connectNulls: _connectNulls,
+		size: _size,
+		...restDivProps
+	} = props;
 
 	const divProps = restDivProps as LineChartWrapperProps['props'];
 
@@ -28,11 +48,11 @@ export function normalizeLineChartProps(props: Readonly<LineChartProps>): Normal
 		data,
 		title,
 		description,
-		width: withDefault(props.width, '100%'),
-		height: withDefault(props.height, DEFAULT_HEIGHT),
-		showLegend: withDefault(props.showLegend, true),
-		showTooltip: withDefault(props.showTooltip, true),
-		showGrid: withDefault(props.showGrid, true),
+		width: withDefault(width, '100%'),
+		height: withDefault(height, DEFAULT_HEIGHT),
+		showLegend: withDefault(showLegend, true),
+		showTooltip: withDefault(showTooltip, true),
+		showGrid: withDefault(showGrid, true),
 		emptyMessage: emptyMessage ?? DEFAULT_EMPTY_MESSAGE,
 		chartClassName,
 		className,

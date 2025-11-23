@@ -5,8 +5,16 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor } from '@tiptap/react';
 import { useEffect } from 'react';
 
+/**
+ * Type alias for TipTap editor that explicitly includes null.
+ * TipTap's useEditor can return null if initialization fails,
+ * but TypeScript's type inference may not always capture this.
+ * This type makes the null possibility explicit throughout the codebase.
+ */
+export type TipTapEditor = ReturnType<typeof useEditor> | null;
+
 export function formatHeight(height: number | string | undefined): string | undefined {
-	if (!height) {
+	if (height === undefined) {
 		return undefined;
 	}
 	return typeof height === 'number' ? `${height}px` : height;
@@ -22,15 +30,11 @@ export function getDefaultExtensions(
 	];
 }
 
-export function useEditorValueSync(
-	editor: ReturnType<typeof useEditor>,
-	value: string | undefined
-) {
+export function useEditorValueSync(editor: TipTapEditor, value: string | undefined) {
 	useEffect(() => {
 		if (value === undefined) {
 			return;
 		}
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (!editor) {
 			return;
 		}
@@ -41,12 +45,11 @@ export function useEditorValueSync(
 }
 
 export function useEditorEditableSync(
-	editor: ReturnType<typeof useEditor>,
+	editor: TipTapEditor,
 	disabled?: boolean,
 	readOnly?: boolean
 ) {
 	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (!editor) {
 			return;
 		}
@@ -74,13 +77,16 @@ export function getEditorConfig(options: EditorConfigOptions) {
 			getDefaultExtensions(toolbar, placeholder),
 		content: value ?? defaultValue ?? '',
 		editable: !disabled && !readOnly,
-		onUpdate: ({ editor: editorInstance }: { editor: ReturnType<typeof useEditor> }) => {
-			onChange?.(editorInstance.getHTML());
+		onUpdate: ({ editor: editorInstance }: { editor: TipTapEditor }) => {
+			// TipTap only calls onUpdate when editor is initialized (non-null)
+			if (editorInstance) {
+				onChange?.(editorInstance.getHTML());
+			}
 		},
 	};
 }
 
-export function useRichTextEditor(options: EditorConfigOptions) {
+export function useRichTextEditor(options: EditorConfigOptions): TipTapEditor {
 	const { value, disabled, readOnly } = options;
 	const editorConfig = getEditorConfig(options);
 	const editor = useEditor(editorConfig);

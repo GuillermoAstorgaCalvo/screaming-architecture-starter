@@ -53,13 +53,15 @@ export function renderAreaChartContent({
 	areaProps,
 }: ChartContentProps) {
 	return (
-		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
-			<RechartsAreaChart data={data} margin={CHART_MARGIN}>
-				<ChartAxes showGrid={showGrid} isHorizontal={false} />
-				<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
-				<Area {...areaProps} />
-			</RechartsAreaChart>
-		</ResponsiveContainer>
+		<div data-testid="area-chart-responsive-container">
+			<ResponsiveContainer width={width as number | `${number}%`} height={height}>
+				<RechartsAreaChart data={data} margin={CHART_MARGIN}>
+					<ChartAxes showGrid={showGrid} isHorizontal={false} />
+					<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
+					<Area {...areaProps} />
+				</RechartsAreaChart>
+			</ResponsiveContainer>
+		</div>
 	);
 }
 
@@ -82,13 +84,14 @@ export function renderChartWrapper({
 	chartContent,
 }: ChartWrapperProps) {
 	return (
-		<div className={className} {...containerProps}>
+		<div className={className} data-testid="area-chart-root" {...containerProps}>
 			<ChartHeader title={title} description={description} />
 			<ChartContainer
 				chartClassName={chartClassName}
 				description={description}
 				title={title}
 				chartType="Area"
+				testId="area-chart-container"
 			>
 				{chartContent}
 			</ChartContainer>

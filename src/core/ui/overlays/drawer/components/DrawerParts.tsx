@@ -65,6 +65,7 @@ interface DrawerOverlayProps {
 export function DrawerOverlay({ isOpen, overlayClassName, onClick }: DrawerOverlayProps) {
 	return (
 		<div
+			data-testid="drawer-backdrop"
 			className={getOverlayClasses(isOpen, overlayClassName)}
 			onClick={onClick}
 			aria-hidden="true"

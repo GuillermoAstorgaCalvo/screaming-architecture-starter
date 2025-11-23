@@ -8,6 +8,7 @@ This directory contains centralized TypeScript type definitions used across the 
 types/
 ├── api/              # API-related types
 │   ├── index.ts     # Common API types
+│   ├── apiResponse.schemas.ts  # Zod schemas for API responses and metadata
 │   └── auth.ts      # Authentication API types
 ├── domains/         # Domain-specific types (shared across domains)
 │   └── index.ts

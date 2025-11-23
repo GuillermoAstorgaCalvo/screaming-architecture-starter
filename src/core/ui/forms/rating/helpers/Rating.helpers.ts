@@ -66,6 +66,25 @@ export const getStarButtonProps = ({
 	};
 };
 
+const getAriaAttributes = (
+	readOnly: boolean,
+	currentValue: number,
+	max: number
+): {
+	'aria-valuenow'?: number;
+	'aria-valuemin'?: number;
+	'aria-valuemax'?: number;
+} => {
+	if (readOnly) {
+		return {
+			'aria-valuenow': currentValue,
+			'aria-valuemin': 0,
+			'aria-valuemax': max,
+		};
+	}
+	return {};
+};
+
 export const getRatingContainerProps = ({
 	readOnly,
 	currentValue,
@@ -74,12 +93,11 @@ export const getRatingContainerProps = ({
 	classes,
 	handleMouseLeave,
 }: RatingContainerPropsParams) => {
+	const ariaAttributes = getAriaAttributes(readOnly, currentValue, max);
 	return {
 		role: readOnly ? undefined : ('radiogroup' as const),
 		'aria-label': ariaLabel,
-		'aria-valuenow': readOnly ? currentValue : undefined,
-		'aria-valuemin': 0,
-		'aria-valuemax': max,
+		...ariaAttributes,
 		className: classes,
 		onMouseLeave: readOnly || !handleMouseLeave ? undefined : handleMouseLeave,
 	};

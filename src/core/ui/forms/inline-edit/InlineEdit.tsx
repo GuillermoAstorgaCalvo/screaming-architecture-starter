@@ -3,10 +3,7 @@ import {
 	renderEditInput,
 	renderViewMode,
 } from '@core/ui/forms/inline-edit/helpers/InlineEditRenderers';
-import {
-	useInlineEditSetup,
-	useStartEditing,
-} from '@core/ui/forms/inline-edit/helpers/InlineEditSetup';
+import { useInlineEditSetup } from '@core/ui/forms/inline-edit/helpers/InlineEditSetup';
 import type { InlineEditProps } from '@src-types/ui/forms-inputs';
 import { useId, useRef } from 'react';
 
@@ -45,23 +42,21 @@ import { useId, useRef } from 'react';
  */
 function useInlineEditConfig(props: Readonly<InlineEditProps>) {
 	const inputRef = useRef<HTMLInputElement>(null);
-	const startEditing = useStartEditing(props);
+	const setup = useInlineEditSetup({
+		controlledValue: props.value,
+		defaultValue: props.defaultValue,
+		onSave: props.onSave,
+		onCancel: props.onCancel,
+		onChange: props.onChange,
+		size: props.size ?? 'md',
+		disabled: props.disabled ?? false,
+		displayClassName: props.displayClassName,
+		inputClassName: props.inputClassName,
+		inputRef,
+	});
 	return {
 		inputRef,
-		startEditing,
-		setup: useInlineEditSetup({
-			controlledValue: props.value,
-			defaultValue: props.defaultValue,
-			onSave: props.onSave,
-			onCancel: props.onCancel,
-			onChange: props.onChange,
-			size: props.size ?? 'md',
-			disabled: props.disabled ?? false,
-			displayClassName: props.displayClassName,
-			inputClassName: props.inputClassName,
-			inputRef,
-			startEditing,
-		}),
+		setup,
 	};
 }
 

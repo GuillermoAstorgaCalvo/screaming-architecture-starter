@@ -1,10 +1,11 @@
 import AppLayout from '@app/components/AppLayout';
+import { useTheme } from '@app/providers/useTheme';
 import Layout from '@shared/components/layout/Layout';
 import type { LayoutProps } from '@src-types/layout';
 import { type RenderResult, screen } from '@testing-library/react';
 import { renderWithProviders } from '@tests/utils/testUtils';
 import type { ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the Layout component to verify props are passed correctly
 vi.mock('@shared/components/layout/Layout', () => ({
@@ -18,6 +19,13 @@ vi.mock('@shared/components/layout/Layout', () => ({
 }));
 
 const mockLayout = vi.mocked(Layout);
+
+// Spy on useTheme to verify it's called
+vi.mock('@app/providers/useTheme', () => ({
+	useTheme: vi.fn(),
+}));
+
+const mockUseTheme = vi.mocked(useTheme);
 
 const TEST_CONTENT = 'Content';
 const LAYOUT_TEST_ID = 'layout';
@@ -190,6 +198,13 @@ const testResponsiveBehavior = (): void => {
 const testThemeIntegration = (): void => {
 	describe('Theme integration', () => {
 		it('uses theme from ThemeProvider context', () => {
+			// Mock useTheme to return dark theme for this test
+			mockUseTheme.mockReturnValue({
+				theme: 'dark',
+				resolvedTheme: 'dark',
+				setTheme: vi.fn(),
+			});
+
 			renderAppLayout(TEST_CONTENT, undefined, { defaultTheme: 'dark' });
 
 			const layoutProps = getLayoutProps();
@@ -213,6 +228,15 @@ const testThemeIntegration = (): void => {
 };
 
 describe('AppLayout', () => {
+	beforeEach(() => {
+		// Setup default mock return for useTheme
+		mockUseTheme.mockReturnValue({
+			theme: 'light',
+			resolvedTheme: 'light',
+			setTheme: vi.fn(),
+		});
+	});
+
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
@@ -221,4 +245,57 @@ describe('AppLayout', () => {
 	testLayoutStructure();
 	testResponsiveBehavior();
 	testThemeIntegration();
+
+	describe('useTheme hook integration', () => {
+		it('calls useTheme hook to get theme config', () => {
+			renderAppLayout();
+
+			expect(mockUseTheme).toHaveBeenCalledTimes(1);
+		});
+
+		it('uses theme config from useTheme hook (line 12)', () => {
+			const mockThemeConfig = {
+				theme: 'dark' as const,
+				resolvedTheme: 'dark' as const,
+				setTheme: vi.fn(),
+			};
+			mockUseTheme.mockReturnValue(mockThemeConfig);
+
+			renderAppLayout();
+
+			const layoutProps = getLayoutProps();
+			expect(layoutProps.theme).toBe(mockThemeConfig);
+			expect(layoutProps.theme?.theme).toBe('dark');
+		});
+
+		it('handles theme config object creation (lines 14-18)', () => {
+			const mockThemeConfig = {
+				theme: 'system' as const,
+				resolvedTheme: 'light' as const,
+				setTheme: vi.fn(),
+			};
+			mockUseTheme.mockReturnValue(mockThemeConfig);
+
+			renderAppLayout(<div data-testid="test-content">{TEST_CONTENT}</div>, 'custom-class');
+
+			const layoutProps = getLayoutProps();
+			expect(layoutProps.theme).toBe(mockThemeConfig);
+			expect(layoutProps.className).toBe('custom-class');
+			assertChildrenRendered('test-content');
+		});
+
+		it('conditionally includes className in layoutProps when provided (line 17)', () => {
+			renderAppLayout(TEST_CONTENT, 'test-class');
+
+			const layoutProps = getLayoutProps();
+			expect(layoutProps.className).toBe('test-class');
+		});
+
+		it('conditionally excludes className from layoutProps when undefined (line 17)', () => {
+			renderAppLayout(TEST_CONTENT);
+
+			const layoutProps = getLayoutProps();
+			expect(layoutProps.className).toBeUndefined();
+		});
+	});
 });

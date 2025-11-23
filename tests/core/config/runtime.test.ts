@@ -33,8 +33,11 @@ vi.mock('@core/config/env.client', () => ({
 
 const originalFetch = globalThis.fetch;
 
+const TEST_API_BASE_URL = 'https://api.example.com';
+const VALIDATION_FAILED_MESSAGE = 'Runtime config validation failed, using defaults:';
+
 const validRuntimeConfig: RuntimeConfig = {
-	API_BASE_URL: 'https://api.example.com',
+	API_BASE_URL: TEST_API_BASE_URL,
 	ANALYTICS_WRITE_KEY: 'analytics-key',
 	GOOGLE_MAPS_API_KEY: 'runtime-maps-key',
 	FEATURE_FLAGS: {
@@ -130,10 +133,7 @@ describe('runtime config error handling', () => {
 		const config = await getRuntimeConfig();
 
 		expect(config).toEqual({});
-		expect(warnSpy).toHaveBeenCalledWith(
-			'Runtime config validation failed, using defaults:',
-			expect.anything()
-		);
+		expect(warnSpy).toHaveBeenCalledWith(VALIDATION_FAILED_MESSAGE, expect.anything());
 	});
 
 	it('returns defaults without warning when the runtime config file is missing', async () => {
@@ -177,5 +177,258 @@ describe('runtime config merging', () => {
 			GTM_CONTAINER_ID: 'GTM-ABC123',
 			GOOGLE_MAPS_API_KEY: 'env-maps-key',
 		});
+	});
+});
+
+describe('FEATURE_FLAGS preprocessing', () => {
+	registerRuntimeConfigTestHooks();
+
+	it('transforms null FEATURE_FLAGS to undefined', async () => {
+		const configWithNullFlags = {
+			API_BASE_URL: TEST_API_BASE_URL,
+			FEATURE_FLAGS: null,
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithNullFlags);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.FEATURE_FLAGS).toBeUndefined();
+		expect(config.API_BASE_URL).toBe(TEST_API_BASE_URL);
+	});
+
+	it('transforms empty object FEATURE_FLAGS to undefined', async () => {
+		const configWithEmptyFlags = {
+			API_BASE_URL: TEST_API_BASE_URL,
+			FEATURE_FLAGS: {},
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithEmptyFlags);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.FEATURE_FLAGS).toBeUndefined();
+		expect(config.API_BASE_URL).toBe(TEST_API_BASE_URL);
+	});
+
+	it('preserves valid FEATURE_FLAGS object', async () => {
+		const configWithValidFlags = {
+			API_BASE_URL: TEST_API_BASE_URL,
+			FEATURE_FLAGS: {
+				EXAMPLE_FEATURE: {
+					key: 'EXAMPLE_FEATURE',
+					enabled: true,
+				},
+			},
+		};
+
+		mockFetchResponse(configWithValidFlags);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.FEATURE_FLAGS).toEqual(configWithValidFlags.FEATURE_FLAGS);
+		expect(config.API_BASE_URL).toBe(TEST_API_BASE_URL);
+	});
+
+	it('rejects invalid FEATURE_FLAGS and falls back to defaults', async () => {
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const configWithInvalidFlags = {
+			API_BASE_URL: TEST_API_BASE_URL,
+			FEATURE_FLAGS: {
+				INVALID_FLAG: {
+					key: '', // Invalid: empty key
+					enabled: true,
+				},
+			},
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithInvalidFlags);
+
+		const config = await getRuntimeConfig();
+
+		expect(config).toEqual({});
+		expect(warnSpy).toHaveBeenCalledWith(VALIDATION_FAILED_MESSAGE, expect.anything());
+	});
+});
+
+describe('API_BASE_URL preprocessing and validation', () => {
+	registerRuntimeConfigTestHooks();
+
+	it('transforms null API_BASE_URL to undefined', async () => {
+		const configWithNullUrl = {
+			API_BASE_URL: null,
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithNullUrl);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.API_BASE_URL).toBeUndefined();
+	});
+
+	it('transforms empty string API_BASE_URL to undefined', async () => {
+		const configWithEmptyUrl = {
+			API_BASE_URL: '',
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithEmptyUrl);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.API_BASE_URL).toBeUndefined();
+	});
+
+	it('validates API_BASE_URL must be a valid URL', async () => {
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const configWithInvalidUrl = {
+			API_BASE_URL: 'not-a-valid-url',
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithInvalidUrl);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.API_BASE_URL).toBeUndefined();
+		expect(warnSpy).toHaveBeenCalledWith(
+			'Runtime config validation failed, using defaults:',
+			expect.anything()
+		);
+	});
+
+	it('accepts valid URL for API_BASE_URL', async () => {
+		const configWithValidUrl = {
+			API_BASE_URL: 'https://api.example.com/v1',
+		};
+
+		mockFetchResponse(configWithValidUrl);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.API_BASE_URL).toBe('https://api.example.com/v1');
+	});
+});
+
+describe('ANALYTICS_WRITE_KEY preprocessing', () => {
+	registerRuntimeConfigTestHooks();
+
+	it('transforms null ANALYTICS_WRITE_KEY to undefined', async () => {
+		const configWithNullKey = {
+			ANALYTICS_WRITE_KEY: null,
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithNullKey);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.ANALYTICS_WRITE_KEY).toBeUndefined();
+	});
+
+	it('transforms empty string ANALYTICS_WRITE_KEY to undefined', async () => {
+		const configWithEmptyKey = {
+			ANALYTICS_WRITE_KEY: '',
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithEmptyKey);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.ANALYTICS_WRITE_KEY).toBeUndefined();
+	});
+
+	it('preserves valid ANALYTICS_WRITE_KEY', async () => {
+		const configWithValidKey = {
+			ANALYTICS_WRITE_KEY: 'analytics-key-123',
+		};
+
+		mockFetchResponse(configWithValidKey);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.ANALYTICS_WRITE_KEY).toBe('analytics-key-123');
+	});
+});
+
+describe('GOOGLE_MAPS_API_KEY preprocessing', () => {
+	registerRuntimeConfigTestHooks();
+
+	it('transforms null GOOGLE_MAPS_API_KEY to undefined', async () => {
+		const configWithNullKey = {
+			GOOGLE_MAPS_API_KEY: null,
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithNullKey);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.GOOGLE_MAPS_API_KEY).toBeUndefined();
+	});
+
+	it('transforms empty string GOOGLE_MAPS_API_KEY to undefined', async () => {
+		const configWithEmptyKey = {
+			GOOGLE_MAPS_API_KEY: '',
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithEmptyKey);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.GOOGLE_MAPS_API_KEY).toBeUndefined();
+	});
+
+	it('preserves valid GOOGLE_MAPS_API_KEY', async () => {
+		const configWithValidKey = {
+			GOOGLE_MAPS_API_KEY: 'maps-key-123',
+		};
+
+		mockFetchResponse(configWithValidKey);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.GOOGLE_MAPS_API_KEY).toBe('maps-key-123');
+	});
+});
+
+describe('additional runtime config keys (catchall)', () => {
+	registerRuntimeConfigTestHooks();
+
+	it('allows additional unknown keys in runtime config', async () => {
+		const configWithExtraKeys = {
+			API_BASE_URL: TEST_API_BASE_URL,
+			CUSTOM_KEY: 'custom-value',
+			ANOTHER_KEY: 123,
+		} as unknown as RuntimeConfig;
+
+		mockFetchResponse(configWithExtraKeys);
+
+		const config = await getRuntimeConfig();
+
+		expect(config.API_BASE_URL).toBe(TEST_API_BASE_URL);
+		expect((config as Record<string, unknown>).CUSTOM_KEY).toBe('custom-value');
+		expect((config as Record<string, unknown>).ANOTHER_KEY).toBe(123);
+	});
+});
+
+describe('JSON parsing errors', () => {
+	registerRuntimeConfigTestHooks();
+
+	it('handles invalid JSON response by logging and returning defaults', async () => {
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const response = new Response('invalid json', {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
+		});
+		const fetchMock = vi.fn().mockResolvedValue(response);
+		globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+		// Mock json() to throw an error
+		vi.spyOn(response, 'json').mockRejectedValue(new Error('Invalid JSON'));
+
+		const config = await getRuntimeConfig();
+
+		expect(config).toEqual({});
+		expect(warnSpy).toHaveBeenCalledWith(
+			'Failed to load runtime config, using defaults:',
+			expect.any(Error)
+		);
 	});
 });

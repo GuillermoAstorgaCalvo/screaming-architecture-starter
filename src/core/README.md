@@ -98,6 +98,7 @@ This directory contains reusable, domain-independent code that forms the foundat
 - `scroll/useScrollPosition.ts` - Scroll position tracking with throttling and SSR fallbacks.
 - `ui/*` - UI convenience hooks (`useMediaQuery`, `useWindowSize`, `useToggle`, `usePrevious`).
 - `seo/useSEO.ts` - Document head metadata helper built on `core/config/seo`.
+- `useDeferredActivation.ts` - Deferred activation hook (defers non-critical features until user interaction or timeout).
 
 ### `a11y/` - Accessibility Utilities
 
@@ -141,10 +142,23 @@ See `config/README.md` for detailed documentation.
   - `buttons.ts` - Button and IconButton constants
   - `controls.ts` - Checkbox, Switch, and Radio constants
   - `data.ts` - Table, Pagination, and Avatar constants
-  - `display.ts` - Skeleton, Badge, Heading, Text, Card, Link, Progress, and Divider constants
+  - `display/` - Display component constants:
+    - `badge.ts` - Badge constants
+    - `card.ts` - Card constants
+    - `divider.ts` - Divider constants
+    - `link.ts` - Link constants
+    - `list.ts` - List constants
+    - `progress.ts` - Progress constants
+    - `skeleton.ts` - Skeleton constants
+    - `stat-card.ts` - Stat card constants
+    - `status-indicator.ts` - Status indicator constants
+    - `stepper.ts` - Stepper constants
+    - `timeline.ts` - Timeline constants
+    - `typography.ts` - Typography constants
   - `forms.ts` - Input, Textarea, and Select constants
   - `navigation.ts` - Breadcrumbs, Drawer, Tabs, and Accordion constants
   - `overlays.ts` - Modal and Spinner constants
+  - `rating.ts` - Rating constants
   - `shared.ts` - Shared constants used across multiple components
 - `endpoints.ts` - API endpoint constants with `buildApiUrl()` helper
 - `env.ts` - Environment-derived constants (IS_DEV, IS_PROD, ENV_MODE, helper functions)
@@ -224,6 +238,7 @@ const guards = [authenticatedGuard, createPermissionGuard(['user:read'], { requi
 - `useRtl.ts` - Hook to check if current language is RTL
 - `resourceLoader.ts` - Dynamic resource loading system (main export)
 - `resourceLoader/` - Resource loading sub-modules:
+  - `backend.ts` - i18next backend adapter for resource loading
   - `cache.ts` - Resource caching utilities
   - `i18n.ts` - i18next integration functions
   - `load.ts` - Resource loading functions

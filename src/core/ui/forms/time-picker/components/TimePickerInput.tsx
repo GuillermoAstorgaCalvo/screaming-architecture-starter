@@ -6,6 +6,7 @@ interface TimePickerInputComponentProps {
 	readonly ariaDescribedBy: string | undefined;
 	readonly required: boolean | undefined;
 	readonly disabled: boolean | undefined;
+	readonly error?: string | undefined;
 	readonly inputProps: Readonly<TimePickerInputProps>;
 }
 
@@ -15,6 +16,7 @@ export function TimePickerInput({
 	ariaDescribedBy,
 	required,
 	disabled,
+	error,
 	inputProps,
 }: Readonly<TimePickerInputComponentProps>) {
 	return (
@@ -25,6 +27,7 @@ export function TimePickerInput({
 			disabled={disabled}
 			required={required}
 			aria-describedby={ariaDescribedBy}
+			aria-invalid={error ? 'true' : undefined}
 			{...inputProps}
 		/>
 	);

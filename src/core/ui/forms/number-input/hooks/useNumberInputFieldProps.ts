@@ -32,7 +32,12 @@ export function useNumberInputFieldProps({
 			onDecrement: handlers.handleDecrement,
 			canIncrement,
 			canDecrement,
-			props: { ...extracted.rest, onChange: handlers.handleInputChange },
+			props: {
+				...extracted.rest,
+				onChange: handlers.handleInputChange,
+				...(extracted.value !== undefined && { value: extracted.value }),
+				...(extracted.defaultValue !== undefined && { defaultValue: extracted.defaultValue }),
+			},
 		}),
 		[state, extracted, canIncrement, canDecrement, handlers]
 	);

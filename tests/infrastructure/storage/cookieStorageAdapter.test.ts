@@ -1,74 +1,15 @@
 import { CookieStorageAdapter } from '@infra/storage/cookieStorageAdapter';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-// Test constants
-const TEST_KEY = 'test-key';
-const TEST_VALUE = 'test-value';
-const TEST_COOKIE_STRING = `${TEST_KEY}=${TEST_VALUE}`;
-const EXPIRED_COOKIE_DATE = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
-const MULTI_COOKIE_STRING = 'key1=value1; key2=value2; key3=value3';
-
-// Helper functions
-const setCookieString = (cookies: string): void => {
-	Object.defineProperty(globalThis.document, 'cookie', {
-		value: cookies,
-		writable: true,
-		configurable: true,
-	});
-};
-
-const getCookieString = (): string => {
-	return globalThis.document.cookie;
-};
-
-const createErrorCookieProperty = (errorMessage = 'Security error') => {
-	return {
-		get: () => {
-			throw new Error(errorMessage);
-		},
-		configurable: true,
-	};
-};
-
-const createErrorCookiePropertyWithSetter = (errorMessage = 'Security error') => {
-	return {
-		set: () => {
-			throw new Error(errorMessage);
-		},
-		get: () => '',
-		configurable: true,
-	};
-};
-
-const setupTestEnvironment = () => {
-	const originalDocument = globalThis.document;
-	const originalWindow = globalThis.window;
-	const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-	// Mock document.cookie
-	Object.defineProperty(globalThis, 'document', {
-		value: {
-			cookie: '',
-		},
-		writable: true,
-		configurable: true,
-	});
-
-	const adapter = new CookieStorageAdapter();
-
-	const cleanup = () => {
-		if (originalDocument) {
-			globalThis.document = originalDocument;
-		}
-		if (originalWindow) {
-			globalThis.window = originalWindow;
-		}
-		consoleWarnSpy.mockRestore();
-		vi.restoreAllMocks();
-	};
-
-	return { adapter, cleanup, consoleWarnSpy };
-};
+import {
+	EXPIRED_COOKIE_DATE,
+	MULTI_COOKIE_STRING,
+	setCookieString,
+	setupTestEnvironment,
+	TEST_COOKIE_STRING,
+	TEST_KEY,
+	TEST_VALUE,
+} from './cookieStorageAdapter.test-helpers';
 
 describe('CookieStorageAdapter - SSR Safety', () => {
 	describe('SSR Safety', () => {
@@ -125,13 +66,11 @@ describe('CookieStorageAdapter - SSR Safety', () => {
 describe('CookieStorageAdapter - getItem', () => {
 	let adapter: CookieStorageAdapter;
 	let cleanup: () => void;
-	let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
-		const { adapter: a, cleanup: c, consoleWarnSpy: spy } = setupTestEnvironment();
+		const { adapter: a, cleanup: c } = setupTestEnvironment();
 		adapter = a;
 		cleanup = c;
-		consoleWarnSpy = spy;
 	});
 
 	afterEach(() => {
@@ -152,31 +91,16 @@ describe('CookieStorageAdapter - getItem', () => {
 		setCookieString('test-key=value%20with%20spaces');
 		expect(adapter.getItem('test-key')).toBe('value with spaces');
 	});
-
-	it('should return null when document.cookie throws error', () => {
-		// Create adapter first when document.cookie is normal
-		const errorAdapter = new CookieStorageAdapter();
-		// Then replace with error property that throws on access
-		Object.defineProperty(globalThis.document, 'cookie', createErrorCookieProperty());
-
-		expect(errorAdapter.getItem('key')).toBeNull();
-		expect(consoleWarnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('Failed to get cookie'),
-			expect.objectContaining({ error: expect.any(String) })
-		);
-	});
 });
 
 describe('CookieStorageAdapter - setItem', () => {
 	let adapter: CookieStorageAdapter;
 	let cleanup: () => void;
-	let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
-		const { adapter: a, cleanup: c, consoleWarnSpy: spy } = setupTestEnvironment();
+		const { adapter: a, cleanup: c } = setupTestEnvironment();
 		adapter = a;
 		cleanup = c;
-		consoleWarnSpy = spy;
 	});
 
 	afterEach(() => {
@@ -186,50 +110,37 @@ describe('CookieStorageAdapter - setItem', () => {
 	it('should store value and return true', () => {
 		const result = adapter.setItem(TEST_KEY, TEST_VALUE);
 		expect(result).toBe(true);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain(TEST_COOKIE_STRING);
 	});
 
 	it('should URL-encode value', () => {
 		adapter.setItem('test-key', 'value with spaces');
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain('test-key=value%20with%20spaces');
 	});
 
 	it('should include default expiration', () => {
 		adapter.setItem(TEST_KEY, TEST_VALUE);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain('expires=');
 	});
 
 	it('should include default path', () => {
 		adapter.setItem(TEST_KEY, TEST_VALUE);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain('path=/');
-	});
-
-	it('should return false when document.cookie assignment throws error', () => {
-		Object.defineProperty(globalThis.document, 'cookie', createErrorCookiePropertyWithSetter());
-
-		const errorAdapter = new CookieStorageAdapter();
-		expect(errorAdapter.setItem('key', 'value')).toBe(false);
-		expect(consoleWarnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('Failed to set cookie'),
-			expect.objectContaining({ error: expect.any(String) })
-		);
 	});
 });
 
-describe('CookieStorageAdapter - setItemWithOptions', () => {
+describe('CookieStorageAdapter - setItemWithOptions - Basic functionality', () => {
 	let adapter: CookieStorageAdapter;
 	let cleanup: () => void;
-	let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
-		const { adapter: a, cleanup: c, consoleWarnSpy: spy } = setupTestEnvironment();
+		const { adapter: a, cleanup: c } = setupTestEnvironment();
 		adapter = a;
 		cleanup = c;
-		consoleWarnSpy = spy;
 	});
 
 	afterEach(() => {
@@ -246,7 +157,7 @@ describe('CookieStorageAdapter - setItemWithOptions', () => {
 		});
 
 		expect(result).toBe(true);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain(TEST_COOKIE_STRING);
 		expect(cookieString).toContain('path=/custom');
 		expect(cookieString).toContain('domain=example.com');
@@ -257,14 +168,14 @@ describe('CookieStorageAdapter - setItemWithOptions', () => {
 	it('should handle empty options object', () => {
 		const result = adapter.setItemWithOptions(TEST_KEY, TEST_VALUE, {});
 		expect(result).toBe(true);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain(TEST_COOKIE_STRING);
 	});
 
 	it('should handle undefined options', () => {
 		const result = adapter.setItemWithOptions(TEST_KEY, TEST_VALUE);
 		expect(result).toBe(true);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain(TEST_COOKIE_STRING);
 	});
 
@@ -276,19 +187,8 @@ describe('CookieStorageAdapter - setItemWithOptions', () => {
 		// Delete it
 		const result = adapter.setItemWithOptions('test-key', '', { expiresDays: -1 });
 		expect(result).toBe(true);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain(EXPIRED_COOKIE_DATE);
-	});
-
-	it('should return false when document.cookie assignment throws error', () => {
-		Object.defineProperty(globalThis.document, 'cookie', createErrorCookiePropertyWithSetter());
-
-		const errorAdapter = new CookieStorageAdapter();
-		expect(errorAdapter.setItemWithOptions('key', 'value', {})).toBe(false);
-		expect(consoleWarnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('Failed to set cookie'),
-			expect.objectContaining({ error: expect.any(String) })
-		);
 	});
 });
 
@@ -314,7 +214,7 @@ describe('CookieStorageAdapter - removeItem', () => {
 		// Remove it
 		const result = adapter.removeItem('test-key');
 		expect(result).toBe(true);
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain('test-key=');
 		expect(cookieString).toContain(EXPIRED_COOKIE_DATE);
 	});
@@ -334,16 +234,14 @@ describe('CookieStorageAdapter - removeItem', () => {
 	});
 });
 
-describe('CookieStorageAdapter - clear', () => {
+describe('CookieStorageAdapter - clear - Basic functionality', () => {
 	let adapter: CookieStorageAdapter;
 	let cleanup: () => void;
-	let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
-		const { adapter: a, cleanup: c, consoleWarnSpy: spy } = setupTestEnvironment();
+		const { adapter: a, cleanup: c } = setupTestEnvironment();
 		adapter = a;
 		cleanup = c;
-		consoleWarnSpy = spy;
 	});
 
 	afterEach(() => {
@@ -357,7 +255,7 @@ describe('CookieStorageAdapter - clear', () => {
 		const result = adapter.clear();
 		expect(result).toBe(true);
 		// All cookies should have expiration set to past
-		const cookieString = getCookieString();
+		const cookieString = globalThis.document.cookie;
 		expect(cookieString).toContain(EXPIRED_COOKIE_DATE);
 	});
 
@@ -366,109 +264,64 @@ describe('CookieStorageAdapter - clear', () => {
 		const result = adapter.clear();
 		expect(result).toBe(true);
 	});
-
-	it('should return false when document.cookie throws error during parsing', () => {
-		// Create adapter first when document.cookie is normal
-		const errorAdapter = new CookieStorageAdapter();
-		// Then replace with error property that throws on access
-		Object.defineProperty(globalThis.document, 'cookie', createErrorCookieProperty());
-
-		expect(errorAdapter.clear()).toBe(false);
-		expect(consoleWarnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('Failed to clear cookies'),
-			expect.objectContaining({ error: expect.any(String) })
-		);
-	});
-
-	it('should return false when removeItem fails for a cookie', () => {
-		setCookieString('key1=value1; key2=value2');
-		// Mock removeItem to fail for one cookie
-		const originalRemoveItem = adapter.removeItem.bind(adapter);
-		vi.spyOn(adapter, 'removeItem').mockImplementation((key: string) => {
-			if (key === 'key1') {
-				return false;
-			}
-			return originalRemoveItem(key);
-		});
-
-		const result = adapter.clear();
-		expect(result).toBe(false);
-	});
 });
 
-describe('CookieStorageAdapter - Utility Operations', () => {
+describe('CookieStorageAdapter - getLength - Basic functionality', () => {
 	let adapter: CookieStorageAdapter;
 	let cleanup: () => void;
-	let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
-		const { adapter: a, cleanup: c, consoleWarnSpy: spy } = setupTestEnvironment();
+		const { adapter: a, cleanup: c } = setupTestEnvironment();
 		adapter = a;
 		cleanup = c;
-		consoleWarnSpy = spy;
 	});
 
 	afterEach(() => {
 		cleanup();
 	});
 
-	describe('getLength', () => {
-		it('should return 0 for empty storage', () => {
-			setCookieString('');
-			expect(adapter.getLength()).toBe(0);
-		});
-
-		it('should return correct count', () => {
-			setCookieString(MULTI_COOKIE_STRING);
-			expect(adapter.getLength()).toBe(3);
-		});
-
-		it('should return 0 when document.cookie throws error', () => {
-			// Create adapter first when document.cookie is normal
-			const errorAdapter = new CookieStorageAdapter();
-			// Then replace with error property that throws on access
-			Object.defineProperty(globalThis.document, 'cookie', createErrorCookieProperty());
-
-			expect(errorAdapter.getLength()).toBe(0);
-			expect(consoleWarnSpy).toHaveBeenCalledWith(
-				expect.stringContaining('Failed to get cookie count'),
-				expect.objectContaining({ error: expect.any(String) })
-			);
-		});
+	it('should return 0 for empty storage', () => {
+		setCookieString('');
+		expect(adapter.getLength()).toBe(0);
 	});
 
-	describe('key', () => {
-		it('should return null for invalid index', () => {
-			setCookieString('');
-			expect(adapter.key(0)).toBeNull();
-			expect(adapter.key(-1)).toBeNull();
-		});
+	it('should return correct count', () => {
+		setCookieString(MULTI_COOKIE_STRING);
+		expect(adapter.getLength()).toBe(3);
+	});
+});
 
-		it('should return key at given index', () => {
-			setCookieString(MULTI_COOKIE_STRING);
-			const keys = [adapter.key(0), adapter.key(1), adapter.key(2)];
-			expect(keys).toContain('key1');
-			expect(keys).toContain('key2');
-			expect(keys).toContain('key3');
-		});
+describe('CookieStorageAdapter - key - Basic functionality', () => {
+	let adapter: CookieStorageAdapter;
+	let cleanup: () => void;
 
-		it('should return null for index beyond length', () => {
-			setCookieString('key1=value1');
-			expect(adapter.key(1)).toBeNull();
-		});
+	beforeEach(() => {
+		const { adapter: a, cleanup: c } = setupTestEnvironment();
+		adapter = a;
+		cleanup = c;
+	});
 
-		it('should return null when document.cookie throws error', () => {
-			// Create adapter first when document.cookie is normal
-			const errorAdapter = new CookieStorageAdapter();
-			// Then replace with error property that throws on access
-			Object.defineProperty(globalThis.document, 'cookie', createErrorCookieProperty());
+	afterEach(() => {
+		cleanup();
+	});
 
-			expect(errorAdapter.key(0)).toBeNull();
-			expect(consoleWarnSpy).toHaveBeenCalledWith(
-				expect.stringContaining('Failed to get cookie key'),
-				expect.objectContaining({ error: expect.any(String) })
-			);
-		});
+	it('should return null for invalid index', () => {
+		setCookieString('');
+		expect(adapter.key(0)).toBeNull();
+		expect(adapter.key(-1)).toBeNull();
+	});
+
+	it('should return key at given index', () => {
+		setCookieString(MULTI_COOKIE_STRING);
+		const keys = [adapter.key(0), adapter.key(1), adapter.key(2)];
+		expect(keys).toContain('key1');
+		expect(keys).toContain('key2');
+		expect(keys).toContain('key3');
+	});
+
+	it('should return null for index beyond length', () => {
+		setCookieString('key1=value1');
+		expect(adapter.key(1)).toBeNull();
 	});
 });
 
@@ -521,7 +374,7 @@ describe('CookieStorageAdapter - Integration', () => {
 
 		it('should handle special characters in values', () => {
 			adapter.setItem('special-key', 'value with spaces & symbols = test');
-			const cookieString = getCookieString();
+			const cookieString = globalThis.document.cookie;
 			expect(cookieString).toContain('special-key=');
 			// Value should be URL-encoded
 			expect(cookieString).toContain('%20'); // space
@@ -537,7 +390,7 @@ describe('CookieStorageAdapter - Integration', () => {
 				expiresDays: 7,
 			});
 
-			const cookieString = getCookieString();
+			const cookieString = globalThis.document.cookie;
 			expect(cookieString).toContain(TEST_COOKIE_STRING);
 			expect(cookieString).toContain('path=/api');
 			expect(cookieString).toContain('domain=example.com');

@@ -1,5 +1,5 @@
+import { prepareCalendarSectionProps } from '@core/ui/calendar/helpers/CalendarSectionProps';
 import {
-	prepareCalendarSectionProps,
 	renderCalendarGrid,
 	renderCalendarHeader,
 } from '@core/ui/calendar/helpers/CalendarViewHelpers';

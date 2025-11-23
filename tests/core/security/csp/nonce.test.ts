@@ -62,6 +62,20 @@ describe('generateNonce - basic generation', () => {
 		expect(callArgs?.length).toBe(32);
 	});
 
+	it('handles various valid lengths', () => {
+		const mockCrypto = createMockCrypto();
+		vi.mocked(getCryptoApi).mockReturnValue(mockCrypto);
+
+		const lengths = [1, 8, 16, 32, 64, 128, 256];
+		for (const length of lengths) {
+			const nonce = generateNonce(length);
+			expect(nonce).toBeTruthy();
+			expect(typeof nonce).toBe('string');
+		}
+	});
+});
+
+describe('generateNonce - format and encoding', () => {
 	it('generates URL-safe base64 nonce', () => {
 		const mockCrypto = createMockCrypto();
 		vi.mocked(getCryptoApi).mockReturnValue(mockCrypto);
@@ -75,18 +89,28 @@ describe('generateNonce - basic generation', () => {
 		expect(nonce).toMatch(/^[\w-]+$/);
 	});
 
-	it('handles various valid lengths', () => {
+	it('converts base64 to base64url format (replaces + with -)', () => {
+		const mockCrypto = createMockCrypto();
+		// Mock bytesToBase64 to return a string with + and /
+		vi.mocked(getCryptoApi).mockReturnValue(mockCrypto);
+		// The actual implementation uses bytesToBase64 which may produce + and /
+		// Then replaces them with - and _
+		const nonce = generateNonce(16);
+		expect(nonce).not.toContain('+');
+		expect(nonce).not.toContain('/');
+	});
+
+	it('removes padding (=) from base64 nonce', () => {
 		const mockCrypto = createMockCrypto();
 		vi.mocked(getCryptoApi).mockReturnValue(mockCrypto);
 
-		const lengths = [1, 8, 16, 32, 64, 128, 256];
-		for (const length of lengths) {
-			const nonce = generateNonce(length);
-			expect(nonce).toBeTruthy();
-			expect(typeof nonce).toBe('string');
-		}
+		const nonce = generateNonce(16);
+		// Base64 padding should be removed
+		expect(nonce).not.toMatch(/=+$/);
 	});
+});
 
+describe('generateNonce - uniqueness', () => {
 	it('generates different nonces on each call', () => {
 		const actualCrypto = globalThis.crypto;
 		if (!actualCrypto?.getRandomValues) {
@@ -117,16 +141,28 @@ describe('generateNonce - validation errors', () => {
 		expect(() => generateNonce(16.5)).toThrow(ERROR_NONCE_LENGTH_POSITIVE);
 	});
 
+	it('throws error for non-integer length (decimal)', () => {
+		expect(() => generateNonce(16.1)).toThrow(ERROR_NONCE_LENGTH_POSITIVE);
+		expect(() => generateNonce(16.9)).toThrow(ERROR_NONCE_LENGTH_POSITIVE);
+	});
+
 	it('throws error for length exceeding maximum (256)', () => {
 		expect(() => generateNonce(257)).toThrow('Nonce length must not exceed 256 bytes');
 	});
 
-	it('throws error for length at maximum boundary', () => {
+	it('throws error for length exceeding maximum (large number)', () => {
+		expect(() => generateNonce(1000)).toThrow('Nonce length must not exceed 256 bytes');
+	});
+
+	it('does not throw for length at maximum boundary (256)', () => {
 		// Should not throw at exactly 256
 		const mockCrypto = createMockCrypto();
 		vi.mocked(getCryptoApi).mockReturnValue(mockCrypto);
 
 		expect(() => generateNonce(256)).not.toThrow();
+		const nonce = generateNonce(256);
+		expect(nonce).toBeTruthy();
+		expect(typeof nonce).toBe('string');
 	});
 });
 
@@ -138,6 +174,8 @@ describe('generateNonce - fallback behavior', () => {
 		expect(nonce).toBeTruthy();
 		expect(typeof nonce).toBe('string');
 		expect(nonce.length).toBeGreaterThan(0);
+		// Fallback generates length * 2 characters
+		expect(nonce.length).toBeGreaterThanOrEqual(32);
 	});
 
 	it('falls back when getRandomValues is not available', () => {
@@ -150,6 +188,7 @@ describe('generateNonce - fallback behavior', () => {
 		const nonce = generateNonce(16);
 		expect(nonce).toBeTruthy();
 		expect(typeof nonce).toBe('string');
+		expect(nonce.length).toBeGreaterThanOrEqual(32);
 	});
 
 	it('falls back when getRandomValues throws', () => {
@@ -164,6 +203,28 @@ describe('generateNonce - fallback behavior', () => {
 		const nonce = generateNonce(16);
 		expect(nonce).toBeTruthy();
 		expect(typeof nonce).toBe('string');
+		expect(nonce.length).toBeGreaterThanOrEqual(32);
+	});
+
+	it('generates fallback nonce with correct length multiplier', () => {
+		vi.mocked(getCryptoApi).mockReturnValue(undefined);
+
+		const nonce8 = generateNonce(8);
+		const nonce16 = generateNonce(16);
+		const nonce32 = generateNonce(32);
+
+		// Fallback generates length * 2 characters
+		expect(nonce8.length).toBeGreaterThanOrEqual(16);
+		expect(nonce16.length).toBeGreaterThanOrEqual(32);
+		expect(nonce32.length).toBeGreaterThanOrEqual(64);
+	});
+
+	it('generates URL-safe fallback nonce', () => {
+		vi.mocked(getCryptoApi).mockReturnValue(undefined);
+
+		const nonce = generateNonce(16);
+		// Fallback uses characters: A-Z, a-z, 0-9, -, _
+		expect(nonce).toMatch(/^[\w-]+$/);
 	});
 });
 

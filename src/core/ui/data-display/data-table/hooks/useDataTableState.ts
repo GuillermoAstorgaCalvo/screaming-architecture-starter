@@ -17,7 +17,7 @@ import type { DataTableProps } from '@src-types/ui/dataTable';
 interface UseDataTableStateOptions<T> {
 	columns: DataTableProps<T>['columns'];
 	data: DataTableProps<T>['data'];
-	getRowId: DataTableProps<T>['getRowId'];
+	getRowId?: DataTableProps<T>['getRowId'];
 	enableSorting?: DataTableProps<T>['enableSorting'];
 	enableGlobalFilter?: DataTableProps<T>['enableGlobalFilter'];
 	enablePagination?: DataTableProps<T>['enablePagination'];

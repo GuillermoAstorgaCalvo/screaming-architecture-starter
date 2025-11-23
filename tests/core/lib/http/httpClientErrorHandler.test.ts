@@ -140,5 +140,67 @@ describe(DESCRIBE_SUITE_NAME, () => {
 			expect(interceptors[0]).toHaveBeenCalledTimes(1);
 			expect(interceptors[1]).toHaveBeenCalledTimes(1);
 		});
+
+		it('executes error interceptors for AbortError', async () => {
+			const abortError = new DOMException('Aborted', 'AbortError');
+			const interceptors = createMockInterceptors(1);
+			const errorInterceptors: ErrorInterceptor[] = interceptors;
+			await expect(handleHttpError(abortError, errorInterceptors)).rejects.toThrow();
+			expect(interceptors[0]).toHaveBeenCalledTimes(1);
+		});
+
+		it('executes error interceptors for HttpClientError', async () => {
+			const httpError: HttpClientError = {
+				...new Error('HTTP 404: Not Found'),
+				status: 404,
+				data: { message: 'Not found' },
+			};
+			const interceptors = createMockInterceptors(1);
+			const errorInterceptors: ErrorInterceptor[] = interceptors;
+			await expect(handleHttpError(httpError, errorInterceptors)).rejects.toThrow();
+			expect(interceptors[0]).toHaveBeenCalledTimes(1);
+		});
+	});
+});
+
+describe(DESCRIBE_SUITE_NAME, () => {
+	describe('edge cases', () => {
+		it('handles object with status but not Error instance', async () => {
+			const error = {
+				status: 500,
+				message: 'Server error',
+				toString: () => 'Server error',
+			};
+			const errorInterceptors: ErrorInterceptor[] = [];
+			await expect(handleHttpError(error, errorInterceptors)).rejects.toThrow();
+			const httpError = (await executeAndCatchError(error, errorInterceptors)) as HttpClientError;
+			expect(httpError.status).toBe(500);
+		});
+
+		it('handles undefined error', async () => {
+			const error = undefined;
+			const errorInterceptors: ErrorInterceptor[] = [];
+			await expect(handleHttpError(error, errorInterceptors)).rejects.toThrow();
+			const caughtError = (await executeAndCatchError(error, errorInterceptors)) as Error;
+			expect(caughtError).toBeInstanceOf(Error);
+			expect(caughtError.message).toBe('undefined');
+		});
+
+		it('handles boolean error', async () => {
+			const error = true;
+			const errorInterceptors: ErrorInterceptor[] = [];
+			await expect(handleHttpError(error, errorInterceptors)).rejects.toThrow();
+			const caughtError = (await executeAndCatchError(error, errorInterceptors)) as Error;
+			expect(caughtError).toBeInstanceOf(Error);
+			expect(caughtError.message).toBe('true');
+		});
+
+		it('handles object error without status', async () => {
+			const error = { message: 'Custom error', code: 'ERR_CUSTOM' };
+			const errorInterceptors: ErrorInterceptor[] = [];
+			await expect(handleHttpError(error, errorInterceptors)).rejects.toThrow();
+			const caughtError = (await executeAndCatchError(error, errorInterceptors)) as Error;
+			expect(caughtError).toBeInstanceOf(Error);
+		});
 	});
 });

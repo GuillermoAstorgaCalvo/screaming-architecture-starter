@@ -18,13 +18,13 @@ export function CarouselContainer({
 }: Readonly<CarouselContainerProps> &
 	Omit<CarouselProps, 'children' | 'aria-label' | 'className' | 'onKeyDown'>) {
 	return (
-		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- This section has aria-roledescription="carousel" and proper keyboard handling, which is the correct ARIA pattern for carousels
 		<section
 			aria-label={ariaLabel}
 			aria-roledescription="carousel"
 			className={classNames('relative', className)}
 			onKeyDown={onKeyDown}
-			// eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+			// eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- tabIndex is required for keyboard navigation on carousel container per WAI-ARIA carousel pattern
 			tabIndex={0}
 			{...props}
 		>

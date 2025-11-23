@@ -30,6 +30,8 @@ export interface RichTextEditorProps extends Omit<HTMLAttributes<HTMLDivElement>
 	disabled?: boolean;
 	/** Whether the editor is read-only @default false */
 	readOnly?: boolean;
+	/** Whether the editor is required @default false */
+	required?: boolean;
 	/** Minimum height of the editor */
 	minHeight?: number | string;
 	/** Maximum height of the editor */

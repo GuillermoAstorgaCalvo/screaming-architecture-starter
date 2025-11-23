@@ -25,7 +25,6 @@ export function AutocompleteContent(props: Readonly<AutocompleteContentProps>) {
 			{labelProps ? <AutocompleteLabel {...labelProps} /> : null}
 			<AutocompletePopover
 				isOpen={props.isOpen}
-				filteredOptions={props.filteredOptions}
 				setIsOpen={props.setIsOpen}
 				triggerRef={triggerRef}
 				fieldProps={props.fieldProps}

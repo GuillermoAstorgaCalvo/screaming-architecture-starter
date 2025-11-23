@@ -1,6 +1,6 @@
 import { decodeJwt, extractNumericClaim } from '@infra/auth/jwtUtils';
 import type { TokenPayload } from '@src-types/api/auth';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 /**
  * Helper to create a valid JWT token string
@@ -353,5 +353,149 @@ describe('decodeJwt - environment compatibility', () => {
 
 		expect(result).not.toBeNull();
 		expect(result?.payload).toEqual(payload);
+	});
+});
+
+/**
+ * Helper to create a mock Buffer.from function
+ */
+function createMockBufferFrom(originalAtob?: typeof globalThis.atob) {
+	return vi.fn((input: string, encoding: string) => {
+		expect(encoding).toBe('base64');
+		const decoded = originalAtob ? originalAtob(input) : '';
+		return {
+			toString: (enc: string) => {
+				expect(enc).toBe('utf-8');
+				return decoded;
+			},
+		};
+	});
+}
+
+/**
+ * Helper to setup Buffer mock in globalThis
+ */
+function setupBufferMock(mockBufferFrom: ReturnType<typeof createMockBufferFrom>) {
+	const mockBuffer = {
+		from: mockBufferFrom,
+	} as unknown as typeof globalThis.Buffer;
+	(globalThis as typeof globalThis & { Buffer: typeof mockBuffer }).Buffer = mockBuffer;
+}
+
+/**
+ * Helper to save original atob and Buffer values
+ */
+function saveOriginalGlobals() {
+	return {
+		originalAtob: globalThis.atob,
+		originalBuffer: (globalThis as typeof globalThis & { Buffer?: unknown }).Buffer,
+	};
+}
+
+/**
+ * Helper to remove atob from globalThis
+ */
+function removeAtob() {
+	delete (globalThis as { atob?: unknown }).atob;
+}
+
+/**
+ * Helper to restore original atob value
+ */
+function restoreAtob(originalAtob: typeof globalThis.atob | undefined) {
+	if (originalAtob === undefined) {
+		delete (globalThis as { atob?: unknown }).atob;
+	} else {
+		globalThis.atob = originalAtob;
+	}
+}
+
+/**
+ * Helper to restore original Buffer value
+ */
+function restoreBuffer(originalBuffer: typeof globalThis.Buffer | undefined) {
+	if (originalBuffer === undefined) {
+		delete (globalThis as typeof globalThis & { Buffer?: unknown }).Buffer;
+	} else {
+		(globalThis as typeof globalThis & { Buffer: unknown }).Buffer = originalBuffer;
+	}
+}
+
+/**
+ * Helper to verify decodeJwt result matches expected header and payload
+ */
+function verifyDecodeResult(
+	result: ReturnType<typeof decodeJwt>,
+	header: Record<string, unknown>,
+	payload: Record<string, unknown>
+) {
+	expect(result).not.toBeNull();
+	expect(result?.header).toEqual(header);
+	expect(result?.payload).toEqual(payload);
+}
+
+describe('decodeJwt - Buffer fallback (Node.js environment)', () => {
+	let originalAtob: typeof globalThis.atob | undefined;
+	let originalBuffer: typeof globalThis.Buffer | undefined;
+
+	beforeEach(() => {
+		const { originalAtob: savedAtob, originalBuffer: savedBuffer } = saveOriginalGlobals();
+		originalAtob = savedAtob;
+		originalBuffer = savedBuffer;
+		removeAtob();
+	});
+
+	afterEach(() => {
+		restoreAtob(originalAtob);
+		restoreBuffer(originalBuffer);
+	});
+
+	it('uses Buffer.from when atob is not available but Buffer is', () => {
+		const mockBufferFrom = createMockBufferFrom(originalAtob);
+		setupBufferMock(mockBufferFrom);
+
+		const header = { alg: 'HS256', typ: 'JWT' };
+		const payload = { sub: 'user123', exp: 1234567890 };
+		const token = createJwtToken(header, payload);
+
+		const result = decodeJwt(token);
+
+		verifyDecodeResult(result, header, payload);
+		expect(mockBufferFrom).toHaveBeenCalled();
+	});
+
+	it('handles Buffer.from when Buffer.from is a function', () => {
+		const mockBufferFrom = createMockBufferFrom(originalAtob);
+		setupBufferMock(mockBufferFrom);
+
+		const header = { alg: 'HS256', typ: 'JWT' };
+		const payload = { sub: 'user123' };
+		const token = createJwtToken(header, payload);
+
+		const result = decodeJwt(token);
+
+		verifyDecodeResult(result, header, payload);
+	});
+
+	it('throws error when neither atob nor Buffer.from is available', () => {
+		delete (globalThis as { atob?: unknown }).atob;
+		delete (globalThis as typeof globalThis & { Buffer?: unknown }).Buffer;
+
+		const header = { alg: 'HS256', typ: 'JWT' };
+		const payload = { sub: 'user123' };
+		const token = createJwtToken(header, payload);
+
+		expect(() => decodeJwt(token)).toThrow('Base64 decoding not supported in current environment');
+	});
+
+	it('throws error when Buffer exists but Buffer.from is not a function', () => {
+		const mockBuffer = {} as unknown as typeof globalThis.Buffer;
+		(globalThis as typeof globalThis & { Buffer: typeof mockBuffer }).Buffer = mockBuffer;
+
+		const header = { alg: 'HS256', typ: 'JWT' };
+		const payload = { sub: 'user123' };
+		const token = createJwtToken(header, payload);
+
+		expect(() => decodeJwt(token)).toThrow('Base64 decoding not supported in current environment');
 	});
 });

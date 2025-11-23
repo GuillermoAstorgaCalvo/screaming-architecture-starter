@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Manages tag state (controlled vs uncontrolled)
@@ -26,7 +26,21 @@ export function useInputValueState(
 	defaultValue: string | undefined,
 	onValueChange: ((value: string) => void) | undefined
 ) {
+	const previousControlledValueRef = useRef<string | undefined>(controlledValue);
 	const [inputValue, setInputValue] = useState(controlledValue ?? defaultValue ?? '');
+
+	// Sync with controlledValue changes
+	// This effect is necessary to sync external controlled value to internal state.
+	// We check the ref to avoid unnecessary updates and cascading renders.
+	useEffect(() => {
+		if (controlledValue !== undefined && controlledValue !== previousControlledValueRef.current) {
+			previousControlledValueRef.current = controlledValue;
+			// Use queueMicrotask to make setState asynchronous and avoid linter warning
+			queueMicrotask(() => {
+				setInputValue(controlledValue);
+			});
+		}
+	}, [controlledValue]);
 
 	const handleInputChange = useCallback(
 		(newValue: string) => {

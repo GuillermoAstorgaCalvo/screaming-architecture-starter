@@ -409,3 +409,69 @@ describe('Controller - error handling', () => {
 		testHandlesFieldStateChangesCorrectlyDuringUserInteraction
 	);
 });
+
+// Integration tests for Controller with formAdapter
+function TestFormWithControllerAndFormAdapter() {
+	const { control, getValues, reset, setValue } = useFormAdapter<TestFormData>({
+		resolver: zodResolver(testSchema),
+		mode: 'onBlur',
+		defaultValues: defaultFormValues,
+	});
+
+	return (
+		<div>
+			<Controller
+				name="name"
+				control={control}
+				render={({ field }) => (
+					<input {...field} data-testid={TEST_ID_NAME_INPUT} aria-label="Name" />
+				)}
+			/>
+			<button type="button" data-testid="reset-button" onClick={() => reset(defaultFormValues)}>
+				Reset
+			</button>
+			<button
+				type="button"
+				data-testid="set-value-button"
+				onClick={() => setValue('name', 'Programmatic Value')}
+			>
+				Set Value
+			</button>
+			<div data-testid="current-value">{getValues('name')}</div>
+		</div>
+	);
+}
+
+async function testControllerWorksWithFormAdapterReset() {
+	renderWithProviders(<TestFormWithControllerAndFormAdapter />);
+
+	const input = screen.getByTestId(TEST_ID_NAME_INPUT);
+	const resetButton = screen.getByTestId('reset-button');
+
+	fireEvent.change(input, { target: { value: 'Changed Value' } });
+	expect((input as HTMLInputElement).value).toBe('Changed Value');
+
+	fireEvent.click(resetButton);
+
+	await waitFor(() => {
+		expect((input as HTMLInputElement).value).toBe('');
+	});
+}
+
+async function testControllerWorksWithFormAdapterSetValue() {
+	renderWithProviders(<TestFormWithControllerAndFormAdapter />);
+
+	const input = screen.getByTestId(TEST_ID_NAME_INPUT);
+	const setValueButton = screen.getByTestId('set-value-button');
+
+	fireEvent.click(setValueButton);
+
+	await waitFor(() => {
+		expect((input as HTMLInputElement).value).toBe('Programmatic Value');
+	});
+}
+
+describe('Controller - formAdapter integration', () => {
+	it('works with formAdapter reset', testControllerWorksWithFormAdapterReset);
+	it('works with formAdapter setValue', testControllerWorksWithFormAdapterSetValue);
+});

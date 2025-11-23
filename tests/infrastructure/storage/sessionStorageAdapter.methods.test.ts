@@ -10,6 +10,7 @@ import {
 	SECURITY_ERROR,
 	setupErrorScenario,
 	setupGetLengthErrorScenario,
+	setupNonErrorThrowScenario,
 	TEST_DESC_RETURN_FALSE_ON_ERROR,
 	TEST_KEY,
 	TEST_VALUE,
@@ -76,6 +77,16 @@ describe('SessionStorageAdapter - getItem', () => {
 				);
 			});
 		});
+
+		it('should handle non-Error objects thrown by getItem', () => {
+			setupNonErrorThrowScenario('getItem', 'String error', (errorAdapter, consoleWarnSpy) => {
+				expect(errorAdapter.getItem(KEY)).toBeNull();
+				expect(consoleWarnSpy).toHaveBeenCalledWith(
+					expect.stringContaining('Failed to get item from sessionStorage'),
+					expect.objectContaining({ error: expect.any(String) })
+				);
+			});
+		});
 	});
 });
 
@@ -114,6 +125,20 @@ describe('SessionStorageAdapter - setItem', () => {
 				);
 			});
 		});
+
+		it('should handle non-Error objects thrown by setItem', () => {
+			setupNonErrorThrowScenario(
+				'setItem',
+				{ message: 'Custom error object' },
+				(errorAdapter, consoleWarnSpy) => {
+					expect(errorAdapter.setItem(KEY, VALUE)).toBe(false);
+					expect(consoleWarnSpy).toHaveBeenCalledWith(
+						expect.stringContaining('Failed to set item in sessionStorage'),
+						expect.objectContaining({ error: expect.any(String) })
+					);
+				}
+			);
+		});
 	});
 });
 
@@ -144,6 +169,16 @@ describe('SessionStorageAdapter - removeItem', () => {
 
 		it(TEST_DESC_RETURN_FALSE_ON_ERROR, () => {
 			setupErrorScenario('removeItem', SECURITY_ERROR, (errorAdapter, consoleWarnSpy) => {
+				expect(errorAdapter.removeItem(KEY)).toBe(false);
+				expect(consoleWarnSpy).toHaveBeenCalledWith(
+					expect.stringContaining('Failed to remove item from sessionStorage'),
+					expect.objectContaining({ error: expect.any(String) })
+				);
+			});
+		});
+
+		it('should handle non-Error objects thrown by removeItem', () => {
+			setupNonErrorThrowScenario('removeItem', null, (errorAdapter, consoleWarnSpy) => {
 				expect(errorAdapter.removeItem(KEY)).toBe(false);
 				expect(consoleWarnSpy).toHaveBeenCalledWith(
 					expect.stringContaining('Failed to remove item from sessionStorage'),
@@ -190,6 +225,16 @@ describe('SessionStorageAdapter - clear', () => {
 				);
 			});
 		});
+
+		it('should handle non-Error objects thrown by clear', () => {
+			setupNonErrorThrowScenario('clear', 123, (errorAdapter, consoleWarnSpy) => {
+				expect(errorAdapter.clear()).toBe(false);
+				expect(consoleWarnSpy).toHaveBeenCalledWith(
+					expect.stringContaining('Failed to clear sessionStorage'),
+					expect.objectContaining({ error: expect.any(String) })
+				);
+			});
+		});
 	});
 });
 
@@ -227,6 +272,20 @@ describe('SessionStorageAdapter - getLength', () => {
 				);
 			});
 		});
+
+		it('should handle non-Error objects thrown by getLength', () => {
+			setupNonErrorThrowScenario(
+				'length',
+				{ toString: () => 'Custom error' },
+				(errorAdapter, consoleWarnSpy) => {
+					expect(errorAdapter.getLength()).toBe(0);
+					expect(consoleWarnSpy).toHaveBeenCalledWith(
+						expect.stringContaining('Failed to get sessionStorage length'),
+						expect.objectContaining({ error: expect.any(String) })
+					);
+				}
+			);
+		});
 	});
 });
 
@@ -259,6 +318,16 @@ describe('SessionStorageAdapter - key', () => {
 
 		it('should return null when sessionStorage throws error', () => {
 			setupErrorScenario('key', SECURITY_ERROR, (errorAdapter, consoleWarnSpy) => {
+				expect(errorAdapter.key(0)).toBeNull();
+				expect(consoleWarnSpy).toHaveBeenCalledWith(
+					expect.stringContaining('Failed to get key from sessionStorage'),
+					expect.objectContaining({ error: expect.any(String) })
+				);
+			});
+		});
+
+		it('should handle non-Error objects thrown by key', () => {
+			setupNonErrorThrowScenario('key', 'String error', (errorAdapter, consoleWarnSpy) => {
 				expect(errorAdapter.key(0)).toBeNull();
 				expect(consoleWarnSpy).toHaveBeenCalledWith(
 					expect.stringContaining('Failed to get key from sessionStorage'),

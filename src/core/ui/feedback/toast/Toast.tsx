@@ -18,6 +18,7 @@ interface RenderToastContentProps {
 	readonly dismissLabel: string;
 	readonly accessibleRole: 'status' | 'alert';
 	readonly dismissHandlers: ReturnType<typeof useToastData>['renderProps']['dismissHandlers'];
+	readonly hasOnDismiss: boolean;
 }
 
 function renderToastContent(props: Readonly<RenderToastContentProps>) {
@@ -36,6 +37,7 @@ function renderToastContent(props: Readonly<RenderToastContentProps>) {
 		dismissHandlers: props.dismissHandlers,
 		dismissLabel: props.dismissLabel,
 		children: props.children,
+		hasOnDismiss: props.hasOnDismiss,
 	});
 	return (
 		<ToastContainer {...containerProps}>

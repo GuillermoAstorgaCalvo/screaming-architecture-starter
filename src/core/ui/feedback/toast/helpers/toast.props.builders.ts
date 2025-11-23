@@ -36,6 +36,7 @@ export interface BuildToastBodyPropsParams {
 	readonly action?: ToastProps['action'] | undefined;
 	readonly dismissHandlers: UseToastDismissReturn;
 	readonly dismissLabel: string;
+	readonly hasOnDismiss: boolean;
 }
 
 export function buildToastBodyProps({
@@ -46,13 +47,14 @@ export function buildToastBodyProps({
 	action,
 	dismissHandlers,
 	dismissLabel,
+	hasOnDismiss,
 }: BuildToastBodyPropsParams) {
 	return {
 		intent,
 		title,
 		description,
 		action,
-		onDismiss: dismissHandlers.handleDismiss,
+		...(hasOnDismiss && { onDismiss: dismissHandlers.handleDismiss }),
 		dismissLabel,
 		children,
 	};
@@ -75,6 +77,7 @@ export interface UseToastDataRenderProps {
 	readonly dismissLabel: string;
 	readonly accessibleRole: 'status' | 'alert';
 	readonly dismissHandlers: UseToastDismissReturn;
+	readonly hasOnDismiss: boolean;
 }
 
 export function extractRenderProps(props: ExtractRenderPropsParams): UseToastDataRenderProps {
@@ -89,5 +92,6 @@ export function extractRenderProps(props: ExtractRenderPropsParams): UseToastDat
 		dismissLabel: props.dismissLabel,
 		accessibleRole: props.accessibleRole,
 		dismissHandlers: props.dismissHandlers,
+		hasOnDismiss: props.onDismiss !== undefined,
 	};
 }

@@ -12,7 +12,7 @@ export interface UseRatingStylesAndContainerParams {
 	ariaLabel: string;
 	size: RatingProps['size'];
 	className?: string | undefined;
-	handleMouseLeave: () => void;
+	handleMouseLeave?: () => void;
 }
 
 export const useRatingStylesAndContainer = ({
@@ -37,7 +37,7 @@ export const useRatingStylesAndContainer = ({
 		max,
 		ariaLabel,
 		classes,
-		handleMouseLeave,
+		...(handleMouseLeave !== undefined && { handleMouseLeave }),
 	});
 
 	return { starClasses, emptyStarClasses, containerProps };

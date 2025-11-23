@@ -186,71 +186,118 @@ function testNamespaceIndependence() {
 	return { result1, result2 };
 }
 
-describe('useTranslation', () => {
+describe('useTranslation - basic functionality', () => {
 	beforeEach(() => {
 		setupDefaultMocks();
 	});
 
-	describe('basic functionality', () => {
-		it('should return translation function and i18n instance', () => {
-			const { result } = renderHook(() => useTranslation('common'));
-			expect(result.current.t).toBeDefined();
-			expect(typeof result.current.t).toBe('function');
-			expect(result.current.i18n).toBe(mockI18nextInstance);
-		});
+	it('should return translation function and i18n instance', () => {
+		const { result } = renderHook(() => useTranslation('common'));
+		expect(result.current.t).toBeDefined();
+		expect(typeof result.current.t).toBe('function');
+		expect(result.current.i18n).toBe(mockI18nextInstance);
+	});
 
-		it('should use common namespace by default', () => {
-			renderHook(() => useTranslation());
-			expect(mockUseI18nextTranslation).toHaveBeenCalledWith('common');
-		});
+	it('should use common namespace by default', () => {
+		renderHook(() => useTranslation());
+		expect(mockUseI18nextTranslation).toHaveBeenCalledWith('common');
+	});
 
-		it('should use specified namespace', () => {
-			renderHook(() => useTranslation('landing'));
-			expect(mockUseI18nextTranslation).toHaveBeenCalledWith('landing');
-		});
+	it('should use specified namespace', () => {
+		renderHook(() => useTranslation('landing'));
+		expect(mockUseI18nextTranslation).toHaveBeenCalledWith('landing');
+	});
 
-		it('should return loading and ready states', () => {
-			const { result, isLoading, isReady } = testLoadingState(true, false);
-			expect(result.current.isLoading).toBe(isLoading);
-			expect(result.current.isReady).toBe(isReady);
-		});
+	it('should return loading and ready states', () => {
+		const { result, isLoading, isReady } = testLoadingState(true, false);
+		expect(result.current.isLoading).toBe(isLoading);
+		expect(result.current.isReady).toBe(isReady);
+	});
 
-		it('should return ready flag from i18next', () => {
-			const { result, ready } = testReadyFlag(false);
-			expect(result.current.ready).toBe(ready);
+	it('should return ready flag from i18next', () => {
+		const { result, ready } = testReadyFlag(false);
+		expect(result.current.ready).toBe(ready);
+	});
+});
+
+describe('useTranslation - type-safe translation function', () => {
+	beforeEach(() => {
+		setupDefaultMocks();
+	});
+
+	it('should call translation function with namespace', () => {
+		testTranslationCall('retry', 'common');
+		expect(mockTFunction).toHaveBeenCalledWith('retry', { ns: 'common' });
+	});
+
+	it('should pass options to translation function', () => {
+		testTranslationCall('greeting', 'common', { name: 'John' });
+		expect(mockTFunction).toHaveBeenCalledWith('greeting', {
+			ns: 'common',
+			name: 'John',
 		});
 	});
 
-	describe('type-safe translation function', () => {
-		it('should call translation function with namespace', () => {
-			testTranslationCall('retry', 'common');
-			expect(mockTFunction).toHaveBeenCalledWith('retry', { ns: 'common' });
-		});
+	it('should maintain stable translation function reference', () => {
+		const { result, rerender } = renderHook(() => useTranslation('common'));
+		const firstT = result.current.t;
+		rerender();
+		expect(result.current.t).toBe(firstT);
+	});
 
-		it('should pass options to translation function', () => {
-			testTranslationCall('greeting', 'common', { name: 'John' });
-			expect(mockTFunction).toHaveBeenCalledWith('greeting', {
-				ns: 'common',
-				name: 'John',
-			});
-		});
+	it('should create new translation function when namespace changes', () => {
+		const { result, rerender } = renderHook(
+			({ namespace }: { namespace: keyof TranslationNamespaces }) => useTranslation(namespace),
+			{ initialProps: { namespace: 'common' } }
+		);
+		const firstT = result.current.t;
+		rerender({ namespace: 'landing' });
+		expect(result.current.t).not.toBe(firstT);
+	});
 
-		it('should maintain stable translation function reference', () => {
-			const { result, rerender } = renderHook(() => useTranslation('common'));
-			const firstT = result.current.t;
-			rerender();
-			expect(result.current.t).toBe(firstT);
-		});
+	it('should call translation function without options when options are not provided', () => {
+		const { result } = renderHook(() => useTranslation('common'));
+		result.current.t('testKey' as never);
+		expect(mockTFunction).toHaveBeenCalledWith('testKey', { ns: 'common' });
+	});
 
-		it('should create new translation function when namespace changes', () => {
-			const { result, rerender } = renderHook(
-				({ namespace }: { namespace: keyof TranslationNamespaces }) => useTranslation(namespace),
-				{ initialProps: { namespace: 'common' } }
-			);
-			const firstT = result.current.t;
-			rerender({ namespace: 'landing' });
-			expect(result.current.t).not.toBe(firstT);
+	it('should merge options with namespace when both are provided', () => {
+		const { result } = renderHook(() => useTranslation('landing'));
+		result.current.t('welcome' as never, { name: 'Alice', count: 5 } as never);
+		expect(mockTFunction).toHaveBeenCalledWith('welcome', {
+			ns: 'landing',
+			name: 'Alice',
+			count: 5,
 		});
+	});
+});
+
+describe('useTranslation - type-safe translation function - function updates', () => {
+	beforeEach(() => {
+		setupDefaultMocks();
+	});
+
+	it('should update translation function when translate function changes', () => {
+		const newTFunction = vi.fn((key: string) => `translated:${key}`);
+		mockUseI18nextTranslation.mockReturnValue({
+			...createMockI18nextTranslation(),
+			t: newTFunction,
+		} as unknown as ReturnType<typeof useI18nextTranslation>);
+
+		const { result, rerender } = renderHook(() => useTranslation('common'));
+		result.current.t('test' as never);
+		expect(newTFunction).toHaveBeenCalledWith('test', { ns: 'common' });
+
+		// Change the translate function
+		const anotherTFunction = vi.fn((key: string) => `another:${key}`);
+		mockUseI18nextTranslation.mockReturnValue({
+			...createMockI18nextTranslation(),
+			t: anotherTFunction,
+		} as unknown as ReturnType<typeof useI18nextTranslation>);
+
+		rerender();
+		result.current.t('test' as never);
+		expect(anotherTFunction).toHaveBeenCalledWith('test', { ns: 'common' });
 	});
 });
 
@@ -272,6 +319,77 @@ describe('useTranslation - loading state management', () => {
 	it('should not set loading state when resource is already loading', () => {
 		const setLoading = testLoadingStateSetup(false, true, true, false);
 		expect(setLoading).not.toHaveBeenCalled();
+	});
+
+	it('should set loading state when resource is not loaded, not loading, and isLoading is false', () => {
+		mockIsResourceLoadedInI18n.mockReturnValue(false);
+		mockIsResourceLoading.mockReturnValue(false);
+		const setLoading = vi.fn();
+		mockUseResourceLoadingState.mockReturnValue(
+			createMockResourceLoadingState({
+				isLoading: false,
+				isReady: false,
+				setLoading,
+			})
+		);
+
+		renderHook(() => useTranslation('common'));
+
+		// Should set loading to true because resource is not loaded and not loading
+		expect(setLoading).toHaveBeenCalledWith(true);
+	});
+
+	it('should not set loading state when isLoading is already true', () => {
+		mockIsResourceLoadedInI18n.mockReturnValue(false);
+		mockIsResourceLoading.mockReturnValue(false);
+		const setLoading = vi.fn();
+		mockUseResourceLoadingState.mockReturnValue(
+			createMockResourceLoadingState({
+				isLoading: true,
+				isReady: false,
+				setLoading,
+			})
+		);
+
+		renderHook(() => useTranslation('common'));
+
+		// Should not call setLoading because isLoading is already true
+		expect(setLoading).not.toHaveBeenCalled();
+	});
+});
+
+describe('useTranslation - loading state management - multiple namespaces', () => {
+	beforeEach(() => {
+		setupDefaultMocks();
+	});
+
+	it('should handle initial loading state effect with different namespaces', () => {
+		mockIsResourceLoadedInI18n.mockReturnValue(false);
+		mockIsResourceLoading.mockReturnValue(false);
+		const setLoadingCommon = vi.fn();
+		const setLoadingLanding = vi.fn();
+
+		mockUseResourceLoadingState
+			.mockReturnValueOnce(
+				createMockResourceLoadingState({
+					isLoading: false,
+					isReady: false,
+					setLoading: setLoadingCommon,
+				})
+			)
+			.mockReturnValueOnce(
+				createMockResourceLoadingState({
+					isLoading: false,
+					isReady: false,
+					setLoading: setLoadingLanding,
+				})
+			);
+
+		renderHook(() => useTranslation('common'));
+		renderHook(() => useTranslation('landing'));
+
+		expect(setLoadingCommon).toHaveBeenCalledWith(true);
+		expect(setLoadingLanding).toHaveBeenCalledWith(true);
 	});
 });
 

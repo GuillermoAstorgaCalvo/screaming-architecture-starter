@@ -18,7 +18,8 @@ export interface PullToRefreshContainerProps {
 	containerProps: Omit<
 		HTMLAttributes<HTMLDivElement>,
 		'onTouchStart' | 'onTouchMove' | 'onTouchEnd' | 'className'
-	>;
+	> &
+		Partial<Record<`data-${string}`, string>>;
 }
 
 /**
@@ -46,10 +47,19 @@ export function PullToRefreshContainer({
 			onTouchEnd={onTouchEnd}
 			{...containerProps}
 		>
-			<div className="absolute top-0 left-0 right-0 z-10" style={indicatorStyle}>
+			<div
+				className="absolute top-0 left-0 right-0 z-10"
+				style={indicatorStyle}
+				data-testid="pull-to-refresh-indicator-wrapper"
+			>
 				{indicator}
 			</div>
-			<div style={{ paddingTop: isIdle ? '0' : `${pullDistance}px` }}>{children}</div>
+			<div
+				style={{ paddingTop: isIdle ? '0' : `${pullDistance}px` }}
+				data-testid="pull-to-refresh-content-wrapper"
+			>
+				{children}
+			</div>
 		</div>
 	);
 }

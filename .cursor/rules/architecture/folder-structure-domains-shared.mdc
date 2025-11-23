@@ -14,13 +14,13 @@ Self-contained areas of business capability. Domain code stays isolated and impo
 
 **Current implementation:**
 
-- `pages/*`: ✅ Route-level components; orchestrate domain hooks/services; minimal logic. Pages receive app-level context via props (e.g., `theme` via `withTheme` HOC). Example: `LandingPage.tsx` uses `useTranslation` hook for i18n.
-- `components/*`: (Optional) Domain UI (sections/widgets); presentational when possible. Not yet implemented in landing domain.
-- `hooks/*`: (Optional) Domain-specific hooks that compose `core` services (e.g., `useLandingStorage` would use `useStorage` and `useLogger`). Not yet implemented in landing domain.
-- `i18n/*`: ✅ Domain translations. Contains translation files (`en.json`, `es.json`, `ar.json`) and registration file (`index.ts`) that uses `registerDomainTranslations()` from `@core/i18n/registry` with async IIFE pattern. Translations are registered in `app/main.tsx` via `import '@domains/<domain>/i18n';`. See `config/i18n.mdc` for registration pattern details.
-- `store/*`: ✅ Zustand store(s); minimal state; derive when possible. Example: `landingStore.ts` with `useLandingStore` hook and `landingSelectors` for optimized state access. See `domains/<domain>/store/README.md` for best practices.
-
-- `services/*`: ✅ Domain APIs/services; use `createApiService` from `@core/api/createApiService`; validate IO with Zod. Example: `services/api/getDemoContentService.ts` demonstrates type-safe API service creation with Zod validation.
+- `pages/*`: ✅ Route-level components; orchestrate domain hooks/services; minimal logic. Pages receive app-level context via props (e.g., `theme` via `withTheme` HOC). Example: `LandingPage.tsx` uses `useTranslation` hook for i18n (uses common translations from `@core/i18n/locales/`).
+- `components/*`: ✅ Domain UI (sections/widgets); presentational when possible. Example: `landing/components/categories/*` showcases UI components organized by category with search and filtering.
+- `hooks/*`: ✅ Domain-specific hooks that compose `core` services. Example: `useComponentFilter.ts` and `useShowcaseFilter.ts` for component showcase filtering.
+- `context/*`: ✅ React Context providers for domain-specific state. Example: `ComponentFilterContext.tsx` for component filtering state.
+- `i18n/*`: (Optional) Domain translations. Contains translation files (`en.json`, `es.json`, `ar.json`) and registration file (`index.ts`) that uses `registerDomainTranslations()` from `@core/i18n/registry` with async IIFE pattern. Translations are registered in `app/main.tsx` via `import '@domains/<domain>/i18n';`. See `config/i18n.mdc` for registration pattern details. Note: Landing domain uses common translations instead of domain-specific translations.
+- `store/*`: (Optional) Zustand store(s); minimal state; derive when possible. Example: `landingStore.ts` with `useLandingStore` hook and `landingSelectors` for optimized state access. See `domains/<domain>/store/README.md` for best practices.
+- `services/*`: (Optional) Domain APIs/services; use `createApiService` from `@core/api/createApiService`; validate IO with Zod. Example: `services/api/getDemoContentService.ts` demonstrates type-safe API service creation with Zod validation.
 
 **Optional/Planned:**
 
@@ -34,22 +34,33 @@ Self-contained areas of business capability. Domain code stays isolated and impo
 src/domains/landing/
 ├── pages/
 │   └── LandingPage.tsx        # ✅ Receives theme via props from withTheme HOC
-│                              # Uses useTranslation hook for i18n
-│                              # Minimal implementation demonstrating domain structure
-├── services/                  # ✅ Domain API services
-│   └── api/
-│       └── getDemoContentService.ts  # ✅ Example API service using createApiService
-├── i18n/                      # ✅ Domain translations
-│   ├── index.ts               # ✅ Registration file using registerDomainTranslations() with async IIFE pattern
-│   ├── en.json                # ✅ English translations
-│   ├── es.json                # ✅ Spanish translations
-│   └── ar.json                # ✅ Arabic translations (RTL)
-└── store/                     # ✅ Zustand store for domain state
-    ├── landingStore.ts        # ✅ Store implementation with useLandingStore hook and selectors
-    └── README.md              # ✅ Store documentation and best practices
+│                              # Uses useTranslation hook for i18n (common translations)
+│                              # Component library showcase with category navigation
+├── components/                 # ✅ Domain-specific UI components
+│   ├── categories/             # ✅ Component category showcase components
+│   │   ├── RootComponentsCategory.tsx
+│   │   ├── FormsCategory.tsx
+│   │   ├── DataDisplayCategory.tsx
+│   │   ├── FeedbackCategory.tsx
+│   │   ├── NavigationCategory.tsx
+│   │   ├── OverlaysCategory.tsx
+│   │   ├── MediaCategory.tsx
+│   │   ├── LayoutCategory.tsx
+│   │   ├── HooksCategory.tsx
+│   │   └── UtilitiesCategory.tsx
+│   └── shared/                 # ✅ Shared component showcase utilities
+│       ├── ComponentSearchBar.tsx
+│       ├── ShowcaseSection.tsx
+│       └── SubcategoryNavigation.tsx
+├── context/                    # ✅ React Context providers
+│   └── ComponentFilterContext.tsx
+├── hooks/                      # ✅ Domain-specific hooks
+│   ├── useComponentFilter.ts
+│   └── useShowcaseFilter.ts
+└── IMPLEMENTATION_STATUS.md    # ✅ Component showcase implementation status
 ```
 
-**Note**: The landing domain demonstrates the core domain structure with pages, services, i18n, and store. Optional directories (`components/`, `hooks/`, `models/`) can be added as the domain grows. See "Optional/Planned" section below for guidance on when to add these.
+**Note**: The landing domain demonstrates a component library showcase with pages, components, context, and hooks. Optional directories (`services/`, `store/`, `i18n/`, `models/`) can be added as the domain grows. See "Optional/Planned" section below for guidance on when to add these.
 
 ### Shared Domains (cross-domain composites)
 

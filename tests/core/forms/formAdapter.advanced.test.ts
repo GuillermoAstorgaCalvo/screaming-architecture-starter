@@ -12,6 +12,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
 	assertControlProperties,
 	assertFieldStateProperties,
+	assertFormControls,
 	assertFormStateProperties,
 	createFormWithDefaults,
 	createSimpleForm,
@@ -240,6 +241,17 @@ function registerControlTests() {
 			const { control } = result.current;
 			assertControlProperties(control);
 		});
+
+		it('should provide control with correct structure for useController', () => {
+			const { result } = createSimpleForm();
+
+			const { control } = result.current;
+			// Control should have the necessary properties for useController
+			expect(control).toBeDefined();
+			expect(typeof control).toBe('object');
+			// Control should be compatible with react-hook-form's useController
+			expect(control).toHaveProperty('_subjects');
+		});
 	});
 }
 
@@ -381,6 +393,38 @@ function registerEdgeCasesTests() {
 			expect(result.current.register).toBe(initialRegister);
 			expect(result.current.handleSubmit).toBe(initialHandleSubmit);
 			expect(result.current.reset).toBe(initialReset);
+		});
+
+		it('should return object with all expected properties', () => {
+			const { result } = createSimpleForm();
+
+			// Verify the return object structure matches FormControls interface
+			const controls = result.current;
+			expect(controls).toHaveProperty('register');
+			expect(controls).toHaveProperty('handleSubmit');
+			expect(controls).toHaveProperty('reset');
+			expect(controls).toHaveProperty('setValue');
+			expect(controls).toHaveProperty('getValues');
+			expect(controls).toHaveProperty('trigger');
+			expect(controls).toHaveProperty('formState');
+			expect(controls).toHaveProperty('errors');
+			expect(controls).toHaveProperty('watch');
+			expect(controls).toHaveProperty('setError');
+			expect(controls).toHaveProperty('clearErrors');
+			expect(controls).toHaveProperty('unregister');
+			expect(controls).toHaveProperty('setFocus');
+			expect(controls).toHaveProperty('getFieldState');
+			expect(controls).toHaveProperty('control');
+			expect(controls).toHaveProperty('isValid');
+			expect(controls).toHaveProperty('isSubmitting');
+			expect(controls).toHaveProperty('isDirty');
+		});
+
+		it('should handle undefined options parameter', () => {
+			const { result } = renderHook(() => useFormAdapter<SimpleFormData>());
+
+			expect(result.current).toBeDefined();
+			assertFormControls(result);
 		});
 	});
 }

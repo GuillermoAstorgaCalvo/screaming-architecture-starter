@@ -1,5 +1,5 @@
 import { getHeaderClasses } from '@core/ui/collapsible/helpers/CollapsibleHelpers';
-import type { ReactNode } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
 
 import { CollapsibleIcon } from './CollapsibleIcon';
 
@@ -27,6 +27,15 @@ export function CollapsibleHeader({
 }: Readonly<CollapsibleHeaderProps>) {
 	const headerClasses = getHeaderClasses(headerClassName);
 
+	const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+		if (disabled) return;
+
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			onToggle();
+		}
+	};
+
 	return (
 		<button
 			type="button"
@@ -36,6 +45,7 @@ export function CollapsibleHeader({
 			aria-disabled={disabled}
 			disabled={disabled}
 			onClick={onToggle}
+			onKeyDown={handleKeyDown}
 			className={headerClasses}
 		>
 			<span className="flex-1">{header}</span>

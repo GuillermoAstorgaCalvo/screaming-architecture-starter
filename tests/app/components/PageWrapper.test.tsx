@@ -2,6 +2,7 @@ import { withTheme } from '@app/components/PageWrapper';
 import { useSEO } from '@core/hooks/seo/useSEO';
 import type { ThemedPageProps } from '@src-types/layout';
 import { render, screen, waitFor } from '@testing-library/react';
+import { getMetaContent, SELECTORS } from '@tests/core/utils/seo/test-helpers';
 import { renderWithProviders } from '@tests/utils/testUtils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -205,11 +206,11 @@ function createTestPageWithSEOAndTheme() {
 }
 
 function assertDescriptionMeta(expectedContent: string) {
-	// Meta tags are not accessible via Testing Library queries, so direct DOM access is necessary
-	// eslint-disable-next-line testing-library/no-node-access
-	const descriptionMeta = document.querySelector('meta[name="description"]');
-	expect(descriptionMeta).toBeInTheDocument();
-	expect(descriptionMeta?.getAttribute('content')).toContain(expectedContent);
+	// Meta tags are not accessible via Testing Library queries (they're in document.head, not the component tree)
+	// Using the shared test helper for consistency with other SEO tests
+	const descriptionContent = getMetaContent(SELECTORS.meta.description);
+	expect(descriptionContent).toBeDefined();
+	expect(descriptionContent).toContain(expectedContent);
 }
 
 describe('withTheme HOC - SEO Integration - useSEO Hook Usage', () => {
@@ -351,7 +352,7 @@ describe('withTheme HOC - Error Handling', () => {
 });
 
 describe('withTheme HOC - Display Name', () => {
-	it('sets a descriptive displayName for wrapped components', () => {
+	it('sets a descriptive displayName for wrapped components (uses Component.displayName)', () => {
 		function SamplePage() {
 			return <div>Sample</div>;
 		}
@@ -359,16 +360,20 @@ describe('withTheme HOC - Display Name', () => {
 
 		const ThemedSamplePage = withTheme(SamplePage);
 
+		// Verifies line 25: Component.displayName ?? Component.name
+		// This branch uses Component.displayName
 		expect(ThemedSamplePage.displayName).toBe('withTheme(SamplePage)');
 	});
 
-	it('uses component name when displayName is not set', () => {
+	it('uses component name when displayName is not set (uses Component.name)', () => {
 		function NamedComponent() {
 			return <div>Named</div>;
 		}
 
 		const ThemedComponent = withTheme(NamedComponent);
 
+		// Verifies line 25: Component.displayName ?? Component.name
+		// This branch uses Component.name (displayName is undefined)
 		expect(ThemedComponent.displayName).toBe('withTheme(NamedComponent)');
 	});
 
@@ -389,5 +394,107 @@ describe('withTheme HOC - Display Name', () => {
 		const ThemedComponent = withTheme(ArrowComponent);
 
 		expect(ThemedComponent.displayName).toBe('withTheme(CustomArrowName)');
+	});
+
+	it('verifies displayName assignment (line 26)', () => {
+		function TestComponent() {
+			return <div>Test</div>;
+		}
+		TestComponent.displayName = 'CustomDisplayName';
+
+		const ThemedComponent = withTheme(TestComponent);
+
+		// Verifies line 26: ThemedPage.displayName = `withTheme(${componentName})`
+		expect(ThemedComponent.displayName).toBe('withTheme(CustomDisplayName)');
+		expect(typeof ThemedComponent.displayName).toBe('string');
+	});
+});
+
+describe('withTheme HOC - ThemedPage function execution', () => {
+	it('executes ThemedPage function and calls useTheme (lines 12-13)', () => {
+		function TestPage({ theme }: Readonly<ThemedPageProps>) {
+			return <div data-testid="theme-value">{theme.theme}</div>;
+		}
+
+		const ThemedPage = withTheme(TestPage);
+		renderWithProviders(<ThemedPage />);
+
+		// Verifies ThemedPage function is executed (line 12)
+		// and useTheme is called (line 13)
+		expect(screen.getByTestId('theme-value').textContent).toBe('light');
+	});
+
+	it('creates themeProps object with all required properties (lines 15-19)', () => {
+		const receivedThemeProps: ThemedPageProps['theme'][] = [];
+
+		function TestPage({ theme }: Readonly<ThemedPageProps>) {
+			receivedThemeProps.push(theme);
+			return (
+				<div>
+					<span data-testid="theme">{theme.theme}</span>
+					<span data-testid="resolved">{theme.resolvedTheme}</span>
+					<span data-testid="has-set-theme">
+						{typeof theme.setTheme === 'function' ? 'yes' : 'no'}
+					</span>
+				</div>
+			);
+		}
+
+		const ThemedPage = withTheme(TestPage);
+		renderWithProviders(<ThemedPage />, { defaultTheme: 'dark' });
+
+		// Verifies lines 15-19: themeProps object creation
+		const [themeProps] = receivedThemeProps;
+		expect(themeProps).toBeDefined();
+		expect(themeProps?.theme).toBe('dark');
+		expect(themeProps?.resolvedTheme).toBe('dark');
+		expect(typeof themeProps?.setTheme).toBe('function');
+
+		expect(screen.getByTestId('theme').textContent).toBe('dark');
+		expect(screen.getByTestId('resolved').textContent).toBe('dark');
+		expect(screen.getByTestId('has-set-theme').textContent).toBe('yes');
+	});
+});
+
+describe('withTheme HOC - Props Passing to Component', () => {
+	it('passes theme props and original props to Component (line 21)', () => {
+		interface TestPageProps {
+			readonly title: string;
+			readonly count: number;
+		}
+
+		function TestPage({ theme, title, count }: Readonly<TestPageProps & ThemedPageProps>) {
+			return (
+				<div>
+					<span data-testid="title">{title}</span>
+					<span data-testid="count">{count}</span>
+					<span data-testid="theme">{theme.theme}</span>
+				</div>
+			);
+		}
+
+		const ThemedPage = withTheme(TestPage);
+		// @ts-expect-error - withTheme removes theme prop requirement, but TypeScript inference doesn't capture this
+		renderWithProviders(<ThemedPage title="Test" count={42} />);
+
+		// Verifies line 21: <Component {...props} theme={themeProps} />
+		expect(screen.getByTestId('title').textContent).toBe('Test');
+		expect(screen.getByTestId('count').textContent).toBe('42');
+		expect(screen.getByTestId('theme').textContent).toBe('light');
+	});
+
+	it('returns ThemedPage component (line 28)', () => {
+		function TestPage() {
+			return <div>Test</div>;
+		}
+
+		const ThemedPage = withTheme(TestPage);
+
+		// Verifies line 28: return ThemedPage;
+		expect(typeof ThemedPage).toBe('function');
+		expect(ThemedPage.displayName).toBeDefined();
+
+		renderWithProviders(<ThemedPage />);
+		expect(screen.getByText('Test')).toBeInTheDocument();
 	});
 });

@@ -63,7 +63,9 @@ export function MotionAccordion({
 			reducedMotionStrategy={reducedMotionStrategy}
 			{...motionBoxProps}
 		>
-			<div className={contentClassName}>{children}</div>
+			<div className={contentClassName} data-testid="motion-accordion-content">
+				{children}
+			</div>
 		</MotionPresence>
 	);
 }

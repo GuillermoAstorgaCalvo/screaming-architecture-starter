@@ -227,10 +227,22 @@ function describeLengthLimits() {
 			expect(result).toBe('');
 		});
 
+		it('should return empty string for HTML exactly at MAX_HTML_LENGTH + 1', () => {
+			const longHtml = 'a'.repeat(MAX_HTML_LENGTH + 1);
+			const result = sanitizeHtml(longHtml);
+			expect(result).toBe('');
+		});
+
 		it('should process HTML at MAX_HTML_LENGTH', () => {
 			const html = `<p>${'a'.repeat(MAX_HTML_LENGTH - 7)}</p>`;
 			const result = sanitizeHtml(html);
 			expect(result).toContain('<p>');
+		});
+
+		it('should process HTML exactly at MAX_HTML_LENGTH boundary', () => {
+			const html = 'a'.repeat(MAX_HTML_LENGTH);
+			const result = sanitizeHtml(html);
+			expect(result).toBe(html);
 		});
 
 		it('should process HTML just under MAX_HTML_LENGTH', () => {
@@ -345,6 +357,37 @@ function describeEdgeCases() {
 			// Tags should be normalized to lowercase
 			expect(result.toLowerCase()).toContain('<p>');
 			expect(result.toLowerCase()).toContain('<strong>');
+		});
+
+		it('should process elements with querySelectorAll', () => {
+			// Test that the querySelectorAll('*') path is executed
+			const html = '<p>Text</p><strong>Bold</strong><em>Italic</em>';
+			const result = sanitizeHtml(html);
+			// All elements should be processed
+			expect(result).toContain('<p>');
+			expect(result).toContain('<strong>');
+			expect(result).toContain('<em>');
+		});
+
+		it('should handle HTML with nested elements requiring processing', () => {
+			const html = '<p><strong><em>Nested content</em></strong></p>';
+			const result = sanitizeHtml(html);
+			// All nested elements should be processed
+			expect(result).toContain('<p>');
+			expect(result).toContain('<strong>');
+			expect(result).toContain('<em>');
+		});
+
+		it('should handle empty string input', () => {
+			const result = sanitizeHtml('');
+			expect(result).toBe('');
+		});
+
+		it('should handle falsy values that evaluate to empty', () => {
+			// @ts-expect-error - testing falsy input
+			expect(sanitizeHtml(null)).toBe('');
+			// @ts-expect-error - testing falsy input
+			expect(sanitizeHtml(undefined)).toBe('');
 		});
 	});
 }

@@ -1,0 +1,88 @@
+import {
+	AlertCircle,
+	AlertTriangle,
+	Check,
+	CheckCircle,
+	CheckCircle2,
+	Circle,
+	Flag,
+	Heart,
+	HelpCircle,
+	Info,
+	Star,
+	Tag,
+	ThumbsDown,
+	ThumbsUp,
+	TrendingDown,
+	TrendingUp,
+	X,
+	XCircle,
+} from 'lucide-react';
+
+import type { IconItem } from './types';
+
+export const statusIcons: IconItem[] = [
+	{ name: 'Check', icon: Check, category: 'Status', keywords: ['check', 'success', 'done'] },
+	{
+		name: 'CheckCircle',
+		icon: CheckCircle,
+		category: 'Status',
+		keywords: ['check', 'success', 'circle'],
+	},
+	{
+		name: 'CheckCircle2',
+		icon: CheckCircle2,
+		category: 'Status',
+		keywords: ['check', 'success', 'circle', 'alt'],
+	},
+	{ name: 'X', icon: X, category: 'Status', keywords: ['close', 'cancel', 'x'] },
+	{ name: 'XCircle', icon: XCircle, category: 'Status', keywords: ['close', 'error', 'circle'] },
+	{
+		name: 'AlertCircle',
+		icon: AlertCircle,
+		category: 'Status',
+		keywords: ['alert', 'warning', 'error', 'circle'],
+	},
+	{
+		name: 'AlertTriangle',
+		icon: AlertTriangle,
+		category: 'Status',
+		keywords: ['alert', 'warning', 'error', 'triangle'],
+	},
+	{ name: 'Info', icon: Info, category: 'Status', keywords: ['info', 'information'] },
+	{
+		name: 'HelpCircle',
+		icon: HelpCircle,
+		category: 'Status',
+		keywords: ['help', 'question', 'circle'],
+	},
+	{ name: 'Star', icon: Star, category: 'Status', keywords: ['star', 'favorite', 'rating'] },
+	{ name: 'Heart', icon: Heart, category: 'Status', keywords: ['heart', 'like', 'favorite'] },
+	{
+		name: 'ThumbsUp',
+		icon: ThumbsUp,
+		category: 'Status',
+		keywords: ['thumbs', 'up', 'like', 'approve'],
+	},
+	{
+		name: 'ThumbsDown',
+		icon: ThumbsDown,
+		category: 'Status',
+		keywords: ['thumbs', 'down', 'dislike', 'reject'],
+	},
+	{ name: 'Circle', icon: Circle, category: 'Status', keywords: ['circle', 'dot', 'indicator'] },
+	{ name: 'Flag', icon: Flag, category: 'Status', keywords: ['flag', 'mark', 'report'] },
+	{ name: 'Tag', icon: Tag, category: 'Status', keywords: ['tag', 'label'] },
+	{
+		name: 'TrendingUp',
+		icon: TrendingUp,
+		category: 'Status',
+		keywords: ['trending', 'up', 'increase'],
+	},
+	{
+		name: 'TrendingDown',
+		icon: TrendingDown,
+		category: 'Status',
+		keywords: ['trending', 'down', 'decrease'],
+	},
+];

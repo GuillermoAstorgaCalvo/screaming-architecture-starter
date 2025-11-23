@@ -10,7 +10,7 @@ interface UtilityFunctionsOptions {
 	length: number;
 	value: string;
 	onChange: (value: string) => void;
-	inputRefs: RefObject<(HTMLInputElement | null)[]>;
+	inputRefs: RefObject<(HTMLInputElement | null)[] | null>;
 }
 
 function createUtilityFunctions(options: UtilityFunctionsOptions) {
@@ -30,7 +30,11 @@ function createUtilityFunctions(options: UtilityFunctionsOptions) {
 	};
 
 	const focusInput = (index: number): void => {
-		const input = inputRefs.current[index];
+		const refs = inputRefs.current;
+		if (!refs) {
+			return;
+		}
+		const input = refs[index];
 		input?.focus();
 		input?.select();
 	};

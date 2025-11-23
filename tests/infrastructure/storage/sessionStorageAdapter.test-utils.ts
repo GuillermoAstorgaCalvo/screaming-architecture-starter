@@ -128,3 +128,48 @@ export function setupGetLengthErrorScenario(
 	}
 	consoleWarnSpy.mockRestore();
 }
+
+// Helper function to setup non-Error throw scenario (for testing non-Error objects thrown)
+export function setupNonErrorThrowScenario(
+	methodName: string,
+	throwValue: unknown,
+	callback: (adapter: SessionStorageAdapter, consoleWarnSpy: ReturnType<typeof vi.spyOn>) => void
+) {
+	const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	const mockSessionStorage = createMockSessionStorage();
+
+	Object.defineProperty(globalThis.window, 'sessionStorage', {
+		value: mockSessionStorage,
+		writable: true,
+		configurable: true,
+	});
+
+	// Create adapter first while all methods work (so availability check passes)
+	const errorAdapter = new SessionStorageAdapter();
+
+	// Now override the specific method to throw a non-Error value
+	if (methodName === 'length') {
+		Object.defineProperty(mockSessionStorage, 'length', {
+			get: () => {
+				throw throwValue;
+			},
+			configurable: true,
+		});
+	} else {
+		(mockSessionStorage as Record<string, unknown>)[methodName] = vi.fn(() => {
+			throw throwValue;
+		});
+	}
+
+	callback(errorAdapter, consoleWarnSpy);
+
+	// Restore original sessionStorage
+	if (ORIGINAL_SESSION_STORAGE && globalThis.window) {
+		Object.defineProperty(globalThis.window, 'sessionStorage', {
+			value: ORIGINAL_SESSION_STORAGE,
+			writable: true,
+			configurable: true,
+		});
+	}
+	consoleWarnSpy.mockRestore();
+}

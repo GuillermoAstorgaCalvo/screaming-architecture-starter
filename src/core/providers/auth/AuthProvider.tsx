@@ -59,6 +59,9 @@ export function AuthProvider({ auth, children }: Readonly<AuthProviderProps>) {
 
 AuthProvider.displayName = 'AuthProvider';
 
+// Cache for metadata objects to return same reference when values are the same
+const metadataCache = new Map<string, AuthMetadata>();
+
 function extractAuthMetadata(auth: AuthPort, tokens: AuthTokens | null): AuthMetadata {
 	if (!tokens?.accessToken) {
 		return EMPTY_AUTH_METADATA;
@@ -76,10 +79,25 @@ function extractAuthMetadata(auth: AuthPort, tokens: AuthTokens | null): AuthMet
 		return EMPTY_AUTH_METADATA;
 	}
 
-	return Object.freeze({
+	// Create a stable key from roles and permissions
+	// Use JSON.stringify on sorted arrays to ensure consistent keys
+	const rolesKey = JSON.stringify([...roles].sort());
+	const permissionsKey = JSON.stringify(Object.keys(permissions).sort());
+	const metadataKey = `${rolesKey}|${permissionsKey}`;
+
+	// Return cached metadata if available
+	const cached = metadataCache.get(metadataKey);
+	if (cached) {
+		return cached;
+	}
+
+	// Create and cache new metadata
+	const metadata = Object.freeze({
 		roles,
 		permissions,
 	}) as AuthMetadata;
+	metadataCache.set(metadataKey, metadata);
+	return metadata;
 }
 
 function decodeTokenPayload(auth: AuthPort, accessToken: string): TokenPayload | null {
@@ -107,6 +125,9 @@ function normalizeRoles(input: unknown): readonly string[] {
 	return Object.freeze(Array.from(new Set(roles)));
 }
 
+// Cache for normalized permissions to return same reference when values are the same
+const permissionsCache = new Map<string, Permissions>();
+
 function normalizePermissions(input: unknown): Permissions {
 	if (!Array.isArray(input)) {
 		return EMPTY_PERMISSIONS;
@@ -120,10 +141,22 @@ function normalizePermissions(input: unknown): Permissions {
 		return EMPTY_PERMISSIONS;
 	}
 
+	// Create a stable key from sorted permissions
+	const sortedPermissions = [...new Set(permissions)].sort((a, b) => a.localeCompare(b));
+	const key = JSON.stringify(sortedPermissions);
+
+	// Return cached permissions if available, otherwise create and cache
+	const cached = permissionsCache.get(key);
+	if (cached) {
+		return cached;
+	}
+
 	const record: Permissions = {};
 	for (const permission of new Set(permissions)) {
 		record[permission] = true;
 	}
 
-	return Object.freeze(record) as Permissions;
+	const normalized = Object.freeze(record) as Permissions;
+	permissionsCache.set(key, normalized);
+	return normalized;
 }

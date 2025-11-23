@@ -6,14 +6,19 @@ import {
 	isValidOTPCharacter,
 } from '@core/ui/forms/otp-input/helpers/OTPInputHelpers';
 
-function createMultipleCharacterHandler(
-	length: number,
-	updateValue: (valueArray: string[]) => void,
-	focusInput: (index: number) => void
-) {
+interface MultipleCharacterHandlerOptions {
+	readonly length: number;
+	readonly onComplete: ((value: string) => void) | undefined;
+	readonly updateValue: (valueArray: string[]) => void;
+	readonly focusInput: (index: number) => void;
+}
+
+function createMultipleCharacterHandler(options: MultipleCharacterHandlerOptions) {
+	const { length, onComplete, updateValue, focusInput } = options;
 	return (index: number, digits: string, valueArray: string[]): void => {
 		fillValueArrayFromDigits({ valueArray, digits, startIndex: index, maxLength: length });
 		updateValue(valueArray);
+		checkAndTriggerComplete(valueArray, length, onComplete);
 		const nextIndex = Math.min(index + digits.length, length - 1);
 		focusInput(nextIndex);
 	};
@@ -56,7 +61,12 @@ function createSingleCharacterHandler(options: SingleCharacterHandlerOptions) {
 export function createInputHandlers(deps: HandlerDependencies) {
 	const { length, onComplete, getValueArray, updateValue, focusInput } = deps;
 
-	const fillMultipleCharacters = createMultipleCharacterHandler(length, updateValue, focusInput);
+	const fillMultipleCharacters = createMultipleCharacterHandler({
+		length,
+		onComplete,
+		updateValue,
+		focusInput,
+	});
 	const handleSingleCharacter = createSingleCharacterHandler({
 		length,
 		onComplete,

@@ -27,6 +27,42 @@ describe('Controller - component export', () => {
 		expect(Controller).toBeDefined();
 		expect(typeof Controller).toBe('function');
 	});
+
+	it('Controller can be instantiated with valid props', () => {
+		// Verify Controller can be used with form control
+		const TestComponent = () => {
+			const { control } = useFormAdapter<TestFormData>({
+				defaultValues: defaultFormValues,
+			});
+
+			return (
+				<Controller
+					name="name"
+					control={control}
+					render={({ field }) => <input {...field} data-testid="test-input" />}
+				/>
+			);
+		};
+
+		renderWithProviders(<TestComponent />);
+		const input = screen.getByTestId('test-input');
+		expect(input).toBeInTheDocument();
+	});
+
+	it('Controller accepts all required props', () => {
+		// Verify Controller accepts name, control, and render props
+		const TestComponent = () => {
+			const { control } = useFormAdapter<TestFormData>({
+				defaultValues: defaultFormValues,
+			});
+
+			return (
+				<Controller name="name" control={control} render={({ field }) => <input {...field} />} />
+			);
+		};
+
+		expect(() => renderWithProviders(<TestComponent />)).not.toThrow();
+	});
 });
 
 // Helper components for form control tests

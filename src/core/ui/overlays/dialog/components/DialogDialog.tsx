@@ -84,6 +84,7 @@ function getDialogAttributes(props: DialogDialogProps) {
 		className: getDialogClassName(className, variant),
 		'aria-labelledby': titleId,
 		'aria-describedby': descriptionId,
+		'aria-modal': true,
 		onCancel: createDialogCancelHandler(closeOnEscape, onClose),
 		onClick: handleOverlayClick,
 		onKeyDown: handleOverlayKeyDown,

@@ -30,7 +30,8 @@
 		"requestFailed": "La solicitud falló",
 		"rootElementNotFound": "Elemento raíz #root no encontrado",
 		"unableToLoadDemoContent": "No se pudo cargar el contenido de demostración.",
-		"failedToLoadGoogleMaps": "Error al cargar Google Maps"
+		"failedToLoadGoogleMaps": "Error al cargar Google Maps",
+		"failedToLoadMap": "Error al cargar el mapa"
 	},
 	"a11y": {
 		"mainNavigation": "Navegación principal",
@@ -44,7 +45,7 @@
 		"currentThemeDescription": "Tema actual: {theme}. Haz clic para alternar.",
 		"required": "Requerido",
 		"imageGallery": "Galería de imágenes",
-		"uploadProgress": "Progreso de carga: {progress}%",
+		"uploadProgress": "Progreso de carga: {{progress}}%",
 		"chooseLanguage": "Elige tu idioma",
 		"addNewItem": "Agregar nuevo elemento",
 		"createNewPost": "Crear nueva publicación",
@@ -129,6 +130,7 @@
 	"deselectAll": "Deseleccionar todo",
 	"selectAllRows": "Seleccionar todas las filas",
 	"noDataAvailable": "No hay datos disponibles",
+	"noItemsAvailable": "No hay elementos disponibles",
 	"search": "Buscar...",
 	"searchPlaceholder": "Buscar...",
 	"noActionsAvailable": "No hay acciones disponibles",

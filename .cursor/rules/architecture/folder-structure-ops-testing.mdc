@@ -40,21 +40,55 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 
 ## tests
 
+**Comprehensive test coverage with 1000+ test files across all modules:**
+
 - `setupTests.ts`: ✅ Vitest setup file that imports `@testing-library/jest-dom/vitest` for DOM matchers. Sets up MSW server for API mocking using handlers from `@tests/mocks/handlers`. Initializes i18n before all tests by awaiting `i18nInitPromise`. Includes console.warn suppression for i18next backend warning (expected in custom setup). Includes console.error suppression for React act() warnings from async effects (expected with async resource loading). Mocks `HTMLDialogElement.showModal()` and `close()` methods for Modal component tests (jsdom doesn't implement these by default). Mocks `window.matchMedia` for ThemeProvider tests (jsdom doesn't implement this by default). MSW server lifecycle: starts beforeAll, resets handlers afterEach, closes afterAll.
 - `vitest-env.d.ts`: ✅ TypeScript environment declarations for Vitest.
-- `app/App.test.tsx`: ✅ App composition, analytics toggles, and accessibility regression tests.
-- `app/components/PageWrapper.test.tsx`: ✅ PageWrapper.withTheme coverage (theme injection guarantees for domains).
-- `core/hooks/**`: ✅ Dozens of suites across async, debounce, fetch, http (`useHttpClientAuth`), interval, motion, scroll, SEO, storage, throttle, and UI hooks.
-- `core/utils/**`: ✅ Coverage for `classNames`, `hookUtils`, debounce/throttle helpers, theme customization utilities, and all SEO DOM helpers.
+- `app/` (18 files): ✅ App composition tests (App.test.tsx, App.analytics.test.tsx, App.providers.test.tsx, main.test.tsx, router.test.tsx), component tests (AppLayout, PageWrapper, ProtectedRoute with advanced scenarios, RightsLoader, SpeedInsightsLoader), page tests (Error404, Error500), provider tests (DeferredMotionProvider, I18nProvider, QueryProvider, ThemeProvider).
+- `core/` (extensive coverage):
+  - `a11y/` (17 files): ✅ Focus management tests (16 files), skip-to-content tests
+  - `api/` (15+ files): ✅ API service factory tests (service creation, error handling, type safety, validation, edge cases, request mapping, helpers)
+  - `auth/`: ✅ Auth utility tests
+  - `config/`: ✅ Configuration tests (env, routes, runtime, feature flags, SEO)
+  - `constants/` (20+ files): ✅ Design tokens, UI constants, endpoints, env, aria, breakpoints, regex, timeouts
+  - `forms/` (15+ files): ✅ Form adapter tests (formAdapter core/advanced, controller, useController with multiple scenarios)
+  - `hooks/` (50+ files): ✅ Hook tests (async, debounce, fetch, http, interval, motion, scroll, SEO, storage, throttle, UI hooks)
+  - `http/`: ✅ HTTP error adapter tests
+  - `i18n/` (21 files): ✅ i18n system tests (resource loading, registry, hooks, types)
+  - `lib/` (26 files): ✅ Framework-specific library tests (date utilities, HTTP client)
+  - `perf/` (4 files): ✅ Performance utility tests (Web Vitals reporting)
+  - `providers/` (7 files): ✅ Provider tests (analytics, auth, http, logger, snackbar, storage, toast)
+  - `router/` (7 files): ✅ Router utility tests (route generation, guards)
+  - `security/` (16 files): ✅ Security utility tests (sanitization, CSP, permissions)
+  - `ui/` (700+ files): ✅ Comprehensive UI component tests with functionality, interactions, accessibility, edge cases, controlled/uncontrolled modes
+  - `utils/` (18 files): ✅ Utility function tests (classNames, hookUtils, debounce/throttle, SEO DOM utils, theme customization)
+- `domains/`: ✅ Landing domain tests, shared domain component tests (14 files)
+- `infrastructure/` (32 files): ✅ Infrastructure adapter tests (analytics 6, auth 4, logging 5, maps 4, storage 13)
+- `types/` (19 files): ✅ Type definition tests (API, UI, all type categories)
+- `shared/`: ✅ Shared component tests
 - `factories/*.ts`: ✅ `apiFactories.ts`, `userFactories.ts` (test data builders).
-- `mocks/*.ts`: ✅ MSW handlers/payloads/server scaffolding used by setupTests.
+- `mocks/handlers.ts`: ✅ MSW request handlers with helper functions (`createNotFoundHandler`, `createErrorHandler`) for easy error scenario testing.
+- `mocks/payloads.ts`: ✅ Pre-defined response payloads (`defaultSlideshowResponse`, `emptySlideshowResponse`, error payloads: `notFoundError`, `internalServerError`, `unauthorizedError`, `forbiddenError`, `validationError`).
+- `mocks/server.ts`: ✅ MSW server setup helper.
 
 **Test Utilities:**
 
-- `utils/testUtils.tsx`: ✅ Custom render function (`renderWithProviders`) that wraps components with all app providers (Logger, Http, Auth, Storage, Theme, I18n, Query, Analytics, Motion, Toast). Accepts optional overrides (storage/logger/http/auth/analytics/defaultTheme). Exports Testing Library utilities (act, cleanup, fireEvent, render, renderHook, screen, waitFor, within) and re-exports mock adapters.
+- `utils/testUtils.tsx`: ✅ Custom render function (`renderWithProviders`) that wraps components with all app providers (Logger, Http, Auth, Storage, Theme, I18n, Query, Analytics, Motion, Toast). Accepts optional overrides (storage/logger/http/auth/analytics/defaultTheme/analyticsConfig/router/routerProps). Exports Testing Library utilities (act, cleanup, fireEvent, render, renderHook, screen, waitFor, within) and re-exports mock adapters. Also exports `throwTestError` utility for testing defensive error handling.
 - `utils/TestProviders.tsx`: ✅ React component that composes the provider tree in the same order as `app/App.tsx`. Consumed by `renderWithProviders` and App-level tests.
-- `utils/a11y.ts`: ✅ vitest-axe helpers for `expect(container).toBeAccessible()`.
-- `utils/mocks/*`: ✅ Mock adapters for every port (Storage, Logger, Http, Auth, Analytics) plus helpers to reset captured state between tests.
+- `utils/a11y.ts`: ✅ vitest-axe helpers for accessibility testing:
+  - `expectA11y(container, config?)`: Run accessibility check on a container element
+  - `getA11yViolations(container, config?)`: Get accessibility violations for custom assertions
+  - `defaultAxeConfig`: Default axe configuration with disabled color-contrast and page-has-heading-one rules
+- `utils/mocks/*`: ✅ Mock adapters for every port (Storage, Logger, Http, Auth, Analytics) plus helpers to reset captured state between tests:
+  - `MockStorageAdapter.ts`: Storage port mock
+  - `MockLoggerAdapter.ts`: Logger port mock
+  - `MockHttpAdapter.ts`: HTTP port mock
+  - `MockAuthAdapter.ts`: Auth port mock
+  - `MockAnalyticsAdapter.ts`: Analytics port mock
+- `utils/polyfills/*`: ✅ Test polyfills for jsdom (3 files):
+  - `DataTransfer.polyfill.ts`: Polyfill for DataTransfer API (used in drag-and-drop tests)
+  - `DragEvent.polyfill.ts`: Polyfill for DragEvent API
+  - `StorageEvent.polyfill.ts`: Polyfill for StorageEvent API (used in cross-tab storage sync tests)
 
 **Additional Test Utilities:**
 

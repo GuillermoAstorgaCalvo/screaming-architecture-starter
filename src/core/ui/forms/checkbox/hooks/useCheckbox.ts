@@ -61,10 +61,12 @@ function buildCheckboxContentProps(
 	options: BuildCheckboxContentPropsOptions
 ): CheckboxContentProps {
 	const { props, finalId, checkboxClasses, ariaDescribedBy, fieldProps } = options;
+	const hasError = Boolean(props.error);
 	return {
 		checkboxId: finalId,
 		checkboxClasses,
 		ariaDescribedBy,
+		hasError,
 		label: props.label,
 		error: props.error,
 		helperText: props.helperText,

@@ -85,12 +85,17 @@ export function ToastProvider({
 	defaultAutoDismiss = true,
 	defaultPauseOnHover = true,
 }: ToastProviderProps) {
-	const { toasts, addToast, removeToast, clearAll } = useToastState({
-		maxToasts,
-		defaultAutoDismiss,
-		defaultDismissAfter,
-		defaultPauseOnHover,
-	});
+	const config = useMemo(
+		() => ({
+			maxToasts,
+			defaultAutoDismiss,
+			defaultDismissAfter,
+			defaultPauseOnHover,
+		}),
+		[maxToasts, defaultAutoDismiss, defaultDismissAfter, defaultPauseOnHover]
+	);
+
+	const { toasts, addToast, removeToast, clearAll } = useToastState(config);
 
 	const value: ToastContextValue = useMemo(
 		() => ({

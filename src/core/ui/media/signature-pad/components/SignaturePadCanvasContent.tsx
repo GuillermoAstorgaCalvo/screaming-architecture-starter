@@ -39,7 +39,7 @@ export function SignaturePadCanvasContent({
 }: Readonly<SignaturePadCanvasContentProps>) {
 	return (
 		<div className="relative inline-block">
-			{/* @ts-expect-error - react-signature-canvas has incompatible types */}
+			{/* @ts-expect-error - react-signature-canvas alpha (1.1.0-alpha.2) has incompatible React component types with @types/react-signature-canvas (^1.0.7). The componentDidMount type signature doesn't match React's expected Component type. This is a known issue with the library's type definitions. The component works correctly at runtime. */}
 			<SignatureCanvas
 				ref={canvasRef}
 				canvasProps={canvasProps}

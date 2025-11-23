@@ -6,14 +6,16 @@
  */
 
 import { LayoutGroup as FramerLayoutGroup } from 'framer-motion';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, HTMLAttributes, ReactNode } from 'react';
 
 /**
  * Props for LayoutGroup wrapper
  */
 type FramerLayoutGroupProps = ComponentProps<typeof FramerLayoutGroup>;
 
-export interface LayoutGroupProps extends Omit<FramerLayoutGroupProps, 'children'> {
+export interface LayoutGroupProps
+	extends Omit<FramerLayoutGroupProps, 'children'>,
+		Pick<HTMLAttributes<HTMLElement>, 'className' | 'id'> {
 	/** Animated children participating in the layout group */
 	children: ReactNode;
 }

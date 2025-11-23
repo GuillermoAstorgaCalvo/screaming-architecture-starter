@@ -10,6 +10,7 @@ export class MockAuthAdapter implements AuthPort {
 	private tokens: AuthTokens | null = null;
 	private readonly listeners = new Set<AuthTokenChangeListener>();
 	private mockPayload: Record<string, unknown> | null = {};
+	private lastTokensKey: string | null = null;
 
 	getTokens(): AuthTokens | null {
 		return this.tokens;
@@ -24,13 +25,23 @@ export class MockAuthAdapter implements AuthPort {
 	}
 
 	setTokens(tokens: AuthTokens): void {
-		this.tokens = { ...tokens };
-		this.notify();
+		// Create a key from token values to detect if values actually changed
+		const tokensKey = `${tokens.accessToken ?? ''}|${tokens.refreshToken ?? ''}`;
+
+		// Only update and notify if values actually changed
+		if (this.lastTokensKey !== tokensKey) {
+			this.tokens = { ...tokens };
+			this.lastTokensKey = tokensKey;
+			this.notify();
+		}
 	}
 
 	clearTokens(): void {
-		this.tokens = null;
-		this.notify();
+		if (this.tokens !== null) {
+			this.tokens = null;
+			this.lastTokensKey = null;
+			this.notify();
+		}
 	}
 
 	subscribe(listener: AuthTokenChangeListener): () => void {
@@ -55,6 +66,9 @@ export class MockAuthAdapter implements AuthPort {
 
 	setMockPayload(payload: Record<string, unknown> | null): void {
 		this.mockPayload = payload ? { ...payload } : null;
+		// Note: We don't notify here because tokens haven't changed
+		// The metadata will be recalculated on the next render when decode() is called
+		// If you need to force a metadata update, call setTokens() with the same tokens
 	}
 
 	isTokenExpired(

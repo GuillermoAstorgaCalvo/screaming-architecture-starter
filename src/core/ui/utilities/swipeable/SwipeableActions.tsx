@@ -31,12 +31,17 @@ export function SwipeableActions({
 	if (actions.length === 0) return null;
 
 	return (
-		<div className="absolute inset-y-0 flex items-center" style={actionsContainerStyle}>
+		<div
+			className="absolute inset-y-0 flex items-center"
+			style={actionsContainerStyle}
+			data-testid="swipeable-actions-container"
+		>
 			<div className="flex h-full w-full items-center">
 				{actions.map(action => (
 					<button
 						key={action.id}
 						type="button"
+						data-testid={`swipeable-action-${action.id}`}
 						className={twMerge(
 							'flex h-full items-center justify-center px-4 transition-colors focus:outline-none',
 							action.background ?? 'bg-secondary'

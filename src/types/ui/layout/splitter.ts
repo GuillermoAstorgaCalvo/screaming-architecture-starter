@@ -63,7 +63,7 @@ export interface SplitterProps extends HTMLAttributes<HTMLDivElement> {
  */
 export interface SplitterPanelProps extends HTMLAttributes<HTMLDivElement> {
 	/** Panel content */
-	children: ReactNode;
+	children?: ReactNode;
 	/** Unique identifier for the panel */
 	id: string;
 	/** Default size (in pixels or percentage) */

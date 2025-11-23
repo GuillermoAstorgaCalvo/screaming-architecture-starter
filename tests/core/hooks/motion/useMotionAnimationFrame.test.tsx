@@ -180,8 +180,8 @@ const registerContinuousLoopTests = (context: MotionAnimationFrameTestContext) =
 	});
 };
 
-const registerEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
-	describe('edge cases', () => {
+const registerDeltaValueEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
+	describe('delta value edge cases', () => {
 		it('should handle very small delta values', () => {
 			const { advanceFrame } = context;
 			const callback = vi.fn();
@@ -199,7 +199,11 @@ const registerEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
 			advanceFrame(1000);
 			expect(callback).toHaveBeenCalledWith(1000, 0);
 		});
+	});
+};
 
+const registerErrorHandlingEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
+	describe('error handling edge cases', () => {
 		it('should handle callback that throws error gracefully', () => {
 			const { advanceFrame } = context;
 			const errorCallback = vi.fn(() => {
@@ -212,7 +216,11 @@ const registerEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
 				advanceFrame(16);
 			}).toThrow('Test error');
 		});
+	});
+};
 
+const registerStateResetEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
+	describe('state reset edge cases', () => {
 		it('should reset lastTime when disabled and re-enabled', async () => {
 			const { advanceFrame } = context;
 			const deltas: number[] = [];
@@ -236,6 +244,26 @@ const registerEdgeCaseTests = (context: MotionAnimationFrameTestContext) => {
 			rerender({ enabled: true });
 			advanceFrame(16);
 			expect(deltas).toEqual([0, 0]);
+		});
+
+		it('should use null coalescing assignment for lastTime on first frame', () => {
+			const { advanceFrame } = context;
+			const times: number[] = [];
+			const callback = vi.fn((time: number, _delta: number) => {
+				times.push(time);
+			});
+
+			renderHook(() => useMotionAnimationFrame(callback));
+
+			// First frame should set lastTimeRef.current to time (null coalescing)
+			advanceFrame(100);
+			expect(callback).toHaveBeenCalledWith(100, 0);
+			expect(times).toEqual([100]);
+
+			// Second frame should use the previous time
+			advanceFrame(50);
+			expect(callback).toHaveBeenCalledWith(150, 50);
+			expect(times).toEqual([100, 150]);
 		});
 	});
 };
@@ -285,5 +313,7 @@ describe('useMotionAnimationFrame', () => {
 	registerCallbackUpdateTests(context);
 	registerCleanupTests(context);
 	registerContinuousLoopTests(context);
-	registerEdgeCaseTests(context);
+	registerDeltaValueEdgeCaseTests(context);
+	registerErrorHandlingEdgeCaseTests(context);
+	registerStateResetEdgeCaseTests(context);
 });

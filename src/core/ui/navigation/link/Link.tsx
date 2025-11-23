@@ -32,9 +32,12 @@ export default function Link({
 	className,
 	children,
 	to,
+	showExternalIcon: _showExternalIcon,
 	...props
 }: Readonly<LinkProps>) {
 	const classes = getLinkVariantClasses({ variant, size, className });
+	// Filter out showExternalIcon as it's not a valid DOM attribute
+	// TODO: Implement external icon rendering if needed
 	return (
 		<RouterLink to={to} className={classes} {...props}>
 			{children}

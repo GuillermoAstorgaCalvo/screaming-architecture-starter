@@ -2,6 +2,8 @@
  * Test helpers for ErrorBoundary tests
  */
 
+import { throwTestError } from '@tests/utils/testUtils';
+
 // Component that throws an error during render
 export function ThrowError({
 	shouldThrow,
@@ -25,6 +27,5 @@ export function ThrowErrorWithStack(): never {
 
 // Component that throws a non-Error object
 export function ThrowNonError(): never {
-	// eslint-disable-next-line no-throw-literal
-	throw 'String error';
+	throwTestError('String error');
 }

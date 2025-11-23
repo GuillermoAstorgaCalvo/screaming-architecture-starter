@@ -1,39 +1,16 @@
 ---
-description: 'Comprehensive test coverage roadmap from current 3.1% to full coverage'
+description: 'Comprehensive test coverage roadmap ordered by priority based on missing coverage'
 globs: ['**/*']
 alwaysApply: false
 ---
 
-# Test Coverage Roadmap: From 3.1% to Full Coverage
+# Test Coverage Roadmap: Priority-Based Phases
 
-**Last Verified**: 2025-11-15 - Roadmap has been comprehensively verified against actual project structure. All file paths, component structures, directory hierarchies, and test file specifications have been validated and confirmed accurate. All mentioned files exist, all directory structures match, and all test file paths are correctly specified. Added missing VirtualizedList component (Task 15.7.1) with all 17 files verified.
+**Last Updated**: 2025-01-27 - Based on coverage report from `pnpm run test:coverage`
 
 ## Current State
 
-**Overall Coverage**: 3.1% statements, 1.43% branches, 2.29% functions, 3.13% lines
-
-**Test Files That Exist**:
-
-- `tests/app/App.test.tsx`: Tests `src/app/App.tsx` ✅
-- `e2e/example.spec.ts`: Example E2E test ✅
-
-**Note**: The following test files are mentioned in `docs/structure.md` but do NOT actually exist:
-
-- `tests/core/router/routes.gen.test.ts` - Does not exist ✅ Verified
-- `tests/shared/components/layout/Layout.test.tsx` - Does not exist ✅ Verified
-- `tests/shared/components/layout/Navbar.test.tsx` - Does not exist ✅ Verified
-
-**Note**: The source files for these tests DO exist:
-
-- `src/core/router/routes.gen.ts` - Exists ✅
-- `src/shared/components/layout/Layout.tsx` - Exists ✅
-- `src/shared/components/layout/Navbar.tsx` - Exists ✅
-
-**Covered Files** (based on existing test file):
-
-- `src/app/App.tsx`: Covered by `tests/app/App.test.tsx` ✅
-
-**Note**: Coverage percentages mentioned in this roadmap (e.g., "77%", "32%", etc.) are based on previous coverage reports and may need verification by running `pnpm run test:coverage` or `pnpm run docker:test -- --coverage`. The roadmap assumes these percentages are approximate and may have changed.
+**Overall Coverage**: 59.37% statements, 53.13% branches, 56.69% functions, 59.93% lines
 
 **Target Coverage Thresholds** (to be enabled):
 
@@ -41,6 +18,8 @@ alwaysApply: false
 - Functions: 80%
 - Branches: 80%
 - Statements: 80%
+
+---
 
 ## Testing Strategy
 
@@ -83,392 +62,426 @@ pnpm run test:coverage
 pnpm run test:watch
 ```
 
-**Note**: On Windows, direct test execution may fail due to fork runner timeout. Docker is the recommended solution.
-
 ### Test Utilities Available
 
 - `tests/utils/testUtils.tsx`: `renderWithProviders()` helper ✅
 - `tests/utils/TestProviders.tsx`: Provider composition ✅
 - `tests/utils/mocks/`: Mock adapters ✅
-  - `MockStorageAdapter.ts` ✅
-  - `MockLoggerAdapter.ts` ✅
-  - `MockHttpAdapter.ts` ✅
-  - `MockAuthAdapter.ts` ✅
-  - `MockAnalyticsAdapter.ts` ✅
 - `tests/factories/`: Test data factories ✅
-  - `apiFactories.ts` ✅
-  - `userFactories.ts` ✅
 - `tests/mocks/`: MSW handlers and payloads ✅
-  - `handlers.ts` ✅
-  - `payloads.ts` ✅
-  - `server.ts` ✅
 - `tests/utils/a11y.ts`: Accessibility testing utilities ✅
 
 ---
 
-## Phase 15: UI Components (Priority: LOW-MEDIUM)
+## Phase 1: CRITICAL PRIORITY - Zero Coverage Files
 
-### Task 15.1: Critical Form Components
+**Priority**: HIGHEST
+**Target**: Achieve 80%+ coverage on all executable code files
+**Impact**: Highest - These files have no test coverage and may contain critical business logic
 
-**Components**: Input, Select, Checkbox, Radio, Textarea, Switch, FileUpload
-**Priority**: MEDIUM
+### Task 1.1: Landing Page Component
 
-**Note**: FileUpload is a complex component with extensive helpers and hooks:
-
-- `src/core/ui/forms/file-upload/FileUpload.tsx` ✅
-- Helpers: `FileUploadHelpers.ts`, `FileUploadValidation.ts`, `useFileUpload.utils.ts`, `FileUploadContentHelpers.ts`, `FileUploadContent.builders.ts`, `FileUploadContentSections.types.ts` ✅
-- Hooks: `useFileUpload.ts`, `useFileUpload.handlers.ts`, `useFileUpload.hooks.ts`, `useFileUpload.props.ts` ✅
-- Types: `FileUploadTypes.ts`, `FileUploadContent.types.ts` ✅
-- Components: Multiple component files in `components/` directory (FileUploadContent, FileUploadDropzone, FileUploadPreview, etc.) - focus testing on main FileUpload component and testable helpers/hooks
+**File**: `src/domains/landing/pages/LandingPage.tsx`
+**Coverage**: 0% (all metrics)
+**Priority**: CRITICAL
 
 **Test Requirements**:
 
-- Test rendering
+- Test component rendering
+- Test all props and variants
 - Test user interactions
-- Test validation
-- Test accessibility
+- Test accessibility (a11y)
 - Test error states
-- Test disabled states
-- Test file upload functionality
-- Test file preview
-- Test drag and drop
-- Test file removal
+- Test loading states
+- Test responsive behavior
 
-**Test Files**: `tests/core/ui/forms/input/Input.test.tsx`, `tests/core/ui/forms/file-upload/FileUpload.test.tsx`, etc.
+**Test File**: `tests/domains/landing/pages/LandingPage.test.tsx` (create new)
 
 ---
 
-### Task 15.2: Critical Feedback Components
+### Task 1.2: Layout Component
 
-**Components**: Alert, Toast, Snackbar, Spinner, Progress
+**File**: `src/shared/components/layout/Layout.tsx`
+**Coverage**: 0% (all metrics)
+**Priority**: CRITICAL
+
+**Test Requirements**:
+
+- Test component rendering
+- Test layout structure
+- Test children rendering
+- Test props handling
+- Test accessibility
+- Test responsive behavior
+
+**Test File**: `tests/shared/components/layout/Layout.test.tsx` (create new)
+
+---
+
+### Task 1.3: Motion Components (Zero Coverage)
+
+**Files**:
+
+- `src/core/ui/utilities/motion/components/AnimatePresence.tsx` (0%)
+- `src/core/ui/utilities/motion/components/LayoutGroup.tsx` (0%)
+- `src/core/ui/utilities/motion/components/MotionAccordion.tsx` (0%)
+- `src/core/ui/utilities/motion/components/MotionFade.tsx` (0%)
+- `src/core/ui/utilities/motion/components/MotionSharedElement.tsx` (0%)
+
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test component rendering
+- Test animation props
+- Test animation states
+- Test lifecycle hooks
+- Test accessibility
+- Test edge cases (null children, empty states)
+
+**Test Files**:
+
+- `tests/core/ui/utilities/motion/components/AnimatePresence.test.tsx` (create new)
+- `tests/core/ui/utilities/motion/components/LayoutGroup.test.tsx` (create new)
+- `tests/core/ui/utilities/motion/components/MotionAccordion.test.tsx` (create new)
+- `tests/core/ui/utilities/motion/components/MotionFade.test.tsx` (create new)
+- `tests/core/ui/utilities/motion/components/MotionSharedElement.test.tsx` (create new)
+
+---
+
+### Task 1.4: Loadable Fallback Component
+
+**File**: `src/core/ui/utilities/loadable/components/loadableFallback.tsx`
+**Coverage**: 0% (all metrics)
 **Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test rendering
-- Test variants
-- Test animations
-- Test accessibility
-- Test dismissal
+- Test fallback rendering
+- Test different fallback types
+- Test prop handling
+- Test default behavior
 
-**Test Files**: `tests/core/ui/feedback/alert/Alert.test.tsx`, etc.
-
----
-
-### Task 15.3: Critical Navigation Components
-
-**Components**: Link, Tabs, Breadcrumbs
-**Priority**: MEDIUM
-
-**Note**: Button is in `src/core/ui/button/Button.tsx` (not in navigation directory)
-
-**Test Requirements**:
-
-- Test rendering
-- Test interactions
-- Test navigation
-- Test accessibility
-- Test keyboard navigation
-
-**Test Files**: `tests/core/ui/navigation/link/Link.test.tsx`, `tests/core/ui/navigation/tabs/Tabs.test.tsx`, `tests/core/ui/navigation/breadcrumbs/Breadcrumbs.test.tsx`, etc.
-
-**Button Component** (separate):
-
-- `src/core/ui/button/Button.tsx` ✅
-- **Test File**: `tests/core/ui/button/Button.test.tsx`
+**Test File**: `tests/core/ui/utilities/loadable/components/loadableFallback.test.tsx` (create new)
 
 ---
 
-### Task 15.4: Critical Data Display
+### Task 1.5: Pull-to-Refresh Container Component
 
-**Components**: Table, DataTable, Card, Badge, Avatar
-**Priority**: LOW
-
-**Test Requirements**:
-
-- Test rendering
-- Test data display
-- Test interactions
-- Test accessibility
-
-**Test Files**: `tests/core/ui/data-display/table/Table.test.tsx`, etc.
-
----
-
-### Task 15.5: Critical Overlays
-
-**Components**: Dialog, Modal, Popover, Tooltip, Drawer
+**File**: `src/core/ui/utilities/pull-to-refresh/components/PullToRefreshContainer.tsx`
+**Coverage**: 0% (all metrics)
 **Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test rendering
-- Test open/close
-- Test focus management
-- Test accessibility
-- Test backdrop
-- Test escape key
-
-**Test Files**: `tests/core/ui/overlays/dialog/Dialog.test.tsx`, etc.
-
----
-
-### Task 15.6: Complex Components
-
-**Components**: Calendar, DatePicker, Combobox, Autocomplete, MultiSelect
-**Priority**: LOW
-
-**Test Requirements**:
-
-- Test complex interactions
+- Test container rendering
+- Test pull-to-refresh functionality
+- Test touch/pointer events
 - Test state management
 - Test accessibility
-- Test keyboard navigation
 
-**Test Files**: `tests/core/ui/forms/date-picker/DatePicker.test.tsx`, etc.
+**Test File**: `tests/core/ui/utilities/pull-to-refresh/components/PullToRefreshContainer.test.tsx` (create new)
 
 ---
 
-### Task 15.7: Utility Components
+## Phase 2: HIGH PRIORITY - Low Coverage Files (< 80%)
 
-**Components**: Accordion, Collapsible, Affix, Resizable, ScrollArea
-**Priority**: LOW
+**Priority**: HIGH
+**Target**: Achieve 80%+ coverage on files with significant gaps
+**Impact**: High - These files have partial coverage but missing critical paths
 
-**Note**: Accordion, Collapsible, and Affix are in their own directories (not in utilities):
+### Task 2.1: Route Generation
 
-- `src/core/ui/accordion/Accordion.tsx` ✅
-- `src/core/ui/collapsible/Collapsible.tsx` ✅
-- `src/core/ui/affix/Affix.tsx` ✅
-- Resizable and ScrollArea are in utilities:
-- `src/core/ui/utilities/resizable/Resizable.tsx` ✅
-- `src/core/ui/utilities/scroll-area/ScrollArea.tsx` ✅
+**File**: `src/core/routing/routes.gen.ts`
+**Coverage**: 51.28% (lines 93-131 uncovered)
+**Priority**: HIGH
 
 **Test Requirements**:
 
-- Test functionality
-- Test interactions
-- Test accessibility
+- Test route generation logic
+- Test all route definitions
+- Test route parameters
+- Test route guards
+- Test route metadata
+- Test error handling in route generation
 
-**Test Files**:
-
-- `tests/core/ui/accordion/Accordion.test.tsx`
-- `tests/core/ui/collapsible/Collapsible.test.tsx`
-- `tests/core/ui/affix/Affix.test.tsx`
-- `tests/core/ui/utilities/resizable/Resizable.test.tsx`
-- `tests/core/ui/utilities/scroll-area/ScrollArea.test.tsx`
+**Test File**: `tests/core/routing/routes.gen.test.ts` (create new)
 
 ---
 
-### Task 15.7.1: VirtualizedList Component
+### Task 2.2: Motion Provider Lazy Loading
 
-**Components** (verified):
+**File**: `src/core/ui/utilities/motion/components/MotionProvider.lazy.tsx`
+**Coverage**: 33.33% statements, 100% branches, 0% functions, 50% lines (line 13 uncovered)
+**Priority**: HIGH
 
-- `src/core/ui/utilities/virtualized-list/VirtualizedList.tsx` ✅ (main component)
-- `src/core/ui/utilities/virtualized-list/components/VirtualizedListWrapper.tsx` ✅
-- `src/core/ui/utilities/virtualized-list/components/VirtualizedListContainer.tsx` ✅
-- `src/core/ui/utilities/virtualized-list/components/VirtualizedListEmpty.tsx` ✅
-- `src/core/ui/utilities/virtualized-list/components/VirtualizedListContent.tsx` ✅
-- `src/core/ui/utilities/virtualized-list/components/VirtualItem.tsx` ✅
-- `src/core/ui/utilities/virtualized-list/helpers/VirtualizedListPropsHelpers.ts` ✅
-- `src/core/ui/utilities/virtualized-list/helpers/VirtualizedListContentHelpers.tsx` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListConfiguration.ts` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListSetupAndProps.ts` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/scroll/useScrollHandler.ts` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/scroll/useInitialScroll.ts` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/utils/useVirtualizedListRef.ts` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizedListSetup.ts` ✅
-- `src/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizerInstance.ts` ✅
-- `src/core/ui/utilities/virtualized-list/types/VirtualizedListTypes.ts` ✅
-- `src/core/ui/utilities/virtualized-list/types/VirtualizedListContentTypes.ts` ✅
+**Test Requirements**:
 
-**Current Coverage**: 0% (no test files exist)
+- Test lazy loading behavior
+- Test component loading states
+- Test error handling
+- Test Suspense boundaries
+
+**Test File**: `tests/core/ui/utilities/motion/components/MotionProvider.lazy.test.tsx` (create new)
+
+---
+
+### Task 2.3: Motion Components (Low Branch Coverage)
+
+**Files**:
+
+- `src/core/ui/utilities/motion/components/MotionBlur.tsx` (75% branches - lines 53-74)
+- `src/core/ui/utilities/motion/components/MotionRotate.tsx` (78.57% branches - lines 55-57)
+- `src/core/ui/utilities/motion/components/MotionShake.tsx` (90.9% branches - line 61)
+
+**Priority**: MEDIUM-HIGH
+
+**Test Requirements**:
+
+- Test all branch conditions
+- Test animation variants
+- Test edge cases
+- Test prop combinations
+
+**Test Files**: Enhance existing tests or create new ones
+
+---
+
+### Task 2.4: Loadable Component
+
+**File**: `src/core/ui/utilities/loadable/loadable.tsx`
+**Coverage**: 100% statements, 91.66% branches, 100% functions, 100% lines (line 67 uncovered)
 **Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test main VirtualizedList component rendering
-- Test vertical and horizontal orientation
-- Test fixed and dynamic item sizes
-- Test overscan configuration
-- Test empty state rendering
-- Test scroll handling (useScrollHandler)
-- Test initial scroll offset (useInitialScroll)
-- Test virtualizer instance creation (useVirtualizerInstance)
-- Test virtualizer setup (useVirtualizedListSetup)
-- Test configuration hooks (useVirtualizedListConfiguration, useVirtualizedListSetupAndProps)
-- Test props extraction and normalization (VirtualizedListPropsHelpers)
-- Test content helpers (VirtualizedListContentHelpers)
-- Test wrapper, container, content, and empty components
-- Test VirtualItem component rendering and positioning
-- Test accessibility (ARIA attributes)
-- Test smooth scrolling option
-- Test getItemKey functionality
-- Test large list performance
+- Test remaining branch conditions
+- Test error handling paths
+- Test edge cases
 
-**Test Files**:
-
-- `tests/core/ui/utilities/virtualized-list/VirtualizedList.test.tsx` (main component)
-- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListWrapper.test.tsx`
-- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListContainer.test.tsx`
-- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListEmpty.test.tsx`
-- `tests/core/ui/utilities/virtualized-list/components/VirtualizedListContent.test.tsx`
-- `tests/core/ui/utilities/virtualized-list/components/VirtualItem.test.tsx`
-- `tests/core/ui/utilities/virtualized-list/helpers/VirtualizedListPropsHelpers.test.ts`
-- `tests/core/ui/utilities/virtualized-list/helpers/VirtualizedListContentHelpers.test.tsx`
-- `tests/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListConfiguration.test.ts`
-- `tests/core/ui/utilities/virtualized-list/hooks/configuration/useVirtualizedListSetupAndProps.test.ts`
-- `tests/core/ui/utilities/virtualized-list/hooks/scroll/useScrollHandler.test.ts`
-- `tests/core/ui/utilities/virtualized-list/hooks/scroll/useInitialScroll.test.ts`
-- `tests/core/ui/utilities/virtualized-list/hooks/utils/useVirtualizedListRef.test.ts`
-- `tests/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizedListSetup.test.ts`
-- `tests/core/ui/utilities/virtualized-list/hooks/virtualizer/useVirtualizerInstance.test.ts`
+**Test File**: `tests/core/ui/utilities/loadable/loadable.test.tsx` (enhance existing)
 
 ---
 
-### Task 15.8: Motion Components
+### Task 2.5: Resizable Component Hook
 
-**Components** (verified):
-
-- `src/core/ui/utilities/motion/MotionBox.tsx` ✅ (main component)
-- `src/core/ui/utilities/motion/components/MotionFade.tsx` ✅
-- `src/core/ui/utilities/motion/components/MotionSlide.tsx` ✅
-- `src/core/ui/utilities/motion/components/MotionList.tsx` ✅
-- `src/core/ui/utilities/motion/components/AnimatePresence.tsx` ✅
-- Additional motion components: MotionBlur, MotionRotate, MotionScale, MotionShake, MotionStagger, MotionAccordion, MotionPresence, MotionProvider, MotionSharedElement, RouteTransition, LayoutGroup ✅
-
-**Priority**: LOW
+**File**: `src/core/ui/utilities/resizable/hooks/useResizableComponent.ts`
+**Coverage**: 100% statements, 83.33% branches, 100% functions, 100% lines (line 44 uncovered)
+**Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test animations
-- Test variants
-- Test transitions
-- Test motion hooks (useMotionConfig, useReducedMotion)
-- Test motion helpers and utilities
+- Test remaining branch conditions
+- Test resize edge cases
+- Test component lifecycle
 
-**Test Files**:
-
-- `tests/core/ui/utilities/motion/MotionBox.test.tsx`
-- `tests/core/ui/utilities/motion/components/MotionFade.test.tsx`
-- `tests/core/ui/utilities/motion/components/MotionSlide.test.tsx`
-- `tests/core/ui/utilities/motion/components/MotionList.test.tsx`
-- `tests/core/ui/utilities/motion/components/AnimatePresence.test.tsx`
-- `tests/core/ui/utilities/motion/hooks/useMotionConfig.test.ts`
-- `tests/core/ui/utilities/motion/hooks/useReducedMotion.test.ts`
+**Test File**: `tests/core/ui/utilities/resizable/hooks/useResizableComponent.test.ts` (enhance existing)
 
 ---
 
-### Task 15.9: Chart Components
+### Task 2.6: Splitter Calculations
 
-**Components**: AreaChart, BarChart, LineChart, PieChart
-**Priority**: LOW
+**File**: `src/core/ui/utilities/splitter/helpers/splitter.calculations.ts`
+**Coverage**: 94.44% statements, 85.71% branches, 100% functions, 94.44% lines (line 44 uncovered)
+**Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test rendering
-- Test data visualization
-- Test interactions
+- Test remaining branch conditions
+- Test calculation edge cases
+- Test boundary conditions
 
-**Test Files**: `tests/core/ui/data-display/chart/area-chart/AreaChart.test.tsx`, etc.
+**Test File**: `tests/core/ui/utilities/splitter/helpers/splitter.calculations.test.ts` (enhance existing)
 
 ---
 
-### Task 15.10: UI Variants
+### Task 2.7: Splitter Hook
 
-**Files**: `src/core/ui/variants/*.ts` (30 variant files)
-**Current Coverage**: 0% (no test files exist)
-**Priority**: LOW
-
-**Variant Files** (verified):
-
-- `anchor.ts`, `badge.ts`, `button.ts`, `card.ts`, `checkbox.ts`, `chip.ts`, `code.ts`, `dialog.ts`, `errorText.ts`, `heading.ts`, `helperText.ts`, `icon.ts`, `iconButton.ts`, `input.ts`, `label.ts`, `link.ts`, `list.ts`, `modal.ts`, `radio.ts`, `rating.ts`, `select.ts`, `skeleton.ts`, `spinner.ts`, `stat.ts`, `stepper.ts`, `switch.ts`, `text.ts`, `textarea.ts`, `timeline.ts`, `toggle.ts`
+**File**: `src/core/ui/utilities/splitter/hooks/useSplitter.ts`
+**Coverage**: 83.33% statements, 33.33% branches, 84.61% functions, 82.35% lines (lines 102-106, 113-114 uncovered)
+**Priority**: HIGH
 
 **Test Requirements**:
 
-- Test variant functions
-- Test class generation
-- Test variant combinations
-- Test variant type safety
+- Test all branch conditions
+- Test state management
+- Test event handlers
+- Test edge cases
 
-**Test Files**: `tests/core/ui/variants/button.test.ts`, `tests/core/ui/variants/input.test.ts`, etc.
+**Test File**: `tests/core/ui/utilities/splitter/hooks/useSplitter.test.ts` (enhance existing)
 
 ---
 
-## Phase 16: Domain Code (Priority: LOW)
+### Task 2.8: Splitter Panel Size Hook
 
-### Task 16.1: Landing Domain
-
-**Files** (verified):
-
-- `src/domains/landing/pages/LandingPage.tsx` ✅
-- `src/domains/landing/services/api/getDemoContentService.ts` ✅
-- `src/domains/landing/store/landingStore.ts` ✅
-- `src/domains/landing/i18n/index.ts` ✅
-
-**Current Coverage**: 0%
-**Priority**: LOW
+**File**: `src/core/ui/utilities/splitter/hooks/useSplitterPanelSize.ts`
+**Coverage**: 100% statements, 91.66% branches, 100% functions, 100% lines (line 47 uncovered)
+**Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test landing store
-- Test landing services
-- Test landing page
-- Test i18n integration
+- Test remaining branch conditions
+- Test size calculation edge cases
 
-**Test Files**: `tests/domains/landing/store/landingStore.test.ts`, `tests/domains/landing/pages/LandingPage.test.tsx`, etc.
+**Test File**: `tests/core/ui/utilities/splitter/hooks/useSplitterPanelSize.test.ts` (enhance existing)
 
 ---
 
-### Task 16.2: Shared Domain
+### Task 2.9: Pull-to-Refresh Handlers
 
-**Files** (verified):
-
-**AutocompleteCombobox**:
-
-- `src/domains/shared/components/autocomplete-combobox/AutocompleteCombobox.tsx`
-- `src/domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxBody.tsx`
-- `src/domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxField.tsx`
-- `src/domains/shared/components/autocomplete-combobox/components/AutocompleteComboboxParts.tsx`
-- `src/domains/shared/components/autocomplete-combobox/helpers/AutocompleteComboboxHelpers.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteCombobox.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxEffects.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.input.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.keyboard.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.list.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.option.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxIds.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxSetup.ts`
-- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxState.ts`
-
-**DatePicker**:
-
-- `src/domains/shared/components/date-picker/DatePicker.tsx`
-
-**Slider**:
-
-- `src/domains/shared/components/slider/Slider.tsx`
-- `src/domains/shared/components/slider/components/SliderView.tsx`
-- `src/domains/shared/components/slider/helpers/sliderModel.ts`
-- `src/domains/shared/components/slider/types/slider.types.ts`
-
-**Current Coverage**: 0%
-**Priority**: LOW
+**File**: `src/core/ui/utilities/pull-to-refresh/hooks/usePullToRefreshHandlers.ts`
+**Coverage**: 97.56% statements, 95.65% branches, 100% functions, 97.29% lines (line 188 uncovered)
+**Priority**: MEDIUM
 
 **Test Requirements**:
 
-- Test shared components (AutocompleteCombobox, DatePicker, Slider)
-- Test shared component hooks (all 10 AutocompleteCombobox hooks)
-- Test shared component helpers (AutocompleteComboboxHelpers, sliderModel)
-- Test component interactions and state management
+- Test remaining branch conditions
+- Test handler edge cases
 
-**Test Files**: `tests/domains/shared/components/autocomplete-combobox/AutocompleteCombobox.test.tsx`, `tests/domains/shared/components/date-picker/DatePicker.test.tsx`, `tests/domains/shared/components/slider/Slider.test.tsx`, etc.
+**Test File**: `tests/core/ui/utilities/pull-to-refresh/hooks/usePullToRefreshHandlers.test.ts` (enhance existing)
 
 ---
 
-## Phase 17: Integration & E2E (Priority: MEDIUM)
+### Task 2.10: Loading Wrapper Empty State
 
-### Task 17.1: Provider Integration Tests
+**File**: `src/core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.empty.tsx`
+**Coverage**: 100% statements, 92.5% branches, 100% functions, 100% lines (lines 125-127 uncovered)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test remaining branch conditions
+- Test empty state edge cases
+
+**Test File**: `tests/core/ui/utilities/loading-wrapper/helpers/LoadingWrapperHelpers.empty.test.tsx` (enhance existing)
+
+---
+
+### Task 2.11: Scroll to Top Component
+
+**File**: `src/core/ui/utilities/scroll-to-top/ScrollToTop.tsx`
+**Coverage**: 90.9% statements, 94.44% branches, 100% functions, 90.9% lines (line 70 uncovered)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test remaining line coverage
+- Test scroll behavior edge cases
+
+**Test File**: `tests/core/ui/utilities/scroll-to-top/ScrollToTop.test.tsx` (enhance existing)
+
+---
+
+### Task 2.12: Throttle Utility
+
+**File**: `src/core/utils/throttle/throttle.ts`
+**Coverage**: 78.26% statements, 53.84% branches, 100% functions, 78.26% lines (lines 96-97, 112-128 uncovered)
+**Priority**: HIGH
+
+**Test Requirements**:
+
+- Test all branch conditions
+- Test throttle behavior
+- Test edge cases (immediate execution, trailing calls)
+- Test timing edge cases
+
+**Test File**: `tests/core/utils/throttle/throttle.test.ts` (enhance existing)
+
+---
+
+### Task 2.13: Throttle Helpers
+
+**File**: `src/core/utils/throttle/throttleHelpers.ts`
+**Coverage**: 98.07% statements, 91.42% branches, 100% functions, 98.07% lines (line 88 uncovered)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test remaining branch conditions
+- Test helper edge cases
+
+**Test File**: `tests/core/utils/throttle/throttleHelpers.test.ts` (enhance existing)
+
+---
+
+### Task 2.14: Class Names Utility
+
+**File**: `src/core/utils/classNames.ts`
+**Coverage**: 100% statements, 95.65% branches, 100% functions, 100% lines (line 115 uncovered)
+**Priority**: LOW-MEDIUM
+
+**Test Requirements**:
+
+- Test remaining branch conditions
+- Test edge case combinations
+
+**Test File**: `tests/core/utils/classNames.test.ts` (enhance existing)
+
+---
+
+### Task 2.15: Hook Utils
+
+**File**: `src/core/utils/hookUtils.ts`
+**Coverage**: 93.75% statements, 95% branches, 100% functions, 93.54% lines (lines 26, 53 uncovered)
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test remaining line coverage
+- Test utility edge cases
+
+**Test File**: `tests/core/utils/hookUtils.test.ts` (enhance existing)
+
+---
+
+### Task 2.16: Storage Adapters
+
+**Files**:
+
+- `src/infrastructure/storage/storage.constants.ts` (75% branches - line 22)
+- `src/infrastructure/storage/localStorageAdapter.ts` (93.75% branches - line 55)
+- `src/infrastructure/storage/sessionStorageAdapter.ts` (100% branches - line 27)
+- `src/infrastructure/storage/indexedDBStorageAdapter.ts` (93.75% branches - line 55)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test remaining branch conditions
+- Test storage error handling
+- Test storage edge cases
+- Test cross-tab synchronization
+
+**Test Files**: Enhance existing tests
+
+---
+
+### Task 2.17: Autocomplete Combobox Handlers
+
+**Files**:
+
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxHandlers.option.test.ts` (83.33% branches - line 32)
+- `src/domains/shared/components/autocomplete-combobox/hooks/useAutocompleteComboboxState.test.ts` (87.5% branches - line 60)
+
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test remaining branch conditions
+- Test option selection edge cases
+- Test state management edge cases
+
+**Test Files**: Enhance existing tests
+
+---
+
+## Phase 3: MEDIUM PRIORITY - Integration & E2E Tests
+
+**Priority**: MEDIUM
+**Target**: Comprehensive integration testing and E2E coverage
+**Impact**: Medium - Ensures system works as a whole
+
+### Task 3.1: Provider Integration Tests
 
 **Priority**: MEDIUM
 
@@ -477,12 +490,14 @@ pnpm run test:watch
 - Test provider composition
 - Test provider interaction
 - Test provider lifecycle
+- Test error boundaries with providers
+- Test provider context sharing
 
-**Test File**: `tests/integration/providers.test.tsx`
+**Test File**: `tests/integration/providers.test.tsx` (create new)
 
 ---
 
-### Task 17.2: Router Integration Tests
+### Task 3.2: Router Integration Tests
 
 **Priority**: MEDIUM
 
@@ -492,12 +507,14 @@ pnpm run test:watch
 - Test route guards
 - Test route parameters
 - Test route transitions
+- Test protected routes
+- Test route error handling
 
-**Test File**: `tests/integration/router.test.tsx`
+**Test File**: `tests/integration/router.test.tsx` (create new)
 
 ---
 
-### Task 17.3: Auth Flow Integration Tests
+### Task 3.3: Auth Flow Integration Tests
 
 **Priority**: HIGH
 
@@ -507,14 +524,31 @@ pnpm run test:watch
 - Test logout flow
 - Test protected routes
 - Test token refresh
+- Test session management
+- Test auth state persistence
 
-**Test File**: `tests/integration/authFlow.test.tsx`
+**Test File**: `tests/integration/authFlow.test.tsx` (create new)
 
 ---
 
-### Task 17.4: E2E Test Expansion
+### Task 3.4: Form Integration Tests
 
-**File**: `e2e/example.spec.ts`
+**Priority**: MEDIUM
+
+**Test Requirements**:
+
+- Test form submission flow
+- Test form validation
+- Test form error handling
+- Test form state management
+- Test form field interactions
+
+**Test File**: `tests/integration/forms.test.tsx` (create new)
+
+---
+
+### Task 3.5: E2E Test Expansion
+
 **Priority**: MEDIUM
 
 **Test Requirements**:
@@ -525,14 +559,58 @@ pnpm run test:watch
 - Form submission
 - Error handling
 - Accessibility checks
+- Performance checks
 
-**Test File**: `e2e/critical-flows.spec.ts`
+**Test File**: `e2e/critical-flows.spec.ts` (create new)
 
 ---
 
-## Phase 18: Coverage Configuration (Priority: HIGH)
+## Phase 4: LOW PRIORITY - Edge Cases & Type Files
 
-### Task 18.1: Enable Coverage Thresholds
+**Priority**: LOW
+**Target**: Complete coverage on edge cases and verify type-only files
+**Impact**: Low - Nice to have, but not critical
+
+### Task 4.1: Type Files Verification
+
+**Files** (0% coverage - expected for type-only files):
+
+- `src/types/**/*.ts` (type definitions)
+- `src/core/ui/**/types/*.ts` (component type definitions)
+- `src/core/ui/utilities/**/types/*.ts` (utility type definitions)
+
+**Priority**: LOW
+
+**Note**: Type files typically don't need test coverage unless they contain executable code (type guards, validators, etc.). Verify that these are truly type-only files.
+
+**Action**: Review type files to ensure they don't contain executable code that needs testing.
+
+---
+
+### Task 4.2: High Coverage Edge Cases
+
+**Files with 95%+ coverage that need edge case testing**:
+
+- Various components and utilities already at high coverage
+
+**Priority**: LOW
+
+**Test Requirements**:
+
+- Test remaining edge cases
+- Test error boundaries
+- Test extreme values
+- Test concurrent operations
+
+---
+
+## Phase 5: Configuration & Maintenance
+
+**Priority**: HIGH (for enabling thresholds)
+**Target**: Enable coverage thresholds and maintain coverage
+**Impact**: High - Ensures coverage doesn't regress
+
+### Task 5.1: Enable Coverage Thresholds
 
 **File**: `vitest.config.ts`
 **Priority**: HIGH
@@ -611,36 +689,32 @@ coverage: {
 
 ### Current Status
 
-- **Overall Coverage**: 3.1% statements, 1.43% branches, 2.29% functions, 3.13% lines (as of last measurement)
-- **Files with Tests**: 1 unit test file (`tests/app/App.test.tsx` covering `src/app/App.tsx`)
-- **E2E Tests**: 1 (`e2e/example.spec.ts`)
-- **Total Test Files Needed**: ~200+ (estimated based on source file count)
-- **Covered Files** (verified):
-  - `src/app/App.tsx`: Covered by `tests/app/App.test.tsx` ✅
-- **Test Infrastructure**: Complete ✅
-  - Test utilities, factories, mocks, and MSW setup all exist
-  - All mock adapters are available
-- **Note**: Tests should be run using Docker on Windows to avoid fork runner timeout issues. Coverage can be generated with `pnpm run docker:test -- --coverage` or `pnpm run test:coverage` on Mac/Linux.
-- **Important**: Coverage percentages mentioned throughout this roadmap (e.g., "77%", "32%", "100%") are based on previous coverage reports and should be verified by running coverage analysis. The actual current coverage may differ.
+- **Overall Coverage**: 59.37% statements, 53.13% branches, 56.69% functions, 59.93% lines
+- **Test Files**: 307 test files passing (4913 tests)
+- **Coverage Report**: Generated from `pnpm run test:coverage`
 
 ### Milestones
 
-1. **Phase 1-3 Complete** (Core utilities, hooks, providers): Target 40% coverage
-2. **Phase 4-6 Complete** (Config, constants, HTTP): Target 60% coverage
-3. **Phase 7-11 Complete** (Security, i18n, router, forms, lib): Target 75% coverage
-4. **Phase 12-16 Complete** (A11y, app, infrastructure, UI, domains): Target 85% coverage
-5. **Phase 17-18 Complete** (Integration, E2E, thresholds): Target 90%+ coverage
+1. **Phase 1 Complete** (Critical zero-coverage components): Target 65% coverage
+2. **Phase 2 Complete** (High priority low-coverage files): Target 75% coverage
+3. **Phase 3 Complete** (Integration & E2E): Target 80% coverage
+4. **Phase 4 Complete** (Edge cases): Target 85% coverage
+5. **Phase 5 Complete** (Coverage thresholds enabled): Target 80%+ coverage maintained
 
 ---
 
 ## Notes
 
-- Start with high-priority tasks (CRITICAL, HIGH)
-- Focus on core functionality first
-- UI components can be tested incrementally
+- **CRITICAL PRIORITY**: Focus on Phase 1 files with 0% coverage first
+- **HIGH PRIORITY**: Address Phase 2 files with < 80% coverage
+- Most core infrastructure files already have 90-100% coverage ✅
+- Enhance existing tests to reach 80%+ coverage where needed
 - Use existing test utilities and patterns
 - Maintain consistency with existing test structure
 - Update this document as tasks are completed
+- Type files are lowest priority unless they contain executable code
+
+---
 
 ## Known Issues
 

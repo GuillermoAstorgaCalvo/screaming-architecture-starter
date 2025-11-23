@@ -42,7 +42,11 @@ function SliderMarks({ marks, min, range, marksId }: Readonly<SliderMarksProps>)
 	}
 
 	return (
-		<div id={marksId} className="relative mt-1 h-8 text-xs text-muted-foreground">
+		<div
+			id={marksId}
+			data-testid="slider-marks"
+			className="relative mt-1 h-8 text-xs text-muted-foreground"
+		>
 			{marks.map(mark => {
 				const position = getPercentage(mark.value, min, range);
 				return (
@@ -126,7 +130,7 @@ export function SliderView({
 	helperId,
 }: Readonly<SliderViewProps>) {
 	return (
-		<div className={classNames('w-full space-y-2', className)}>
+		<div className={classNames('w-full space-y-2', className)} data-testid="slider-wrapper">
 			<SliderHeader
 				htmlFor={sliderId}
 				label={label}

@@ -4,7 +4,7 @@ import {
 	buildInlineEditReturn,
 	useInlineEditValue,
 } from '@core/ui/forms/inline-edit/hooks/useInlineEdit.utils';
-import type { ChangeEvent, FocusEvent, KeyboardEvent } from 'react';
+import { type ChangeEvent, type FocusEvent, type KeyboardEvent, useEffect } from 'react';
 
 export interface UseInlineEditOptions {
 	readonly value?: string;
@@ -46,6 +46,16 @@ export function useInlineEdit({
 	});
 
 	const state = useInlineEditState({ initialValue: currentValue });
+
+	// Update edit value when controlled value changes (only when not editing)
+	useEffect(() => {
+		if (!state.isEditing) {
+			const newValue = getCurrentValueFn();
+			state.updateEditValue(newValue);
+			state.setOriginalValue(newValue);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [controlledValue, defaultValue, state.isEditing]);
 
 	const handlers = useInlineEditHandlers({
 		getCurrentValueFn,

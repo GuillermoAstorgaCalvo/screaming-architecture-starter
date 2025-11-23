@@ -26,14 +26,22 @@ export function getHeaderClasses(size: StandardSize): string {
 	return twMerge(ACCORDION_HEADER_BASE_CLASSES, ACCORDION_HEADER_SIZE_CLASSES[size]);
 }
 
-export function getContentClasses(size: StandardSize, isExpanded: boolean): string {
+export function getContentClassesExpanded(size: StandardSize): string {
 	const sizeClasses = ACCORDION_CONTENT_SIZE_CLASSES[size];
-	const heightClass = isExpanded ? '' : 'max-h-0';
-	return twMerge(ACCORDION_CONTENT_BASE_CLASSES, sizeClasses, heightClass);
+	return twMerge(ACCORDION_CONTENT_BASE_CLASSES, sizeClasses);
 }
 
-export function getContentStyle(isExpanded: boolean): React.CSSProperties | undefined {
-	return isExpanded ? { maxHeight: 'var(--animation-max-height-collapsible, 1000px)' } : undefined;
+export function getContentClassesCollapsed(size: StandardSize): string {
+	const sizeClasses = ACCORDION_CONTENT_SIZE_CLASSES[size];
+	return twMerge(ACCORDION_CONTENT_BASE_CLASSES, sizeClasses, 'max-h-0');
+}
+
+export function getContentStyleExpanded(): React.CSSProperties {
+	return { maxHeight: 'var(--animation-max-height-collapsible, 1000px)' };
+}
+
+export function getContentStyleCollapsed(): undefined {
+	return undefined;
 }
 
 export function getAccordionItemIds(
@@ -72,13 +80,14 @@ export interface AccordionContainerPropsParams {
  */
 export function getAccordionContainerProps({
 	variant,
-	allowMultiple,
+	allowMultiple: _allowMultiple,
 	className,
 	props,
 }: AccordionContainerPropsParams) {
 	return {
 		className: getAccordionClasses(variant ?? 'default', className),
-		'aria-multiselectable': allowMultiple,
+		// Note: aria-multiselectable is not valid for accordion pattern on a plain div
+		// Accordion behavior is controlled via allowMultiple prop internally
 		...props,
 	};
 }

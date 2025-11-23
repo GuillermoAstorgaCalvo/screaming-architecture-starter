@@ -45,8 +45,8 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
   2. Providers order: `LoggerProvider` → `ErrorBoundaryWrapper` → `HttpProvider` → `AuthProvider` → `StorageProvider` → `ThemeProvider` → `I18nProvider` → `QueryProvider` → `AnalyticsProvider` → `DeferredMotionProvider` (wraps lazy-loaded `LazyMotionProvider`, defers loading until user interaction) → `ToastProvider` → `BrowserRouter` → `LazyLayoutGroup` (lazy-loaded) → `Router` → `ToastContainer` (inside ToastProvider but outside BrowserRouter).
   3. Analytics toggles between `googleTagManagerAdapter` and `noopAnalyticsAdapter` based on `env.ANALYTICS_ENABLED` / runtime config (prefers runtime ANALYTICS_WRITE_KEY, otherwise GTM env vars). Analytics adapter is lazy-loaded when enabled.
   4. No domain logic; only composition + DI wiring.
-- `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Awaits `i18nInitPromise` from `@core/i18n/i18n` to ensure translations are loaded before rendering. Calls `reportWebVitals()` from `@core/perf/reportWebVitals` with logger adapter (only runs in production). Imports domain i18n registrations (e.g., `@domains/landing/i18n`). Creates React root, renders `<App />` wrapped in `StrictMode`, conditionally renders `<SpeedInsightsLoader />` (only in production when feature flag enabled), imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization (Promise.all for parallel init).
-- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense` using `DefaultLoadingFallback` from `@core/ui/utilities/loadable/components/loadableFallback`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Uses `LazyRouteTransition` (lazy-loaded) from `@core/ui/utilities/motion/components/RouteTransition.lazy` for route change animations. Tracks page views via `useAnalytics()` hook on route changes (tracks path, title, and location). Paths derive from `core/config/routes.ts` via the generated helpers in `@core/router/routes.gen` (`buildRoute`, `ROUTE_KEYS`). Includes catch-all route (`path="*"`) for `Error404`.
+- `main.tsx`: Bootstrap. Calls `initConfig()` from `@core/config/init` to load runtime configuration and configure httpClient baseURL. Awaits `i18nInitPromise` from `@core/i18n/i18n` to ensure translations are loaded before rendering. Calls `reportWebVitals()` from `@core/perf/reportWebVitals` with logger adapter (only runs in production). Imports domain i18n registrations when domain translations exist (e.g., `@domains/my-domain/i18n`). Creates React root, renders `<App />` wrapped in `StrictMode`, conditionally renders `<SpeedInsightsLoader />` (only in production when feature flag enabled), imports global CSS (`@styles/globals.css`), and throws error if root element `#root` not found. Uses top-level await for async initialization (Promise.all for parallel init).
+- `router.tsx`: Centralized routes. Lazy-load pages with `React.lazy` and `React.Suspense` using `DefaultLoadingFallback` from `@core/ui/utilities/loadable/components/loadableFallback`. Uses `withTheme` HOC from `PageWrapper.tsx` to inject theme props into pages. Wraps routes with `AppLayout` component. Uses `useDeferredActivation` hook to defer route transitions until ready (with `timeout: 0` for immediate activation). Conditionally renders `LazyRouteTransition` (lazy-loaded) from `@core/ui/utilities/motion/components/RouteTransition.lazy` for route change animations when transitions are ready, otherwise renders routes without transitions. Tracks page views via `useAnalytics()` hook on route changes (tracks path, title, and location with SSR-safe checks). Paths derive from `core/config/routes.ts` via the generated helpers in `@core/router/routes.gen` (`buildRoute`, `ROUTE_KEYS`). Includes catch-all route (`path="*"`) for `Error404`.
 - `pages/*`: App-level system pages:
   - `Error404.tsx`: Not Found page (404 error)
   - `Error500.tsx`: Internal Server Error page (500 error)
@@ -54,6 +54,7 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
   - `AppLayout.tsx`: Layout wrapper for routes
   - `PageWrapper.tsx`: Exports `withTheme` HOC that injects theme props into page components
   - `ProtectedRoute.tsx`: Route protection component that provides authentication and permission-based route guards using route guard utilities from `@core/router/routes.guards`
+  - `RightsLoader.tsx`: Loads user rights/permissions from API endpoint. Fetches additional rights data and provides loading and error states. Renders children when rights are loaded. Uses `useAuth`, `useHttp`, and `useLogger` hooks.
   - `SpeedInsightsLoader.tsx`: Lazy-loads Vercel Speed Insights component (only in production when feature flag enabled)
 - `providers/*`: App-scoped providers:
   - `ThemeProvider.tsx`: Theme management (light/dark/system) with persistence via StoragePort, system theme detection, HTML class management
@@ -73,6 +74,7 @@ See also: `architecture/folder-structure.mdc` (index linking adjacent rules)
 ```tsx
 // app/App.tsx (actual implementation, trimmed for clarity)
 import Error500 from '@app/pages/Error500';
+import { DeferredMotionProvider } from '@app/providers/DeferredMotionProvider';
 import { I18nProvider } from '@app/providers/I18nProvider';
 import { QueryProvider } from '@app/providers/QueryProvider';
 import { ThemeProvider } from '@app/providers/ThemeProvider';
@@ -82,7 +84,7 @@ import { getCachedRuntimeConfig } from '@core/config/runtime';
 import { useHttpClientAuth } from '@core/hooks/http/useHttpClientAuth';
 import { ErrorBoundaryWrapper } from '@core/lib/ErrorBoundaryWrapper';
 import { httpClient } from '@core/lib/http/httpClient';
-import type { AnalyticsInitOptions } from '@core/ports/AnalyticsPort';
+import type { AnalyticsInitOptions, AnalyticsPort } from '@core/ports/AnalyticsPort';
 import { AnalyticsProvider } from '@core/providers/analytics/AnalyticsProvider';
 import { AuthProvider } from '@core/providers/auth/AuthProvider';
 import { HttpProvider } from '@core/providers/http/HttpProvider';
@@ -91,25 +93,43 @@ import { StorageProvider } from '@core/providers/storage/StorageProvider';
 import { ToastProvider } from '@core/providers/toast/ToastProvider';
 import ToastContainer from '@core/ui/feedback/toast/components/ToastContainer';
 import { LazyLayoutGroup } from '@core/ui/utilities/motion/components/LayoutGroup.lazy';
-import { DeferredMotionProvider } from '@app/providers/DeferredMotionProvider';
-import {
-	googleTagManagerAdapter,
-	noopAnalyticsAdapter,
-} from '@infra/analytics/googleTagManagerAdapter';
+import { noopAnalyticsAdapter } from '@infra/analytics/noopAnalyticsAdapter';
 import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import { loggerAdapter } from '@infra/logging/loggerAdapter';
 import { localStorageAdapter } from '@infra/storage/localStorageAdapter';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 const authAdapter = new JwtAuthAdapter({ storage: localStorageAdapter });
 
+interface AppProvidersProps {
+	readonly analytics: AnalyticsPort;
+	readonly config: AnalyticsInitOptions | null;
+	readonly children: ReactNode;
+}
+
 export default function App() {
 	useHttpClientAuth(authAdapter);
 
-	const analyticsEnabled = env.ANALYTICS_ENABLED;
-	const analyticsAdapter = analyticsEnabled ? googleTagManagerAdapter : noopAnalyticsAdapter;
-	const analyticsConfig = getAnalyticsConfig(analyticsEnabled);
+	const { analyticsAdapter, analyticsConfig, shouldLoadAnalytics } = useAnalytics(
+		env.ANALYTICS_ENABLED
+	);
+	const analyticsProviderConfig = shouldLoadAnalytics ? analyticsConfig : null;
 
+	return (
+		<AppProviders analytics={analyticsAdapter} config={analyticsProviderConfig}>
+			<BrowserRouter>
+				<LazyLayoutGroup id="app-route-transitions">
+					<div data-testid="router">
+						<Router />
+					</div>
+				</LazyLayoutGroup>
+			</BrowserRouter>
+		</AppProviders>
+	);
+}
+
+function AppProviders({ analytics, config, children }: AppProvidersProps) {
 	return (
 		<LoggerProvider logger={loggerAdapter}>
 			<ErrorBoundaryWrapper fallback={<Error500 />}>
@@ -119,16 +139,10 @@ export default function App() {
 							<ThemeProvider>
 								<I18nProvider>
 									<QueryProvider>
-										<AnalyticsProvider analytics={analyticsAdapter} config={analyticsConfig}>
+										<AnalyticsProvider analytics={analytics} config={config}>
 											<DeferredMotionProvider>
 												<ToastProvider>
-													<BrowserRouter>
-														<LazyLayoutGroup id="app-route-transitions">
-															<div data-testid="router">
-																<Router />
-															</div>
-														</LazyLayoutGroup>
-													</BrowserRouter>
+													{children}
 													<ToastContainer />
 												</ToastProvider>
 											</DeferredMotionProvider>
@@ -144,24 +158,74 @@ export default function App() {
 	);
 }
 
+function useAnalytics(isAnalyticsEnabled: boolean) {
+	const analyticsConfig = useMemo(
+		() => getAnalyticsConfig(isAnalyticsEnabled),
+		[isAnalyticsEnabled]
+	);
+	const shouldLoadAnalytics = Boolean(analyticsConfig);
+	const [analyticsAdapter, setAnalyticsAdapter] = useState<AnalyticsPort>(noopAnalyticsAdapter);
+
+	useEffect(() => {
+		if (!shouldLoadAnalytics) {
+			setAnalyticsAdapter(noopAnalyticsAdapter);
+			return;
+		}
+
+		let isMounted = true;
+
+		const loadAnalyticsAdapter = async () => {
+			try {
+				const module = await import('@infra/analytics/googleTagManagerAdapter');
+				if (isMounted) {
+					setAnalyticsAdapter(module.googleTagManagerAdapter);
+				}
+			} catch (error) {
+				console.warn('Failed to load analytics adapter', error);
+				if (isMounted) {
+					setAnalyticsAdapter(noopAnalyticsAdapter);
+				}
+			}
+		};
+
+		loadAnalyticsAdapter().catch(error => {
+			console.error('Unexpected analytics adapter error', error);
+		});
+
+		return () => {
+			isMounted = false;
+		};
+	}, [shouldLoadAnalytics]);
+
+	return { analyticsAdapter, analyticsConfig, shouldLoadAnalytics };
+}
+
 function getAnalyticsConfig(isEnabled: boolean): AnalyticsInitOptions | null {
 	if (!isEnabled) {
 		return null;
 	}
 	const runtimeConfig = getCachedRuntimeConfig();
-	const runtimeKey = runtimeConfig?.ANALYTICS_WRITE_KEY?.trim();
-	const containerId = runtimeKey ?? env.GTM_CONTAINER_ID;
+	const runtimeContainerId = runtimeConfig?.ANALYTICS_WRITE_KEY?.trim();
+	const envContainerId = env.GTM_CONTAINER_ID;
+	const containerId = runtimeContainerId ?? envContainerId;
+
 	if (!containerId) {
 		return null;
 	}
+
+	const debugOverride = env.GTM_DEBUG;
+	const debug = debugOverride ?? env.DEV;
+
 	const config: AnalyticsInitOptions = {
 		writeKey: containerId,
 		containerId,
 		dataLayerName: env.GTM_DATALAYER_NAME,
 	};
-	if ((env.GTM_DEBUG ?? env.DEV) === true) {
+
+	if (debug) {
 		config.debug = true;
 	}
+
 	return config;
 }
 ```

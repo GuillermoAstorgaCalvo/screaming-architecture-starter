@@ -37,8 +37,11 @@ export default function ScrollArea({
 	const classes = getScrollAreaClasses({ orientation, className });
 
 	return (
-		<div className={classes} {...props}>
-			<div className="h-full w-full overflow-auto [&::-webkit-scrollbar]:w-(--spacing-xs) [&::-webkit-scrollbar]:h-(--spacing-xs) [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-muted dark:[&::-webkit-scrollbar-thumb]:bg-border-dark dark:[&::-webkit-scrollbar-track]:bg-muted-dark">
+		<div className={classes} data-testid="scroll-area" {...props}>
+			<div
+				className="h-full w-full overflow-auto [&::-webkit-scrollbar]:w-(--spacing-xs) [&::-webkit-scrollbar]:h-(--spacing-xs) [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-muted dark:[&::-webkit-scrollbar-thumb]:bg-border-dark dark:[&::-webkit-scrollbar-track]:bg-muted-dark"
+				data-testid="scroll-area-content"
+			>
 				{children}
 			</div>
 		</div>

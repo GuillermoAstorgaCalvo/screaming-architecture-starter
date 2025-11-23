@@ -8,6 +8,7 @@ export function CheckboxField({
 	id,
 	className,
 	ariaDescribedBy,
+	hasError,
 	disabled,
 	required,
 	checked,
@@ -21,6 +22,7 @@ export function CheckboxField({
 			className={className}
 			disabled={disabled}
 			required={required}
+			aria-invalid={hasError ? true : undefined}
 			aria-describedby={ariaDescribedBy}
 			checked={checked}
 			defaultChecked={defaultChecked}

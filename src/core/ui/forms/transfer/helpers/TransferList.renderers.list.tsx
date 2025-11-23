@@ -1,3 +1,4 @@
+import i18n from '@core/i18n/i18n';
 import Checkbox from '@core/ui/checkbox/Checkbox';
 import ListItem from '@core/ui/data-display/list/components/ListItem';
 import type {
@@ -67,7 +68,11 @@ export function renderList<T>({
 }: RenderListProps<T>) {
 	const emptyContent = (
 		<div className="py-8 text-center text-text-muted dark:text-text-muted text-sm">
-			{renderEmpty ? renderEmpty(type) : <span>No items available</span>}
+			{renderEmpty ? (
+				renderEmpty(type)
+			) : (
+				<span>{i18n.t('noItemsAvailable', { ns: 'common' })}</span>
+			)}
 		</div>
 	);
 

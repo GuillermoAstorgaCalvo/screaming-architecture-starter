@@ -7,13 +7,22 @@ import {
 	getRegisteredNamespaces,
 	registerResourceLoader,
 } from '@core/i18n/resourceLoader/registry';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createLoader, filterCommonNamespace } from './registry.test.helpers';
 
 describe('getRegisteredNamespaces', () => {
+	const originalWarn = console.warn;
+	let warnSpy: ReturnType<typeof vi.spyOn>;
+
 	beforeEach(() => {
 		clearResourceLoaders();
+		warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	});
+
+	afterEach(() => {
+		warnSpy.mockRestore();
+		console.warn = originalWarn;
 	});
 
 	it('should return empty array when no loaders are registered', () => {

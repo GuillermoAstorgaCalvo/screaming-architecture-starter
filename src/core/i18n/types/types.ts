@@ -71,6 +71,7 @@ export interface CommonTranslations {
 	'errors.rootElementNotFound': string;
 	'errors.unableToLoadDemoContent': string;
 	'errors.failedToLoadGoogleMaps': string;
+	'errors.failedToLoadMap': string;
 	'a11y.mainNavigation': string;
 	'a11y.notifications': string;
 	'a11y.dismissNotification': string;
@@ -129,6 +130,7 @@ export interface CommonTranslations {
 	deselectAll: string;
 	selectAllRows: string;
 	noDataAvailable: string;
+	noItemsAvailable: string;
 	searchPlaceholder: string;
 	noActionsAvailable: string;
 	noOptionsFound: string;

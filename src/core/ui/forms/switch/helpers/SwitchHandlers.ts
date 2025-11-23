@@ -5,19 +5,27 @@ export function lockInputCheckedProperty(
 	element: HTMLInputElement,
 	getLockedValue: () => boolean
 ): void {
-	const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(element), 'checked');
-	if (descriptor?.set) {
-		const originalSet = descriptor.set;
-		Object.defineProperty(element, 'checked', {
-			set(_value: boolean) {
-				const lockedValue = getLockedValue();
-				originalSet.call(element, lockedValue);
-			},
-			get() {
-				return getLockedValue();
-			},
-			configurable: true,
-		});
+	try {
+		const prototype = Object.getPrototypeOf(element);
+		if (!prototype) {
+			return;
+		}
+		const descriptor = Object.getOwnPropertyDescriptor(prototype, 'checked');
+		if (descriptor?.set) {
+			const originalSet = descriptor.set;
+			Object.defineProperty(element, 'checked', {
+				set(_value: boolean) {
+					const lockedValue = getLockedValue();
+					originalSet.call(element, lockedValue);
+				},
+				get() {
+					return getLockedValue();
+				},
+				configurable: true,
+			});
+		}
+	} catch {
+		// Handle elements without prototype or other edge cases gracefully
 	}
 }
 

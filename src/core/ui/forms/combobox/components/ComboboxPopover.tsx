@@ -1,4 +1,3 @@
-import type { ComboboxOption } from '@core/ui/forms/combobox/Combobox';
 import { ComboboxField } from '@core/ui/forms/combobox/components/ComboboxField';
 import { ComboboxListbox } from '@core/ui/forms/combobox/components/ComboboxListbox';
 import {
@@ -33,7 +32,6 @@ function ComboboxPopoverContent(props: Readonly<ComboboxListboxProps>) {
 
 interface ComboboxPopoverProps {
 	readonly isOpen: boolean;
-	readonly filteredOptions: ComboboxOption[];
 	readonly setIsOpen: (open: boolean) => void;
 	readonly triggerRef: RefObject<HTMLDivElement | null>;
 	readonly fieldProps: ComboboxContentProps['fieldProps'];
@@ -43,14 +41,14 @@ interface ComboboxPopoverProps {
 
 export function ComboboxPopover({
 	isOpen,
-	filteredOptions,
 	setIsOpen,
 	triggerRef,
 	fieldProps,
 	inputRef,
 	listboxProps,
 }: Readonly<ComboboxPopoverProps>) {
-	const popoverIsOpen = isOpen && filteredOptions.length > 0;
+	// Show popover when open, even if there are no filtered options (to show empty state)
+	const popoverIsOpen = isOpen;
 	const trigger = (
 		<ComboboxPopoverTrigger triggerRef={triggerRef} fieldProps={fieldProps} inputRef={inputRef} />
 	);

@@ -1,11 +1,11 @@
 import type { ComboboxProps } from '@core/ui/forms/combobox/Combobox';
 import type { useComboboxState } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
 import type { ComboboxFieldProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 
 const BLUR_DELAY_MS = 200;
 
-type FieldPropsRest = Omit<
+export type FieldPropsRest = Omit<
 	ComboboxProps,
 	| 'label'
 	| 'error'
@@ -19,14 +19,21 @@ type FieldPropsRest = Omit<
 	| 'placeholder'
 	| 'maxHeight'
 	| 'emptyState'
+	| 'value'
+	| 'defaultValue'
+	| 'onChange'
+	| 'options'
+	| 'filterFn'
+	| 'onInputChange'
 >;
 
 function createInputHandlers(params: {
 	setInputValue: (value: string) => void;
 	setIsOpen: (open: boolean) => void;
 	setHighlightedIndex: (index: number) => void;
+	handleKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }) {
-	const { setInputValue, setIsOpen, setHighlightedIndex } = params;
+	const { setInputValue, setIsOpen, setHighlightedIndex, handleKeyDown } = params;
 	return {
 		onChange: (e: ChangeEvent<HTMLInputElement>) => {
 			setInputValue(e.target.value);
@@ -41,6 +48,7 @@ function createInputHandlers(params: {
 				setHighlightedIndex(-1);
 			}, BLUR_DELAY_MS);
 		},
+		...(handleKeyDown && { onKeyDown: handleKeyDown }),
 	};
 }
 
@@ -67,8 +75,20 @@ function buildFieldPropsObject(params: {
 	rest: FieldPropsRest;
 	handlers: ReturnType<typeof createInputHandlers>;
 	inputValue: string;
+	isOpen: boolean;
+	ariaControls: string;
 }): ComboboxFieldProps {
-	const { state, disabled, required, placeholder, rest, handlers, inputValue } = params;
+	const {
+		state,
+		disabled,
+		required,
+		placeholder,
+		rest,
+		handlers,
+		inputValue,
+		isOpen,
+		ariaControls,
+	} = params;
 	const inputProps = buildInputProps({ rest, placeholder, handlers, inputValue });
 
 	return {
@@ -78,6 +98,8 @@ function buildFieldPropsObject(params: {
 		ariaDescribedBy: state.ariaDescribedBy,
 		disabled,
 		required,
+		isOpen,
+		ariaControls,
 		props: inputProps,
 	};
 }
@@ -86,6 +108,7 @@ function prepareFieldPropsData(params: {
 	setInputValue: (value: string) => void;
 	setIsOpen: (open: boolean) => void;
 	setHighlightedIndex: (index: number) => void;
+	handleKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }): ReturnType<typeof createInputHandlers> {
 	return createInputHandlers(params);
 }
@@ -100,6 +123,9 @@ export function createFieldProps(params: {
 	setInputValue: (value: string) => void;
 	setIsOpen: (open: boolean) => void;
 	setHighlightedIndex: (index: number) => void;
+	isOpen: boolean;
+	ariaControls: string;
+	handleKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }): ComboboxFieldProps {
 	const {
 		state,
@@ -111,8 +137,16 @@ export function createFieldProps(params: {
 		setInputValue,
 		setIsOpen,
 		setHighlightedIndex,
+		isOpen,
+		ariaControls,
+		handleKeyDown,
 	} = params;
-	const handlers = prepareFieldPropsData({ setInputValue, setIsOpen, setHighlightedIndex });
+	const handlers = prepareFieldPropsData({
+		setInputValue,
+		setIsOpen,
+		setHighlightedIndex,
+		...(handleKeyDown && { handleKeyDown }),
+	});
 	return buildFieldPropsObject({
 		state,
 		disabled,
@@ -121,5 +155,7 @@ export function createFieldProps(params: {
 		rest,
 		handlers,
 		inputValue,
+		isOpen,
+		ariaControls,
 	});
 }

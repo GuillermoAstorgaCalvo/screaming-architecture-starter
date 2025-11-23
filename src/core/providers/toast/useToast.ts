@@ -1,6 +1,6 @@
 import { ToastContext } from '@core/providers/toast/ToastContext';
 import type { ToastAction, ToastIntent } from '@core/ui/feedback/toast/types/toast.types';
-import { type ReactNode, useCallback, useContext } from 'react';
+import { type ReactNode, useCallback, useContext, useMemo } from 'react';
 
 export interface ToastOptions {
 	readonly title?: string;
@@ -48,22 +48,19 @@ export function useToast() {
 		[addToast]
 	);
 
-	const createIntentCallback = useCallback(
-		(intent: ToastIntent) => (options: ToastOptions | string) => showToast(intent, options),
+	const intentFns = useMemo(
+		() => ({
+			success: (options: ToastOptions | string) => showToast('success', options),
+			error: (options: ToastOptions | string) => showToast('error', options),
+			warning: (options: ToastOptions | string) => showToast('warning', options),
+			info: (options: ToastOptions | string) => showToast('info', options),
+		}),
 		[showToast]
 	);
 
-	const success = createIntentCallback('success');
-	const error = createIntentCallback('error');
-	const warning = createIntentCallback('warning');
-	const info = createIntentCallback('info');
-
 	return {
 		toasts,
-		success,
-		error,
-		warning,
-		info,
+		...intentFns,
 		show: showToast,
 		dismiss: removeToast,
 		clear: clearAll,

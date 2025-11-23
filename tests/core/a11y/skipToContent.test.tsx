@@ -301,4 +301,39 @@ describe('SkipToContent - targetId variations', () => {
 
 		expect(mockFocus).toHaveBeenCalledTimes(1);
 	});
+
+	it('handles targetId with various special characters', () => {
+		const specialIds = ['test.id', 'test#id', 'test:id', 'test[id]', 'test(id)'];
+		for (const specialId of specialIds) {
+			document.body.innerHTML = '';
+			const { mockFocus: freshMockFocus } = setupMocks();
+			const element = createTargetElement(specialId);
+			renderWithProviders(<SkipToContent targetId={specialId} />);
+
+			clickSkipLink();
+
+			expect(freshMockFocus).toHaveBeenCalledTimes(1);
+			expect(element.getAttribute('tabindex')).toBe('-1');
+		}
+	});
+
+	it('preserves existing tabindex values other than null', () => {
+		const targetElement = createTargetElement(DEFAULT_TARGET_ID);
+		targetElement.setAttribute('tabindex', '1');
+		renderWithProviders(<SkipToContent />);
+
+		clickSkipLink();
+
+		expect(targetElement.getAttribute('tabindex')).toBe('1');
+	});
+
+	it('preserves existing tabindex="0" on target element', () => {
+		const targetElement = createTargetElement(DEFAULT_TARGET_ID);
+		targetElement.setAttribute('tabindex', '0');
+		renderWithProviders(<SkipToContent />);
+
+		clickSkipLink();
+
+		expect(targetElement.getAttribute('tabindex')).toBe('0');
+	});
 });

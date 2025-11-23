@@ -29,7 +29,7 @@ export function getCanvasStyle({
 	return {
 		border: '1px solid',
 		borderColor: 'currentColor',
-		borderRadius: designTokens.radius.md,
+		borderRadius: 'var(--radius-md)',
 		backgroundColor,
 		cursor: disabled ? 'not-allowed' : 'crosshair',
 		opacity: disabled ? DISABLED_OPACITY : 1,

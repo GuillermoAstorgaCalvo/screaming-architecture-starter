@@ -1,4 +1,3 @@
-import '@domains/landing/i18n';
 import '@styles/globals.css';
 
 import App from '@app/App';

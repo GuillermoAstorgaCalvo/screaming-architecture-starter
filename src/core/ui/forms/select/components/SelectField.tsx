@@ -52,7 +52,7 @@ export function SelectField({
 				className={className}
 				disabled={disabled}
 				required={required}
-				aria-invalid={hasError}
+				aria-invalid={hasError ? true : undefined}
 				aria-describedby={ariaDescribedBy}
 				{...selectProps}
 			>

@@ -1,4 +1,8 @@
-import { getContentClasses, getContentStyle } from '@core/ui/accordion/helpers/AccordionHelpers';
+import {
+	getContentClassesCollapsed,
+	getContentClassesExpanded,
+	getContentStyleExpanded,
+} from '@core/ui/accordion/helpers/AccordionHelpers';
 import type { StandardSize } from '@src-types/ui/base';
 import type { ReactNode } from 'react';
 
@@ -21,8 +25,9 @@ export function AccordionContent({
 		<section
 			id={contentId}
 			aria-labelledby={headerId}
-			className={getContentClasses(size, isExpanded)}
-			style={getContentStyle(isExpanded)}
+			aria-hidden={!isExpanded}
+			className={isExpanded ? getContentClassesExpanded(size) : getContentClassesCollapsed(size)}
+			style={isExpanded ? getContentStyleExpanded() : undefined}
 		>
 			{content}
 		</section>

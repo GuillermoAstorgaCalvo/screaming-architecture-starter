@@ -46,6 +46,7 @@ export function renderEditInput(options: Readonly<EditInputOptions>) {
 		handleBlur,
 		inputProps,
 	} = options;
+	const { onKeyDown: _onKeyDown, ...restInputProps } = inputProps;
 	return (
 		<input
 			id={id}
@@ -57,7 +58,7 @@ export function renderEditInput(options: Readonly<EditInputOptions>) {
 			className={inputClasses}
 			disabled={disabled}
 			aria-label={placeholder}
-			{...inputProps}
+			{...restInputProps}
 		/>
 	);
 }

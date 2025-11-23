@@ -53,6 +53,10 @@ describe('useFetch - abort signal and edge cases', () => {
 		it('should handle empty response data', handlesEmptyResponseData);
 		it('should handle URL changes', handlesUrlChanges);
 		it('should log success and error messages', logsSuccessAndErrorMessages);
+		it('should handle unmount during fetch', handlesUnmountDuringFetch);
+		it('should handle multiple rapid fetches', handlesMultipleRapidFetches);
+		it('should handle fetch with custom headers', handlesFetchWithCustomHeaders);
+		it('should handle fetch with query parameters', handlesFetchWithQueryParams);
 	});
 });
 
@@ -271,4 +275,113 @@ async function logsSuccessAndErrorMessages(): Promise<void> {
 	);
 	expect(errorLog).toBeDefined();
 	expect(errorLog?.context?.url).toBe(USERS_ENDPOINT);
+}
+
+async function handlesUnmountDuringFetch(): Promise<void> {
+	httpAdapter.mockResponse(USERS_ENDPOINT, HTTP_METHOD_GET, async () => {
+		await wait(100);
+		return createSuccessResponse({ users: [DEFAULT_USER], total: 1 });
+	});
+
+	const { result, unmount } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
+		wrapper,
+	});
+
+	let fetchPromise: Promise<void> | undefined;
+	act(() => {
+		fetchPromise = result.current.fetch();
+	});
+
+	unmount();
+
+	if (fetchPromise) {
+		await fetchPromise.catch(() => {
+			// Expected
+		});
+	}
+
+	await wait(150);
+
+	expect(result.current).toBeDefined();
+}
+
+async function handlesMultipleRapidFetches(): Promise<void> {
+	let callCount = 0;
+	httpAdapter.mockResponse(USERS_ENDPOINT, HTTP_METHOD_GET, async () => {
+		callCount++;
+		await wait(50);
+		return createSuccessResponse({
+			users: [{ ...DEFAULT_USER, id: String(callCount) }],
+			total: 1,
+		});
+	});
+
+	const { result } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
+		wrapper,
+	});
+
+	await act(async () => {
+		await Promise.all([result.current.fetch(), result.current.fetch(), result.current.fetch()]);
+	});
+
+	await waitFor(() => {
+		expect(result.current.loading).toBe(false);
+	});
+
+	expect(httpAdapter.requests.length).toBeGreaterThanOrEqual(1);
+}
+
+async function handlesFetchWithCustomHeaders(): Promise<void> {
+	const testData: TestApiResponse = {
+		users: [DEFAULT_USER],
+		total: 1,
+	};
+
+	httpAdapter.mockResponse(USERS_ENDPOINT, HTTP_METHOD_GET, createSuccessResponse(testData));
+
+	const { result } = renderHook(
+		() =>
+			useFetch<TestApiResponse>(USERS_ENDPOINT, {
+				headers: { 'X-Custom-Header': 'custom-value' },
+			}),
+		{
+			wrapper,
+		}
+	);
+
+	await runFetch(result);
+
+	await waitFor(() => {
+		expect(result.current.data).toEqual(testData);
+	});
+
+	const [request] = httpAdapter.requests;
+	expect(request?.config?.headers?.['X-Custom-Header']).toBe('custom-value');
+}
+
+async function handlesFetchWithQueryParams(): Promise<void> {
+	const testData: TestApiResponse = {
+		users: [DEFAULT_USER],
+		total: 1,
+	};
+
+	httpAdapter.mockResponse(USERS_ENDPOINT, HTTP_METHOD_GET, createSuccessResponse(testData));
+
+	const { result } = renderHook(
+		() =>
+			useFetch<TestApiResponse>(USERS_ENDPOINT, {
+				headers: { 'Content-Type': 'application/json' },
+			}),
+		{
+			wrapper,
+		}
+	);
+
+	await runFetch(result);
+
+	await waitFor(() => {
+		expect(result.current.data).toEqual(testData);
+	});
+
+	expect(httpAdapter.requests).toHaveLength(1);
 }

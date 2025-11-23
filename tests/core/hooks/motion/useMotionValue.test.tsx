@@ -59,6 +59,29 @@ describe('useMotionValue creation', () => {
 		rerender();
 		expect(initializer).toHaveBeenCalledTimes(1);
 	});
+
+	it('should re-evaluate when initial value changes', () => {
+		const initializer1 = vi.fn(() => 10);
+		const initializer2 = vi.fn(() => 20);
+		const { result, rerender } = renderHook(({ initial }) => useMotionValue(initial), {
+			initialProps: { initial: initializer1 },
+		});
+
+		expect(initializer1).toHaveBeenCalledTimes(1);
+		expect(result.current.get()).toBe(10);
+
+		rerender({ initial: initializer2 });
+		expect(initializer2).toHaveBeenCalledTimes(1);
+		expect(result.current.get()).toBe(20);
+	});
+
+	it('should handle function initializer that returns different types', () => {
+		const { result: stringResult } = renderHook(() => useMotionValue(() => 'test'));
+		expect(stringResult.current.get()).toBe('test');
+
+		const { result: boolResult } = renderHook(() => useMotionValue(() => true));
+		expect(boolResult.current.get()).toBe(true);
+	});
 });
 
 describe('useMotionValue initial edge cases', () => {

@@ -1,6 +1,5 @@
 import { ROUTES } from '@core/config/routes';
 import { useTranslation } from '@core/i18n/useTranslation';
-import { Link } from 'react-router-dom';
 
 export default function Error500() {
 	const { t } = useTranslation('common');
@@ -13,12 +12,12 @@ export default function Error500() {
 			<p className="mt-lg text-lg text-text-secondary dark:text-text-secondary">
 				{t('errors.error500.message')}
 			</p>
-			<Link
-				to={ROUTES.HOME}
+			<a
+				href={ROUTES.HOME}
 				className="mt-xl text-primary underline hover:text-primary/90 dark:text-primary dark:hover:text-primary/80"
 			>
 				{t('errors.error500.returnHome')}
-			</Link>
+			</a>
 		</main>
 	);
 }

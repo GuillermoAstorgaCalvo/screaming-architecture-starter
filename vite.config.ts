@@ -24,11 +24,17 @@ function getServerConfig(env: Record<string, string>) {
 /**
  * Core library chunks for better code splitting and caching
  * Only includes packages that are actually installed in the project
+ *
+ * Strategy: Split large libraries into separate chunks for better caching and parallel loading
  */
 function getCoreLibrariesChunks() {
 	return {
-		// Core React libraries
-		vendor: ['react', 'react-dom', 'react-router-dom'],
+		// Split React core libraries for better caching
+		// React changes less frequently than app code
+		react: ['react', 'react/jsx-runtime'],
+		'react-dom': ['react-dom', 'react-dom/client'],
+		// React Router is large and can be cached separately
+		'react-router': ['react-router-dom', 'react-router'],
 		// UI libraries (only installed packages)
 		ui: ['@radix-ui/react-slot'],
 		// Query and state management
@@ -45,16 +51,98 @@ function getCoreLibrariesChunks() {
 		forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
 		// I18n libraries
 		i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+		// Lucide React icons (large library, split for better code splitting)
+		icons: ['lucide-react'],
+		// Utility libraries
+		utils: ['tailwind-merge', 'class-variance-authority'],
 	};
 }
 
 /**
- * Manual chunks configuration for optimized bundle splitting
+ * Check if a module ID matches a package pattern
  */
-function getManualChunks() {
-	return {
-		...getCoreLibrariesChunks(),
+function matchesPackage(id: string, pkg: string): boolean {
+	const packagePattern = `node_modules/${pkg}`;
+	if (id.includes(packagePattern)) {
+		return true;
+	}
+
+	// Handle scoped packages (e.g., @tanstack/react-query)
+	if (pkg.startsWith('@')) {
+		const [scope, name] = pkg.split('/');
+		if (scope && name) {
+			const scopedPattern = `node_modules/${scope}/${name}`;
+			return id.includes(scopedPattern);
+		}
+	}
+
+	// Handle non-scoped packages (match first part only)
+	const [firstPart] = pkg.split('/');
+	if (firstPart) {
+		return id.includes(`node_modules/${firstPart}/`);
+	}
+
+	return false;
+}
+
+/**
+ * Check if module belongs to additional utility libraries
+ */
+function getUtilityChunk(id: string): string | undefined {
+	if (!id.includes('node_modules/')) {
+		return undefined;
+	}
+
+	const utilityChunks: Record<string, string> = {
+		'node_modules/zustand': 'zustand',
+		'node_modules/sonner': 'sonner',
+		'node_modules/react-markdown': 'markdown',
+		'node_modules/react-syntax-highlighter': 'syntax-highlighter',
+		'node_modules/qrcode.react': 'qrcode',
+		'node_modules/web-vitals': 'web-vitals',
+		'node_modules/@supabase': 'supabase',
 	};
+
+	for (const [pattern, chunkName] of Object.entries(utilityChunks)) {
+		if (id.includes(pattern)) {
+			return chunkName;
+		}
+	}
+
+	return undefined;
+}
+
+/**
+ * Manual chunks configuration for optimized bundle splitting
+ *
+ * This function creates a custom chunking strategy that:
+ * 1. Separates vendor libraries into their own chunks for better caching
+ * 2. Groups domain-specific code together
+ * 3. Allows dynamic imports to create separate chunks automatically
+ * 4. Prevents vendor chunk from becoming too large
+ */
+function getManualChunks(id: string) {
+	// Core library chunks (vendor code)
+	const coreChunks = getCoreLibrariesChunks();
+
+	// Check if this module belongs to a core library chunk
+	for (const [chunkName, packages] of Object.entries(coreChunks)) {
+		for (const pkg of packages) {
+			if (matchesPackage(id, pkg)) {
+				return chunkName;
+			}
+		}
+	}
+
+	// Check for utility libraries
+	const utilityChunk = getUtilityChunk(id);
+	if (utilityChunk) {
+		return utilityChunk;
+	}
+
+	// Domain-specific chunks are handled automatically via dynamic imports
+	// Let Vite handle the rest automatically
+	return undefined;
 }
 
 /**
@@ -81,16 +169,23 @@ function getBuildConfig(env: Record<string, string>, mode: string) {
 		sourcemap: getSourcemapOption(),
 		rollupOptions: {
 			output: {
-				manualChunks: getManualChunks(),
+				manualChunks: getManualChunks,
 				// Optimize chunk names for better caching
 				chunkFileNames: 'assets/[name]-[hash].js',
 				entryFileNames: 'assets/[name]-[hash].js',
 				assetFileNames: 'assets/[name]-[hash].[ext]',
 			},
+			// Tree shaking optimizations for better dead code elimination
+			treeshake: {
+				moduleSideEffects: false,
+				preset: 'smallest' as const,
+			},
 		},
 		// Performance optimizations
 		chunkSizeWarningLimit: Number.parseInt(env['VITE_CHUNK_SIZE_WARNING_LIMIT'] ?? '1000', 10),
-		reportCompressedSize: env['VITE_REPORT_COMPRESSED_SIZE'] === 'true',
+		// Enable compressed size reporting in production by default for better visibility
+		// Can be disabled by setting VITE_REPORT_COMPRESSED_SIZE=false
+		reportCompressedSize: env['VITE_REPORT_COMPRESSED_SIZE'] !== 'false' && mode === 'production',
 		cssCodeSplit: env['VITE_CSS_CODE_SPLIT'] !== 'false',
 	};
 }

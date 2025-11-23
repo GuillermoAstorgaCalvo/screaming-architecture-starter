@@ -1,8 +1,9 @@
+import { useDebouncedCallback } from '@core/hooks/debounce/useDebounce';
 import { useTranslation } from '@core/i18n/useTranslation';
 import type { SearchInputFieldProps } from '@core/ui/forms/search-input/types/SearchInputTypes';
 import Icon from '@core/ui/icons/Icon';
 import { classNames } from '@core/utils/classNames';
-import type { InputHTMLAttributes, MouseEvent } from 'react';
+import type { ChangeEvent, InputHTMLAttributes, MouseEvent } from 'react';
 
 function SearchIcon() {
 	return (
@@ -54,6 +55,7 @@ interface SearchInputProps {
 	readonly disabled?: boolean;
 	readonly required?: boolean;
 	readonly value?: string;
+	readonly defaultValue?: string;
 	readonly inputProps: Readonly<
 		Omit<
 			InputHTMLAttributes<HTMLInputElement>,
@@ -66,6 +68,7 @@ interface SearchInputProps {
 			| 'aria-describedby'
 			| 'type'
 			| 'value'
+			| 'defaultValue'
 		>
 	>;
 }
@@ -78,6 +81,7 @@ function SearchInput({
 	disabled,
 	required,
 	value,
+	defaultValue,
 	inputProps,
 }: SearchInputProps) {
 	return (
@@ -88,12 +92,15 @@ function SearchInput({
 			disabled={disabled}
 			required={required}
 			value={value}
+			defaultValue={defaultValue}
 			aria-invalid={hasError}
 			aria-describedby={ariaDescribedBy}
 			{...inputProps}
 		/>
 	);
 }
+
+const DEFAULT_DEBOUNCE_DELAY_MS = 300;
 
 export function SearchInputField({
 	id,
@@ -103,10 +110,16 @@ export function SearchInputField({
 	disabled,
 	required,
 	value,
+	defaultValue,
 	onClear,
 	showClearButton,
 	props: inputProps,
 }: Readonly<SearchInputFieldProps>) {
+	const { onChange, ...restInputProps } = inputProps;
+	const debouncedOnChange = useDebouncedCallback((...args: unknown[]) => {
+		onChange?.(args[0] as ChangeEvent<HTMLInputElement>);
+	}, DEFAULT_DEBOUNCE_DELAY_MS) as (e: ChangeEvent<HTMLInputElement>) => void;
+
 	return (
 		<div className="relative">
 			<SearchIcon />
@@ -118,9 +131,10 @@ export function SearchInputField({
 				{...(disabled !== undefined && { disabled })}
 				{...(required !== undefined && { required })}
 				{...(value !== undefined && { value })}
-				inputProps={inputProps}
+				{...(defaultValue !== undefined && { defaultValue })}
+				inputProps={{ ...restInputProps, onChange: debouncedOnChange }}
 			/>
-			{showClearButton ? (
+			{showClearButton && value ? (
 				<ClearButton {...(disabled !== undefined && { disabled })} onClear={onClear} />
 			) : null}
 		</div>

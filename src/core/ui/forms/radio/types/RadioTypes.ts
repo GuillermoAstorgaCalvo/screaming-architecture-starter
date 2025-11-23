@@ -15,6 +15,7 @@ export interface RadioFieldProps {
 	readonly value: string;
 	readonly className: string;
 	readonly ariaDescribedBy: string | undefined;
+	readonly ariaInvalid?: boolean | undefined;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
 	readonly checked?: boolean | undefined;
@@ -31,6 +32,7 @@ export interface RadioFieldProps {
 			| 'disabled'
 			| 'required'
 			| 'aria-describedby'
+			| 'aria-invalid'
 			| 'checked'
 			| 'defaultChecked'
 		>
@@ -56,6 +58,7 @@ export interface RadioContentProps {
 	readonly value: string;
 	readonly radioClasses: string;
 	readonly ariaDescribedBy: string | undefined;
+	readonly ariaInvalid?: boolean | undefined;
 	readonly label?: string | undefined;
 	readonly error?: string | undefined;
 	readonly helperText?: string | undefined;
@@ -76,6 +79,7 @@ export interface RadioContentProps {
 			| 'disabled'
 			| 'required'
 			| 'aria-describedby'
+			| 'aria-invalid'
 			| 'checked'
 			| 'defaultChecked'
 		>
@@ -90,6 +94,7 @@ export interface RadioFieldWithLabelProps
 		| 'name'
 		| 'value'
 		| 'ariaDescribedBy'
+		| 'ariaInvalid'
 		| 'label'
 		| 'required'
 		| 'disabled'

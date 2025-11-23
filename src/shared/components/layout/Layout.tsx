@@ -11,7 +11,7 @@ import type { LayoutProps } from '@src-types/layout';
  */
 export default function Layout({ children, theme, className }: Readonly<LayoutProps>) {
 	return (
-		<div className="flex min-h-screen flex-col">
+		<div className="flex min-h-screen flex-col" data-testid="layout-root">
 			<SkipToContent targetId="main-content" />
 			<Navbar theme={theme} />
 			<main id="main-content" className={classNames('flex-1', className)}>

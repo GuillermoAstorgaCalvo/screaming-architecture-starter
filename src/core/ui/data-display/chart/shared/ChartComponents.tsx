@@ -47,6 +47,7 @@ interface ChartContainerProps {
 	description?: string | undefined;
 	title?: string | undefined;
 	chartType: string;
+	testId?: string | undefined;
 	children: ReactNode;
 }
 
@@ -55,16 +56,18 @@ export function ChartContainer({
 	description,
 	title,
 	chartType,
+	testId,
 	children,
 }: Readonly<ChartContainerProps>) {
 	return (
-		<div
+		<section
 			className={chartClassName}
 			aria-label={description ?? title ?? `${chartType} chart`}
 			aria-describedby={description ? undefined : title}
+			data-testid={testId}
 		>
 			{children}
-		</div>
+		</section>
 	);
 }
 

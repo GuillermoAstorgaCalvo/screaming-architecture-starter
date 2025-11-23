@@ -13,6 +13,7 @@ function extractRadioFieldProperties(props: Readonly<RadioFieldProps>) {
 		checked: props.checked,
 		defaultChecked: props.defaultChecked,
 		ariaDescribedBy: props.ariaDescribedBy,
+		ariaInvalid: props.ariaInvalid,
 		inputProps: props.props,
 	};
 }
@@ -31,6 +32,7 @@ function buildRadioCoreProps(
 		disabled: extracted.disabled,
 		required: extracted.required,
 		'aria-describedby': extracted.ariaDescribedBy,
+		'aria-invalid': extracted.ariaInvalid,
 		checked: extracted.checked,
 		defaultChecked: extracted.defaultChecked,
 	};

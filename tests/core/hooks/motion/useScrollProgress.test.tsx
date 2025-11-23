@@ -85,30 +85,89 @@ const registerBasicFunctionalityTests = () => {
 	});
 };
 
+const registerContainerBasicTests = () => {
+	it('should work without container (defaults to window)', () => {
+		const { result } = renderHook(() => useScrollProgress());
+		expect(result.current).toBeDefined();
+	});
+
+	it('should work with container ref', () => {
+		const container = document.createElement('div');
+		const containerRef = { current: container } as RefObject<HTMLElement>;
+		const { result } = renderHook(() => useScrollProgress({ container: containerRef }));
+		expect(result.current).toBeDefined();
+	});
+
+	it('should work with container as HTMLElement', () => {
+		const container = document.createElement('div');
+		const { result } = renderHook(() => useScrollProgress({ container }));
+		expect(result.current).toBeDefined();
+	});
+
+	it('should handle null container', () => {
+		const { result } = renderHook(() => useScrollProgress({ container: null }));
+		expect(result.current).toBeDefined();
+	});
+};
+
+const registerContainerScrollCalculationTests = () => {
+	it('should calculate scroll height from container when provided', async () => {
+		const container = document.createElement('div');
+		Object.defineProperty(container, 'scrollHeight', {
+			writable: true,
+			value: 2000,
+		});
+		Object.defineProperty(container, 'clientHeight', {
+			writable: true,
+			value: 1000,
+		});
+
+		const containerRef = { current: container } as RefObject<HTMLElement>;
+		const { result } = renderHook(() => useScrollProgress({ container: containerRef }));
+		mockScrollY = 500;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBeGreaterThanOrEqual(0);
+		});
+		const progress = result.current.get();
+		expect(progress).toBeLessThanOrEqual(1);
+	});
+};
+
+const registerContainerResolutionTests = () => {
+	it('should resolve container from RefObject correctly', () => {
+		const container = document.createElement('div');
+		const containerRef = { current: container } as RefObject<HTMLElement>;
+		const { result } = renderHook(() => useScrollProgress({ container: containerRef }));
+		expect(result.current).toBeDefined();
+	});
+
+	it('should resolve container from HTMLElement directly', () => {
+		const container = document.createElement('div');
+		const { result } = renderHook(() => useScrollProgress({ container }));
+		expect(result.current).toBeDefined();
+	});
+
+	it('should update when container changes', () => {
+		const container1 = document.createElement('div');
+		const container2 = document.createElement('div');
+		const { result, rerender } = renderHook(({ container }) => useScrollProgress({ container }), {
+			initialProps: { container: container1 },
+		});
+
+		expect(result.current).toBeDefined();
+		rerender({ container: container2 });
+		expect(result.current).toBeDefined();
+	});
+};
+
 const registerContainerOptionTests = () => {
 	describe('container option', () => {
-		it('should work without container (defaults to window)', () => {
-			const { result } = renderHook(() => useScrollProgress());
-			expect(result.current).toBeDefined();
-		});
-
-		it('should work with container ref', () => {
-			const container = document.createElement('div');
-			const containerRef = { current: container } as RefObject<HTMLElement>;
-			const { result } = renderHook(() => useScrollProgress({ container: containerRef }));
-			expect(result.current).toBeDefined();
-		});
-
-		it('should work with container as HTMLElement', () => {
-			const container = document.createElement('div');
-			const { result } = renderHook(() => useScrollProgress({ container }));
-			expect(result.current).toBeDefined();
-		});
-
-		it('should handle null container', () => {
-			const { result } = renderHook(() => useScrollProgress({ container: null }));
-			expect(result.current).toBeDefined();
-		});
+		registerContainerBasicTests();
+		registerContainerScrollCalculationTests();
+		registerContainerResolutionTests();
 	});
 };
 
@@ -136,69 +195,261 @@ const registerOffsetOptionTests = () => {
 	});
 };
 
-const registerHorizontalOptionTests = () => {
-	describe('horizontal option', () => {
-		it('should track vertical scroll by default', () => {
-			const { result } = renderHook(() => useScrollProgress());
-			expect(result.current).toBeDefined();
+const registerHorizontalBasicTests = () => {
+	it('should track vertical scroll by default', () => {
+		const { result } = renderHook(() => useScrollProgress());
+		expect(result.current).toBeDefined();
+	});
+
+	it('should track horizontal scroll when horizontal is true', () => {
+		const { result } = renderHook(() => useScrollProgress({ horizontal: true }));
+		expect(result.current).toBeDefined();
+	});
+
+	it('should use scrollX and scrollXProgress for horizontal scroll', async () => {
+		const { result } = renderHook(() => useScrollProgress({ horizontal: true }));
+		mockScrollX = 100;
+		mockScrollXProgress = 0.5;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			expect(result.current.get()).toBeGreaterThanOrEqual(0);
+		});
+	});
+};
+
+const registerHorizontalContainerTests = () => {
+	it('should calculate horizontal scroll height from container scrollWidth', async () => {
+		const container = document.createElement('div');
+		Object.defineProperty(container, 'scrollWidth', {
+			writable: true,
+			value: 1000,
+		});
+		Object.defineProperty(container, 'clientWidth', {
+			writable: true,
+			value: 500,
 		});
 
-		it('should track horizontal scroll when horizontal is true', () => {
-			const { result } = renderHook(() => useScrollProgress({ horizontal: true }));
-			expect(result.current).toBeDefined();
+		const containerRef = { current: container } as RefObject<HTMLElement>;
+		const { result } = renderHook(() =>
+			useScrollProgress({ container: containerRef, horizontal: true })
+		);
+		mockScrollX = 250;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBeGreaterThanOrEqual(0);
+		});
+		const progress = result.current.get();
+		expect(progress).toBeLessThanOrEqual(1);
+	});
+};
+
+const registerHorizontalWindowTests = () => {
+	it('should calculate horizontal scroll height from window when no container', async () => {
+		const originalScrollWidth = globalThis.document.documentElement.scrollWidth;
+		const originalInnerWidth = globalThis.window.innerWidth;
+		Object.defineProperty(globalThis.document.documentElement, 'scrollWidth', {
+			writable: true,
+			value: 2000,
+		});
+		Object.defineProperty(globalThis.window, 'innerWidth', {
+			writable: true,
+			value: 1000,
+		});
+
+		const { result } = renderHook(() => useScrollProgress({ horizontal: true }));
+		mockScrollX = 500;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBeGreaterThanOrEqual(0);
+		});
+		const progress = result.current.get();
+		expect(progress).toBeLessThanOrEqual(1);
+
+		Object.defineProperty(globalThis.document.documentElement, 'scrollWidth', {
+			writable: true,
+			value: originalScrollWidth,
+		});
+		Object.defineProperty(globalThis.window, 'innerWidth', {
+			writable: true,
+			value: originalInnerWidth,
+		});
+	});
+};
+
+const registerHorizontalOptionTests = () => {
+	describe('horizontal option', () => {
+		registerHorizontalBasicTests();
+		registerHorizontalContainerTests();
+		registerHorizontalWindowTests();
+	});
+};
+
+const registerProgressOffsetTests = () => {
+	it('should calculate progress correctly with offsets', async () => {
+		const originalGetScrollHeight = globalThis.document.documentElement.scrollHeight;
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: 1000,
+		});
+		Object.defineProperty(globalThis.window, 'innerHeight', {
+			writable: true,
+			value: 500,
+		});
+
+		const { result } = renderHook(() => useScrollProgress({ offset: 100, offsetBottom: 100 }));
+		mockScrollY = 200;
+		triggerScrollChange();
+
+		let progressValue = 0;
+		await waitFor(() => {
+			progressValue = result.current.get();
+			expect(progressValue).toBeGreaterThanOrEqual(0);
+		});
+		expect(progressValue).toBeLessThanOrEqual(1);
+
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: originalGetScrollHeight,
+		});
+	});
+};
+
+const registerProgressClampingTests = () => {
+	it('should clamp progress between 0 and 1', async () => {
+		const { result } = renderHook(() => useScrollProgress());
+
+		mockScrollY = -100;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBeGreaterThanOrEqual(0);
+		});
+
+		mockScrollY = 100000;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBeLessThanOrEqual(1);
+		});
+	});
+};
+
+const registerProgressZeroHeightTests = () => {
+	it('should return 0 when scrollHeight is zero', async () => {
+		const originalScrollHeight = globalThis.document.documentElement.scrollHeight;
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: 0,
+		});
+
+		const { result } = renderHook(() => useScrollProgress());
+		mockScrollY = 100;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			expect(result.current.get()).toBe(0);
+		});
+
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: originalScrollHeight,
+		});
+	});
+
+	it('should return 0 when range is zero or negative', async () => {
+		const originalScrollHeight = globalThis.document.documentElement.scrollHeight;
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: 100,
+		});
+		Object.defineProperty(globalThis.window, 'innerHeight', {
+			writable: true,
+			value: 100,
+		});
+
+		// offset + offsetBottom >= scrollHeight, so range <= 0
+		const { result } = renderHook(() => useScrollProgress({ offset: 50, offsetBottom: 50 }));
+		mockScrollY = 25;
+		triggerScrollChange();
+
+		await waitFor(() => {
+			expect(result.current.get()).toBe(0);
+		});
+
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: originalScrollHeight,
+		});
+	});
+};
+
+const registerProgressBoundaryTests = () => {
+	it('should calculate progress correctly at start point', async () => {
+		const originalScrollHeight = globalThis.document.documentElement.scrollHeight;
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: 1000,
+		});
+		Object.defineProperty(globalThis.window, 'innerHeight', {
+			writable: true,
+			value: 500,
+		});
+
+		const { result } = renderHook(() => useScrollProgress({ offset: 100 }));
+		mockScrollY = 100; // At start point
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBe(0);
+		});
+
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: originalScrollHeight,
+		});
+	});
+
+	it('should calculate progress correctly at end point', async () => {
+		const originalScrollHeight = globalThis.document.documentElement.scrollHeight;
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: 1000,
+		});
+		Object.defineProperty(globalThis.window, 'innerHeight', {
+			writable: true,
+			value: 500,
+		});
+
+		const { result } = renderHook(() => useScrollProgress({ offsetBottom: 100 }));
+		mockScrollY = 400; // At end point (500 - 100)
+		triggerScrollChange();
+
+		await waitFor(() => {
+			const progress = result.current.get();
+			expect(progress).toBe(1);
+		});
+
+		Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
+			writable: true,
+			value: originalScrollHeight,
 		});
 	});
 };
 
 const registerProgressCalculationTests = () => {
 	describe('progress calculation', () => {
-		it('should calculate progress correctly with offsets', async () => {
-			const originalGetScrollHeight = globalThis.document.documentElement.scrollHeight;
-			Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
-				writable: true,
-				value: 1000,
-			});
-			Object.defineProperty(globalThis.window, 'innerHeight', {
-				writable: true,
-				value: 500,
-			});
-
-			const { result } = renderHook(() => useScrollProgress({ offset: 100, offsetBottom: 100 }));
-			mockScrollY = 200;
-			triggerScrollChange();
-
-			let progressValue = 0;
-			await waitFor(() => {
-				progressValue = result.current.get();
-				expect(progressValue).toBeGreaterThanOrEqual(0);
-			});
-			expect(progressValue).toBeLessThanOrEqual(1);
-
-			Object.defineProperty(globalThis.document.documentElement, 'scrollHeight', {
-				writable: true,
-				value: originalGetScrollHeight,
-			});
-		});
-
-		it('should clamp progress between 0 and 1', async () => {
-			const { result } = renderHook(() => useScrollProgress());
-
-			mockScrollY = -100;
-			triggerScrollChange();
-
-			await waitFor(() => {
-				const progress = result.current.get();
-				expect(progress).toBeGreaterThanOrEqual(0);
-			});
-
-			mockScrollY = 100000;
-			triggerScrollChange();
-
-			await waitFor(() => {
-				const progress = result.current.get();
-				expect(progress).toBeLessThanOrEqual(1);
-			});
-		});
+		registerProgressOffsetTests();
+		registerProgressClampingTests();
+		registerProgressZeroHeightTests();
+		registerProgressBoundaryTests();
 	});
 };
 

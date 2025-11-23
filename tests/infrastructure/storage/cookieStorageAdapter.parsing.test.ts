@@ -103,4 +103,18 @@ describe('parseCookies - complex scenarios', () => {
 		expect(cookies.size).toBe(1);
 		expect(cookies.get('key2')).toBe('value2');
 	});
+
+	it('should skip empty trimmed cookie pairs', () => {
+		const cookies = parseCookies('key1=value1; ; key2=value2');
+		expect(cookies.size).toBe(2);
+		expect(cookies.get('key1')).toBe('value1');
+		expect(cookies.get('key2')).toBe('value2');
+	});
+
+	it('should skip whitespace-only cookie pairs', () => {
+		const cookies = parseCookies('key1=value1;    ; key2=value2');
+		expect(cookies.size).toBe(2);
+		expect(cookies.get('key1')).toBe('value1');
+		expect(cookies.get('key2')).toBe('value2');
+	});
 });

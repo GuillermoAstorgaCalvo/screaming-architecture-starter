@@ -177,6 +177,45 @@ describe('mergeDesignTokens structured overrides', () => {
 	});
 });
 
+describe('mergeDesignTokens primitive value overrides', () => {
+	it('overrides primitive values (strings, numbers) without mutating defaults', () => {
+		const merged = mergeDesignTokens(
+			asPartial({
+				spacing: {
+					xs: 8,
+					sm: 16,
+				},
+			})
+		);
+
+		expect(merged.spacing.xs).toBe(8);
+		expect(merged.spacing.sm).toBe(16);
+		expect(merged.spacing.md).toBe(designTokens.spacing.md);
+		expect(merged.spacing.lg).toBe(designTokens.spacing.lg);
+
+		expect(designTokens.spacing.xs).toBe(4);
+		expect(designTokens.spacing.sm).toBe(8);
+	});
+
+	it('overrides string values in radius tokens', () => {
+		const merged = mergeDesignTokens(
+			asPartial({
+				radius: {
+					sm: '0.5rem',
+					md: '0.75rem',
+				},
+			})
+		);
+
+		expect(merged.radius.sm).toBe('0.5rem');
+		expect(merged.radius.md).toBe('0.75rem');
+		expect(merged.radius.lg).toBe(designTokens.radius.lg);
+
+		expect(designTokens.radius.sm).toBe('0.375rem');
+		expect(designTokens.radius.md).toBe('0.625rem');
+	});
+});
+
 describe('mergeDesignTokens typing guarantees', () => {
 	it('preserves typing guarantees for downstream consumers', () => {
 		const merged = mergeDesignTokens(

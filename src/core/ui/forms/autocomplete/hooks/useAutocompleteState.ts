@@ -61,14 +61,19 @@ export function useAutocompleteInput(
 	setValue: (value: string) => void
 ) {
 	const [inputValue, setInputValue] = useState(() => getInitialInputValue(props.options, value));
+	const isFirstRender = useRef(true);
 
 	// Debounce the input value for search
 	const DEBOUNCE_DELAY_MS = 300;
 	const debounceDelay = props.debounceDelay ?? DEBOUNCE_DELAY_MS;
 	const debouncedInputValue = useDebounce(inputValue, debounceDelay);
 
-	// Call onInputChange with debounced value
+	// Call onInputChange with debounced value (skip initial mount)
 	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
 		props.onInputChange?.(debouncedInputValue);
 	}, [debouncedInputValue, props]);
 

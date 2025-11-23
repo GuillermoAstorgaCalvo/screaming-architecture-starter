@@ -81,6 +81,27 @@ describe('getCryptoApi', () => {
 			expect(result).toBe(globalCrypto);
 			expect(result).not.toBe(windowCrypto);
 		});
+
+		it('returns window.crypto when globalThis.crypto is not available', () => {
+			cleanupCrypto();
+			const windowCrypto = createMockCrypto();
+			setupWindowCrypto(windowCrypto);
+
+			const result = getCryptoApi();
+			expect(result).toBe(windowCrypto);
+		});
+
+		it('handles window without crypto property', () => {
+			cleanupCrypto();
+			Object.defineProperty(globalThis, 'window', {
+				value: {},
+				writable: true,
+				configurable: true,
+			});
+
+			const result = getCryptoApi();
+			expect(result).toBeUndefined();
+		});
 	});
 });
 
@@ -174,5 +195,41 @@ describe('bytesToBase64 - large arrays', () => {
 		const result = bytesToBase64(bytes);
 		expect(result).toBeTruthy();
 		expect(typeof result).toBe('string');
+	});
+
+	it('handles arrays with multiple chunks', () => {
+		const bytes = createTestArray(20000); // Multiple chunks
+		const result = bytesToBase64(bytes);
+		expect(result).toBeTruthy();
+		expect(typeof result).toBe('string');
+		expect(result.length).toBeGreaterThan(0);
+	});
+
+	it('handles arrays exactly at chunk boundary', () => {
+		const bytes = createTestArray(8192 * 2); // Exactly 2 chunks
+		const result = bytesToBase64(bytes);
+		expect(result).toBeTruthy();
+		expect(typeof result).toBe('string');
+	});
+
+	it('handles number array input', () => {
+		const bytes = [72, 101, 108, 108, 111];
+		const result = bytesToBase64(bytes);
+		expect(result).toBe('SGVsbG8=');
+	});
+
+	it('handles number array with values at boundaries', () => {
+		const bytes = [0, 128, 255];
+		const result = bytesToBase64(bytes);
+		expect(result).toBeTruthy();
+		expect(typeof result).toBe('string');
+	});
+
+	it('handles mixed Uint8Array and number array conversion', () => {
+		const uint8Array = new Uint8Array([65, 66, 67]);
+		const numberArray = [65, 66, 67];
+		const result1 = bytesToBase64(uint8Array);
+		const result2 = bytesToBase64(numberArray);
+		expect(result1).toBe(result2);
 	});
 });

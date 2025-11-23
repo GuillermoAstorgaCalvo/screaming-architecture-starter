@@ -23,18 +23,20 @@ export function BarChartContent({
 	radius,
 }: BarChartContentProps) {
 	return (
-		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
-			<RechartsBarChart
-				data={data}
-				layout={isHorizontal ? 'vertical' : 'horizontal'}
-				margin={CHART_MARGIN}
-				barGap={barGap}
-				barCategoryGap={categoryGap}
-			>
-				<ChartAxes showGrid={showGrid} isHorizontal={isHorizontal} />
-				<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
-				<Bar dataKey={dataKey} fill={color} radius={radius} isAnimationActive />
-			</RechartsBarChart>
-		</ResponsiveContainer>
+		<div data-testid="bar-chart-responsive-container">
+			<ResponsiveContainer width={width as number | `${number}%`} height={height}>
+				<RechartsBarChart
+					data={data}
+					layout={isHorizontal ? 'vertical' : 'horizontal'}
+					margin={CHART_MARGIN}
+					barGap={barGap}
+					barCategoryGap={categoryGap}
+				>
+					<ChartAxes showGrid={showGrid} isHorizontal={isHorizontal} />
+					<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
+					<Bar dataKey={dataKey} fill={color} radius={radius} isAnimationActive />
+				</RechartsBarChart>
+			</ResponsiveContainer>
+		</div>
 	);
 }

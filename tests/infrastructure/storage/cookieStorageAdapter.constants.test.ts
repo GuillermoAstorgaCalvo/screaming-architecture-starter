@@ -49,6 +49,14 @@ function describeCookieDeleteExpiration() {
 
 function describeGetDefaultCookieOptions() {
 	describe('getDefaultCookieOptions', () => {
+		describeBasicOptions();
+		describeSecureOptionProtocols();
+		describeSecureOptionEdgeCases();
+	});
+}
+
+function describeBasicOptions() {
+	describe('basic options', () => {
 		it('should return default options with path "/"', () => {
 			const options = getDefaultCookieOptions();
 			expect(options.path).toBe('/');
@@ -58,7 +66,11 @@ function describeGetDefaultCookieOptions() {
 			const options = getDefaultCookieOptions();
 			expect(options.sameSite).toBe('Lax');
 		});
+	});
+}
 
+function describeSecureOptionProtocols() {
+	describe('secure option - protocol detection', () => {
 		it('should return secure true in HTTPS environment', () => {
 			Object.defineProperty(globalThis, 'window', {
 				value: {
@@ -88,7 +100,11 @@ function describeGetDefaultCookieOptions() {
 			const options = getDefaultCookieOptions();
 			expect(options.secure).toBe(false);
 		});
+	});
+}
 
+function describeSecureOptionEdgeCases() {
+	describe('secure option - edge cases', () => {
 		it('should return secure false when window is undefined', () => {
 			// @ts-expect-error - Intentionally removing window for SSR test
 			delete globalThis.window;
@@ -100,6 +116,34 @@ function describeGetDefaultCookieOptions() {
 		it('should return secure false when location is undefined', () => {
 			Object.defineProperty(globalThis, 'window', {
 				value: {},
+				writable: true,
+				configurable: true,
+			});
+
+			const options = getDefaultCookieOptions();
+			expect(options.secure).toBe(false);
+		});
+
+		it('should return secure false when location.protocol is undefined', () => {
+			Object.defineProperty(globalThis, 'window', {
+				value: {
+					location: {},
+				},
+				writable: true,
+				configurable: true,
+			});
+
+			const options = getDefaultCookieOptions();
+			expect(options.secure).toBe(false);
+		});
+
+		it('should return secure false when location.protocol is null', () => {
+			Object.defineProperty(globalThis, 'window', {
+				value: {
+					location: {
+						protocol: null,
+					},
+				},
 				writable: true,
 				configurable: true,
 			});

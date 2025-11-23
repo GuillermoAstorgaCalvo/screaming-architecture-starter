@@ -28,7 +28,7 @@ import {
 import type { MotionStaggerProps } from '@core/ui/utilities/motion/types/motionTypes';
 import { STATIC_VARIANTS } from '@core/ui/utilities/motion/variants/reducedMotionVariants';
 import { staggerContainerVariants } from '@core/ui/utilities/motion/variants/staggerVariants';
-import { type HTMLMotionProps, motion } from 'framer-motion';
+import { type HTMLMotionProps, motion, stagger } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
 
 const MIN_REDUCED_DELAY = 0.05;
@@ -39,8 +39,7 @@ function createStaggerVariants(staggerDelay: number, delayChildren: number) {
 		visible: {
 			...staggerContainerVariants['visible'],
 			transition: {
-				staggerChildren: staggerDelay,
-				delayChildren,
+				delayChildren: stagger(staggerDelay, { startDelay: delayChildren }),
 			},
 		},
 	};

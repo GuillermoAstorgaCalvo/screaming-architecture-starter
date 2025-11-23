@@ -49,6 +49,7 @@ export const SplitterHandle = forwardRef<HTMLButtonElement, SplitterHandleProps>
 				disabled={disabled}
 				aria-label={`Resize panel ${panelIndex + 1}`}
 				tabIndex={disabled ? -1 : 0}
+				data-testid={`splitter-handle-${panelIndex}`}
 			/>
 		);
 	}

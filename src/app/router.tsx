@@ -11,7 +11,6 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 const LandingPageBase = lazy(() => import('@domains/landing/pages/LandingPage'));
-
 const LandingPage = withTheme(LandingPageBase);
 
 export default function Router() {
@@ -30,10 +29,11 @@ export default function Router() {
 			pageView.title = documentTitle;
 		}
 
+		// SSR safety: window.location may be undefined in some environments (e.g., iframe sandbox)
+		// The optional chain check is necessary at runtime, even though TypeScript types suggest otherwise
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		const windowLocation = globalThis.window?.location?.href;
-		if (windowLocation) {
-			pageView.location = windowLocation;
+		if ('window' in globalThis && globalThis.window.location?.href) {
+			pageView.location = globalThis.window.location.href;
 		}
 
 		analytics.trackPageView(pageView);

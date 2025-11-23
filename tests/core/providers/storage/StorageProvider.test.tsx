@@ -84,3 +84,79 @@ describe('useStorage', () => {
 		);
 	});
 });
+
+describe('StorageProvider lifecycle', () => {
+	it('maintains storage instance on unmount and remount', () => {
+		const storage = createMockStorage();
+		const { result, unmount } = renderHook(() => useStorage(), {
+			wrapper: createWrapper(storage),
+		});
+
+		const initialStorage = result.current;
+		unmount();
+
+		const { result: newResult } = renderHook(() => useStorage(), {
+			wrapper: createWrapper(storage),
+		});
+
+		expect(newResult.current).toBe(storage);
+		expect(newResult.current).toBe(initialStorage);
+	});
+});
+
+describe('StorageProvider error handling', () => {
+	it('handles storage operations that return false', () => {
+		const storage = createMockStorage();
+		vi.mocked(storage.setItem).mockReturnValue(false);
+		vi.mocked(storage.removeItem).mockReturnValue(false);
+		vi.mocked(storage.clear).mockReturnValue(false);
+
+		const { result } = renderHook(() => useStorage(), {
+			wrapper: createWrapper(storage),
+		});
+
+		expect(result.current.setItem('key', 'value')).toBe(false);
+		expect(result.current.removeItem('key')).toBe(false);
+		expect(result.current.clear()).toBe(false);
+	});
+
+	it('handles getItem returning null', () => {
+		const storage = createMockStorage();
+		vi.mocked(storage.getItem).mockReturnValue(null);
+
+		const { result } = renderHook(() => useStorage(), {
+			wrapper: createWrapper(storage),
+		});
+
+		expect(result.current.getItem('nonexistent')).toBeNull();
+	});
+
+	it('handles key returning null for out-of-range indices', () => {
+		const storage = createMockStorage();
+		vi.mocked(storage.key).mockReturnValue(null);
+
+		const { result } = renderHook(() => useStorage(), {
+			wrapper: createWrapper(storage),
+		});
+
+		expect(result.current.key(999)).toBeNull();
+	});
+});
+
+describe('StorageProvider composition', () => {
+	it('works correctly when nested with other providers', () => {
+		const storage = createMockStorage();
+
+		const NestedWrapper = ({ children }: { children: ReactNode }) => (
+			<StorageProvider storage={storage}>
+				<div data-testid="nested">{children}</div>
+			</StorageProvider>
+		);
+
+		const { result } = renderHook(() => useStorage(), {
+			wrapper: NestedWrapper,
+		});
+
+		expect(result.current).toBe(storage);
+	});
+});

@@ -61,6 +61,7 @@ function renderChartWrapper({
 				description={description}
 				title={title}
 				chartType="Pie"
+				testId="pie-chart-container"
 			>
 				{chartContent}
 			</ChartContainer>
@@ -109,24 +110,39 @@ function renderChartWrapper({
  */
 
 export default function PieChart(props: Readonly<PieChartProps>) {
-	if (props.data.length === 0) {
-		return renderEmptyState({
-			className: props.className,
-			title: props.title,
-			emptyMessage: props.emptyMessage,
-		});
+	const {
+		data,
+		title,
+		description,
+		emptyMessage,
+		chartClassName,
+		className,
+		width: _width,
+		height: _height,
+		colorScheme: _colorScheme,
+		showLegend: _showLegend,
+		showTooltip: _showTooltip,
+		showGrid: _showGrid,
+		dataKey: _dataKey,
+		nameKey: _nameKey,
+		innerRadius: _innerRadius,
+		outerRadius: _outerRadius,
+		paddingAngle: _paddingAngle,
+		startAngle: _startAngle,
+		endAngle: _endAngle,
+		showLabels: _showLabels,
+		activeOnHover: _activeOnHover,
+		labelLineLength: _labelLineLength,
+		size: _size,
+		...restProps
+	} = props;
+	if (data.length === 0) {
+		return renderEmptyState({ className, title, emptyMessage });
 	}
-
 	const chartContent = buildCompleteChart(createChartContentConfig(props));
-
 	return (
-		<div className={props.className} {...props}>
-			{renderChartWrapper({
-				title: props.title,
-				description: props.description,
-				chartClassName: props.chartClassName,
-				chartContent,
-			})}
+		<div className={className} data-testid="pie-chart-root" {...restProps}>
+			{renderChartWrapper({ title, description, chartClassName, chartContent })}
 		</div>
 	);
 }

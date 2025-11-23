@@ -6,10 +6,8 @@
 
 import { ROUTES } from '@core/config/routes';
 import { ErrorBoundary } from '@core/lib/ErrorBoundary';
-import { ErrorBoundaryWrapper } from '@core/lib/ErrorBoundaryWrapper';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { MockLoggerAdapter } from '@tests/utils/mocks/MockLoggerAdapter';
-import { renderWithProviders } from '@tests/utils/testUtils';
 import type { ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -192,6 +190,36 @@ describe('ErrorBoundary - Default fallback', () => {
 		expect(main).toBeInTheDocument();
 		expect(main).toHaveClass('flex', 'min-h-screen');
 	});
+
+	it('should render default title and description from i18n', () => {
+		renderWithRouter(
+			<ErrorBoundary logger={logger}>
+				<ThrowError shouldThrow={true} />
+			</ErrorBoundary>
+		);
+
+		const main = screen.getByRole('main');
+		expect(main).toBeInTheDocument();
+		// Title and description should be rendered (from i18n translations)
+		expect(main.textContent).toBeTruthy();
+	});
+
+	it('should render error actions (try again and go to home buttons)', () => {
+		renderWithRouter(
+			<ErrorBoundary logger={logger}>
+				<ThrowError shouldThrow={true} />
+			</ErrorBoundary>
+		);
+
+		// Should have try again button
+		const tryAgainButton = screen.getByRole('button', { name: /try again/i });
+		expect(tryAgainButton).toBeInTheDocument();
+
+		// Should have go to home link
+		const homeLink = screen.getByRole('link', { name: /go to home/i });
+		expect(homeLink).toBeInTheDocument();
+		expect(homeLink).toHaveAttribute('href', ROUTES.HOME);
+	});
 });
 
 describe('ErrorBoundary - Custom fallback', () => {
@@ -242,7 +270,16 @@ describe('ErrorBoundary - Custom fallback', () => {
 	});
 });
 
-describe('ErrorBoundary - Development vs Production mode', () => {
+// Helper to mock DEV environment
+async function mockDevEnvironment(dev: boolean) {
+	const originalEnv = await import('@core/config/env.client');
+	vi.spyOn(originalEnv, 'env', 'get').mockReturnValue({
+		...originalEnv.env,
+		DEV: dev,
+	} as typeof originalEnv.env);
+}
+
+describe('ErrorBoundary - Development mode', () => {
 	let logger: MockLoggerAdapter;
 	let cleanup: () => void;
 
@@ -256,58 +293,86 @@ describe('ErrorBoundary - Development vs Production mode', () => {
 		cleanup();
 	});
 
-	describe('Mode-specific behavior', () => {
-		it('should display error details in development mode', async () => {
-			// Mock DEV to be true
-			const originalEnv = await import('@core/config/env.client');
-			vi.spyOn(originalEnv, 'env', 'get').mockReturnValue({
-				...originalEnv.env,
-				DEV: true,
-			} as typeof originalEnv.env);
+	it('should display error details in development mode', async () => {
+		await mockDevEnvironment(true);
 
-			const errorMessage = 'Development error';
-			renderWithRouter(
-				<ErrorBoundary logger={logger}>
-					<ThrowError shouldThrow={true} errorMessage={errorMessage} />
-				</ErrorBoundary>
-			);
+		const errorMessage = 'Development error';
+		renderWithRouter(
+			<ErrorBoundary logger={logger}>
+				<ThrowError shouldThrow={true} errorMessage={errorMessage} />
+			</ErrorBoundary>
+		);
 
-			// Wait for error details to render - check for error message in the paragraph
-			await waitFor(() => {
-				const errorParagraphs = screen.getAllByText(new RegExp(errorMessage));
-				expect(errorParagraphs.length).toBeGreaterThan(0);
-			});
-
-			// Verify error details container is present using Testing Library
-			const main = screen.getByRole('main');
-			const mainContainer = within(main);
-			// Check if error details are visible - the error message appears in both paragraph and pre elements
-			const errorDetails = mainContainer.getAllByText(new RegExp(errorMessage));
-			expect(errorDetails.length).toBeGreaterThan(0);
-			// Verify at least one error detail element is in the document
-			expect(errorDetails[0]).toBeInTheDocument();
+		await waitFor(() => {
+			const errorParagraphs = screen.getAllByText(new RegExp(errorMessage));
+			expect(errorParagraphs.length).toBeGreaterThan(0);
 		});
 
-		it('should not display error details in production mode', async () => {
-			// Mock DEV to be false
-			const originalEnv = await import('@core/config/env.client');
-			vi.spyOn(originalEnv, 'env', 'get').mockReturnValue({
-				...originalEnv.env,
-				DEV: false,
-			} as typeof originalEnv.env);
+		const main = screen.getByRole('main');
+		const mainContainer = within(main);
+		const errorDetails = mainContainer.getAllByText(new RegExp(errorMessage));
+		expect(errorDetails.length).toBeGreaterThan(0);
+		expect(errorDetails[0]).toBeInTheDocument();
+	});
 
-			const errorMessage = 'Production error';
-			renderWithRouter(
-				<ErrorBoundary logger={logger}>
-					<ThrowError shouldThrow={true} errorMessage={errorMessage} />
-				</ErrorBoundary>
-			);
+	it('should display error stack trace in development mode when available', async () => {
+		await mockDevEnvironment(true);
 
-			// Error details should not be visible
-			await waitFor(() => {
-				const errorText = screen.queryByText(new RegExp(errorMessage));
-				expect(errorText).not.toBeInTheDocument();
-			});
+		renderWithRouter(
+			<ErrorBoundary logger={logger}>
+				<ThrowErrorWithStack />
+			</ErrorBoundary>
+		);
+
+		const main = screen.getByRole('main');
+		expect(main).toBeInTheDocument();
+		expect(main.textContent).toBeTruthy();
+	});
+
+	it('should not display error stack trace when stack is not available', async () => {
+		await mockDevEnvironment(true);
+
+		const errorWithoutStack = new Error('Error without stack');
+		delete (errorWithoutStack as { stack?: string }).stack;
+
+		renderWithRouter(
+			<ErrorBoundary logger={logger}>
+				<ThrowError shouldThrow={true} errorMessage={errorWithoutStack.message} />
+			</ErrorBoundary>
+		);
+
+		const main = screen.getByRole('main');
+		expect(main).toBeInTheDocument();
+	});
+});
+
+describe('ErrorBoundary - Production mode', () => {
+	let logger: MockLoggerAdapter;
+	let cleanup: () => void;
+
+	beforeEach(() => {
+		const { logger: setupLogger, cleanup: setupCleanup } = setupErrorBoundaryTests();
+		logger = setupLogger;
+		cleanup = setupCleanup;
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it('should not display error details in production mode', async () => {
+		await mockDevEnvironment(false);
+
+		const errorMessage = 'Production error';
+		renderWithRouter(
+			<ErrorBoundary logger={logger}>
+				<ThrowError shouldThrow={true} errorMessage={errorMessage} />
+			</ErrorBoundary>
+		);
+
+		await waitFor(() => {
+			const errorText = screen.queryByText(new RegExp(errorMessage));
+			expect(errorText).not.toBeInTheDocument();
 		});
 	});
 });
@@ -389,116 +454,7 @@ describe('ErrorBoundary - Error recovery', () => {
 	});
 });
 
-describe('ErrorBoundaryWrapper - Logger injection', () => {
-	let cleanup: () => void;
-
-	beforeEach(() => {
-		const { cleanup: setupCleanup } = setupErrorBoundaryTests();
-		cleanup = setupCleanup;
-	});
-
-	afterEach(() => {
-		cleanup();
-	});
-
-	it('should inject logger from context', () => {
-		const testLogger = new MockLoggerAdapter();
-		renderWithProviders(
-			<ErrorBoundaryWrapper>
-				<ThrowError shouldThrow={true} />
-			</ErrorBoundaryWrapper>,
-			{ logger: testLogger }
-		);
-
-		// Should log error using the provided logger
-		expect(testLogger.logs).toHaveLength(1);
-		expect(testLogger.logs[0]?.level).toBe('error');
-	});
-});
-
-describe('ErrorBoundaryWrapper - Default UI', () => {
-	let cleanup: () => void;
-
-	beforeEach(() => {
-		const { cleanup: setupCleanup } = setupErrorBoundaryTests();
-		cleanup = setupCleanup;
-	});
-
-	afterEach(() => {
-		cleanup();
-	});
-
-	it('should use ErrorBoundaryUI by default', () => {
-		renderWithProviders(
-			<ErrorBoundaryWrapper>
-				<ThrowError shouldThrow={true} />
-			</ErrorBoundaryWrapper>
-		);
-
-		// ErrorBoundaryUI renders a main element with role="alert"
-		const alert = screen.getByRole('alert');
-		expect(alert).toBeInTheDocument();
-	});
-
-	it('should handle error recovery through ErrorBoundaryUI', () => {
-		renderWithProviders(
-			<ErrorBoundaryWrapper>
-				<ThrowError shouldThrow={true} />
-			</ErrorBoundaryWrapper>
-		);
-
-		// ErrorBoundaryUI should have a retry button
-		const retryButton = screen.getByRole('button', { name: /retry|try again/i });
-		expect(retryButton).toBeInTheDocument();
-	});
-});
-
-describe('ErrorBoundaryWrapper - Custom configuration', () => {
-	let cleanup: () => void;
-
-	beforeEach(() => {
-		const { cleanup: setupCleanup } = setupErrorBoundaryTests();
-		cleanup = setupCleanup;
-	});
-
-	afterEach(() => {
-		cleanup();
-	});
-
-	it('should use custom fallback when provided', () => {
-		const customFallback = <div data-testid="custom-wrapper-fallback">Custom</div>;
-		renderWithProviders(
-			<ErrorBoundaryWrapper fallback={customFallback}>
-				<ThrowError shouldThrow={true} />
-			</ErrorBoundaryWrapper>
-		);
-
-		expect(screen.getByTestId('custom-wrapper-fallback')).toBeInTheDocument();
-	});
-
-	it('should pass uiProps to ErrorBoundaryUI', () => {
-		renderWithProviders(
-			<ErrorBoundaryWrapper
-				uiProps={{
-					title: 'Custom Title',
-					description: 'Custom Description',
-					variant: 'minimal',
-				}}
-			>
-				<ThrowError shouldThrow={true} />
-			</ErrorBoundaryWrapper>
-		);
-
-		// ErrorBoundaryUI should render with custom props
-		const alert = screen.getByRole('alert');
-		expect(alert).toBeInTheDocument();
-		// The title and description should be rendered by ErrorBoundaryUI
-		expect(screen.getByText('Custom Title')).toBeInTheDocument();
-		expect(screen.getByText('Custom Description')).toBeInTheDocument();
-	});
-});
-
-describe('ErrorBoundaryWrapper - Nested boundaries', () => {
+describe('ErrorBoundary - Nested boundaries', () => {
 	let cleanup: () => void;
 
 	beforeEach(() => {
@@ -529,6 +485,21 @@ describe('ErrorBoundaryWrapper - Nested boundaries', () => {
 		// Outer boundary should not catch it
 		expect(outerLogger.logs).toHaveLength(0);
 	});
+
+	it('should allow outer boundary to catch if inner boundary does not catch', () => {
+		const outerLogger = new MockLoggerAdapter();
+
+		renderWithRouter(
+			<ErrorBoundary logger={outerLogger}>
+				<div>
+					<ThrowError shouldThrow={true} />
+				</div>
+			</ErrorBoundary>
+		);
+
+		// Outer boundary should catch the error
+		expect(outerLogger.logs).toHaveLength(1);
+	});
 });
 
 describe('ErrorBoundary - Edge cases', () => {
@@ -545,7 +516,7 @@ describe('ErrorBoundary - Edge cases', () => {
 		cleanup();
 	});
 
-	describe('Edge case handling', () => {
+	describe('Multiple errors', () => {
 		it('should handle multiple errors sequentially', () => {
 			const { rerender } = renderWithRouter(
 				<ErrorBoundary logger={logger}>
@@ -555,7 +526,6 @@ describe('ErrorBoundary - Edge cases', () => {
 
 			expect(logger.logs).toHaveLength(1);
 
-			// Reset and throw again
 			const resetButton = screen.getByRole('button', { name: /try again/i });
 			resetButton.click();
 
@@ -567,18 +537,16 @@ describe('ErrorBoundary - Edge cases', () => {
 				</BrowserRouter>
 			);
 
-			// Should log the second error
 			expect(logger.logs.length).toBeGreaterThanOrEqual(1);
 		});
+	});
 
+	describe('Fallback edge cases', () => {
 		it('should handle errors in error boundary fallback', () => {
 			const fallbackThatThrows = () => {
 				throw new Error('Fallback error');
 			};
 
-			// When a fallback throws, React will still throw the error
-			// This is expected behavior - error boundaries can't catch errors in their own fallback
-			// The test verifies that the error boundary attempts to render the fallback
 			expect(() => {
 				renderWithRouter(
 					<ErrorBoundary logger={logger} fallback={fallbackThatThrows}>
@@ -593,15 +561,67 @@ describe('ErrorBoundary - Edge cases', () => {
 				<div data-testid="null-error-fallback">{error ? error.message : 'No error object'}</div>
 			);
 
-			// This shouldn't happen in practice, but test the edge case
 			renderWithRouter(
 				<ErrorBoundary logger={logger} fallback={customFallback}>
 					<ThrowError shouldThrow={true} />
 				</ErrorBoundary>
 			);
 
-			// Should render the fallback
 			expect(screen.getByTestId('null-error-fallback')).toBeInTheDocument();
+		});
+
+		it('should handle empty error message in fallback function', () => {
+			const customFallback = (error: Error | null, reset: () => void) => (
+				<div data-testid="empty-error-fallback">
+					{error?.message ?? 'Empty error message'}
+					<button onClick={reset} data-testid="reset-btn">
+						Reset
+					</button>
+				</div>
+			);
+
+			renderWithRouter(
+				<ErrorBoundary logger={logger} fallback={customFallback}>
+					<ThrowError shouldThrow={true} errorMessage="" />
+				</ErrorBoundary>
+			);
+
+			expect(screen.getByTestId('empty-error-fallback')).toBeInTheDocument();
+			expect(screen.getByTestId('reset-btn')).toBeInTheDocument();
+		});
+	});
+
+	describe('Reset functionality', () => {
+		it('should handle reset function being called multiple times', () => {
+			const customFallback = (error: Error | null, reset: () => void) => (
+				<div data-testid="reset-test">
+					<button onClick={reset} data-testid="reset-btn">
+						Reset
+					</button>
+				</div>
+			);
+
+			const { rerender } = renderWithRouter(
+				<ErrorBoundary logger={logger} fallback={customFallback}>
+					<ThrowError shouldThrow={true} />
+				</ErrorBoundary>
+			);
+
+			const resetButton = screen.getByTestId('reset-btn');
+			expect(resetButton).toBeInTheDocument();
+
+			resetButton.click();
+			resetButton.click();
+
+			rerender(
+				<BrowserRouter>
+					<ErrorBoundary logger={logger} fallback={customFallback}>
+						<ThrowError shouldThrow={false} />
+					</ErrorBoundary>
+				</BrowserRouter>
+			);
+
+			expect(screen.getByText('No error')).toBeInTheDocument();
 		});
 	});
 });

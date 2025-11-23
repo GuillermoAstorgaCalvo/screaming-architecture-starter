@@ -10,76 +10,76 @@
 
 export const designTokens = {
 	color: {
-		// Primary brand color
+		// Primary brand color - Modern blue with purple gradient
 		primary: {
-			DEFAULT: '#2dd4ff',
-			foreground: '#01060f',
-			light: '#67e8f9',
-			dark: '#0284c7',
+			DEFAULT: '#6366f1', // Indigo-500
+			foreground: '#ffffff',
+			light: '#818cf8', // Indigo-400
+			dark: '#4f46e5', // Indigo-600
 		},
 
-		// Secondary color for supporting actions
+		// Secondary color for supporting actions - Purple-blue gradient
 		secondary: {
-			DEFAULT: '#818cf8',
-			foreground: '#0f172a',
-			light: '#c7d2fe',
-			dark: '#4c1d95',
+			DEFAULT: '#8b5cf6', // Violet-500
+			foreground: '#ffffff',
+			light: '#a78bfa', // Violet-400
+			dark: '#7c3aed', // Violet-600
 		},
 
-		// Accent color for highlights and emphasis
+		// Accent color for highlights and emphasis - Light purple-blue
 		accent: {
-			DEFAULT: '#f0abfc',
-			foreground: '#0f172a',
-			light: '#fce7f3',
-			dark: '#c026d3',
+			DEFAULT: '#a78bfa', // Violet-400
+			foreground: '#ffffff',
+			light: '#c4b5fd', // Violet-300
+			dark: '#7c3aed', // Violet-600
 		},
 
 		// Muted colors for subtle backgrounds and borders
 		muted: {
-			DEFAULT: '#1e293b',
+			DEFAULT: 'rgba(255, 255, 255, 0.1)', // Glassmorphism ready
 			foreground: '#e2e8f0',
-			dark: '#0b1220',
+			dark: 'rgba(255, 255, 255, 0.05)',
 			darkForeground: '#f8fafc',
 		},
 
 		// Destructive/danger color for errors and destructive actions
 		destructive: {
-			DEFAULT: '#fb7185',
-			foreground: '#0f172a',
-			light: '#fecdd3',
-			dark: '#be123c',
+			DEFAULT: '#ef4444', // Red-500
+			foreground: '#ffffff',
+			light: '#f87171', // Red-400
+			dark: '#dc2626', // Red-600
 		},
 
 		// Success color for positive feedback
 		success: {
-			DEFAULT: '#34d399',
-			foreground: '#022c22',
-			light: '#bbf7d0',
-			dark: '#065f46',
+			DEFAULT: '#10b981', // Emerald-500
+			foreground: '#ffffff',
+			light: '#34d399', // Emerald-400
+			dark: '#059669', // Emerald-600
 		},
 
 		// Warning color for cautionary states
 		warning: {
-			DEFAULT: '#fbbf24',
-			foreground: '#0f172a',
-			light: '#fef3c7',
-			dark: '#b45309',
+			DEFAULT: '#f59e0b', // Amber-500
+			foreground: '#ffffff',
+			light: '#fbbf24', // Amber-400
+			dark: '#d97706', // Amber-600
 		},
 
 		// Info color for informational states
 		info: {
-			DEFAULT: '#60a5fa',
-			foreground: '#0f172a',
-			light: '#dbeafe',
-			dark: '#1d4ed8',
+			DEFAULT: '#3b82f6', // Blue-500
+			foreground: '#ffffff',
+			light: '#60a5fa', // Blue-400
+			dark: '#2563eb', // Blue-600
 		},
 
-		// Surface colors (backgrounds)
+		// Surface colors (backgrounds) - Deep dark blue
 		surface: {
-			DEFAULT: '#0b1220',
-			dark: '#03060d',
-			elevated: '#0f172a',
-			elevatedDark: '#111826',
+			DEFAULT: '#0a0e27', // Deep dark blue
+			dark: '#050816', // Darker variant
+			elevated: '#0f1422', // Slightly lighter for elevation
+			elevatedDark: '#141a2e',
 		},
 
 		// Overlay/backdrop colors for modals, drawers, etc.
@@ -94,27 +94,27 @@ export const designTokens = {
 			defaultDark: 'rgba(1, 6, 15, 0.85)',
 		},
 
-		// Border colors
+		// Border colors - Subtle with glassmorphism
 		border: {
-			DEFAULT: '#1e293b',
-			dark: '#0f172a',
-			light: '#334155',
-			darkLight: '#64748b',
+			DEFAULT: 'rgba(255, 255, 255, 0.1)', // Glassmorphism border
+			dark: 'rgba(255, 255, 255, 0.05)',
+			light: 'rgba(255, 255, 255, 0.2)',
+			darkLight: 'rgba(255, 255, 255, 0.15)',
 		},
 
-		// Text colors
+		// Text colors - White and light variants
 		text: {
-			primary: '#f8fafc',
-			primaryDark: '#e2e8f0',
-			secondary: '#cbd5f5',
-			secondaryDark: '#94a3b8',
-			muted: '#8aa3c7',
-			mutedDark: '#7488a6',
+			primary: '#ffffff',
+			primaryDark: '#f1f5f9',
+			secondary: '#e2e8f0',
+			secondaryDark: '#cbd5e1',
+			muted: '#94a3b8',
+			mutedDark: '#64748b',
 			disabled: '#475569',
-			disabledDark: '#1f2937',
-			onPrimary: '#020617',
-			onSecondary: '#020617',
-			onDestructive: '#020617',
+			disabledDark: '#334155',
+			onPrimary: '#ffffff',
+			onSecondary: '#ffffff',
+			onDestructive: '#ffffff',
 		},
 	},
 
@@ -141,22 +141,26 @@ export const designTokens = {
 		'4xl': 64,
 	},
 
-	// Shadow/elevation tokens
+	// Shadow/elevation tokens - Enhanced for glassmorphism
 	shadow: {
 		none: 'none',
-		sm: '0 10px 20px -10px rgba(15, 23, 42, 0.4)',
-		md: '0 20px 45px -25px rgba(15, 23, 42, 0.6)',
-		lg: '0 30px 60px -30px rgba(15, 23, 42, 0.65)',
-		xl: '0 40px 90px -45px rgba(15, 23, 42, 0.75)',
-		'2xl': '0 25px 50px -12px rgba(15, 23, 42, 0.65), 0 35px 80px -20px rgba(45, 212, 191, 0.25)',
-		inner: 'inset 0 2px 8px 0 rgba(15, 23, 42, 0.5)',
-		// Dark mode shadows (lighter, more subtle)
+		sm: '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
+		md: '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3)',
+		lg: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+		xl: '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+		'2xl':
+			'0 30px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 40px rgba(99, 102, 241, 0.2)',
+		inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.3)',
+		// Glassmorphism shadows
+		glass: '0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+		// Dark mode shadows (more pronounced for depth)
 		dark: {
-			sm: '0 10px 20px -12px rgba(2, 6, 23, 0.6)',
-			md: '0 18px 40px -20px rgba(2, 6, 23, 0.7)',
-			lg: '0 25px 55px -25px rgba(2, 6, 23, 0.75)',
-			xl: '0 35px 70px -30px rgba(2, 6, 23, 0.8)',
-			'2xl': '0 45px 100px -40px rgba(2, 6, 23, 0.85)',
+			sm: '0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3)',
+			md: '0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4)',
+			lg: '0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 10px 10px -5px rgba(0, 0, 0, 0.3)',
+			xl: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+			'2xl':
+				'0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 40px rgba(99, 102, 241, 0.3)',
 		},
 	},
 
@@ -287,14 +291,15 @@ export const designTokens = {
 		thick: '4px',
 	},
 
-	// Backdrop blur tokens for glassmorphism effects
+	// Backdrop blur tokens for glassmorphism effects - Enhanced
 	backdropBlur: {
 		none: '0',
 		sm: '4px',
-		md: '8px',
-		lg: '12px',
-		xl: '16px',
-		'2xl': '24px',
+		md: '10px',
+		lg: '16px',
+		xl: '24px',
+		'2xl': '40px',
+		glass: '20px', // Standard glassmorphism blur
 	},
 
 	// Filter blur tokens for animation effects (CSS filter: blur())

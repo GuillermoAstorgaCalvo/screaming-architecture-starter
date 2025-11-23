@@ -107,5 +107,11 @@ export function calculatePaginationMeta(
  * Calculate offset from page and page size
  */
 export function calculateOffset(page: number, pageSize: number): number {
-	return (Math.max(1, page) - 1) * Math.max(1, pageSize);
+	const safePage = Math.max(1, Math.floor(page));
+	const safePageSize = Math.max(1, Math.floor(pageSize));
+	// If original pageSize was invalid (<= 0), return 0
+	if (pageSize <= 0) {
+		return 0;
+	}
+	return (safePage - 1) * safePageSize;
 }

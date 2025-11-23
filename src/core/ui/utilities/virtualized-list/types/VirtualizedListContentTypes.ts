@@ -11,4 +11,9 @@ export interface VirtualizedListContentProps<T> {
 	readonly getItemKey?: ((item: T, index: number) => string | number) | undefined;
 	readonly orientation: 'vertical' | 'horizontal';
 	readonly totalSize: number;
+	/**
+	 * Optional test ID for the list element.
+	 * Used for testing implementation details (styles) that can't be accessed semantically.
+	 */
+	readonly 'data-testid'?: string | undefined;
 }

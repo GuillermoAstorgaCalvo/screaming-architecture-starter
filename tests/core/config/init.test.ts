@@ -57,4 +57,23 @@ describe('initConfig', () => {
 
 		consoleSpy.mockRestore();
 	});
+
+	it('logs and swallows errors thrown when setting httpClient config', async () => {
+		const runtimeConfig = { API_BASE_URL: 'https://api.example.com' };
+		mockedGetRuntimeConfig.mockResolvedValue(runtimeConfig);
+		const configError = new Error('httpClient config error');
+		mockedHttpClient.setDefaultConfig.mockImplementation(() => {
+			throw configError;
+		});
+
+		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+		await expect(initConfig()).resolves.toBeUndefined();
+		expect(consoleSpy).toHaveBeenCalledWith('Failed to initialize configuration:', configError);
+		expect(mockedHttpClient.setDefaultConfig).toHaveBeenCalledWith({
+			baseURL: runtimeConfig.API_BASE_URL,
+		});
+
+		consoleSpy.mockRestore();
+	});
 });

@@ -3,15 +3,26 @@ import { useEffect, useState } from 'react';
 
 /**
  * Type guard to check if window is available (SSR-safe)
+ * @internal - Exported for testing purposes only
  */
-function isWindowAvailable(): boolean {
+let _isWindowAvailable = (): boolean => {
 	return 'window' in globalThis;
+};
+
+export function isWindowAvailable(): boolean {
+	return _isWindowAvailable();
+}
+
+// Allow tests to override the implementation
+export function __setIsWindowAvailable(fn: () => boolean): void {
+	_isWindowAvailable = fn;
 }
 
 /**
  * Gets current scroll position from window
+ * @internal - Exported for testing purposes only
  */
-function getScrollPosition(): number {
+export function getScrollPosition(): number {
 	if (!isWindowAvailable()) {
 		return 0;
 	}

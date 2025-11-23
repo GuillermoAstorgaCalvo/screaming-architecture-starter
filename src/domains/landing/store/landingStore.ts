@@ -1,136 +1,164 @@
 /**
- * Landing Domain Store
+ * Landing Domain Zustand Store
  *
- * Example Zustand store following best practices:
- * - Domain-scoped state management
- * - Type-safe with TypeScript
- * - Uses selectors for performance optimization
- * - Minimal state, derived values when possible
+ * Manages client-side state for the landing domain, including component filtering.
+ * This store demonstrates the Zustand pattern for domain-scoped state management.
  *
  * @example
  * ```tsx
- * // In a component
- * import { useLandingStore } from '@domains/landing/store/landingStore';
+ * // Using selectors (recommended)
+ * const searchQuery = useLandingStore(landingSelectors.searchQuery);
+ * const setSearchQuery = useLandingStore(landingSelectors.setSearchQuery);
  *
- * function MyComponent() {
- *   // Using selector for optimal re-renders
- *   const count = useLandingStore((state) => state.count);
- *   const increment = useLandingStore((state) => state.increment);
- *
- *   return (
- *     <button onClick={increment}>Count: {count}</button>
- *   );
- * }
+ * // Using inline selectors
+ * const selectedTags = useLandingStore(state => state.selectedTags);
  * ```
  */
 
 import type { StoreSelector } from '@core/lib/storeUtils';
+import type { CategoryId } from '@domains/landing/pages/landing.types';
 import { create } from 'zustand';
 
 /**
- * Landing store state interface
+ * Landing domain state
  */
-export interface LandingState {
-	/** Counter value */
-	count: number;
-	/** Loading state */
-	isLoading: boolean;
-	/** Error message */
-	error: string | null;
+interface LandingState {
+	/** Active category for component showcase navigation */
+	activeCategory: CategoryId;
+	/** Search query for filtering components */
+	searchQuery: string;
+	/** Selected tags for filtering components */
+	selectedTags: string[];
 }
 
 /**
- * Landing store actions interface
+ * Landing domain actions
  */
-export interface LandingActions {
-	/** Increment the counter */
-	increment: () => void;
-	/** Decrement the counter */
-	decrement: () => void;
-	/** Reset the counter */
-	reset: () => void;
-	/** Set loading state */
-	setLoading: (isLoading: boolean) => void;
-	/** Set error message */
-	setError: (error: string | null) => void;
+interface LandingActions {
+	/** Sets the active category */
+	setActiveCategory: (category: CategoryId) => void;
+	/** Sets the search query */
+	setSearchQuery: (query: string) => void;
+	/** Toggles a tag in the selected tags array */
+	toggleTag: (tag: string) => void;
+	/** Clears all filters (search query and selected tags) */
+	clearFilters: () => void;
 }
 
 /**
- * Combined landing store type
+ * Landing domain store type
  */
-export type LandingStore = LandingState & LandingActions;
+type LandingStore = LandingState & LandingActions;
 
 /**
- * Landing store initial state
+ * Initial state for the landing store
  */
 const initialState: LandingState = {
-	count: 0,
-	isLoading: false,
-	error: null,
+	activeCategory: 'root',
+	searchQuery: '',
+	selectedTags: [],
 };
 
 /**
  * Landing domain Zustand store
  *
- * Uses Zustand's create function with proper TypeScript typing.
- * State updates are immutable by default in Zustand.
+ * Provides state management for component filtering in the landing domain.
+ * Uses Zustand for efficient, selector-based state access.
  */
 export const useLandingStore = create<LandingStore>(set => ({
 	...initialState,
 
-	increment: () =>
-		set(state => ({
-			...state,
-			count: state.count + 1,
-		})),
+	setActiveCategory: (category: CategoryId) => {
+		set({ activeCategory: category });
+	},
 
-	decrement: () =>
-		set(state => ({
-			...state,
-			count: state.count - 1,
-		})),
+	setSearchQuery: (query: string) => {
+		set({ searchQuery: query });
+	},
 
-	reset: () =>
-		set(() => ({
-			...initialState,
-		})),
+	toggleTag: (tag: string) => {
+		set(state => {
+			if (state.selectedTags.includes(tag)) {
+				return {
+					selectedTags: state.selectedTags.filter(t => t !== tag),
+				};
+			}
+			return {
+				selectedTags: [...state.selectedTags, tag],
+			};
+		});
+	},
 
-	setLoading: (isLoading: boolean) =>
-		set(state => ({
-			...state,
-			isLoading,
-		})),
-
-	setError: (error: string | null) =>
-		set(state => ({
-			...state,
-			error,
-		})),
+	clearFilters: () => {
+		set(initialState);
+	},
 }));
 
 /**
- * Pre-defined selectors for common state access patterns
- * Using selectors prevents unnecessary re-renders
+ * Pre-defined selectors for the landing store
+ *
+ * Using selectors prevents unnecessary re-renders by subscribing only to
+ * the specific state slices that components need.
+ *
+ * @example
+ * ```tsx
+ * const searchQuery = useLandingStore(landingSelectors.searchQuery);
+ * const setSearchQuery = useLandingStore(landingSelectors.setSearchQuery);
+ * ```
  */
 export const landingSelectors = {
-	/** Select only the count value */
-	count: ((state: LandingStore) => state.count) satisfies StoreSelector<LandingStore, number>,
+	/** Selector for active category */
+	activeCategory: ((state: LandingStore) => state.activeCategory) satisfies StoreSelector<
+		LandingStore,
+		CategoryId
+	>,
 
-	/** Select only the loading state */
-	isLoading: ((state: LandingStore) => state.isLoading) satisfies StoreSelector<
+	/** Selector for setActiveCategory action */
+	setActiveCategory: ((state: LandingStore) => state.setActiveCategory) satisfies StoreSelector<
+		LandingStore,
+		(category: CategoryId) => void
+	>,
+
+	/** Selector for search query */
+	searchQuery: ((state: LandingStore) => state.searchQuery) satisfies StoreSelector<
+		LandingStore,
+		string
+	>,
+
+	/** Selector for setSearchQuery action */
+	setSearchQuery: ((state: LandingStore) => state.setSearchQuery) satisfies StoreSelector<
+		LandingStore,
+		(query: string) => void
+	>,
+
+	/** Selector for selected tags */
+	selectedTags: ((state: LandingStore) => state.selectedTags) satisfies StoreSelector<
+		LandingStore,
+		string[]
+	>,
+
+	/** Selector for toggleTag action */
+	toggleTag: ((state: LandingStore) => state.toggleTag) satisfies StoreSelector<
+		LandingStore,
+		(tag: string) => void
+	>,
+
+	/** Selector for clearFilters action */
+	clearFilters: ((state: LandingStore) => state.clearFilters) satisfies StoreSelector<
+		LandingStore,
+		() => void
+	>,
+
+	/** Derived selector: checks if any filters are active */
+	hasActiveFilters: ((state: LandingStore) =>
+		state.searchQuery.trim() !== '' || state.selectedTags.length > 0) satisfies StoreSelector<
 		LandingStore,
 		boolean
 	>,
 
-	/** Select only the error message */
-	error: ((state: LandingStore) => state.error) satisfies StoreSelector<
+	/** Derived selector: gets the count of selected tags */
+	selectedTagsCount: ((state: LandingStore) => state.selectedTags.length) satisfies StoreSelector<
 		LandingStore,
-		string | null
+		number
 	>,
-
-	/** Select count and increment action together */
-	countWithIncrement: ((state: LandingStore) => ({
-		count: state.count,
-		increment: state.increment,
-	})) satisfies StoreSelector<LandingStore, { count: number; increment: () => void }>,
 } as const;

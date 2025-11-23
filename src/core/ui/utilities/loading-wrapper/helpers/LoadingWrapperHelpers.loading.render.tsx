@@ -17,13 +17,13 @@ type SkeletonStateProps = Readonly<{
 export function renderSkeletonState({ skeletonComponent, className, props }: SkeletonStateProps) {
 	if (skeletonComponent) {
 		return (
-			<div className={className} {...props}>
+			<div className={className} data-testid="skeleton-wrapper" {...props}>
 				{skeletonComponent}
 			</div>
 		);
 	}
 	return (
-		<div className={className} {...props}>
+		<div className={className} data-testid="skeleton-wrapper" {...props}>
 			<Skeleton variant="rectangular" className="w-full h-32" />
 		</div>
 	);

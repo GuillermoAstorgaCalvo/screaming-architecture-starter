@@ -66,10 +66,12 @@ function buildColorPickerContentProps(
 	options: Readonly<BuildColorPickerContentPropsOptions>
 ): ColorPickerContentProps {
 	const { props, state, fieldProps } = options;
+	const hasError = Boolean(props.error);
 	return {
 		colorPickerId: state.finalId,
 		colorPickerClasses: state.colorPickerClasses,
 		ariaDescribedBy: state.ariaDescribedBy,
+		hasError,
 		label: props.label,
 		error: props.error,
 		helperText: props.helperText,

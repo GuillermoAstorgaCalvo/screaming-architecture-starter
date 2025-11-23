@@ -1,10 +1,49 @@
 import i18n from '@core/i18n/i18n';
 import type { BarChartProps } from '@src-types/ui/data/chart';
+import type { ReactNode } from 'react';
 
 import { BarChartContent } from './components/BarChartContent';
 import { BarChartEmptyState } from './components/BarChartEmptyState';
 import { BarChartWrapper } from './components/BarChartWrapper';
 import { buildBarChartContentConfig } from './helpers/BarChart.config';
+
+function renderEmptyState(params: {
+	title: string | undefined;
+	emptyMessage: ReactNode;
+	className: string | undefined;
+	restProps: Record<string, unknown>;
+}) {
+	return (
+		<BarChartEmptyState
+			title={params.title}
+			emptyMessage={params.emptyMessage}
+			className={params.className}
+			props={params.restProps}
+		/>
+	);
+}
+
+function renderChart(params: {
+	title: string | undefined;
+	description: string | undefined;
+	chartClassName: string | undefined;
+	className: string | undefined;
+	restProps: Record<string, unknown>;
+	props: Readonly<BarChartProps>;
+}) {
+	const chartConfig = buildBarChartContentConfig(params.props);
+	return (
+		<BarChartWrapper
+			title={params.title}
+			description={params.description}
+			chartClassName={params.chartClassName}
+			className={params.className}
+			props={params.restProps}
+		>
+			<BarChartContent {...chartConfig} />
+		</BarChartWrapper>
+	);
+}
 
 /**
  * BarChart - Bar chart component for data visualization
@@ -49,31 +88,23 @@ export default function BarChart(props: Readonly<BarChartProps>) {
 		emptyMessage = i18n.t('common.noDataAvailable', { ns: 'common' }),
 		chartClassName,
 		className,
+		width: _width,
+		height: _height,
+		colorScheme: _colorScheme,
+		showLegend: _showLegend,
+		showTooltip: _showTooltip,
+		showGrid: _showGrid,
+		dataKey: _dataKey,
+		orientation: _orientation,
+		stacked: _stacked,
+		barGap: _barGap,
+		categoryGap: _categoryGap,
+		radius: _radius,
+		size: _size,
 		...restProps
 	} = props;
-
 	if (data.length === 0) {
-		return (
-			<BarChartEmptyState
-				title={title}
-				emptyMessage={emptyMessage}
-				className={className}
-				props={restProps}
-			/>
-		);
+		return renderEmptyState({ title, emptyMessage, className, restProps });
 	}
-
-	const chartConfig = buildBarChartContentConfig(props);
-
-	return (
-		<BarChartWrapper
-			title={title}
-			description={description}
-			chartClassName={chartClassName}
-			className={className}
-			props={restProps}
-		>
-			<BarChartContent {...chartConfig} />
-		</BarChartWrapper>
-	);
+	return renderChart({ title, description, chartClassName, className, restProps, props });
 }

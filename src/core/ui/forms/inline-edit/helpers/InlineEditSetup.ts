@@ -21,7 +21,6 @@ export interface UseInlineEditSetupOptions {
 	readonly displayClassName?: string | undefined;
 	readonly inputClassName?: string | undefined;
 	readonly inputRef: RefObject<HTMLInputElement | null>;
-	readonly startEditing: () => void;
 }
 
 export interface InlineEditSetup {
@@ -75,9 +74,9 @@ function getComputedValues(options: Readonly<UseInlineEditSetupOptions>) {
  * Setup hook and compute all derived values and handlers
  */
 export function useInlineEditSetup(options: Readonly<UseInlineEditSetupOptions>): InlineEditSetup {
-	const { inputRef, startEditing, disabled } = options;
+	const { inputRef, disabled } = options;
 
-	const { isEditing, editValue, handleChange, handleKeyDown, handleBlur } =
+	const { isEditing, editValue, startEditing, handleChange, handleKeyDown, handleBlur } =
 		useInlineEditState(options);
 
 	const { displayValue, isEmpty, displayClasses, inputClasses } = getComputedValues(options);
@@ -116,7 +115,6 @@ export interface CreateSetupOptionsParams {
 	readonly displayClassName?: string | undefined;
 	readonly inputClassName?: string | undefined;
 	readonly inputRef: RefObject<HTMLInputElement | null>;
-	readonly startEditing: () => void;
 }
 
 /**
@@ -136,17 +134,7 @@ export function createSetupOptions(
 		displayClassName: params.displayClassName,
 		inputClassName: params.inputClassName,
 		inputRef: params.inputRef,
-		startEditing: params.startEditing,
 	};
-}
-
-/**
- * Initialize inline edit hook and get startEditing function
- */
-export function useStartEditing(props: Readonly<InlineEditProps>) {
-	const hookOptions = buildHookOptions(props);
-	const { startEditing } = useInlineEdit(hookOptions);
-	return startEditing;
 }
 
 /**
@@ -154,8 +142,7 @@ export function useStartEditing(props: Readonly<InlineEditProps>) {
  */
 export function getSetupConfig(
 	props: Readonly<InlineEditProps>,
-	inputRef: RefObject<HTMLInputElement | null>,
-	startEditing: () => void
+	inputRef: RefObject<HTMLInputElement | null>
 ): Readonly<UseInlineEditSetupOptions> {
 	return createSetupOptions({
 		controlledValue: props.value,
@@ -168,6 +155,5 @@ export function getSetupConfig(
 		displayClassName: props.displayClassName,
 		inputClassName: props.inputClassName,
 		inputRef,
-		startEditing,
 	});
 }

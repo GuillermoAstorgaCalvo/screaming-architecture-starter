@@ -195,7 +195,7 @@ describe('generateHash - digest operation errors', () => {
 	});
 });
 
-describe('generateHash - consistency and edge cases', () => {
+describe('generateHash - consistency', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});
@@ -223,6 +223,12 @@ describe('generateHash - consistency and edge cases', () => {
 
 		expect(hash1).not.toBe(hash2);
 	});
+});
+
+describe('generateHash - content handling', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
 
 	it('handles unicode content', async () => {
 		if (!setupActualCrypto()) {
@@ -245,6 +251,51 @@ describe('generateHash - consistency and edge cases', () => {
 		const hash = await generateHash(content);
 
 		expect(hash).toMatch(/^sha256-[\d+/=A-Za-z]+$/);
+	});
+
+	it('handles content with special characters', async () => {
+		if (!setupActualCrypto()) {
+			return;
+		}
+
+		const content = 'console.log("test");\n\tconst x = { a: 1 };';
+		const hash = await generateHash(content);
+
+		expect(hash).toMatch(/^sha256-[\d+/=A-Za-z]+$/);
+	});
+
+	it('handles content with unicode and special characters', async () => {
+		if (!setupActualCrypto()) {
+			return;
+		}
+
+		const content = 'console.log("Hello 世界 🌍");';
+		const hash = await generateHash(content);
+
+		expect(hash).toMatch(/^sha256-[\d+/=A-Za-z]+$/);
+	});
+});
+
+describe('generateHash - algorithm comparison', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it('generates different hashes for different algorithms', async () => {
+		if (!setupActualCrypto()) {
+			return;
+		}
+
+		const content = 'test content';
+		const hash256 = await generateHash(content, 'sha256');
+		const hash384 = await generateHash(content, 'sha384');
+		const hash512 = await generateHash(content, 'sha512');
+
+		expect(hash256).toMatch(/^sha256-/);
+		expect(hash384).toMatch(/^sha384-/);
+		expect(hash512).toMatch(/^sha512-/);
+		expect(hash256).not.toBe(hash384);
+		expect(hash384).not.toBe(hash512);
 	});
 });
 

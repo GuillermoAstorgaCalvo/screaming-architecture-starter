@@ -21,6 +21,7 @@ src/domains/<domain-name>/
 ├── pages/              # Route-level page components
 ├── components/         # Domain-specific UI components (optional)
 ├── hooks/              # Domain-specific hooks (optional)
+├── context/            # React context providers (optional)
 ├── services/           # API services and business logic
 │   └── api/            # API service implementations
 ├── store/              # Zustand stores for domain state
@@ -38,7 +39,7 @@ src/domains/<domain-name>/
 ### 1. Create Domain Directory
 
 ```bash
-mkdir -p src/domains/my-domain/{pages,components,hooks,services/api,store,i18n,models}
+mkdir -p src/domains/my-domain/{pages,components,hooks,context,services/api,store,i18n,models}
 ```
 
 ### 2. Create Domain Page
@@ -77,6 +78,7 @@ export const ROUTES = {
 import AppLayout from '@app/components/AppLayout';
 import { withTheme } from '@app/components/PageWrapper';
 import Error404 from '@app/pages/Error404';
+import { useDeferredActivation } from '@core/hooks/useDeferredActivation';
 import type { AnalyticsPageView } from '@core/ports/AnalyticsPort';
 import { useAnalytics } from '@core/providers/analytics/useAnalytics';
 import { buildRoute } from '@core/router/routes.gen';
@@ -91,6 +93,7 @@ const MyDomainPage = withTheme(MyDomainPageBase);
 export default function Router() {
 	const analytics = useAnalytics();
 	const location = useLocation();
+	const transitionsReady = useDeferredActivation({ timeout: 0 });
 
 	useEffect(() => {
 		const path = `${location.pathname}${location.search}${location.hash}`;
@@ -103,10 +106,11 @@ export default function Router() {
 			pageView.title = documentTitle;
 		}
 
-		const windowLocation = 'window' in globalThis ? globalThis.window.location.href : undefined;
-
-		if (windowLocation !== undefined) {
-			pageView.location = windowLocation;
+		// SSR safety: window.location may be undefined in some environments (e.g., iframe sandbox)
+		// The optional chain check is necessary at runtime, even though TypeScript types suggest otherwise
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if ('window' in globalThis && globalThis.window.location?.href) {
+			pageView.location = globalThis.window.location.href;
 		}
 
 		analytics.trackPageView(pageView);
@@ -115,13 +119,21 @@ export default function Router() {
 	return (
 		<AppLayout>
 			<Suspense fallback={<DefaultLoadingFallback />}>
-				<LazyRouteTransition locationKey={location.pathname}>
+				{transitionsReady ? (
+					<LazyRouteTransition locationKey={location.pathname}>
+						<Routes location={location}>
+							{/* ... other routes */}
+							<Route path={buildRoute('MY_DOMAIN')} element={<MyDomainPage />} />
+							<Route path="*" element={<Error404 />} />
+						</Routes>
+					</LazyRouteTransition>
+				) : (
 					<Routes location={location}>
 						{/* ... other routes */}
 						<Route path={buildRoute('MY_DOMAIN')} element={<MyDomainPage />} />
 						<Route path="*" element={<Error404 />} />
 					</Routes>
-				</LazyRouteTransition>
+				)}
 			</Suspense>
 		</AppLayout>
 	);

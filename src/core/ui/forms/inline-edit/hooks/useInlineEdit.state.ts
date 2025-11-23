@@ -19,10 +19,13 @@ export function useEditValueState(initialValue: string) {
 
 	const updateEditValue = useCallback((value: string) => {
 		setEditValue(value);
+		editValueRef.current = value;
 	}, []);
 
 	const resetToOriginal = useCallback(() => {
-		setEditValue(originalValueRef.current);
+		const originalValue = originalValueRef.current;
+		setEditValue(originalValue);
+		editValueRef.current = originalValue;
 	}, []);
 
 	const setOriginalValue = useCallback((value: string) => {

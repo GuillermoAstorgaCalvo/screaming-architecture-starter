@@ -5,6 +5,7 @@ export function ColorPickerField({
 	id,
 	colorPickerClasses,
 	ariaDescribedBy,
+	hasError,
 	disabled,
 	required,
 	value,
@@ -25,6 +26,7 @@ export function ColorPickerField({
 			className={colorPickerClasses}
 			disabled={disabled}
 			required={required}
+			aria-invalid={hasError}
 			aria-describedby={ariaDescribedBy}
 			value={value}
 			defaultValue={defaultValue}

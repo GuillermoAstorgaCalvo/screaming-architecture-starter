@@ -212,56 +212,138 @@ function defineOpenGraphAndTwitterTests() {
 
 function defineMergeSEOConfigTests() {
 	describe('mergeSEOConfig', () => {
-		it('fills in defaults for missing values and preserves optional fields', () => {
-			globalThis.window?.history.replaceState({}, '', '/base?ref=home');
-			const config = {
-				title: 'Landing',
-				description: 'Landing page description',
-				indexable: false,
-				canonicalUrl: '/landing',
-				ogType: 'article' as const,
-				ogImage: '/assets/og.png',
-				ogImageWidth: 800,
-				ogImageHeight: 418,
-				ogImageAlt: 'Landing OG',
-				ogLocale: 'en_GB',
-				twitterCard: 'summary' as const,
-				twitterImage: '/assets/twitter.png',
-				twitterImageAlt: 'Landing Twitter',
-				keywords: 'react,starter',
-				author: 'Screaming Team',
-				customMeta: [{ name: 'viewport', content: 'width=device-width' }],
-			};
+		defineMergeSEOConfigBasicTests();
+		defineMergeSEOConfigOptionalPropertiesTests();
+		defineMergeSEOConfigImageAltTests();
+		defineMergeSEOConfigDefaultValuesTests();
+	});
+}
 
-			const result = mergeSEOConfig(config);
+function defineMergeSEOConfigBasicTests() {
+	it('fills in defaults for missing values and preserves optional fields', () => {
+		globalThis.window?.history.replaceState({}, '', '/base?ref=home');
+		const config = {
+			title: 'Landing',
+			description: 'Landing page description',
+			indexable: false,
+			canonicalUrl: '/landing',
+			ogType: 'article' as const,
+			ogImage: '/assets/og.png',
+			ogImageWidth: 800,
+			ogImageHeight: 418,
+			ogImageAlt: 'Landing OG',
+			ogLocale: 'en_GB',
+			twitterCard: 'summary' as const,
+			twitterImage: '/assets/twitter.png',
+			twitterImageAlt: 'Landing Twitter',
+			keywords: 'react,starter',
+			author: 'Screaming Team',
+			customMeta: [{ name: 'viewport', content: 'width=device-width' }],
+		};
 
-			expect(result.title).toBe(LANDING_FULL_TITLE);
-			expect(result.description).toBe('Landing page description');
-			expect(result.indexable).toBe(false);
-			expect(result.canonicalUrl).toBe(`${getOrigin()}/landing`);
-			expect(result.ogType).toBe('article');
-			expect(result.ogImage).toBe(`${getOrigin()}/assets/og.png`);
-			expect(result.ogImageWidth).toBe(800);
-			expect(result.ogImageHeight).toBe(418);
-			expect(result.ogImageAlt).toBe('Landing OG');
-			expect(result.ogLocale).toBe('en_GB');
-			expect(result.twitterCard).toBe('summary');
-			expect(result.twitterImage).toBe(`${getOrigin()}/assets/twitter.png`);
-			expect(result.twitterImageAlt).toBe('Landing Twitter');
-			expect(result.keywords).toBe('react,starter');
-			expect(result.author).toBe('Screaming Team');
-			expect(result.customMeta).toEqual([{ name: 'viewport', content: 'width=device-width' }]);
+		const result = mergeSEOConfig(config);
+
+		expect(result.title).toBe(LANDING_FULL_TITLE);
+		expect(result.description).toBe('Landing page description');
+		expect(result.indexable).toBe(false);
+		expect(result.canonicalUrl).toBe(`${getOrigin()}/landing`);
+		expect(result.ogType).toBe('article');
+		expect(result.ogImage).toBe(`${getOrigin()}/assets/og.png`);
+		expect(result.ogImageWidth).toBe(800);
+		expect(result.ogImageHeight).toBe(418);
+		expect(result.ogImageAlt).toBe('Landing OG');
+		expect(result.ogLocale).toBe('en_GB');
+		expect(result.twitterCard).toBe('summary');
+		expect(result.twitterImage).toBe(`${getOrigin()}/assets/twitter.png`);
+		expect(result.twitterImageAlt).toBe('Landing Twitter');
+		expect(result.keywords).toBe('react,starter');
+		expect(result.author).toBe('Screaming Team');
+		expect(result.customMeta).toEqual([{ name: 'viewport', content: 'width=device-width' }]);
+	});
+
+	it('fills derived values when optional imagery is missing', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({ title: 'Docs' });
+
+		expect(result.title).toBe(DOCS_FULL_TITLE);
+		expect(result.ogImage).toBe(`${getOrigin()}/og-image.png`);
+		expect(result.ogImageAlt).toBe(DOCS_FULL_TITLE);
+		expect(result.twitterImage).toBe(`${getOrigin()}/og-image.png`);
+		expect(result.twitterImageAlt).toBe(DOCS_FULL_TITLE);
+	});
+
+	it('handles empty config object', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({});
+
+		expect(result.title).toBe(DEFAULT_TITLE);
+		expect(result.description).toBe(DEFAULT_DESCRIPTION);
+		expect(result.indexable).toBe(true);
+	});
+}
+
+function defineMergeSEOConfigOptionalPropertiesTests() {
+	it('handles optional properties being undefined (not included in result)', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({
+			title: 'Test',
 		});
 
-		it('fills derived values when optional imagery is missing', () => {
-			globalThis.window?.history.replaceState({}, '', '/base');
-			const result = mergeSEOConfig({ title: 'Docs' });
+		expect(result.title).toBe(`Test | ${DEFAULT_TITLE}`);
+		expect(result.keywords).toBeUndefined();
+		expect(result.author).toBeUndefined();
+		expect(result.customMeta).toBeUndefined();
+	});
+}
 
-			expect(result.title).toBe(DOCS_FULL_TITLE);
-			expect(result.ogImage).toBe(`${getOrigin()}/og-image.png`);
-			expect(result.ogImageAlt).toBe(DOCS_FULL_TITLE);
-			expect(result.twitterImage).toBe(`${getOrigin()}/og-image.png`);
-			expect(result.twitterImageAlt).toBe(DOCS_FULL_TITLE);
+function defineMergeSEOConfigImageAltTests() {
+	const CUSTOM_OG_ALT = 'Custom OG Alt';
+
+	it('uses provided ogImageAlt and twitterImageAlt when specified', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({
+			title: 'Test',
+			ogImageAlt: CUSTOM_OG_ALT,
+			twitterImageAlt: 'Custom Twitter Alt',
 		});
+
+		expect(result.ogImageAlt).toBe(CUSTOM_OG_ALT);
+		expect(result.twitterImageAlt).toBe('Custom Twitter Alt');
+	});
+
+	it('falls back ogImageAlt to title when not provided', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({
+			title: 'Test Page',
+		});
+
+		expect(result.ogImageAlt).toBe(`Test Page | ${DEFAULT_TITLE}`);
+	});
+
+	it('falls back twitterImageAlt to ogImageAlt when not provided', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({
+			title: 'Test Page',
+			ogImageAlt: CUSTOM_OG_ALT,
+		});
+
+		expect(result.twitterImageAlt).toBe(CUSTOM_OG_ALT);
+	});
+}
+
+function defineMergeSEOConfigDefaultValuesTests() {
+	it('handles all default value paths in buildBaseSEOResult', () => {
+		globalThis.window?.history.replaceState({}, '', '/base');
+		const result = mergeSEOConfig({
+			title: 'Minimal Config',
+		});
+
+		expect(result.description).toBe(DEFAULT_DESCRIPTION);
+		expect(result.indexable).toBe(true);
+		expect(result.ogType).toBe('website');
+		expect(result.ogImageWidth).toBe(1200);
+		expect(result.ogImageHeight).toBe(630);
+		expect(result.ogLocale).toBe('en_US');
+		expect(result.twitterCard).toBe('summary_large_image');
 	});
 }

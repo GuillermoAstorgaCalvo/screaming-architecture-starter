@@ -4,7 +4,7 @@ import {
 	savePersistedData,
 } from '@core/ui/forms/form-wizard/helpers/useFormWizardState.helpers';
 import type { FormWizardState } from '@core/ui/forms/form-wizard/types/FormWizardTypes';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FieldValues } from 'react-hook-form';
 
 /**
@@ -25,15 +25,17 @@ function useFormWizardStateValues<T extends FieldValues>({
 	const [errorSteps, setErrorSteps] = useState(new Set<number>());
 	const [formData, setFormData] = useState<Partial<T>>(initialState.formData);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const isResettingRef = useRef(false);
 
 	useEffect(() => {
-		if (persistData) {
+		if (persistData && !isResettingRef.current) {
 			savePersistedData(persistKey, {
 				activeStep,
 				formData,
 				completedSteps: Array.from(completedSteps),
 			});
 		}
+		isResettingRef.current = false;
 	}, [activeStep, formData, completedSteps, persistData, persistKey]);
 
 	return {
@@ -47,6 +49,7 @@ function useFormWizardStateValues<T extends FieldValues>({
 		setFormData,
 		isSubmitting,
 		setIsSubmitting,
+		isResettingRef,
 	};
 }
 
@@ -68,8 +71,14 @@ function useFormWizardHandlers<T extends FieldValues>({
 	persistData,
 	persistKey,
 }: UseFormWizardHandlersParams<T>) {
-	const { setActiveStep, setCompletedSteps, setErrorSteps, setFormData, setIsSubmitting } =
-		stateValues;
+	const {
+		setActiveStep,
+		setCompletedSteps,
+		setErrorSteps,
+		setFormData,
+		setIsSubmitting,
+		isResettingRef,
+	} = stateValues;
 
 	return useMemo(
 		() =>
@@ -83,6 +92,7 @@ function useFormWizardHandlers<T extends FieldValues>({
 				initialStep,
 				persistData,
 				persistKey,
+				isResettingRef,
 			}),
 		[
 			stepsLength,
@@ -94,6 +104,7 @@ function useFormWizardHandlers<T extends FieldValues>({
 			setErrorSteps,
 			setFormData,
 			setIsSubmitting,
+			isResettingRef,
 		]
 	);
 }

@@ -39,11 +39,11 @@ export interface DisplayContentOptions {
  */
 export function getDisplayContent(options: Readonly<DisplayContentOptions>): ReactNode {
 	const { isEmpty, showEmptyPlaceholder, placeholder, displayValue, renderDisplay } = options;
-	if (isEmpty && showEmptyPlaceholder) {
-		return <span className={PLACEHOLDER_CLASSES}>{placeholder}</span>;
-	}
 	if (renderDisplay) {
 		return renderDisplay(displayValue);
+	}
+	if (isEmpty && showEmptyPlaceholder) {
+		return <span className={PLACEHOLDER_CLASSES}>{placeholder}</span>;
 	}
 	return displayValue;
 }

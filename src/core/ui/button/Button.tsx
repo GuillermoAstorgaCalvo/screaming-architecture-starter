@@ -1,6 +1,7 @@
 import Spinner from '@core/ui/spinner/Spinner';
 import { getButtonVariantClasses } from '@core/ui/variants/button';
 import type { ButtonProps } from '@src-types/ui/buttons';
+import type { MouseEvent } from 'react';
 
 /**
  * Button - Reusable button component with variants and sizes
@@ -34,14 +35,38 @@ export default function Button({
 	disabled,
 	className,
 	children,
+	onClick,
 	...props
 }: Readonly<ButtonProps>) {
+	const isDisabled = (disabled ?? false) || isLoading;
+
+	const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+		// Prevent onClick when button is disabled (handles cases where fireEvent bypasses native disabled)
+		if (isDisabled || event.currentTarget.disabled) {
+			event.preventDefault();
+			event.stopPropagation();
+			return;
+		}
+		onClick?.(event);
+	};
+
+	// Use no-op handler when disabled to ensure onClick is never called
+	const clickHandler = isDisabled
+		? (event: MouseEvent<HTMLButtonElement>) => {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+		: handleClick;
+
+	const { type, ...restProps } = props;
+
 	return (
 		<button
-			type={props.type ?? 'button'}
-			disabled={(disabled ?? false) || isLoading}
+			type={type ?? 'button'}
+			disabled={isDisabled}
 			className={getButtonVariantClasses({ variant, size, fullWidth, className })}
-			{...props}
+			onClick={clickHandler}
+			{...restProps}
 		>
 			{isLoading ? <Spinner size="sm" className="mr-2" /> : null}
 			{children}

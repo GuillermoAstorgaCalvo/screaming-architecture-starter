@@ -177,7 +177,7 @@ describe('serializeCookieOptions - expiration options', () => {
 	});
 });
 
-describe('serializeCookieOptions - combined and complex options', () => {
+describe('serializeCookieOptions - combined options', () => {
 	it('should combine multiple options', () => {
 		const result = serializeCookieOptions({
 			path: CUSTOM_PATH,
@@ -226,5 +226,64 @@ describe('serializeCookieOptions - combined and complex options', () => {
 		expect(result).toContain(`path=${CUSTOM_PATH}`);
 		expect(result).toContain('sameSite=None');
 		expect(result).not.toContain('secure');
+	});
+});
+
+describe('serializeCookieOptions - edge cases', () => {
+	it('should not include path when path is empty string', () => {
+		const result = serializeCookieOptions({ path: '' });
+		expect(result).not.toContain('path=');
+	});
+
+	it('should not include sameSite when sameSite is empty string', () => {
+		const result = serializeCookieOptions({ sameSite: '' as 'Lax' });
+		expect(result).not.toContain('sameSite=');
+	});
+
+	it('should return only sameSite when path and secure are overridden to falsy values', () => {
+		// Mock window to return false for secure
+		Object.defineProperty(globalThis, 'window', {
+			value: {
+				location: {
+					protocol: 'http:',
+				},
+			},
+			writable: true,
+			configurable: true,
+		});
+
+		// Override path and secure to falsy values, but sameSite defaults to 'Lax'
+		const result = serializeCookieOptions({
+			path: '',
+			secure: false,
+		});
+
+		// sameSite defaults to 'Lax' and cannot be overridden to empty/undefined
+		expect(result).toBe('; sameSite=Lax');
+	});
+
+	it('should return empty string when all options are falsy (tests line 77 empty parts branch)', () => {
+		// Mock window to return false for secure (HTTP)
+		Object.defineProperty(globalThis, 'window', {
+			value: {
+				location: {
+					protocol: 'http:',
+				},
+			},
+			writable: true,
+			configurable: true,
+		});
+
+		// Override all defaults to falsy values
+		// When defaults are merged with empty strings, the empty strings override the defaults
+		// Since all options are falsy, no parts will be added to the array
+		const result = serializeCookieOptions({
+			path: '',
+			sameSite: '' as 'Lax',
+			secure: false,
+		});
+
+		// When parts array is empty, the ternary on line 77 returns empty string
+		expect(result).toBe('');
 	});
 });

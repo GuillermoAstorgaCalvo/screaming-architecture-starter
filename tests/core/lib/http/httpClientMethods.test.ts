@@ -16,6 +16,8 @@ const BEARER_TOKEN = 'Bearer token';
 const TEST_BODY = { key: 'value' };
 const JSON_CONTENT_TYPE = 'application/json';
 const TEST_PASSES_CONFIG = 'passes config to request';
+const TEST_HANDLES_EMPTY_CONFIG = 'handles empty config';
+const TEST_HANDLES_UNDEFINED_BODY = 'handles undefined body';
 
 const createMockRequest = (): RequestMethod => {
 	return vi.fn().mockImplementation(<T = unknown>(_url: string, _config?: HttpClientConfig) =>
@@ -55,6 +57,31 @@ const testGetMethod = () => {
 			await get(TEST_URL, { headers: {} } as Parameters<HttpPort['get']>[1]);
 			expect(request).toHaveBeenCalledWith(TEST_URL, { method: 'GET', headers: {} });
 		});
+
+		it(TEST_HANDLES_EMPTY_CONFIG, async () => {
+			const request = createMockRequest();
+			const get = createGetMethod(request);
+			await get(TEST_URL, {});
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'GET',
+			});
+		});
+
+		it('handles config with all properties except body', async () => {
+			const request = createMockRequest();
+			const get = createGetMethod(request);
+			await get(TEST_URL, {
+				headers: { Authorization: BEARER_TOKEN },
+				timeout: 5000,
+				baseURL: 'https://api.example.com',
+			});
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'GET',
+				headers: { Authorization: BEARER_TOKEN },
+				timeout: 5000,
+				baseURL: 'https://api.example.com',
+			});
+		});
 	});
 };
 
@@ -81,13 +108,33 @@ const testPostMethod = () => {
 			});
 		});
 
-		it('handles undefined body', async () => {
+		it(TEST_HANDLES_UNDEFINED_BODY, async () => {
 			const request = createMockRequest();
 			const post = createPostMethod(request);
 			await post(TEST_URL);
 			expect(request).toHaveBeenCalledWith(TEST_URL, {
 				method: 'POST',
 				body: undefined,
+			});
+		});
+
+		it('handles null body', async () => {
+			const request = createMockRequest();
+			const post = createPostMethod(request);
+			await post(TEST_URL, null);
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'POST',
+				body: null,
+			});
+		});
+
+		it('handles empty config with body', async () => {
+			const request = createMockRequest();
+			const post = createPostMethod(request);
+			await post(TEST_URL, TEST_BODY, {});
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'POST',
+				body: TEST_BODY,
 			});
 		});
 	});
@@ -115,6 +162,16 @@ const testPutMethod = () => {
 				headers: { 'Content-Type': JSON_CONTENT_TYPE },
 			});
 		});
+
+		it(TEST_HANDLES_UNDEFINED_BODY, async () => {
+			const request = createMockRequest();
+			const put = createPutMethod(request);
+			await put(TEST_URL);
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'PUT',
+				body: undefined,
+			});
+		});
 	});
 };
 
@@ -140,6 +197,16 @@ const testPatchMethod = () => {
 				headers: { 'Content-Type': JSON_CONTENT_TYPE },
 			});
 		});
+
+		it(TEST_HANDLES_UNDEFINED_BODY, async () => {
+			const request = createMockRequest();
+			const patch = createPatchMethod(request);
+			await patch(TEST_URL);
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'PATCH',
+				body: undefined,
+			});
+		});
 	});
 };
 
@@ -159,6 +226,15 @@ const testDeleteMethod = () => {
 			expect(request).toHaveBeenCalledWith(TEST_URL, {
 				method: 'DELETE',
 				headers: { Authorization: BEARER_TOKEN },
+			});
+		});
+
+		it(TEST_HANDLES_EMPTY_CONFIG, async () => {
+			const request = createMockRequest();
+			const del = createDeleteMethod(request);
+			await del(TEST_URL, {});
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'DELETE',
 			});
 		});
 	});
@@ -182,6 +258,15 @@ const testHeadMethod = () => {
 				headers: { Authorization: BEARER_TOKEN },
 			});
 		});
+
+		it(TEST_HANDLES_EMPTY_CONFIG, async () => {
+			const request = createMockRequest();
+			const head = createHeadMethod(request);
+			await head(TEST_URL, {});
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'HEAD',
+			});
+		});
 	});
 };
 
@@ -201,6 +286,15 @@ const testOptionsMethod = () => {
 			expect(request).toHaveBeenCalledWith(TEST_URL, {
 				method: 'OPTIONS',
 				headers: { Authorization: BEARER_TOKEN },
+			});
+		});
+
+		it(TEST_HANDLES_EMPTY_CONFIG, async () => {
+			const request = createMockRequest();
+			const options = createOptionsMethod(request);
+			await options(TEST_URL, {});
+			expect(request).toHaveBeenCalledWith(TEST_URL, {
+				method: 'OPTIONS',
 			});
 		});
 	});

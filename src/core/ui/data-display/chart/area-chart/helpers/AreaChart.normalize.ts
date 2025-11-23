@@ -45,7 +45,28 @@ const DEFAULT_PROPS = {
 
 /** Normalizes and extracts props from AreaChartProps */
 export function normalizeProps(props: Readonly<AreaChartProps>): NormalizedAreaChartProps {
-	const { data, title, description, chartClassName, className, ...restProps } = props;
+	const {
+		data,
+		title,
+		description,
+		chartClassName,
+		className,
+		width: _width,
+		height: _height,
+		colorScheme: _colorScheme,
+		showLegend: _showLegend,
+		showTooltip: _showTooltip,
+		showGrid: _showGrid,
+		dataKey: _dataKey,
+		showDots: _showDots,
+		strokeWidth: _strokeWidth,
+		curveType: _curveType,
+		connectNulls: _connectNulls,
+		fillOpacity: _fillOpacity,
+		emptyMessage: _emptyMessage,
+		size: _size,
+		...restProps
+	} = props;
 	const normalized = {
 		...DEFAULT_PROPS,
 		...props,

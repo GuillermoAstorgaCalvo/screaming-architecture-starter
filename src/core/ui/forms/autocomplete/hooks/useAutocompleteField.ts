@@ -53,8 +53,18 @@ function buildInputProps(params: {
 	inputValue: string;
 }): AutocompleteFieldProps['props'] {
 	const { rest, placeholder, handlers, inputValue } = params;
+	// Filter out non-DOM props that shouldn't be passed to the input element
+	const {
+		options: _options,
+		filterFn: _filterFn,
+		onInputChange: _onInputChange,
+		onChange: _onChange,
+		value: _value,
+		defaultValue: _defaultValue,
+		...domProps
+	} = rest;
 	return {
-		...rest,
+		...domProps,
 		placeholder,
 		...handlers,
 		value: inputValue,
@@ -69,8 +79,11 @@ function buildFieldPropsObject(params: {
 	rest: FieldPropsRest;
 	handlers: ReturnType<typeof createInputHandlers>;
 	inputValue: string;
+	isOpen: boolean;
+	menuId: string;
 }): AutocompleteFieldProps {
-	const { state, disabled, required, placeholder, rest, handlers, inputValue } = params;
+	const { state, disabled, required, placeholder, rest, handlers, inputValue, isOpen, menuId } =
+		params;
 	const inputProps = buildInputProps({ rest, placeholder, handlers, inputValue });
 
 	return {
@@ -80,6 +93,8 @@ function buildFieldPropsObject(params: {
 		ariaDescribedBy: state.ariaDescribedBy,
 		disabled,
 		required,
+		isOpen,
+		menuId,
 		props: inputProps,
 	};
 }
@@ -99,6 +114,8 @@ export function createFieldProps(params: {
 	placeholder: string | undefined;
 	rest: FieldPropsRest;
 	inputValue: string;
+	isOpen: boolean;
+	menuId: string;
 	setInputValue: (value: string) => void;
 	setIsOpen: (open: boolean) => void;
 	setHighlightedIndex: (index: number) => void;
@@ -110,6 +127,8 @@ export function createFieldProps(params: {
 		placeholder,
 		rest,
 		inputValue,
+		isOpen,
+		menuId,
 		setInputValue,
 		setIsOpen,
 		setHighlightedIndex,
@@ -123,5 +142,7 @@ export function createFieldProps(params: {
 		rest,
 		handlers,
 		inputValue,
+		isOpen,
+		menuId,
 	});
 }

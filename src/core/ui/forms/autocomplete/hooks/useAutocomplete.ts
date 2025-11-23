@@ -63,6 +63,7 @@ function buildAutocompleteFieldProps(params: {
 	>;
 	stateSetup: ReturnType<typeof useAutocompleteStateSetup>;
 	interactions: ReturnType<typeof useAutocompleteInteractions>;
+	menuId: string;
 }) {
 	return createFieldProps({
 		state: params.state,
@@ -71,6 +72,8 @@ function buildAutocompleteFieldProps(params: {
 		placeholder: params.placeholder,
 		rest: params.rest,
 		inputValue: params.stateSetup.inputValue,
+		isOpen: params.interactions.isOpen,
+		menuId: params.menuId,
 		setInputValue: params.stateSetup.setInputValue,
 		setIsOpen: params.interactions.setIsOpen,
 		setHighlightedIndex: params.interactions.setHighlightedIndex,
@@ -89,6 +92,7 @@ function extractAutocompleteProps(props: Readonly<AutocompleteProps>) {
 		maxHeight = 280,
 		emptyState,
 		highlightMatches = true,
+		debounceDelay: _debounceDelay,
 		...rest
 	} = props;
 	const defaultEmptyState = emptyState ?? i18n.t('common.noOptionsFound', { ns: 'common' });
@@ -131,6 +135,7 @@ function buildAutocompleteFieldPropsFromState(params: {
 	>;
 	stateSetup: ReturnType<typeof useAutocompleteStateSetup>;
 	interactions: ReturnType<typeof useAutocompleteInteractions>;
+	menuId: string;
 }) {
 	return buildAutocompleteFieldProps({
 		state: params.state,
@@ -140,6 +145,7 @@ function buildAutocompleteFieldPropsFromState(params: {
 		rest: params.rest,
 		stateSetup: params.stateSetup,
 		interactions: params.interactions,
+		menuId: params.menuId,
 	});
 }
 
@@ -155,6 +161,7 @@ export function useAutocomplete(props: Readonly<AutocompleteProps>): Autocomplet
 		rest: extracted.rest,
 		stateSetup,
 		interactions,
+		menuId,
 	});
 	return buildAutocompleteReturn({
 		state: stateSetup.state,

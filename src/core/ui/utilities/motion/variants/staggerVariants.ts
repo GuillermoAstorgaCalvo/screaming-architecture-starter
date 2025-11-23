@@ -4,7 +4,13 @@
  */
 
 import { motionDurations, motionEasing } from '@core/ui/utilities/motion/constants/motionConstants';
-import type { Variants } from 'framer-motion';
+import { stagger, type Variants } from 'framer-motion';
+
+/**
+ * Stagger delay constants
+ */
+const STAGGER_DELAY = motionDurations.micro; // 0.1s
+const STAGGER_START_DELAY = motionDurations.micro; // 0.1s
 
 /**
  * Stagger container variants for animating children
@@ -16,8 +22,7 @@ export const staggerContainerVariants: Variants = {
 	visible: {
 		opacity: 1,
 		transition: {
-			staggerChildren: 0.1,
-			delayChildren: 0.1,
+			delayChildren: stagger(STAGGER_DELAY, { startDelay: STAGGER_START_DELAY }),
 		},
 	},
 };

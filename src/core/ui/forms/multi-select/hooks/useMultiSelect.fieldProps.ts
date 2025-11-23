@@ -25,6 +25,9 @@ interface CreateMultiSelectFieldPropsParams {
 		| 'placeholder'
 		| 'maxHeight'
 		| 'emptyState'
+		| 'value'
+		| 'defaultValue'
+		| 'onChange'
 	>;
 	readonly inputValue: string;
 	readonly setInputValue: (value: string) => void;
@@ -34,6 +37,17 @@ interface CreateMultiSelectFieldPropsParams {
 }
 
 function buildFieldPropsObject(params: CreateMultiSelectFieldPropsParams) {
+	const {
+		filterFn: _filterFn,
+		onInputChange: _onInputChange,
+		...restWithoutCustomProps
+	} = params.rest;
+	// Explicitly filter out value and defaultValue to prevent both from being passed to input
+	const {
+		value: _value,
+		defaultValue: _defaultValue,
+		...safeProps
+	} = restWithoutCustomProps as Record<string, unknown>;
 	const eventHandlers = createInputEventHandlers({
 		inputValue: params.inputValue,
 		setInputValue: params.setInputValue,
@@ -42,7 +56,7 @@ function buildFieldPropsObject(params: CreateMultiSelectFieldPropsParams) {
 	});
 
 	return {
-		...params.rest,
+		...safeProps,
 		placeholder: params.placeholder,
 		...eventHandlers,
 	} as MultiSelectFieldProps['props'];
@@ -81,6 +95,9 @@ export function buildMultiSelectFieldPropsFromState(params: {
 		| 'placeholder'
 		| 'maxHeight'
 		| 'emptyState'
+		| 'value'
+		| 'defaultValue'
+		| 'onChange'
 	>;
 	readonly stateSetup: MultiSelectStateSetup;
 	readonly interactions: ReturnType<typeof useMultiSelectInteractions>;

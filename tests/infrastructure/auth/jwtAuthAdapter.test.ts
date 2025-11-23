@@ -1,61 +1,28 @@
 import { createAuthTokenStorage } from '@core/auth/authTokenStorage';
 import type { AuthTokens } from '@core/ports/AuthPort';
-import type { StoragePort } from '@core/ports/StoragePort';
 import { JwtAuthAdapter } from '@infra/auth/jwtAuthAdapter';
 import type { TokenPayload } from '@src-types/api/auth';
 import { MockStorageAdapter } from '@tests/utils/mocks/MockStorageAdapter';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-/**
- * Helper to create a valid JWT token string
- */
-function createJwtToken(
-	header: Record<string, unknown>,
-	payload: Record<string, unknown>,
-	signature = 'signature'
-): string {
-	const encodeBase64Url = (obj: Record<string, unknown>): string => {
-		const json = JSON.stringify(obj);
-		const base64 = btoa(json);
-		return base64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
-	};
-
-	return `${encodeBase64Url(header)}.${encodeBase64Url(payload)}.${signature}`;
-}
-
-/**
- * Helper to create tokens with expiration
- */
-function createTokens(overrides: Partial<AuthTokens> = {}): AuthTokens {
-	return {
-		accessToken: createJwtToken({ alg: 'HS256', typ: 'JWT' }, { sub: 'user123' }),
-		refreshToken: 'refresh-token-456',
-		expiresAt: Date.now() + 3600000, // 1 hour from now
-		...overrides,
-	};
-}
-
-/**
- * Helper to create a token with expiration claim
- */
-function createTokenWithExpiration(expSeconds: number): string {
-	const now = Math.floor(Date.now() / 1000);
-	return createJwtToken(
-		{ alg: 'HS256', typ: 'JWT' },
-		{ sub: 'user123', exp: now + expSeconds, iat: now }
-	);
-}
-
-const createMockStorage = (): StoragePort => ({
-	getItem: vi.fn().mockReturnValue(null),
-	setItem: vi.fn().mockReturnValue(true),
-	removeItem: vi.fn().mockReturnValue(true),
-	clear: vi.fn().mockReturnValue(true),
-	getLength: vi.fn().mockReturnValue(0),
-	key: vi.fn().mockReturnValue(null),
-});
-
-const DEFAULT_STORAGE_KEY = 'app.auth.tokens';
+import {
+	createJwtToken,
+	createMockStorage,
+	createTokens,
+	createTokenWithExpiration,
+	DEFAULT_STORAGE_KEY,
+	testAllClaims,
+	testEmptyObjectPayload,
+	testExpAndNbfClaims,
+	testIatAndExpClaims,
+	testIatAndNbfClaims,
+	testNoClaims,
+	testNullUndefinedPayload,
+	testNumericClaimExtraction,
+	testOnlyExpClaim,
+	testOnlyIatClaim,
+	testOnlyNbfClaim,
+} from './jwtAuthAdapter.test.utils';
 
 describe('JwtAuthAdapter - constructor', () => {
 	it('creates adapter without storage (in-memory only)', () => {
@@ -359,52 +326,67 @@ describe('JwtAuthAdapter - JWT decoding - decoding with claims', () => {
 	});
 
 	it('decodes JWT token with iat, exp, and nbf claims', () => {
-		const now = Math.floor(Date.now() / 1000);
-		const header = { alg: 'HS256', typ: 'JWT' };
-		const payload = {
-			sub: 'user123',
-			iat: now - 3600,
-			exp: now + 3600,
-			nbf: now - 1800,
-		};
-		const token = createJwtToken(header, payload);
-
-		const decoded = adapter.decode(token);
-
-		expect(decoded).not.toBeNull();
-		expect(decoded?.issuedAt).toBe(now - 3600);
-		expect(decoded?.expiresAt).toBe(now + 3600);
-		expect(decoded?.notBefore).toBe(now - 1800);
+		testAllClaims(adapter);
 	});
 
 	it('decodes JWT token without iat, exp, or nbf claims', () => {
-		const header = { alg: 'HS256', typ: 'JWT' };
-		const payload = { sub: 'user123' };
-		const token = createJwtToken(header, payload);
+		testNoClaims(adapter);
+	});
+});
 
-		const decoded = adapter.decode(token);
+describe('JwtAuthAdapter - JWT decoding - individual claim decoding', () => {
+	let adapter: JwtAuthAdapter;
 
-		expect(decoded).not.toBeNull();
-		expect(decoded?.issuedAt).toBeUndefined();
-		expect(decoded?.expiresAt).toBeUndefined();
-		expect(decoded?.notBefore).toBeUndefined();
+	beforeEach(() => {
+		adapter = new JwtAuthAdapter();
+	});
+
+	it('decodes JWT token with only iat claim', () => {
+		testOnlyIatClaim(adapter);
+	});
+
+	it('decodes JWT token with only exp claim', () => {
+		testOnlyExpClaim(adapter);
+	});
+
+	it('decodes JWT token with only nbf claim', () => {
+		testOnlyNbfClaim(adapter);
+	});
+});
+
+describe('JwtAuthAdapter - JWT decoding - claim combinations', () => {
+	let adapter: JwtAuthAdapter;
+
+	beforeEach(() => {
+		adapter = new JwtAuthAdapter();
+	});
+
+	it('decodes JWT token with iat and exp claims (without nbf)', () => {
+		testIatAndExpClaims(adapter);
+	});
+
+	it('decodes JWT token with iat and nbf claims (without exp)', () => {
+		testIatAndNbfClaims(adapter);
+	});
+
+	it('decodes JWT token with exp and nbf claims (without iat)', () => {
+		testExpAndNbfClaims(adapter);
+	});
+
+	it('handles empty object payload in decoded token (branch coverage for line 123)', () => {
+		testEmptyObjectPayload(adapter);
+	});
+});
+
+describe('JwtAuthAdapter - JWT decoding - numeric claim extraction', () => {
+	let adapter: JwtAuthAdapter;
+
+	beforeEach(() => {
+		adapter = new JwtAuthAdapter();
 	});
 
 	it('extracts numeric claims from string values', () => {
-		const now = Math.floor(Date.now() / 1000);
-		const header = { alg: 'HS256', typ: 'JWT' };
-		const payload = {
-			sub: 'user123',
-			iat: now - 3600,
-			exp: now + 3600,
-		};
-		const token = createJwtToken(header, payload);
-
-		const decoded = adapter.decode(token);
-
-		expect(decoded).not.toBeNull();
-		expect(decoded?.issuedAt).toBe(now - 3600);
-		expect(decoded?.expiresAt).toBe(now + 3600);
+		testNumericClaimExtraction(adapter);
 	});
 });
 
@@ -429,6 +411,10 @@ describe('JwtAuthAdapter - JWT decoding - error cases', () => {
 		const decoded = adapter.decode(malformedToken);
 
 		expect(decoded).toBeNull();
+	});
+
+	it('handles null/undefined payload in decoded token (branch coverage for line 123)', () => {
+		testNullUndefinedPayload(adapter);
 	});
 });
 
@@ -530,111 +516,6 @@ describe('JwtAuthAdapter - token expiration - clock skew handling', () => {
 
 		// Should not be expired (31s > 30s clock skew)
 		expect(skewAdapter.isTokenExpired(token)).toBe(false);
-	});
-});
-
-describe('JwtAuthAdapter - token change listeners - basic listener functionality', () => {
-	let adapter: JwtAuthAdapter;
-
-	beforeEach(() => {
-		adapter = new JwtAuthAdapter();
-	});
-
-	it('notifies listeners when tokens are set', () => {
-		const listener = vi.fn();
-		adapter.subscribe(listener);
-		const tokens = createTokens();
-
-		adapter.setTokens(tokens);
-
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith(tokens);
-	});
-
-	it('notifies listeners when tokens are cleared', () => {
-		const listener = vi.fn();
-		adapter.subscribe(listener);
-		adapter.setTokens(createTokens());
-
-		adapter.clearTokens();
-
-		expect(listener).toHaveBeenCalledTimes(2); // Once for set, once for clear
-		expect(listener).toHaveBeenLastCalledWith(null);
-	});
-
-	it('notifies multiple listeners', () => {
-		const listener1 = vi.fn();
-		const listener2 = vi.fn();
-		adapter.subscribe(listener1);
-		adapter.subscribe(listener2);
-		const tokens = createTokens();
-
-		adapter.setTokens(tokens);
-
-		expect(listener1).toHaveBeenCalledWith(tokens);
-		expect(listener2).toHaveBeenCalledWith(tokens);
-	});
-
-	it('unsubscribes listener', () => {
-		const listener = vi.fn();
-		const unsubscribe = adapter.subscribe(listener);
-		adapter.setTokens(createTokens());
-
-		unsubscribe();
-		adapter.setTokens(createTokens());
-
-		expect(listener).toHaveBeenCalledTimes(1); // Only first setTokens call
-	});
-});
-
-describe('JwtAuthAdapter - token change listeners - advanced listener scenarios', () => {
-	let adapter: JwtAuthAdapter;
-
-	beforeEach(() => {
-		adapter = new JwtAuthAdapter();
-	});
-
-	it('handles listener errors gracefully', () => {
-		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-		const errorListener = vi.fn(() => {
-			throw new Error('Listener error');
-		});
-		const normalListener = vi.fn();
-		adapter.subscribe(errorListener);
-		adapter.subscribe(normalListener);
-		const tokens = createTokens();
-
-		adapter.setTokens(tokens);
-
-		expect(consoleSpy).toHaveBeenCalledWith(
-			'Auth token listener threw an error',
-			expect.any(Error)
-		);
-		expect(normalListener).toHaveBeenCalledWith(tokens); // Other listeners still called
-
-		consoleSpy.mockRestore();
-	});
-
-	it('allows multiple subscriptions and unsubscriptions', () => {
-		const listener1 = vi.fn();
-		const listener2 = vi.fn();
-		const unsubscribe1 = adapter.subscribe(listener1);
-		const unsubscribe2 = adapter.subscribe(listener2);
-		const tokens = createTokens();
-
-		adapter.setTokens(tokens);
-		expect(listener1).toHaveBeenCalledTimes(1);
-		expect(listener2).toHaveBeenCalledTimes(1);
-
-		unsubscribe1();
-		adapter.setTokens(createTokens());
-		expect(listener1).toHaveBeenCalledTimes(1); // No longer called
-		expect(listener2).toHaveBeenCalledTimes(2); // Still called
-
-		unsubscribe2();
-		adapter.setTokens(createTokens());
-		expect(listener1).toHaveBeenCalledTimes(1); // Still not called
-		expect(listener2).toHaveBeenCalledTimes(2); // No longer called
 	});
 });
 

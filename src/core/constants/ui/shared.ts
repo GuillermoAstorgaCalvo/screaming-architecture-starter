@@ -10,9 +10,9 @@ import type { StandardSize } from '@src-types/ui/base';
  * Used by ErrorText, HelperText, and Label components
  */
 export const TEXT_SIZE_CLASSES: Record<StandardSize, string> = {
-	sm: 'text-xs',
-	md: 'text-sm',
-	lg: 'text-base',
+	sm: 'text-sm',
+	md: 'text-base',
+	lg: 'text-lg',
 } as const;
 
 /**

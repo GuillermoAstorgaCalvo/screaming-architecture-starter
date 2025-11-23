@@ -11,11 +11,9 @@ export function loadPersistedData<T extends FieldValues>(
 	formData?: Partial<T>;
 	completedSteps?: number[];
 } | null {
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- SSR runtime safety check
-	if (globalThis.window === undefined) {
+	if (!('window' in globalThis)) {
 		return null;
 	}
-
 	try {
 		const persisted = globalThis.window.localStorage.getItem(persistKey);
 		if (!persisted) {
@@ -74,6 +72,7 @@ interface FormWizardHandlersParams<T extends FieldValues> {
 	initialStep: number;
 	persistData: boolean;
 	persistKey: string;
+	isResettingRef: { current: boolean };
 }
 
 function createResetHandler<T extends FieldValues>({
@@ -85,16 +84,18 @@ function createResetHandler<T extends FieldValues>({
 	initialStep,
 	persistData,
 	persistKey,
+	isResettingRef,
 }: FormWizardHandlersParams<T>) {
 	return () => {
+		isResettingRef.current = true;
+		if (persistData) {
+			clearPersistedData(persistKey);
+		}
 		setActiveStep(initialStep);
 		setCompletedSteps(new Set());
 		setErrorSteps(new Set());
 		setFormData({} as Partial<T>);
 		setIsSubmitting(false);
-		if (persistData) {
-			clearPersistedData(persistKey);
-		}
 	};
 }
 
@@ -148,11 +149,9 @@ export function savePersistedData<T extends FieldValues>(
 		completedSteps: number[];
 	}
 ): void {
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- SSR runtime safety check
-	if (globalThis.window === undefined) {
+	if (!('window' in globalThis)) {
 		return;
 	}
-
 	try {
 		globalThis.window.localStorage.setItem(persistKey, JSON.stringify(data));
 	} catch {
@@ -164,11 +163,9 @@ export function savePersistedData<T extends FieldValues>(
  * Remove persisted data from localStorage
  */
 export function clearPersistedData(persistKey: string): void {
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- SSR runtime safety check
-	if (globalThis.window === undefined) {
+	if (!('window' in globalThis)) {
 		return;
 	}
-
 	try {
 		globalThis.window.localStorage.removeItem(persistKey);
 	} catch {

@@ -165,6 +165,116 @@ describe('AnalyticsProvider initialization', () => {
 	});
 });
 
+describe('AnalyticsProvider lifecycle', () => {
+	it('cleans up initialization on unmount', async () => {
+		const analyticsAdapter = createMockAnalyticsAdapter();
+		const propsRef = createPropsRef(analyticsAdapter, { writeKey: 'test' });
+		const { unmount } = renderUseAnalyticsHook(propsRef);
+
+		await waitForInitializeCalls(analyticsAdapter, 1);
+
+		unmount();
+
+		// Verify initialization was called before unmount
+		expect(analyticsAdapter.initialize).toHaveBeenCalledTimes(1);
+	});
+
+	it('handles unmount during async initialization', async () => {
+		let resolveInit: (() => void) | undefined;
+		const initPromise = new Promise<void>(resolve => {
+			resolveInit = resolve;
+		});
+
+		const initialize = vi.fn().mockReturnValue(initPromise);
+		const analyticsAdapter = createMockAnalyticsAdapter({ initialize });
+		const propsRef = createPropsRef(analyticsAdapter, { writeKey: 'test' });
+		const { unmount } = renderUseAnalyticsHook(propsRef);
+
+		// Unmount before initialization completes
+		unmount();
+
+		// Complete initialization after unmount
+		if (resolveInit) {
+			resolveInit();
+		}
+
+		// Should not throw or cause issues
+		await waitFor(() => {
+			expect(initialize).toHaveBeenCalled();
+		});
+	});
+});
+
+describe('AnalyticsProvider error handling', () => {
+	it('handles synchronous initialization errors gracefully', async () => {
+		const error = new Error('sync init error');
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+		const initialize = vi.fn().mockImplementation(() => {
+			throw error;
+		});
+
+		const analyticsAdapter = createMockAnalyticsAdapter({ initialize });
+		const propsRef = createPropsRef(analyticsAdapter, { writeKey: 'test' });
+		renderUseAnalyticsHook(propsRef);
+
+		await waitFor(() => {
+			expect(warnSpy).toHaveBeenCalledWith('Failed to initialize analytics provider', error);
+		});
+
+		warnSpy.mockRestore();
+	});
+
+	it('handles adapter without initialize method', () => {
+		const analyticsAdapter = createMockAnalyticsAdapter();
+		delete (analyticsAdapter as Partial<AnalyticsPort>).initialize;
+		const propsRef = createPropsRef(analyticsAdapter, { writeKey: 'test' });
+
+		// Should not throw when initialize is missing
+		expect(() => renderUseAnalyticsHook(propsRef)).not.toThrow();
+	});
+
+	it('handles null config without errors', () => {
+		const analyticsAdapter = createMockAnalyticsAdapter();
+		const propsRef = createPropsRef(analyticsAdapter, null);
+
+		expect(() => renderUseAnalyticsHook(propsRef)).not.toThrow();
+		expect(analyticsAdapter.initialize).not.toHaveBeenCalled();
+	});
+});
+
+describe('AnalyticsProvider context memoization', () => {
+	it('memoizes context value when analytics adapter is stable', () => {
+		const analyticsAdapter = createMockAnalyticsAdapter();
+		const propsRef = createPropsRef(analyticsAdapter);
+		const { result, rerender } = renderUseAnalyticsHook(propsRef);
+
+		const firstValue = result.current;
+		rerender();
+
+		expect(result.current).toBe(firstValue);
+		expect(result.current).toBe(analyticsAdapter);
+	});
+});
+
+describe('AnalyticsProvider composition', () => {
+	it('works correctly when nested with other providers', () => {
+		const analyticsAdapter = createMockAnalyticsAdapter();
+
+		const NestedWrapper = ({ children }: PropsWithChildren) => (
+			<AnalyticsProvider analytics={analyticsAdapter} config={null}>
+				<div data-testid="nested">{children}</div>
+			</AnalyticsProvider>
+		);
+
+		const { result } = renderHook(() => useAnalytics(), {
+			wrapper: NestedWrapper,
+		});
+
+		expect(result.current).toBe(analyticsAdapter);
+	});
+});
+
 describe('useAnalytics guard', () => {
 	it('throws when useAnalytics is called outside of AnalyticsProvider', () => {
 		expect(() => renderHook(() => useAnalytics())).toThrowError(

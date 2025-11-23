@@ -9,8 +9,12 @@ export function getContainerStyle(minHeight?: number | string, maxHeight?: numbe
 	};
 }
 
+/**
+ * Creates props for RichTextEditorEditorContent.
+ * Editor must be non-null (this function is only called after null checks).
+ */
 export function getContentProps(
-	editor: ReturnType<typeof useEditor>,
+	editor: NonNullable<ReturnType<typeof useEditor>>,
 	hasError: boolean,
 	ariaDescribedBy?: string
 ): RichTextEditorEditorContentProps {

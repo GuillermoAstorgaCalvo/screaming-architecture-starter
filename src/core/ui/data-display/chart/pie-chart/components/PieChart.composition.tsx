@@ -88,9 +88,11 @@ export function wrapWithResponsiveContainer(
 	chartContent: ReactElement
 ): ReactElement {
 	return (
-		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
-			{chartContent}
-		</ResponsiveContainer>
+		<div data-testid="pie-chart-responsive-container">
+			<ResponsiveContainer width={width as number | `${number}%`} height={height}>
+				{chartContent}
+			</ResponsiveContainer>
+		</div>
 	);
 }
 

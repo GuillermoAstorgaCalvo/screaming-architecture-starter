@@ -176,12 +176,14 @@ Framework-agnostic, reusable, domain-independent code. Domains and `app` depend 
 - `useTranslation.ts`: ✅ Custom hook wrapper with automatic resource loading. Provides `useTranslation` hook that automatically loads resources on-demand when first used. Type-safe translation function with autocomplete.
 - `useRtl.ts`: ✅ Hook to check if current language is RTL. Returns boolean indicating if current language requires RTL layout. Automatically updates when language changes.
 - `resourceLoader.ts`: ✅ Dynamic resource loading system (main export, re-exports from sub-modules). Handles lazy loading of translation resources and caches loaded resources to prevent re-loading.
-- `resourceLoader.cache.ts`: ✅ Resource caching utilities (`clearResourceCacheFor`, `isResourceCached`, `isResourceLoading`)
-- `resourceLoader.i18n.ts`: ✅ i18next integration functions (`addResourceToI18n`, `loadAndAddResource`)
-- `resourceLoader.load.ts`: ✅ Resource loading functions (`loadResource`)
-- `resourceLoader.registry.ts`: ✅ Resource loader registry (`registerResourceLoader`, `getRegisteredNamespaces`, `clearResourceLoaders`)
-- `resourceLoader.types.ts`: ✅ Type definitions for resource loading (`ResourceLoader`, `TranslationResource`, `AddResourceOptions`, etc.)
-- `resourceLoader.validation.ts`: ✅ Resource validation utilities
+- `resourceLoader/`: ✅ Resource loading sub-modules:
+  - `backend.ts`: ✅ i18next backend adapter for resource loading (ResourceLoaderBackend)
+  - `cache.ts`: ✅ Resource caching utilities (`clearResourceCacheFor`, `isResourceCached`, `isResourceLoading`)
+  - `i18n.ts`: ✅ i18next integration functions (`addResourceToI18n`, `loadAndAddResource`)
+  - `load.ts`: ✅ Resource loading functions (`loadResource`)
+  - `registry.ts`: ✅ Resource loader registry (`registerResourceLoader`, `getRegisteredNamespaces`, `clearResourceLoaders`)
+  - `types.ts`: ✅ Type definitions for resource loading (`ResourceLoader`, `TranslationResource`, `AddResourceOptions`, etc.)
+  - `validation.ts`: ✅ Resource validation utilities
 - `registry.ts`: ✅ Domain translation registration system. Exports `registerDomainTranslations(namespace, loaderFactory)` for registering domain translations and `registerCommonTranslations(loaderFactory)` for registering common translations.
 - `constants.ts`: ✅ Centralized i18n constants. Exports `SUPPORTED_LANGUAGES`, `DEFAULT_LANGUAGE`, `RTL_LANGUAGES`, `DEFAULT_NAMESPACE`, `LANGUAGE_STORAGE_KEY`, `LANGUAGE_DETECTION_ORDER`. Helper functions: `isSupportedLanguage()`, `isRtlLanguage()`, `normalizeLanguage()`.
 - `errors.ts`: ✅ Custom error classes for i18n resource loading. Exports `ResourceLoaderNotFoundError` (thrown when resource loader is not found for a namespace) and `InvalidResourceFormatError` (thrown when resource format is invalid).

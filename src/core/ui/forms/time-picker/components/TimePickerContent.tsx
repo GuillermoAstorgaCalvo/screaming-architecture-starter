@@ -9,14 +9,22 @@ import type {
 } from '@core/ui/forms/time-picker/types/TimePickerTypes';
 
 function buildTimePickerFieldPropsFromLabelProps(props: Readonly<TimePickerFieldWithLabelProps>) {
-	const { timePickerId, timePickerClasses, ariaDescribedBy, disabled, required, fieldProps } =
-		props;
+	const {
+		timePickerId,
+		timePickerClasses,
+		ariaDescribedBy,
+		disabled,
+		required,
+		error,
+		fieldProps,
+	} = props;
 	return {
 		id: timePickerId,
 		timePickerClasses,
 		ariaDescribedBy,
 		disabled,
 		required,
+		error,
 		props: fieldProps,
 	};
 }
@@ -42,6 +50,7 @@ function buildTimePickerFieldWithLabelProps(props: Readonly<TimePickerContentPro
 		label,
 		required,
 		disabled,
+		error,
 		fieldProps,
 	} = props;
 	return {
@@ -51,6 +60,7 @@ function buildTimePickerFieldWithLabelProps(props: Readonly<TimePickerContentPro
 		label,
 		required,
 		disabled,
+		error,
 		fieldProps,
 	};
 }

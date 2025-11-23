@@ -66,7 +66,7 @@ export function renderEmptyStateWithString({
 		...(onEmptyAction && { onEmptyAction }),
 	});
 	return (
-		<div className={className} {...props}>
+		<div className={className} data-testid="empty-state-wrapper" {...props}>
 			<EmptyState {...emptyStateProps} />
 		</div>
 	);
@@ -136,7 +136,7 @@ function renderDefaultEmptyState(params: DefaultEmptyStateParams) {
 		...(params.onEmptyAction && { onEmptyAction: params.onEmptyAction }),
 	});
 	return (
-		<div className={params.className} {...params.props}>
+		<div className={params.className} data-testid="empty-state-wrapper" {...params.props}>
 			<EmptyState {...emptyStateProps} />
 		</div>
 	);
@@ -153,7 +153,7 @@ export function renderEmptyState(props: EmptyStateProps) {
 		);
 	}
 	return (
-		<div className={props.className} {...props.props}>
+		<div className={props.className} data-testid="empty-state-wrapper" {...props.props}>
 			{props.emptyMessage}
 		</div>
 	);

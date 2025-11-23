@@ -12,6 +12,28 @@ describe('useController - hook exports and imports', () => {
 	it('should be importable from @core/forms/useController', () => {
 		expect(useController).toBeDefined();
 	});
+
+	it('should be callable as a hook', () => {
+		const { result } = renderUseController<{ name: string }>(
+			{ name: 'name' },
+			{ defaultValues: { name: '' } }
+		);
+
+		expect(result.current).toBeDefined();
+		expect(result.current.field).toBeDefined();
+		expect(result.current.fieldState).toBeDefined();
+	});
+
+	it('should return consistent hook interface', () => {
+		const { result } = renderUseController<{ name: string }>(
+			{ name: 'name' },
+			{ defaultValues: { name: '' } }
+		);
+
+		expect(result.current).toHaveProperty('field');
+		expect(result.current).toHaveProperty('fieldState');
+		expect(result.current).toHaveProperty('formState');
+	});
 });
 
 describe('useController - field initialization', () => {

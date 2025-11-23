@@ -48,6 +48,7 @@ function createWrapperProps(
 		description: props.description,
 		chartClassName: props.chartClassName,
 		className: props.className,
+		testId: 'line-chart-container',
 		props: props.restProps,
 	};
 }

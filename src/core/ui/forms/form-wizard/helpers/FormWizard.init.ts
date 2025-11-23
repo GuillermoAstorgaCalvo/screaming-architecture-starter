@@ -1,5 +1,4 @@
 import type { FormControls } from '@core/forms/formAdapter';
-import { buildCallbacks } from '@core/ui/forms/form-wizard/helpers/FormWizard.callbacks';
 import { useFormWizardForm } from '@core/ui/forms/form-wizard/helpers/FormWizard.form';
 import {
 	createStateHandlers,
@@ -79,12 +78,13 @@ export function useFormWizardInit<T extends FieldValues>(config: {
 		steps: config.steps,
 	});
 	const synchronizedState = useWizardStateSync(stateManagement, config.controlledActiveStep);
+	const callbacksObj = buildCallbacksObj(config);
 	const handlers = useFormWizardHandlersInit<T>({
 		state: synchronizedState,
 		steps: config.steps,
 		formControls,
 		stateHandlers: createStateHandlers<T>(stateManagement),
-		callbacks: buildCallbacks<T>(config),
+		callbacks: callbacksObj,
 		options: {
 			validateOnStepChange: config.validateOnStepChange,
 			allowBackNavigation: config.allowBackNavigation,
@@ -92,4 +92,30 @@ export function useFormWizardInit<T extends FieldValues>(config: {
 	});
 
 	return { formControls, synchronizedState, handlers };
+}
+
+function buildCallbacksObj<T extends FieldValues>(config: {
+	onStepChange?: (stepIndex: number) => void;
+	onComplete?: (data: T) => void | Promise<void>;
+	onCancel?: () => void;
+}): {
+	onStepChange?: (stepIndex: number) => void;
+	onComplete?: (data: T) => void | Promise<void>;
+	onCancel?: () => void;
+} {
+	const callbacksObj: {
+		onStepChange?: (stepIndex: number) => void;
+		onComplete?: (data: T) => void | Promise<void>;
+		onCancel?: () => void;
+	} = {};
+	if (config.onStepChange !== undefined) {
+		callbacksObj.onStepChange = config.onStepChange;
+	}
+	if (config.onComplete !== undefined) {
+		callbacksObj.onComplete = config.onComplete;
+	}
+	if (config.onCancel !== undefined) {
+		callbacksObj.onCancel = config.onCancel;
+	}
+	return callbacksObj;
 }

@@ -66,6 +66,7 @@ function buildRadioContentProps(options: BuildRadioContentPropsOptions): RadioCo
 		value: props.value,
 		radioClasses,
 		ariaDescribedBy,
+		ariaInvalid: props.error ? true : undefined,
 		label: props.label,
 		error: props.error,
 		helperText: props.helperText,

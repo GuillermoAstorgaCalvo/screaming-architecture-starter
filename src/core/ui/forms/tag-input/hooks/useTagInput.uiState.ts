@@ -28,7 +28,13 @@ export function useTagInputState({
 	className,
 }: Readonly<UseTagInputStateOptions>): UseTagInputStateReturn {
 	const generatedId = useId();
-	const finalId = generateTagInputId(generatedId, inputId, label);
+	const finalId = generateTagInputId({
+		generatedId,
+		inputId,
+		label,
+		error,
+		helperText,
+	});
 	const hasError = Boolean(error);
 	const ariaDescribedBy = finalId ? getAriaDescribedBy(finalId, error, helperText) : undefined;
 	const inputClasses = getTagInputClasses({

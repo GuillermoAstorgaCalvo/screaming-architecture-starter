@@ -5,8 +5,6 @@
  * root rendering, and web vitals scheduling
  */
 
-import '@domains/landing/i18n';
-
 import { initConfig } from '@core/config/init';
 import { isProduction, isSpeedInsightsEnabled } from '@core/constants/env';
 import i18n, { i18nInitPromise } from '@core/i18n/i18n';
@@ -103,6 +101,8 @@ async function waitForWebVitals(): Promise<void> {
 
 function setupEventListenersMock() {
 	const eventListeners = new Map<string, Set<EventListenerOrEventListenerObject>>();
+	const documentEventListeners = new Map<string, Set<EventListenerOrEventListenerObject>>();
+
 	globalThis.addEventListener = vi.fn(
 		(event: string, handler: EventListenerOrEventListenerObject) => {
 			if (!eventListeners.has(event)) {
@@ -116,7 +116,22 @@ function setupEventListenersMock() {
 			eventListeners.get(event)?.delete(handler);
 		}
 	) as typeof globalThis.removeEventListener;
-	return eventListeners;
+
+	document.addEventListener = vi.fn(
+		(event: string, handler: EventListenerOrEventListenerObject) => {
+			if (!documentEventListeners.has(event)) {
+				documentEventListeners.set(event, new Set());
+			}
+			documentEventListeners.get(event)?.add(handler);
+		}
+	) as typeof document.addEventListener;
+	document.removeEventListener = vi.fn(
+		(event: string, handler: EventListenerOrEventListenerObject) => {
+			documentEventListeners.get(event)?.delete(handler);
+		}
+	) as typeof document.removeEventListener;
+
+	return { eventListeners, documentEventListeners };
 }
 
 function getEventListenerCalls() {
@@ -130,6 +145,12 @@ function getEventNames(): string[] {
 function findEventHandler(eventName: string): EventListener | undefined {
 	const addEventListenerCalls = getEventListenerCalls();
 	const found = addEventListenerCalls.find(call => call[0] === eventName);
+	return found?.[1] as EventListener | undefined;
+}
+
+function findDocumentEventHandler(eventName: string): EventListener | undefined {
+	const documentAddEventListenerCalls = vi.mocked(document.addEventListener).mock.calls;
+	const found = documentAddEventListenerCalls.find(call => call[0] === eventName);
 	return found?.[1] as EventListener | undefined;
 }
 
@@ -154,6 +175,109 @@ function restoreDocument(original: Document | undefined): void {
 			value: original,
 		});
 	}
+}
+
+// Helper functions for web vitals error handling tests
+async function setupAppAndTriggerWebVitals(): Promise<void> {
+	setupMockContainerWithSelector();
+	await initializeApp();
+	await waitForWebVitals();
+}
+
+async function triggerPointerDownEvent(): Promise<void> {
+	const pointerdownHandler = findEventHandler('pointerdown');
+	if (pointerdownHandler) {
+		pointerdownHandler(new Event('pointerdown'));
+	}
+}
+
+async function setupErrorTestMocks(): Promise<{
+	loggerAdapter: any;
+	reportWebVitals: any;
+}> {
+	const { loggerAdapter } = await import('@infra/logging/loggerAdapter');
+	const { reportWebVitals } = await import('@core/perf/reportWebVitals');
+	(loggerAdapter as any).reset();
+	return { loggerAdapter, reportWebVitals };
+}
+
+function verifyErrorLogged(loggerAdapter: any, expectedError?: string): void {
+	const warnLogs = loggerAdapter.logs.filter(
+		(log: any) =>
+			log.level === 'warn' &&
+			log.message === 'reportWebVitals failed' &&
+			(expectedError ? log.context?.error === expectedError : true)
+	);
+	expect(warnLogs.length).toBeGreaterThan(0);
+}
+
+async function testReportWebVitalsError(errorValue: unknown, expectedError: string): Promise<void> {
+	await setupAppAndTriggerWebVitals();
+
+	const { loggerAdapter, reportWebVitals } = await setupErrorTestMocks();
+	vi.mocked(reportWebVitals).mockRejectedValueOnce(errorValue);
+
+	await triggerPointerDownEvent();
+	await waitForWebVitals();
+
+	verifyErrorLogged(loggerAdapter, expectedError || undefined);
+}
+
+function restoreEventListener(
+	property: 'addEventListener' | 'removeEventListener',
+	originalValue: typeof globalThis.addEventListener | typeof globalThis.removeEventListener
+): void {
+	Object.defineProperty(globalThis, property, {
+		writable: true,
+		configurable: true,
+		value: originalValue,
+	});
+}
+
+async function testMissingEventListenerSupport(
+	property: 'addEventListener' | 'removeEventListener'
+): Promise<void> {
+	const mockContainer = createMockContainer();
+	vi.spyOn(document, 'querySelector').mockReturnValue(mockContainer);
+
+	const originalValue =
+		property === 'addEventListener' ? globalThis.addEventListener : globalThis.removeEventListener;
+
+	Object.defineProperty(globalThis, property, {
+		writable: true,
+		configurable: true,
+		value: undefined,
+	});
+
+	await initializeApp();
+	await waitForWebVitals();
+
+	restoreEventListener(property, originalValue);
+}
+
+function setupVisibilityState(value: 'hidden' | 'visible'): void {
+	Object.defineProperty(document, 'visibilityState', {
+		writable: true,
+		configurable: true,
+		value,
+	});
+}
+
+async function testVisibilityChange(visibilityState: 'hidden' | 'visible'): Promise<void> {
+	setupMockContainerWithSelector();
+	await initializeApp();
+	await waitForWebVitals();
+
+	const visibilityChangeHandler = findDocumentEventHandler('visibilitychange');
+	expect(visibilityChangeHandler).toBeDefined();
+
+	setupVisibilityState(visibilityState);
+
+	if (visibilityChangeHandler) {
+		visibilityChangeHandler(new Event('visibilitychange'));
+	}
+
+	await waitForWebVitals();
 }
 
 describe('Main - Configuration Initialization', () => {
@@ -189,20 +313,14 @@ describe('Main - Configuration Initialization', () => {
 });
 
 describe('Main - Root Element Rendering', () => {
-	// eslint-disable-next-line @typescript-eslint/no-deprecated
-	let originalQuerySelector: typeof document.querySelector;
-
 	beforeEach(() => {
 		vi.clearAllMocks();
-		// eslint-disable-next-line @typescript-eslint/no-deprecated
-		originalQuerySelector = document.querySelector;
 		// Clear any existing root element
 		document.querySelector('#root')?.remove();
 	});
 
 	afterEach(() => {
-		// eslint-disable-next-line @typescript-eslint/no-deprecated
-		document.querySelector = originalQuerySelector;
+		vi.restoreAllMocks();
 		document.querySelector('#root')?.remove();
 		vi.clearAllMocks();
 		// Clear module cache to allow re-import
@@ -292,12 +410,16 @@ describe('Main - Speed Insights Loading', () => {
 // Web Vitals test setup helpers
 let originalAddEventListener: typeof globalThis.addEventListener;
 let originalRemoveEventListener: typeof globalThis.removeEventListener;
+let originalDocumentAddEventListener: typeof document.addEventListener;
+let originalDocumentRemoveEventListener: typeof document.removeEventListener;
 let originalDocument: Document | undefined;
 
 function setupWebVitalsMocks() {
 	vi.clearAllMocks();
 	originalAddEventListener = globalThis.addEventListener;
 	originalRemoveEventListener = globalThis.removeEventListener;
+	originalDocumentAddEventListener = document.addEventListener;
+	originalDocumentRemoveEventListener = document.removeEventListener;
 	originalDocument = globalThis.document;
 	setupEventListenersMock();
 }
@@ -305,13 +427,15 @@ function setupWebVitalsMocks() {
 function teardownWebVitalsMocks() {
 	globalThis.addEventListener = originalAddEventListener;
 	globalThis.removeEventListener = originalRemoveEventListener;
+	document.addEventListener = originalDocumentAddEventListener;
+	document.removeEventListener = originalDocumentRemoveEventListener;
 	if (originalDocument) {
 		globalThis.document = originalDocument;
 	}
 	vi.clearAllMocks();
 }
 
-describe('Main - Web Vitals Scheduling', () => {
+function setupWebVitalsTestSuite(): void {
 	beforeEach(() => {
 		setupWebVitalsMocks();
 		document.querySelector('#root')?.remove();
@@ -322,6 +446,10 @@ describe('Main - Web Vitals Scheduling', () => {
 		document.querySelector('#root')?.remove();
 		vi.resetModules();
 	});
+}
+
+describe('Main - Web Vitals Scheduling', () => {
+	setupWebVitalsTestSuite();
 
 	describe('Initialization', () => {
 		it('schedules web vitals reporting on initialization', async () => {
@@ -340,43 +468,88 @@ describe('Main - Web Vitals Scheduling', () => {
 	});
 
 	describe('Error Handling', () => {
+		setupWebVitalsTestSuite();
+		registerErrorHandlingTests();
+	});
+
+	describe('User Interaction', () => {
+		registerUserInteractionTests();
+	});
+
+	describe('Initialization Edge Cases', () => {
+		registerInitializationEdgeCaseTests();
+	});
+});
+
+function registerErrorHandlingTests(): void {
+	describe('Missing Document Support', () => {
 		it('handles missing document gracefully for web vitals', async () => {
-			// First initialize app normally
 			const mockContainer = createMockContainer();
 			vi.spyOn(document, 'querySelector').mockReturnValue(mockContainer);
 			await initializeApp();
 
-			// Then test web vitals with null document (simulating edge case)
-			// The scheduleWebVitals function should handle this
 			const originalDoc = globalThis.document;
 			Object.defineProperty(globalThis, 'document', {
 				writable: true,
 				value: null,
 			});
 
-			// The web vitals should still be scheduled even with null document
-			// (it will trigger immediately)
 			await waitForWebVitals();
-
 			restoreDocument(originalDoc);
 		});
 	});
 
-	describe('User Interaction', () => {
-		it('triggers web vitals report on user interaction', async () => {
-			setupMockContainerWithSelector();
-			await initializeApp();
-			await waitForWebVitals();
+	describe('Missing Event Listener Support', () => {
+		it('triggers web vitals immediately when addEventListener is missing', async () => {
+			await testMissingEventListenerSupport('addEventListener');
+		});
 
-			const pointerdownHandler = findEventHandler('pointerdown');
-			if (pointerdownHandler) {
-				pointerdownHandler(new Event('pointerdown'));
-			}
-
-			await waitForWebVitals();
+		it('triggers web vitals immediately when removeEventListener is missing', async () => {
+			await testMissingEventListenerSupport('removeEventListener');
 		});
 	});
-});
+
+	describe('Report Web Vitals Errors', () => {
+		it('handles reportWebVitals error gracefully', async () => {
+			await testReportWebVitalsError(new Error('Web vitals failed'), '');
+		});
+
+		it('handles reportWebVitals error with non-Error value', async () => {
+			await testReportWebVitalsError('String error', 'String error');
+		});
+	});
+}
+
+function registerUserInteractionTests(): void {
+	it('triggers web vitals report on user interaction', async () => {
+		setupMockContainerWithSelector();
+		await initializeApp();
+		await waitForWebVitals();
+
+		await triggerPointerDownEvent();
+		await waitForWebVitals();
+	});
+
+	it('triggers web vitals report when document visibility changes to hidden', async () => {
+		await testVisibilityChange('hidden');
+	});
+
+	it('does not trigger web vitals when document visibility changes to visible', async () => {
+		await testVisibilityChange('visible');
+	});
+}
+
+function registerInitializationEdgeCaseTests(): void {
+	it('triggers web vitals immediately when document is already hidden', async () => {
+		setupMockContainerWithSelector();
+		setupVisibilityState('hidden');
+
+		await initializeApp();
+		await waitForWebVitals();
+
+		expect(globalThis.addEventListener).toHaveBeenCalled();
+	});
+}
 
 describe('Main - App Initialization', () => {
 	beforeEach(() => {

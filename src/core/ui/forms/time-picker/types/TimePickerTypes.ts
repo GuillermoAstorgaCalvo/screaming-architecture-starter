@@ -34,6 +34,7 @@ export interface TimePickerFieldProps {
 	readonly ariaDescribedBy: string | undefined;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
+	readonly error?: string | undefined;
 	readonly props: Readonly<TimePickerInputProps>;
 }
 
@@ -59,5 +60,6 @@ export interface TimePickerFieldWithLabelProps
 		| 'label'
 		| 'required'
 		| 'disabled'
+		| 'error'
 		| 'fieldProps'
 	> {}

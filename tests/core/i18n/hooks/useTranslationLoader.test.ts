@@ -362,4 +362,26 @@ describe('useResourceLoadingEffects - cleanup and errors', () => {
 
 		expect(props.loadResource).toHaveBeenCalled();
 	});
+
+	it('should handle loadResource errors in language change handler gracefully', async () => {
+		const props = createEffectsProps();
+		const getLanguageChangeHandler = setupLanguageChangeHandler();
+		props.loadResource = vi.fn().mockRejectedValue(new Error('Load failed'));
+
+		renderHook(() => useResourceLoadingEffects(props));
+
+		await waitFor(() => {
+			expect(mockI18n.on).toHaveBeenCalledWith('languageChanged', expect.any(Function));
+		});
+
+		const languageChangeHandler = getLanguageChangeHandler();
+		await act(async () => {
+			if (languageChangeHandler) {
+				languageChangeHandler('es');
+			}
+		});
+
+		// Should not throw, error should be caught
+		expect(props.loadResource).toHaveBeenCalled();
+	});
 });

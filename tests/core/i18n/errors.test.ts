@@ -1,86 +1,80 @@
 import { InvalidResourceFormatError, ResourceLoaderNotFoundError } from '@core/i18n/errors';
 import { describe, expect, it } from 'vitest';
 
-const TEST_NAMESPACE = 'test-namespace';
+describe('ResourceLoaderNotFoundError', () => {
+	it('creates error with correct message and name', () => {
+		const namespace = 'testNamespace';
+		const error = new ResourceLoaderNotFoundError(namespace);
 
-function describeResourceLoaderNotFoundError() {
-	describe('ResourceLoaderNotFoundError', () => {
-		it('should create error with correct message', () => {
-			const error = new ResourceLoaderNotFoundError(TEST_NAMESPACE);
-			expect(error.message).toBe('No resource loader registered for namespace: test-namespace');
-			expect(error.name).toBe('ResourceLoaderNotFoundError');
-		});
-
-		it('should be an instance of Error', () => {
-			const error = new ResourceLoaderNotFoundError(TEST_NAMESPACE);
-			expect(error).toBeInstanceOf(Error);
-		});
-
-		it('should include namespace in message', () => {
-			const namespace = 'my-namespace';
-			const error = new ResourceLoaderNotFoundError(namespace);
-			expect(error.message).toContain(namespace);
-		});
-
-		it('should have correct error name', () => {
-			const error = new ResourceLoaderNotFoundError('test');
-			expect(error.name).toBe('ResourceLoaderNotFoundError');
-		});
+		expect(error).toBeInstanceOf(Error);
+		expect(error.name).toBe('ResourceLoaderNotFoundError');
+		expect(error.message).toBe(`No resource loader registered for namespace: ${namespace}`);
 	});
-}
 
-function describeInvalidResourceFormatError() {
-	describe('InvalidResourceFormatError', () => {
-		it('should create error with correct message without reason', () => {
-			const error = new InvalidResourceFormatError(TEST_NAMESPACE, 'en');
-			expect(error.message).toBe(
-				'Invalid resource format for namespace "test-namespace", language "en"'
-			);
-			expect(error.name).toBe('InvalidResourceFormatError');
-		});
+	it('creates error with different namespace', () => {
+		const namespace = 'anotherNamespace';
+		const error = new ResourceLoaderNotFoundError(namespace);
 
-		it('should create error with correct message with reason', () => {
-			const reason = 'Missing default export';
-			const error = new InvalidResourceFormatError(TEST_NAMESPACE, 'en', reason);
-			expect(error.message).toBe(
-				`Invalid resource format for namespace "test-namespace", language "en": ${reason}`
-			);
-			expect(error.name).toBe('InvalidResourceFormatError');
-		});
-
-		it('should be an instance of Error', () => {
-			const error = new InvalidResourceFormatError(TEST_NAMESPACE, 'en');
-			expect(error).toBeInstanceOf(Error);
-		});
-
-		it('should include namespace and language in message', () => {
-			const namespace = 'my-namespace';
-			const language = 'es';
-			const error = new InvalidResourceFormatError(namespace, language);
-			expect(error.message).toContain(namespace);
-			expect(error.message).toContain(language);
-		});
-
-		it('should include reason when provided', () => {
-			const reason = 'Invalid JSON structure';
-			const error = new InvalidResourceFormatError('test', 'en', reason);
-			expect(error.message).toContain(reason);
-		});
-
-		it('should have correct error name', () => {
-			const error = new InvalidResourceFormatError('test', 'en');
-			expect(error.name).toBe('InvalidResourceFormatError');
-		});
-
-		it('should handle empty reason', () => {
-			const error = new InvalidResourceFormatError('test', 'en', '');
-			// Empty reason should not append colon and empty string
-			expect(error.message).toBe('Invalid resource format for namespace "test", language "en"');
-		});
+		expect(error.message).toBe(`No resource loader registered for namespace: ${namespace}`);
 	});
-}
 
-describe('i18n errors', () => {
-	describeResourceLoaderNotFoundError();
-	describeInvalidResourceFormatError();
+	it('has correct error name', () => {
+		const error = new ResourceLoaderNotFoundError('test');
+		expect(error.name).toBe('ResourceLoaderNotFoundError');
+	});
+});
+
+describe('InvalidResourceFormatError', () => {
+	it('creates error with correct message and name when reason is provided', () => {
+		const namespace = 'testNamespace';
+		const language = 'en';
+		const reason = 'Invalid JSON format';
+		const error = new InvalidResourceFormatError(namespace, language, reason);
+
+		expect(error).toBeInstanceOf(Error);
+		expect(error.name).toBe('InvalidResourceFormatError');
+		expect(error.message).toBe(
+			`Invalid resource format for namespace "${namespace}", language "${language}": ${reason}`
+		);
+	});
+
+	it('creates error with correct message when reason is not provided', () => {
+		const namespace = 'testNamespace';
+		const language = 'en';
+		const error = new InvalidResourceFormatError(namespace, language);
+
+		expect(error).toBeInstanceOf(Error);
+		expect(error.name).toBe('InvalidResourceFormatError');
+		expect(error.message).toBe(
+			`Invalid resource format for namespace "${namespace}", language "${language}"`
+		);
+	});
+
+	it('creates error with different namespace and language', () => {
+		const namespace = 'anotherNamespace';
+		const language = 'fr';
+		const reason = 'Missing required fields';
+		const error = new InvalidResourceFormatError(namespace, language, reason);
+
+		expect(error.message).toBe(
+			`Invalid resource format for namespace "${namespace}", language "${language}": ${reason}`
+		);
+	});
+
+	it('handles empty reason string as undefined', () => {
+		const namespace = 'testNamespace';
+		const language = 'en';
+		const reason = '';
+		const error = new InvalidResourceFormatError(namespace, language, reason);
+
+		// Empty string is falsy, so it's treated as undefined
+		expect(error.message).toBe(
+			`Invalid resource format for namespace "${namespace}", language "${language}"`
+		);
+	});
+
+	it('has correct error name', () => {
+		const error = new InvalidResourceFormatError('test', 'en');
+		expect(error.name).toBe('InvalidResourceFormatError');
+	});
 });

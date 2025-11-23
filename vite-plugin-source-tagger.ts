@@ -34,6 +34,19 @@ function hasSourceAttribute(attributes: ts.JsxAttributes): boolean {
 	);
 }
 
+function isFragmentElement(node: ts.JsxOpeningElement | ts.JsxSelfClosingElement): boolean {
+	// Check for <Fragment> or <React.Fragment>
+	if (ts.isIdentifier(node.tagName)) {
+		return node.tagName.escapedText === 'Fragment';
+	}
+	// Check for <React.Fragment>
+	if (ts.isQualifiedName(node.tagName)) {
+		const { right } = node.tagName;
+		return ts.isIdentifier(right) && (right as ts.Identifier).escapedText === 'Fragment';
+	}
+	return false;
+}
+
 function appendSourceAttribute(attributes: ts.JsxAttributes, value: string): ts.JsxAttributes {
 	const sourceAttribute = ts.factory.createJsxAttribute(
 		ts.factory.createIdentifier(SOURCE_ATTRIBUTE_NAME),
@@ -56,6 +69,11 @@ function createTransformer(
 	return context => {
 		const visit: ts.Visitor = node => {
 			if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+				// Skip React Fragments - they only accept 'key' and 'children' props
+				if (isFragmentElement(node)) {
+					return ts.visitEachChild(node, visit, context);
+				}
+
 				if (hasSourceAttribute(node.attributes)) {
 					return ts.visitEachChild(node, visit, context);
 				}

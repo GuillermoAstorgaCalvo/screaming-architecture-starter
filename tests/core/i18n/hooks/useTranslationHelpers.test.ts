@@ -55,6 +55,23 @@ function createMockState() {
 	};
 }
 
+// Helper function to create expected loadAndAddResource call arguments
+function getExpectedLoadArgs() {
+	return {
+		i18nInstance: mockI18n,
+		namespace: TEST_NAMESPACE,
+		language: TEST_LANGUAGE,
+	};
+}
+
+// Helper function to setup mocks for resource not loaded scenario
+function setupResourceNotLoaded() {
+	mockI18n.getResourceBundle.mockReturnValue(undefined);
+	mockIsResourceCached.mockReturnValue(false);
+	mockIsResourceLoading.mockReturnValue(false);
+	mockLoadAndAddResource.mockResolvedValue(undefined);
+}
+
 describe('isResourceLoadedInI18n', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -145,77 +162,66 @@ describe('ensureResourceLoaded', () => {
 	});
 
 	describe('when resource needs to be loaded', () => {
-		it('should wait for existing load if resource is cached', async () => {
-			mockI18n.getResourceBundle.mockReturnValue(undefined);
-			mockIsResourceCached.mockReturnValue(true);
-			mockLoadAndAddResource.mockResolvedValue(undefined);
+		describe('when waiting for existing load', () => {
+			it('should wait for existing load if resource is cached', async () => {
+				mockI18n.getResourceBundle.mockReturnValue(undefined);
+				mockIsResourceCached.mockReturnValue(true);
+				mockLoadAndAddResource.mockResolvedValue(undefined);
 
-			await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
+				await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
 
-			expect(mockLoadAndAddResource).toHaveBeenCalledWith({
-				i18nInstance: mockI18n,
-				namespace: TEST_NAMESPACE,
-				language: TEST_LANGUAGE,
+				expect(mockLoadAndAddResource).toHaveBeenCalledWith(getExpectedLoadArgs());
+			});
+
+			it('should wait for existing load if resource is currently loading', async () => {
+				mockI18n.getResourceBundle.mockReturnValue(undefined);
+				mockIsResourceCached.mockReturnValue(false);
+				mockIsResourceLoading.mockReturnValue(true);
+				mockLoadAndAddResource.mockResolvedValue(undefined);
+
+				await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
+
+				expect(mockLoadAndAddResource).toHaveBeenCalledWith(getExpectedLoadArgs());
 			});
 		});
 
-		it('should wait for existing load if resource is currently loading', async () => {
-			mockI18n.getResourceBundle.mockReturnValue(undefined);
-			mockIsResourceCached.mockReturnValue(false);
-			mockIsResourceLoading.mockReturnValue(true);
-			mockLoadAndAddResource.mockResolvedValue(undefined);
+		describe('when loading new resource', () => {
+			it('should load resource if not loaded, cached, or loading', async () => {
+				setupResourceNotLoaded();
 
-			await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
+				await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
 
-			expect(mockLoadAndAddResource).toHaveBeenCalledWith({
-				i18nInstance: mockI18n,
-				namespace: TEST_NAMESPACE,
-				language: TEST_LANGUAGE,
+				expect(mockLoadAndAddResource).toHaveBeenCalledWith(getExpectedLoadArgs());
 			});
-		});
 
-		it('should load resource if not loaded, cached, or loading', async () => {
-			mockI18n.getResourceBundle.mockReturnValue(undefined);
-			mockIsResourceCached.mockReturnValue(false);
-			mockIsResourceLoading.mockReturnValue(false);
-			mockLoadAndAddResource.mockResolvedValue(undefined);
+			it('should handle the second loadAndAddResource call path when not cached and not loading', async () => {
+				setupResourceNotLoaded();
 
-			await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
+				await ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE);
 
-			expect(mockLoadAndAddResource).toHaveBeenCalledWith({
-				i18nInstance: mockI18n,
-				namespace: TEST_NAMESPACE,
-				language: TEST_LANGUAGE,
+				expect(mockLoadAndAddResource).toHaveBeenCalledTimes(1);
+				expect(mockLoadAndAddResource).toHaveBeenCalledWith(getExpectedLoadArgs());
 			});
 		});
 	});
 });
 
 describe('ensureResourceLoaded error handling', () => {
+	let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		clearResourceCache();
+		consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 	});
 
 	afterEach(() => {
 		vi.clearAllMocks();
 		clearResourceCache();
+		consoleErrorSpy.mockRestore();
 	});
 
 	it('should throw error if loading fails', async () => {
-		mockI18n.getResourceBundle.mockReturnValue(undefined);
-		mockIsResourceCached.mockReturnValue(false);
-		mockIsResourceLoading.mockReturnValue(false);
-		const error = new Error(LOAD_ERROR_MESSAGE);
-		mockLoadAndAddResource.mockRejectedValue(error);
-
-		await expect(ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE)).rejects.toThrow(
-			LOAD_ERROR_MESSAGE
-		);
-	});
-
-	it('should log error and throw when loading fails', async () => {
-		const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 		mockI18n.getResourceBundle.mockReturnValue(undefined);
 		mockIsResourceCached.mockReturnValue(false);
 		mockIsResourceLoading.mockReturnValue(false);
@@ -229,20 +235,38 @@ describe('ensureResourceLoaded error handling', () => {
 			expect.stringContaining('Failed to load translations'),
 			error
 		);
+	});
 
-		consoleErrorSpy.mockRestore();
+	it('should log error and throw when loading fails', async () => {
+		mockI18n.getResourceBundle.mockReturnValue(undefined);
+		mockIsResourceCached.mockReturnValue(false);
+		mockIsResourceLoading.mockReturnValue(false);
+		const error = new Error(LOAD_ERROR_MESSAGE);
+		mockLoadAndAddResource.mockRejectedValue(error);
+
+		await expect(ensureResourceLoaded(TEST_NAMESPACE, TEST_LANGUAGE)).rejects.toThrow(
+			LOAD_ERROR_MESSAGE
+		);
+		expect(consoleErrorSpy).toHaveBeenCalledWith(
+			expect.stringContaining('Failed to load translations'),
+			error
+		);
 	});
 });
 
 describe('handleExistingLoad', () => {
+	let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		clearResourceCache();
+		consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 	});
 
 	afterEach(() => {
 		vi.clearAllMocks();
 		clearResourceCache();
+		consoleErrorSpy.mockRestore();
 	});
 
 	it('should not set loading if resource is already loaded', async () => {
@@ -304,14 +328,18 @@ describe('handleExistingLoad', () => {
 });
 
 describe('handleInitialLoad', () => {
+	let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		clearResourceCache();
+		consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 	});
 
 	afterEach(() => {
 		vi.clearAllMocks();
 		clearResourceCache();
+		consoleErrorSpy.mockRestore();
 	});
 
 	it('should set loading and ready states correctly', async () => {

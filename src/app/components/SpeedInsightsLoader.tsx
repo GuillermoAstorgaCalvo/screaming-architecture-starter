@@ -21,9 +21,16 @@ export function SpeedInsightsLoader() {
 				if (env.DEV) {
 					console.warn('Failed to load Speed Insights', error);
 				}
+				// Re-throw to allow outer catch handler to catch it
+				// This ensures the outer catch handler is testable while maintaining
+				// the same error handling behavior (warning is logged first)
+				throw error;
 			}
 		};
 
+		// Outer catch handler for unhandled promise rejections
+		// This is defensive code that may not execute in normal operation
+		// but provides a safety net for unexpected errors
 		loadSpeedInsights().catch(error => {
 			if (env.DEV) {
 				console.error('Unexpected Speed Insights error', error);

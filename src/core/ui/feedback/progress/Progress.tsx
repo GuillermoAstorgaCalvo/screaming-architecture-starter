@@ -40,7 +40,13 @@ function getProgressLabel(
 }
 
 function ProgressBar({ percentage }: Readonly<{ percentage: number }>) {
-	return <div className={PROGRESS_BAR_BASE_CLASSES} style={{ width: `${percentage}%` }} />;
+	return (
+		<div
+			className={PROGRESS_BAR_BASE_CLASSES}
+			style={{ width: `${percentage}%` }}
+			data-testid="progress-bar"
+		/>
+	);
 }
 
 function ProgressValue({ value }: Readonly<{ value: number }>) {

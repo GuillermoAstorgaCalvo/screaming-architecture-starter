@@ -111,6 +111,14 @@ export function buildPageTitle(
 }
 
 /**
+ * Type guard to check if window is available (SSR-safe)
+ */
+function isWindowAvailable(): boolean {
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- SSR-safe check
+	return globalThis.window !== undefined && globalThis.window !== null;
+}
+
+/**
  * Build absolute URL from relative path
  * Uses globalThis.window.location.origin in browser, falls back to relative path in SSR
  *
@@ -118,8 +126,7 @@ export function buildPageTitle(
  * @returns Absolute URL
  */
 export function buildAbsoluteUrl(path: string): string {
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- SSR check
-	if (globalThis.window === undefined) {
+	if (!isWindowAvailable()) {
 		// SSR fallback - return as-is if already absolute
 		return path;
 	}
@@ -183,8 +190,7 @@ export function buildCanonicalUrl(canonicalUrl?: string): string {
 		return buildAbsoluteUrl(canonicalUrl);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- SSR check
-	if (globalThis.window === undefined) {
+	if (!isWindowAvailable()) {
 		return '/';
 	}
 

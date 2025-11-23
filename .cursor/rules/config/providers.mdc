@@ -29,20 +29,23 @@ alwaysApply: false
 
 Composition: `app/App.tsx` wraps router with providers in order:
 
-1. `LoggerProvider`
-2. `ErrorBoundaryWrapper`
-3. `HttpProvider`
-4. `AuthProvider`
-5. `StorageProvider`
-6. `ThemeProvider`
-7. `I18nProvider`
-8. `QueryProvider`
-9. `AnalyticsProvider`
-10. `LazyMotionProvider` / `LazyLayoutGroup` (lazy-loaded, from `core/ui/utilities/motion`)
-11. `ToastProvider`
-12. `BrowserRouter`
-13. `LazyLayoutGroup` (lazy-loaded, route transitions)
-14. `Router` (renders routes) + `ToastContainer`
+1. `LoggerProvider` (outermost, provides logger to ErrorBoundary)
+2. `ErrorBoundaryWrapper` (uses logger from context, renders Error500 as fallback)
+3. `HttpProvider` (injects httpClient implementing HttpPort)
+4. `AuthProvider` (injects JwtAuthAdapter implementing AuthPort)
+5. `StorageProvider` (injects localStorageAdapter implementing StoragePort, must be before ThemeProvider since ThemeProvider uses storage)
+6. `ThemeProvider` (light/dark/system + persisted choice)
+7. `I18nProvider` (react-i18next context, preloaded core + domain namespaces)
+8. `QueryProvider` (TanStack Query v5, gcTime/staleTime tuned)
+9. `AnalyticsProvider` (Google Tag Manager adapter w/ runtime config fallback, lazy-loaded when enabled)
+10. `DeferredMotionProvider` (wraps lazy-loaded LazyMotionProvider, defers Framer Motion loading until user interaction)
+11. `ToastProvider` (queue + dismissal logic)
+12. `BrowserRouter` (React Router v7)
+13. `LazyLayoutGroup` (lazy-loaded, Framer Motion route transition grouping, inside BrowserRouter)
+14. `Router` (App routes + transitions, inside LazyLayoutGroup)
+15. `ToastContainer` (renders toast notifications, inside ToastProvider but outside BrowserRouter for proper context access)
+
+**Note**: The `useHttpClientAuth` hook is called at the App component level (before providers) to sync AuthPort tokens with HttpPort interceptor. Analytics adapter is lazy-loaded when enabled via `useAnalytics` hook. `ToastContainer` is placed inside `ToastProvider` but outside `BrowserRouter` to ensure proper context access.
 
 ### Provider Hooks
 

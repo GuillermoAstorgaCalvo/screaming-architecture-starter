@@ -385,7 +385,8 @@ export const SEGMENTED_CONTROL_ITEM_VARIANT_CLASSES: Record<
 		inactive: SEGMENTED_CONTROL_ITEM_INACTIVE_CLASSES,
 	},
 	pills: {
-		active: 'bg-surface text-primary shadow-sm rounded-md dark:bg-muted-dark dark:text-primary',
+		active:
+			'bg-white/20 text-white shadow-sm rounded-md dark:bg-primary/80 dark:text-white font-semibold',
 		inactive: SEGMENTED_CONTROL_ITEM_INACTIVE_CLASSES,
 	},
 	outline: {

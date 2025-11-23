@@ -15,6 +15,37 @@ import {
 	TEST_CONTAINER_ID,
 } from './googleTagManagerAdapter.test-utils';
 
+// Helper to test adapter method when window is null
+function testMethodWithNullWindow(adapter: GoogleTagManagerAdapter, methodCall: () => void): void {
+	const savedWindow = globalThis.window;
+	Object.defineProperty(globalThis, 'window', {
+		writable: true,
+		value: undefined,
+		configurable: true,
+	});
+
+	expect(() => {
+		methodCall();
+	}).not.toThrow();
+
+	Object.defineProperty(globalThis, 'window', {
+		writable: true,
+		value: savedWindow,
+		configurable: true,
+	});
+}
+
+// Helper to test adapter method when dataLayer is not an array
+function testMethodWithNonArrayDataLayer(
+	adapter: GoogleTagManagerAdapter,
+	methodCall: () => void
+): void {
+	getWindowAsRecord().dataLayer = { not: 'an array' } as unknown;
+	expect(() => {
+		methodCall();
+	}).not.toThrow();
+}
+
 describe('GoogleTagManagerAdapter - Edge Cases', () => {
 	describe('Missing Globals Handling', () => {
 		let adapter: GoogleTagManagerAdapter;
@@ -43,6 +74,7 @@ describe('GoogleTagManagerAdapter - Edge Cases', () => {
 				containerId: TEST_CONTAINER_ID,
 			};
 
+			// Verify ensureGlobalDataLayer handles null window gracefully
 			expect(() => adapter.initialize(options)).not.toThrow();
 		});
 
@@ -78,18 +110,58 @@ describe('GoogleTagManagerAdapter - DataLayer Edge Cases', () => {
 		vi.clearAllMocks();
 	});
 
-	it('should handle dataLayer that is not an array', () => {
-		getWindowAsRecord().dataLayer = { not: 'an array' } as unknown;
+	describe('Non-array dataLayer handling', () => {
+		it('should handle dataLayer that is not an array', () => {
+			getWindowAsRecord().dataLayer = { not: 'an array' } as unknown;
 
-		const options: AnalyticsInitOptions = {
-			containerId: TEST_CONTAINER_ID,
-		};
+			const options: AnalyticsInitOptions = {
+				containerId: TEST_CONTAINER_ID,
+			};
 
-		adapter.initialize(options);
+			adapter.initialize(options);
 
-		// Should create a new array
-		const dataLayer = getDataLayer(getWindowAsRecord());
-		expect(Array.isArray(dataLayer)).toBe(true);
+			// Should create a new array
+			const dataLayer = getDataLayer(getWindowAsRecord());
+			expect(Array.isArray(dataLayer)).toBe(true);
+		});
+
+		it('should handle pushToDataLayer when dataLayer is not an array after initialization', () => {
+			adapter.initialize({ containerId: TEST_CONTAINER_ID });
+			getWindowAsRecord().dataLayer = { not: 'an array' } as unknown;
+
+			expect(() => {
+				adapter.trackEvent({ name: 'test_event' });
+			}).not.toThrow();
+
+			const { dataLayer } = getWindowAsRecord();
+			expect(Array.isArray(dataLayer)).toBe(false);
+		});
+
+		it('should handle pushToDataLayer with custom dataLayer name when dataLayer is not an array', () => {
+			adapter.initialize({
+				containerId: TEST_CONTAINER_ID,
+				dataLayerName: CUSTOM_DATALAYER_NAME,
+			});
+
+			getWindowAsRecord()[CUSTOM_DATALAYER_NAME] = { not: 'an array' } as unknown;
+
+			expect(() => {
+				adapter.trackEvent({ name: 'test_event' });
+			}).not.toThrow();
+
+			const dataLayer = getWindowAsRecord()[CUSTOM_DATALAYER_NAME];
+			expect(Array.isArray(dataLayer)).toBe(false);
+		});
+	});
+
+	describe('Null window handling', () => {
+		it('should handle pushToDataLayer when window is null (non-browser environment)', () => {
+			adapter.initialize({ containerId: TEST_CONTAINER_ID });
+
+			testMethodWithNullWindow(adapter, () => {
+				adapter.trackEvent({ name: 'test_event' });
+			});
+		});
 	});
 });
 
@@ -192,6 +264,124 @@ describe('GoogleTagManagerAdapter - Script Injection Edge Cases', () => {
 		// Restore scripts
 		for (const scriptEl of scripts) document.head.append(scriptEl);
 	});
+
+	it('should use insertBefore when firstScript has parentNode (line 151)', () => {
+		// Clear any existing scripts first
+		const existingScripts = Array.from(document.head.querySelectorAll('script'));
+		for (const script of existingScripts) {
+			script.remove();
+		}
+
+		// Ensure there's at least one script in the document with a parentNode
+		const existingScript = document.createElement('script');
+		existingScript.id = 'existing-script';
+		existingScript.textContent = '// existing script';
+		document.head.append(existingScript);
+
+		// Verify the script has a parentNode
+		expect(existingScript.parentNode).toBeTruthy();
+
+		const options: AnalyticsInitOptions = {
+			containerId: TEST_CONTAINER_ID,
+		};
+
+		adapter.initialize(options);
+
+		// Verify script was injected
+		const gtmScript = document.querySelector<HTMLScriptElement>(
+			`script[id="gtm-script-${TEST_CONTAINER_ID}"]`
+		);
+		expect(gtmScript).toBeTruthy();
+
+		// Verify the script was inserted before the first script (line 151)
+		// This verifies that insertBefore was called when firstScript has parentNode
+		const allScripts = Array.from(document.head.querySelectorAll('script'));
+		const gtmScriptIndex = allScripts.findIndex(s => s.id === `gtm-script-${TEST_CONTAINER_ID}`);
+		const existingScriptIndex = allScripts.findIndex(s => s.id === 'existing-script');
+
+		// GTM script should be before the existing script (insertBefore path)
+		expect(gtmScriptIndex).toBeLessThan(existingScriptIndex);
+		expect(gtmScriptIndex).toBe(0); // Should be first
+
+		// Verify insertBefore was actually called by checking parentNode
+		expect(gtmScript?.parentNode).toBe(existingScript.parentNode);
+
+		// Cleanup
+		existingScript.remove();
+	});
+});
+
+describe('GoogleTagManagerAdapter - Script Injection Non-Browser Environment', () => {
+	it('should not inject script when isBrowserEnvironment is false (line 138)', () => {
+		const savedWindow = globalThis.window;
+		const savedDocument = globalThis.document;
+
+		// Set window and document to undefined to make isBrowserEnvironment return false
+		Object.defineProperty(globalThis, 'window', {
+			writable: true,
+			value: undefined,
+			configurable: true,
+		});
+		Object.defineProperty(globalThis, 'document', {
+			writable: true,
+			value: undefined,
+			configurable: true,
+		});
+
+		const testAdapter = new GoogleTagManagerAdapter();
+		const options: AnalyticsInitOptions = {
+			containerId: TEST_CONTAINER_ID,
+		};
+
+		// This should not throw and should not inject script (line 138)
+		expect(() => testAdapter.initialize(options)).not.toThrow();
+
+		// Restore
+		Object.defineProperty(globalThis, 'window', {
+			writable: true,
+			value: savedWindow,
+			configurable: true,
+		});
+		Object.defineProperty(globalThis, 'document', {
+			writable: true,
+			value: savedDocument,
+			configurable: true,
+		});
+	});
+
+	it('should handle ensureGlobalDataLayer when window is null (line 125)', () => {
+		const savedWindow = globalThis.window;
+		const savedDocument = globalThis.document;
+
+		// Set window to null but keep document as object
+		// This makes isBrowserEnvironment() return true (typeof null === 'object')
+		// but getWindow() will return null, hitting line 125
+		Object.defineProperty(globalThis, 'window', {
+			writable: true,
+			value: null,
+			configurable: true,
+		});
+
+		const testAdapter = new GoogleTagManagerAdapter();
+		const options: AnalyticsInitOptions = {
+			containerId: TEST_CONTAINER_ID,
+		};
+
+		// This should not throw and should handle null window gracefully (line 125)
+		expect(() => testAdapter.initialize(options)).not.toThrow();
+
+		// Restore
+		Object.defineProperty(globalThis, 'window', {
+			writable: true,
+			value: savedWindow,
+			configurable: true,
+		});
+		Object.defineProperty(globalThis, 'document', {
+			writable: true,
+			value: savedDocument,
+			configurable: true,
+		});
+	});
 });
 
 describe('GoogleTagManagerAdapter - DataLayer Management', () => {
@@ -242,5 +432,183 @@ describe('GoogleTagManagerAdapter - DataLayer Management', () => {
 		// Default dataLayer should not be affected
 		const defaultDataLayer = getDataLayer(getWindowAsRecord());
 		expect(defaultDataLayer.length).toBe(0);
+	});
+});
+
+describe('GoogleTagManagerAdapter - DataLayer Null Handling - Non-array dataLayer', () => {
+	let adapter: GoogleTagManagerAdapter;
+	let originalWindow: typeof globalThis.window;
+	let originalDocument: Document;
+
+	beforeEach(() => {
+		adapter = new GoogleTagManagerAdapter();
+		originalWindow = globalThis.window;
+		originalDocument = globalThis.document;
+		adapter.initialize({ containerId: TEST_CONTAINER_ID });
+	});
+
+	afterEach(() => {
+		restoreGlobals(originalWindow, originalDocument);
+		vi.clearAllMocks();
+	});
+
+	it('should handle trackPageView when dataLayer is not an array', () => {
+		testMethodWithNonArrayDataLayer(adapter, () => {
+			adapter.trackPageView({ path: '/test' });
+		});
+	});
+
+	it('should handle identify when dataLayer is not an array', () => {
+		testMethodWithNonArrayDataLayer(adapter, () => {
+			adapter.identify({ userId: 'user123' });
+		});
+	});
+
+	it('should handle setUserProperties when dataLayer is not an array', () => {
+		testMethodWithNonArrayDataLayer(adapter, () => {
+			adapter.setUserProperties({ email: 'test@example.com' });
+		});
+	});
+
+	it('should handle reset when dataLayer is not an array', () => {
+		testMethodWithNonArrayDataLayer(adapter, () => {
+			adapter.reset();
+		});
+	});
+});
+
+describe('GoogleTagManagerAdapter - DataLayer Null Handling - Null window', () => {
+	let adapter: GoogleTagManagerAdapter;
+	let originalWindow: typeof globalThis.window;
+	let originalDocument: Document;
+
+	beforeEach(() => {
+		adapter = new GoogleTagManagerAdapter();
+		originalWindow = globalThis.window;
+		originalDocument = globalThis.document;
+		adapter.initialize({ containerId: TEST_CONTAINER_ID });
+	});
+
+	afterEach(() => {
+		restoreGlobals(originalWindow, originalDocument);
+		vi.clearAllMocks();
+	});
+
+	it('should handle trackEvent when window is null', () => {
+		testMethodWithNullWindow(adapter, () => {
+			adapter.trackEvent({ name: 'test_event' });
+		});
+	});
+
+	it('should handle trackPageView when window is null', () => {
+		testMethodWithNullWindow(adapter, () => {
+			adapter.trackPageView({ path: '/test' });
+		});
+	});
+
+	it('should handle identify when window is null', () => {
+		testMethodWithNullWindow(adapter, () => {
+			adapter.identify({ userId: 'user123' });
+		});
+	});
+
+	it('should handle setUserProperties when window is null', () => {
+		testMethodWithNullWindow(adapter, () => {
+			adapter.setUserProperties({ email: 'test@example.com' });
+		});
+	});
+
+	it('should handle reset when window is null', () => {
+		testMethodWithNullWindow(adapter, () => {
+			adapter.reset();
+		});
+	});
+});
+
+describe('GoogleTagManagerAdapter - Error Recovery Paths', () => {
+	let adapter: GoogleTagManagerAdapter;
+	let originalWindow: typeof globalThis.window;
+	let originalDocument: Document;
+
+	beforeEach(() => {
+		adapter = new GoogleTagManagerAdapter();
+		originalWindow = globalThis.window;
+		originalDocument = globalThis.document;
+		adapter.initialize({ containerId: TEST_CONTAINER_ID });
+	});
+
+	afterEach(() => {
+		restoreGlobals(originalWindow, originalDocument);
+		vi.clearAllMocks();
+	});
+
+	it('should handle pushToDataLayer when getDataLayer returns null (line 188)', () => {
+		// Set dataLayer to non-array to make getDataLayer return null (line 204)
+		getWindowAsRecord().dataLayer = { not: 'an array' } as unknown;
+
+		// This should call pushToDataLayer which will return early at line 188
+		expect(() => {
+			adapter.trackEvent({ name: 'test_event' });
+		}).not.toThrow();
+
+		// Verify dataLayer was not modified
+		const { dataLayer } = getWindowAsRecord();
+		expect(Array.isArray(dataLayer)).toBe(false);
+	});
+
+	it('should handle getDataLayer when window is null (line 197)', () => {
+		// Temporarily set window to null
+		const savedWindow = globalThis.window;
+		Object.defineProperty(globalThis, 'window', {
+			writable: true,
+			value: null,
+			configurable: true,
+		});
+
+		// This should call getDataLayer which will return null at line 197
+		expect(() => {
+			adapter.trackEvent({ name: 'test_event' });
+		}).not.toThrow();
+
+		// Restore
+		Object.defineProperty(globalThis, 'window', {
+			writable: true,
+			value: savedWindow,
+			configurable: true,
+		});
+	});
+
+	it('should handle getDataLayer when dataLayer is not an array (line 204)', () => {
+		// Set dataLayer to non-array to make getDataLayer return null at line 204
+		getWindowAsRecord().dataLayer = { not: 'an array' } as unknown;
+
+		// This should call getDataLayer which will return null at line 204
+		expect(() => {
+			adapter.trackEvent({ name: 'test_event' });
+		}).not.toThrow();
+
+		// Verify dataLayer was not modified
+		const { dataLayer } = getWindowAsRecord();
+		expect(Array.isArray(dataLayer)).toBe(false);
+	});
+
+	it('should handle pushToDataLayer with custom dataLayer name when getDataLayer returns null', () => {
+		// Re-initialize with custom dataLayer name
+		adapter.initialize({
+			containerId: TEST_CONTAINER_ID,
+			dataLayerName: CUSTOM_DATALAYER_NAME,
+		});
+
+		// Set custom dataLayer to non-array
+		getWindowAsRecord()[CUSTOM_DATALAYER_NAME] = { not: 'an array' } as unknown;
+
+		// This should call pushToDataLayer which will return early
+		expect(() => {
+			adapter.trackEvent({ name: 'test_event' });
+		}).not.toThrow();
+
+		// Verify custom dataLayer was not modified
+		const dataLayer = getWindowAsRecord()[CUSTOM_DATALAYER_NAME];
+		expect(Array.isArray(dataLayer)).toBe(false);
 	});
 });

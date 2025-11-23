@@ -97,7 +97,7 @@ describe('useScrollMotionValue returns', () => {
 	});
 });
 
-describe('useScrollMotionValue containers', () => {
+describe('useScrollMotionValue container options', () => {
 	it('should call useScroll with no options by default', async () => {
 		const { useScroll } = await import('framer-motion');
 		renderHook(() => useScrollMotionValue());
@@ -123,7 +123,9 @@ describe('useScrollMotionValue containers', () => {
 
 		expect(useScroll).toHaveBeenCalledWith({ container: { current: container } });
 	});
+});
 
+describe('useScrollMotionValue container edge cases', () => {
 	it('should handle null container', async () => {
 		const { useScroll } = await import('framer-motion');
 
@@ -141,6 +143,17 @@ describe('useScrollMotionValue containers', () => {
 		expect(useScroll).toHaveBeenCalledWith({ container: containerRef });
 	});
 
+	it('should handle undefined container option', async () => {
+		const { useScroll } = await import('framer-motion');
+
+		// @ts-expect-error - Testing edge case
+		renderHook(() => useScrollMotionValue({ container: undefined }));
+
+		expect(useScroll).toHaveBeenCalledWith({});
+	});
+});
+
+describe('useScrollMotionValue container advanced scenarios', () => {
 	it('should work with different container elements', () => {
 		const container1 = document.createElement('div');
 		const container2 = document.createElement('section');
@@ -150,6 +163,38 @@ describe('useScrollMotionValue containers', () => {
 
 		const { result: result2 } = renderHook(() => useScrollMotionValue({ container: container2 }));
 		expect(result2.current).toBeDefined();
+	});
+
+	it('should correctly identify RefObject vs HTMLElement using "current" property', async () => {
+		const { useScroll } = await import('framer-motion');
+		const container = document.createElement('div');
+
+		// Test with RefObject (has 'current' property)
+		const refObject: RefObject<HTMLElement> = { current: container };
+		renderHook(() => useScrollMotionValue({ container: refObject }));
+		expect(useScroll).toHaveBeenCalledWith({ container: refObject });
+
+		// Test with HTMLElement directly (no 'current' property)
+		renderHook(() => useScrollMotionValue({ container }));
+		expect(useScroll).toHaveBeenCalledWith({ container: { current: container } });
+	});
+
+	it('should handle container changes on rerender', async () => {
+		const { useScroll } = await import('framer-motion');
+		const container1: HTMLElement = document.createElement('div');
+		const container2: HTMLElement = document.createElement('section');
+
+		const { rerender } = renderHook(
+			({ container }: { container: HTMLElement }) => useScrollMotionValue({ container }),
+			{
+				initialProps: { container: container1 },
+			}
+		);
+
+		expect(useScroll).toHaveBeenCalledWith({ container: { current: container1 } });
+
+		rerender({ container: container2 });
+		expect(useScroll).toHaveBeenCalledWith({ container: { current: container2 } });
 	});
 });
 

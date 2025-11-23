@@ -18,7 +18,7 @@ export interface OTPInputFieldProps {
 	readonly onChange: (value: string) => void;
 	readonly onComplete?: ((value: string) => void) | undefined;
 	readonly autoFocus?: boolean | undefined;
-	readonly inputRefs: RefObject<(HTMLInputElement | null)[]>;
+	readonly inputRefs: RefObject<(HTMLInputElement | null)[] | null>;
 }
 
 export interface OTPInputMessagesProps {

@@ -19,6 +19,7 @@ export function VirtualizedListContent<T>({
 	getItemKey,
 	orientation,
 	totalSize,
+	'data-testid': testId,
 }: Readonly<VirtualizedListContentProps<T>>) {
 	const virtualItemsStyle = useMemo(
 		() => getVirtualItemsStyle({ orientation, totalSize }),
@@ -39,7 +40,7 @@ export function VirtualizedListContent<T>({
 	);
 
 	return (
-		<ul style={virtualItemsStyle} className="list-none m-0 p-0">
+		<ul style={virtualItemsStyle} className="list-none m-0 p-0" data-testid={testId}>
 			{renderedItems}
 		</ul>
 	);

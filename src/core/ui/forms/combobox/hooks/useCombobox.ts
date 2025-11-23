@@ -1,7 +1,10 @@
 import i18n from '@core/i18n/i18n';
 import type { ComboboxProps } from '@core/ui/forms/combobox/Combobox';
 import { useComboboxState } from '@core/ui/forms/combobox/helpers/ComboboxHelpers';
-import { createFieldProps } from '@core/ui/forms/combobox/hooks/useComboboxField';
+import {
+	createFieldProps,
+	type FieldPropsRest,
+} from '@core/ui/forms/combobox/hooks/useComboboxField';
 import { buildComboboxReturn } from '@core/ui/forms/combobox/hooks/useComboboxReturn';
 import {
 	useComboboxInput,
@@ -9,7 +12,7 @@ import {
 	useComboboxValue,
 } from '@core/ui/forms/combobox/hooks/useComboboxState';
 import type { ComboboxContentProps } from '@core/ui/forms/combobox/types/ComboboxTypes';
-import { useId } from 'react';
+import { type KeyboardEvent, useId } from 'react';
 
 function useComboboxStateSetup(props: Readonly<ComboboxProps>) {
 	const { comboboxId, label, error, helperText, size = 'md', className } = props;
@@ -40,25 +43,14 @@ function buildComboboxFieldProps(params: {
 	disabled: boolean | undefined;
 	required: boolean | undefined;
 	placeholder: string | undefined;
-	rest: Omit<
-		ComboboxProps,
-		| 'label'
-		| 'error'
-		| 'helperText'
-		| 'size'
-		| 'fullWidth'
-		| 'required'
-		| 'comboboxId'
-		| 'className'
-		| 'disabled'
-		| 'placeholder'
-		| 'maxHeight'
-		| 'emptyState'
-	>;
+	rest: FieldPropsRest;
 	inputValue: string;
 	setInputValue: (value: string) => void;
 	setIsOpen: (open: boolean) => void;
 	setHighlightedIndex: (index: number) => void;
+	isOpen: boolean;
+	ariaControls: string;
+	handleKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }) {
 	return createFieldProps(params);
 }
@@ -74,6 +66,12 @@ function extractComboboxProps(props: Readonly<ComboboxProps>) {
 		placeholder,
 		maxHeight = 280,
 		emptyState,
+		value,
+		defaultValue,
+		onChange,
+		options,
+		filterFn,
+		onInputChange,
 		...rest
 	} = props;
 	const defaultEmptyState = emptyState ?? i18n.t('common.noOptionsFound', { ns: 'common' });
@@ -87,6 +85,12 @@ function extractComboboxProps(props: Readonly<ComboboxProps>) {
 		placeholder,
 		maxHeight,
 		emptyState: defaultEmptyState,
+		value,
+		defaultValue,
+		onChange,
+		options,
+		filterFn,
+		onInputChange,
 		rest,
 	};
 }
@@ -96,23 +100,10 @@ function buildComboboxFieldPropsFromState(params: {
 	disabled: boolean | undefined;
 	required: boolean | undefined;
 	placeholder: string | undefined;
-	rest: Omit<
-		ComboboxProps,
-		| 'label'
-		| 'error'
-		| 'helperText'
-		| 'size'
-		| 'fullWidth'
-		| 'required'
-		| 'comboboxId'
-		| 'className'
-		| 'disabled'
-		| 'placeholder'
-		| 'maxHeight'
-		| 'emptyState'
-	>;
+	rest: FieldPropsRest;
 	stateSetup: ReturnType<typeof useComboboxStateSetup>;
 	interactions: ReturnType<typeof useComboboxInteractions>;
+	menuId: string;
 }) {
 	return buildComboboxFieldProps({
 		state: params.state,
@@ -124,6 +115,9 @@ function buildComboboxFieldPropsFromState(params: {
 		setInputValue: params.stateSetup.setInputValue,
 		setIsOpen: params.interactions.setIsOpen,
 		setHighlightedIndex: params.interactions.setHighlightedIndex,
+		isOpen: params.interactions.isOpen,
+		ariaControls: params.menuId,
+		handleKeyDown: params.interactions.handleKeyDown,
 	});
 }
 
@@ -139,6 +133,7 @@ export function useCombobox(props: Readonly<ComboboxProps>): ComboboxContentProp
 		rest: extracted.rest,
 		stateSetup,
 		interactions,
+		menuId,
 	});
 	return buildComboboxReturn({
 		state: stateSetup.state,

@@ -18,7 +18,7 @@ export async function validateStepFields<T extends FieldValues>(
 	// If step has specific fields to validate, validate only those
 	if (step.validateFields && step.validateFields.length > 0) {
 		const fieldsToValidate = step.validateFields as Path<T>[];
-		const isValid = await formControls.trigger(fieldsToValidate);
+		const isValid = await formControls.trigger(...fieldsToValidate);
 		if (!isValid) {
 			context.markStepError(context.stepIndex);
 			return false;

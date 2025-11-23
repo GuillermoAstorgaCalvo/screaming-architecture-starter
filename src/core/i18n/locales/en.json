@@ -30,7 +30,8 @@
 		"requestFailed": "Request failed",
 		"rootElementNotFound": "Root element #root not found",
 		"unableToLoadDemoContent": "Unable to load demo content.",
-		"failedToLoadGoogleMaps": "Failed to load Google Maps"
+		"failedToLoadGoogleMaps": "Failed to load Google Maps",
+		"failedToLoadMap": "Error loading map"
 	},
 	"a11y": {
 		"mainNavigation": "Main navigation",
@@ -44,7 +45,7 @@
 		"currentThemeDescription": "Current theme: {theme}. Click to toggle.",
 		"required": "Required",
 		"imageGallery": "Image gallery",
-		"uploadProgress": "Upload progress: {progress}%",
+		"uploadProgress": "Upload progress: {{progress}}%",
 		"chooseLanguage": "Choose your language",
 		"addNewItem": "Add new item",
 		"createNewPost": "Create new post",
@@ -129,6 +130,7 @@
 	"deselectAll": "Deselect all",
 	"selectAllRows": "Select all rows",
 	"noDataAvailable": "No data available",
+	"noItemsAvailable": "No items available",
 	"search": "Search...",
 	"searchPlaceholder": "Search...",
 	"noActionsAvailable": "No actions available",
@@ -168,7 +170,7 @@
 		"kb": "KB",
 		"mb": "MB",
 		"gb": "GB",
-		"uploadProgress": "Upload progress: {progress}%"
+		"uploadProgress": "Upload progress: {{progress}}%"
 	},
 	"wizard": {
 		"next": "Next",

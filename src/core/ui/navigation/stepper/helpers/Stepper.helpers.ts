@@ -47,8 +47,8 @@ interface StepElementConfig {
 	readonly className: string;
 	readonly onClick?: (() => void) | undefined;
 	readonly type?: 'button' | undefined;
-	readonly ariaCurrent?: 'step' | undefined;
-	readonly ariaDisabled?: true | undefined;
+	readonly 'aria-current'?: 'step' | undefined;
+	readonly 'aria-disabled'?: true | undefined;
 }
 
 /**
@@ -94,8 +94,8 @@ function getClickableStepConfig({
 		className: `flex ${layout} gap-2 ${interactivity}`,
 		onClick: () => onClick(stepIndex),
 		type: 'button' as const,
-		ariaCurrent: status === 'active' ? ('step' as const) : undefined,
-		ariaDisabled: undefined,
+		'aria-current': status === 'active' ? ('step' as const) : undefined,
+		'aria-disabled': undefined,
 	};
 }
 
@@ -115,8 +115,8 @@ function getNonClickableStepConfig({
 		className: `flex ${layout} gap-2 ${interactivity}`,
 		onClick: undefined,
 		type: undefined,
-		ariaCurrent: status === 'active' ? ('step' as const) : undefined,
-		ariaDisabled: true as const,
+		'aria-current': status === 'active' ? ('step' as const) : undefined,
+		'aria-disabled': true as const,
 	};
 }
 

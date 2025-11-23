@@ -1,34 +1,45 @@
-import { useSEO } from '@core/hooks/seo/useSEO';
-import { useTranslation } from '@core/i18n/useTranslation';
-import Container from '@core/ui/container/Container';
-import type { ThemeConfig } from '@src-types/layout';
+import { ComponentFilterProvider } from '@domains/landing/context/ComponentFilterContext';
+import { useLandingPageFilters } from '@domains/landing/hooks/useLandingPageFilters';
+import { renderCategoryContent } from '@domains/landing/pages/landing.utils';
+import { LandingPageHeader } from '@domains/landing/pages/LandingPageHeader';
+import { landingSelectors, useLandingStore } from '@domains/landing/store/landingStore';
+import type { ThemedPageProps } from '@src-types/layout';
 
-export interface LandingPageProps {
-	readonly theme: ThemeConfig;
-}
+/**
+ * LandingPage - Component library showcase and manual testing page
+ *
+ * Displays all implementations organized by categories with interactive demos
+ */
 
-export default function LandingPage({ theme: _theme }: LandingPageProps) {
-	const { t } = useTranslation('landing');
-
-	useSEO({
-		title: t('hero.title'),
-		description: t('hero.subtitle'),
-	});
+function LandingPageContent(_props: Readonly<ThemedPageProps>) {
+	// Use Zustand store for active category (shared between LandingPage and LandingPageHeader)
+	const activeCategory = useLandingStore(landingSelectors.activeCategory);
+	const setActiveCategory = useLandingStore(landingSelectors.setActiveCategory);
+	const { searchQuery, setSearchQuery, selectedTags, toggleTag, allAvailableTags } =
+		useLandingPageFilters();
 
 	return (
-		<main>
-			<Container maxWidth="6xl">
-				<div className="space-y-xl">
-					<div>
-						<h1 className="text-3xl font-bold text-text-primary dark:text-text-primary">
-							{t('hero.title')}
-						</h1>
-						<p className="mt-sm text-text-secondary dark:text-text-secondary">
-							{t('hero.subtitle')}
-						</p>
-					</div>
-				</div>
-			</Container>
-		</main>
+		<div data-testid="landing-page" className="min-h-screen">
+			<LandingPageHeader
+				activeCategory={activeCategory}
+				onCategoryChange={setActiveCategory}
+				searchQuery={searchQuery}
+				onSearchChange={setSearchQuery}
+				selectedTags={selectedTags}
+				onTagToggle={toggleTag}
+				allAvailableTags={allAvailableTags}
+			/>
+			<div className="container mx-auto px-4 py-8">
+				<div className="space-y-8">{renderCategoryContent(activeCategory)}</div>
+			</div>
+		</div>
+	);
+}
+
+export default function LandingPage(props: Readonly<ThemedPageProps>) {
+	return (
+		<ComponentFilterProvider>
+			<LandingPageContent {...props} />
+		</ComponentFilterProvider>
 	);
 }

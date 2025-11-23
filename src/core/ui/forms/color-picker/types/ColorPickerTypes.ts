@@ -22,6 +22,7 @@ export interface ColorPickerFieldProps {
 	readonly id: string | undefined;
 	readonly colorPickerClasses: string;
 	readonly ariaDescribedBy: string | undefined;
+	readonly hasError?: boolean | undefined;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
 	readonly value?: string | undefined;
@@ -54,6 +55,7 @@ export interface ColorPickerContentProps {
 	readonly colorPickerId: string | undefined;
 	readonly colorPickerClasses: string;
 	readonly ariaDescribedBy: string | undefined;
+	readonly hasError: boolean;
 	readonly label?: string | undefined;
 	readonly error?: string | undefined;
 	readonly helperText?: string | undefined;

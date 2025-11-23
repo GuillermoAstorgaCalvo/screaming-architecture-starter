@@ -7,6 +7,7 @@ import {
 	type ResponseInterceptor,
 } from '@core/lib/http/httpClientInterceptors';
 import type { HttpClientConfig, HttpClientError, HttpClientResponse } from '@core/ports/HttpPort';
+import { throwTestError } from '@tests/utils/testUtils';
 import { describe, expect, it, vi } from 'vitest';
 
 const BEARER_TOKEN = 'Bearer token';
@@ -94,8 +95,7 @@ const createThrowingErrorInterceptor = (errorMessage: string): ErrorInterceptor 
 const createNonErrorThrowingInterceptor = (): ErrorInterceptor => {
 	const throwString = (): never => {
 		// Intentionally throwing a string (non-Error) to test that such throws are ignored
-		// eslint-disable-next-line no-throw-literal
-		throw 'String throw';
+		throwTestError('String throw');
 	};
 	return vi.fn().mockImplementation(throwString);
 };
@@ -248,5 +248,82 @@ describe('executeErrorInterceptors - edge cases', () => {
 		}
 		expect(interceptor1).toHaveBeenCalledWith(error);
 		expect(interceptor2).toHaveBeenCalledWith(error);
+	});
+
+	it('handles interceptor that throws undefined', async () => {
+		const error = createTestError();
+		const interceptor: ErrorInterceptor = vi.fn().mockImplementation(() => {
+			throwTestError(undefined);
+		});
+		await expect(executeErrorInterceptors([interceptor], error)).rejects.toThrow(
+			TEST_ERROR_MESSAGE
+		);
+		expect(interceptor).toHaveBeenCalledWith(error);
+	});
+
+	it('handles interceptor that throws null', async () => {
+		const error = createTestError();
+		const interceptor: ErrorInterceptor = vi.fn().mockImplementation(() => {
+			throwTestError(null);
+		});
+		await expect(executeErrorInterceptors([interceptor], error)).rejects.toThrow(
+			TEST_ERROR_MESSAGE
+		);
+		expect(interceptor).toHaveBeenCalledWith(error);
+	});
+});
+
+describe('executeRequestInterceptors - additional edge cases', () => {
+	it('handles interceptor that modifies multiple config properties', async () => {
+		const config = createTestConfig();
+		const interceptor: RequestInterceptor = vi.fn().mockImplementation(cfg => ({
+			...cfg,
+			url: MODIFIED_URL,
+			headers: { ...cfg.headers, 'X-Version': '2' },
+			method: 'POST',
+		}));
+		const result = await executeRequestInterceptors([interceptor], config);
+		expect(result.url).toBe(MODIFIED_URL);
+		expect(result.headers?.['X-Version']).toBe('2');
+		expect(result.method).toBe('POST');
+	});
+
+	it('handles interceptor that returns same config object', async () => {
+		const config = createTestConfig();
+		const interceptor: RequestInterceptor = vi.fn().mockImplementation(cfg => cfg);
+		const result = await executeRequestInterceptors([interceptor], config);
+		expect(result).toBe(config);
+	});
+});
+
+describe('executeResponseInterceptors - additional edge cases', () => {
+	it('handles interceptor that modifies response headers', async () => {
+		const response = createTestResponse();
+		const newHeaders = new Headers({ 'X-Custom': 'value' });
+		const interceptor: ResponseInterceptor = vi.fn().mockImplementation(resp => ({
+			...resp,
+			headers: newHeaders,
+		}));
+		const result = await executeResponseInterceptors([interceptor], response);
+		expect(result.headers).toBe(newHeaders);
+	});
+
+	it('handles interceptor that modifies response status', async () => {
+		const response = createTestResponse();
+		const interceptor: ResponseInterceptor = vi.fn().mockImplementation(resp => ({
+			...resp,
+			status: 201,
+			statusText: 'Created',
+		}));
+		const result = await executeResponseInterceptors([interceptor], response);
+		expect(result.status).toBe(201);
+		expect(result.statusText).toBe('Created');
+	});
+
+	it('handles interceptor that returns same response object', async () => {
+		const response = createTestResponse();
+		const interceptor: ResponseInterceptor = vi.fn().mockImplementation(resp => resp);
+		const result = await executeResponseInterceptors([interceptor], response);
+		expect(result).toBe(response);
 	});
 });

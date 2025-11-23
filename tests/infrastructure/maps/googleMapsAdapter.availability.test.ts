@@ -116,16 +116,19 @@ describe('GoogleMapsAdapter - Script Loading - Injection', () => {
 
 	it('should not inject script if head element is missing', async () => {
 		// Mock querySelector to return null for 'head' query
-		// Save original before spying
+		// Store original implementation before spying to preserve behavior for other selectors
+		// Note: querySelector is flagged as deprecated by TypeScript DOM types, but it's still
+		// the standard API used by the implementation, so we need to test with it
 		// eslint-disable-next-line @typescript-eslint/no-deprecated
-		const originalQuerySelector = document.querySelector.bind(document);
+		const originalQuerySelector = document.querySelector;
 		const querySelectorSpy = vi
 			.spyOn(document, 'querySelector')
 			.mockImplementation((selector: string) => {
 				if (selector === 'head') {
 					return null;
 				}
-				return originalQuerySelector(selector);
+				// Call original implementation with correct 'this' context
+				return originalQuerySelector.call(document, selector);
 			});
 
 		const initPromise = adapter.initialize(TEST_API_KEY);

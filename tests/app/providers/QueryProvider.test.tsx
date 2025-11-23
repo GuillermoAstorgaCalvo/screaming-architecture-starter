@@ -86,3 +86,52 @@ describe('QueryProvider', () => {
 		expect(mutations?.retryDelay).toBe(1_000);
 	});
 });
+
+describe('QueryProvider lifecycle', () => {
+	it('maintains QueryClient instance on unmount and remount', () => {
+		const wrapper = createWrapper();
+		const { result, unmount } = renderHook(() => useQueryClient(), { wrapper });
+
+		expect(result.current).toBeDefined();
+		unmount();
+
+		const { result: newResult } = renderHook(() => useQueryClient(), { wrapper });
+
+		// New instance should be created (not the same reference)
+		expect(newResult.current).toBeDefined();
+		expect(typeof newResult.current.getDefaultOptions).toBe('function');
+	});
+
+	it('creates a new QueryClient instance on each mount', () => {
+		const wrapper = createWrapper();
+		const { result: firstResult, unmount: firstUnmount } = renderHook(() => useQueryClient(), {
+			wrapper,
+		});
+
+		const firstClient = firstResult.current;
+		firstUnmount();
+
+		const { result: secondResult } = renderHook(() => useQueryClient(), { wrapper });
+
+		// Each mount creates a new instance
+		expect(secondResult.current).not.toBe(firstClient);
+		expect(secondResult.current).toBeDefined();
+	});
+});
+
+describe('QueryProvider composition', () => {
+	it('works correctly when nested with other providers', () => {
+		const NestedWrapper = ({ children }: { children: ReactNode }) => (
+			<QueryProvider>
+				<div data-testid="nested">{children}</div>
+			</QueryProvider>
+		);
+
+		const { result } = renderHook(() => useQueryClient(), {
+			wrapper: NestedWrapper,
+		});
+
+		expect(result.current).toBeDefined();
+		expect(typeof result.current.getDefaultOptions).toBe('function');
+	});
+});

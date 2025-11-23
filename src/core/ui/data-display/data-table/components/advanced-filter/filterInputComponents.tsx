@@ -29,6 +29,7 @@ export function TextFilterInput({
 		<Input
 			{...commonProps}
 			type="text"
+			inputId={`filter-${id}`}
 			placeholder={placeholder ?? `Filter by ${label}`}
 			value={value ?? ''}
 			onChange={e => commonProps.onChange(id, e.target.value)}

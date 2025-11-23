@@ -12,7 +12,9 @@ export function createInputRefCallback({
 }: CreateRefCallbackParams): (el: HTMLInputElement | null) => void {
 	return (el: HTMLInputElement | null) => {
 		const refs = inputRefs.current;
-		refs[index] = el;
+		if (refs) {
+			refs[index] = el;
+		}
 	};
 }
 
@@ -52,9 +54,21 @@ export function getInputEventHandlers({
 	onFocus,
 }: EventHandlersParams) {
 	return {
-		onChange: (e: ChangeEvent<HTMLInputElement>) => onInput(index, e.currentTarget.value),
+		onChange: (e: ChangeEvent<HTMLInputElement>) => {
+			// Don't process input if the element is disabled
+			if (e.currentTarget.disabled) {
+				return;
+			}
+			onInput(index, e.currentTarget.value);
+		},
 		onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => onKeyDown(index, e),
-		onPaste,
+		onPaste: (e: ClipboardEvent<HTMLInputElement>) => {
+			// Don't process paste if the element is disabled
+			if (e.currentTarget.disabled) {
+				return;
+			}
+			onPaste(e);
+		},
 		onFocus: (e: FocusEvent<HTMLInputElement>) => onFocus(index, e),
 	};
 }

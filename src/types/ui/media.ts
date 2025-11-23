@@ -66,6 +66,8 @@ export interface SignaturePadProps
 	maxWidth?: number;
 	/** Throttle rate for drawing events in milliseconds @default 16 */
 	throttle?: number;
+	/** Whether the signature pad is required @default false */
+	required?: boolean;
 	/** Current signature data URL (controlled) */
 	value?: string | null;
 	/** Default signature data URL (uncontrolled) */

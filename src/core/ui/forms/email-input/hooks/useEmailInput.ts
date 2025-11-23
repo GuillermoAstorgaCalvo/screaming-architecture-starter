@@ -59,6 +59,7 @@ interface BuildEmailInputFieldPropsOptions {
 	readonly state: UseEmailInputStateReturn;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
+	readonly value?: string | undefined;
 	readonly rest: Readonly<
 		Omit<
 			InputHTMLAttributes<HTMLInputElement>,
@@ -70,6 +71,7 @@ interface BuildEmailInputFieldPropsOptions {
 			| 'aria-invalid'
 			| 'aria-describedby'
 			| 'type'
+			| 'value'
 		>
 	>;
 }
@@ -84,7 +86,10 @@ function buildEmailInputFieldProps(
 		ariaDescribedBy: options.state.ariaDescribedBy,
 		disabled: options.disabled,
 		required: options.required,
-		props: options.rest,
+		props: {
+			...options.rest,
+			...(options.value !== undefined && { value: options.value }),
+		},
 	};
 }
 
@@ -111,8 +116,19 @@ export function useEmailInputProps({
 		className,
 		disabled,
 		required,
+		value: rawValue,
 		...rest
 	} = props;
+
+	// Normalize value to string for email input
+	const value =
+		rawValue === undefined
+			? undefined
+			: typeof rawValue === 'string'
+				? rawValue
+				: Array.isArray(rawValue)
+					? rawValue.join(',')
+					: String(rawValue);
 
 	const state = useEmailInputState({
 		inputId,
@@ -127,6 +143,7 @@ export function useEmailInputProps({
 		state,
 		disabled,
 		required,
+		value,
 		rest,
 	});
 

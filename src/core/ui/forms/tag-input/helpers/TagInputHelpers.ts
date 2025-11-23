@@ -28,15 +28,21 @@ export function getAriaDescribedBy(
 	return ids.length > 0 ? ids.join(' ') : undefined;
 }
 
-export function generateTagInputId(
-	generatedId: string,
-	inputId?: string,
-	label?: string
-): string | undefined {
+export interface GenerateTagInputIdOptions {
+	readonly generatedId: string;
+	readonly inputId?: string | undefined;
+	readonly label?: string | undefined;
+	readonly error?: string | undefined;
+	readonly helperText?: string | undefined;
+}
+
+export function generateTagInputId(options: GenerateTagInputIdOptions): string | undefined {
+	const { generatedId, inputId, label, error, helperText } = options;
 	if (inputId) {
 		return inputId;
 	}
-	if (!label) {
+	// Generate ID if label exists, or if error/helperText exists (needed for ARIA relationships)
+	if (!label && !error && !helperText) {
 		return undefined;
 	}
 	const cleanId = generatedId.replaceAll(':', '');

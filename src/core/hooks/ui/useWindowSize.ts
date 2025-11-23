@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 /**
  * Type guard to check if window is available (SSR-safe)
  */
-function isWindowAvailable(): boolean {
+export function isWindowAvailable(): boolean {
 	return 'window' in globalThis;
 }
 

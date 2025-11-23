@@ -46,8 +46,9 @@ interface UsePanelRefsReturn {
 function usePanelRefs({ panels }: UsePanelRefsParams): UsePanelRefsReturn {
 	const panelElementsRef = useRef<Map<string, HTMLElement>>(new Map());
 	const [panelRefs, setPanelRefs] = useState<readonly PanelRef[]>([]);
+	const [updateTrigger, setUpdateTrigger] = useState(0);
 
-	useEffect(() => {
+	const updatePanelRefs = useCallback(() => {
 		const refs = panels
 			.map(panel => {
 				const element = panelElementsRef.current.get(panel.id);
@@ -60,12 +61,18 @@ function usePanelRefs({ panels }: UsePanelRefsParams): UsePanelRefsReturn {
 		setPanelRefs(refs);
 	}, [panels]);
 
+	useEffect(() => {
+		updatePanelRefs();
+	}, [panels, updateTrigger, updatePanelRefs]);
+
 	const registerPanel = useCallback((id: string, element: HTMLElement) => {
 		panelElementsRef.current.set(id, element);
+		setUpdateTrigger(prev => prev + 1);
 	}, []);
 
 	const unregisterPanel = useCallback((id: string) => {
 		panelElementsRef.current.delete(id);
+		setUpdateTrigger(prev => prev + 1);
 	}, []);
 
 	return {

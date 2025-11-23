@@ -37,14 +37,15 @@ export function MultiSelectOptionsList(props: MultiSelectOptionsListProps) {
 	});
 
 	// ARIA listbox pattern: Using role="listbox" on <ul> is correct per WAI-ARIA spec
+	// tabIndex={-1} makes the element programmatically focusable, satisfying interactive role requirements
 	// Native <select> cannot support filtering, custom styling, or complex interactions
-	// This warning is a false positive - the implementation follows ARIA Authoring Practices
 	return (
 		<ul
 			ref={listboxRef}
 			id={menuId}
 			role="listbox"
 			aria-multiselectable="true"
+			tabIndex={-1}
 			className={className}
 			style={style}
 		>

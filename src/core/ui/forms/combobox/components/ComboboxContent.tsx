@@ -21,7 +21,6 @@ export function ComboboxContent(props: Readonly<ComboboxContentProps>) {
 			{labelProps ? <ComboboxLabel {...labelProps} /> : null}
 			<ComboboxPopover
 				isOpen={props.isOpen}
-				filteredOptions={props.filteredOptions}
 				setIsOpen={props.setIsOpen}
 				triggerRef={triggerRef}
 				fieldProps={props.fieldProps}

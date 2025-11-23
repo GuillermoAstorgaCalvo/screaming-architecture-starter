@@ -18,7 +18,6 @@ export function CommandPaletteDialog({
 			)}
 			style={{ zIndex: componentZIndex.modal }}
 			aria-labelledby={`${id}-title`}
-			tabIndex={-1}
 			onKeyDown={onKeyDown}
 		>
 			{children}

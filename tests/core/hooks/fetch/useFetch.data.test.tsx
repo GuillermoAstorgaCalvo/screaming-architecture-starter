@@ -3,6 +3,7 @@ import type { HttpClientResponse } from '@core/ports/HttpPort';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { MockHttpAdapter } from '@tests/utils/mocks/MockHttpAdapter';
 import type { MockLoggerAdapter } from '@tests/utils/mocks/MockLoggerAdapter';
+import { throwTestError } from '@tests/utils/testUtils';
 import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -10,6 +11,7 @@ import { createTestSetup, runFetch, type TestApiResponse } from './useFetch.test
 
 const USERS_ENDPOINT = '/api/users';
 const NETWORK_ERROR_MESSAGE = 'Network error';
+const UNKNOWN_ERROR_MESSAGE = 'An unknown error occurred';
 const DEFAULT_TEST_DATA: TestApiResponse = {
 	users: [{ id: '1', name: 'John', email: 'john@example.com' }],
 	total: 1,
@@ -65,6 +67,9 @@ function registerErrorHandlingTests(): void {
 		it('should handle string errors', handlesStringErrors);
 		it('should handle unknown error types', handlesUnknownErrorTypes);
 		it('should clear error on successful fetch after error', clearsErrorAfterSuccessfulFetch);
+		it('should handle null error values', handlesNullErrorValues);
+		it('should handle undefined error values', handlesUndefinedErrorValues);
+		it('should handle number error values', handlesNumberErrorValues);
 	});
 }
 
@@ -259,8 +264,7 @@ async function handlesErrorInstances(): Promise<void> {
 
 async function handlesStringErrors(): Promise<void> {
 	httpAdapter.mockResponse(USERS_ENDPOINT, 'GET', () => {
-		// eslint-disable-next-line no-throw-literal
-		throw 'String error';
+		throwTestError('String error');
 	});
 
 	const { result } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
@@ -278,8 +282,7 @@ async function handlesStringErrors(): Promise<void> {
 
 async function handlesUnknownErrorTypes(): Promise<void> {
 	httpAdapter.mockResponse(USERS_ENDPOINT, 'GET', () => {
-		// eslint-disable-next-line no-throw-literal
-		throw { some: 'object' };
+		throwTestError({ some: 'object' });
 	});
 
 	const { result } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
@@ -292,7 +295,7 @@ async function handlesUnknownErrorTypes(): Promise<void> {
 		expect(result.current.error).toBeTruthy();
 	});
 
-	expect(result.current.error).toBe('An unknown error occurred');
+	expect(result.current.error).toBe(UNKNOWN_ERROR_MESSAGE);
 }
 
 async function clearsErrorAfterSuccessfulFetch(): Promise<void> {
@@ -331,4 +334,58 @@ async function clearsErrorAfterSuccessfulFetch(): Promise<void> {
 
 	expect(result.current.error).toBeNull();
 	expect(result.current.data).toEqual(testData);
+}
+
+async function handlesNullErrorValues(): Promise<void> {
+	httpAdapter.mockResponse(USERS_ENDPOINT, 'GET', () => {
+		throwTestError(null);
+	});
+
+	const { result } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
+		wrapper,
+	});
+
+	await runFetch(result);
+
+	await waitFor(() => {
+		expect(result.current.error).toBeTruthy();
+	});
+
+	expect(result.current.error).toBe(UNKNOWN_ERROR_MESSAGE);
+}
+
+async function handlesUndefinedErrorValues(): Promise<void> {
+	httpAdapter.mockResponse(USERS_ENDPOINT, 'GET', () => {
+		throwTestError(undefined);
+	});
+
+	const { result } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
+		wrapper,
+	});
+
+	await runFetch(result);
+
+	await waitFor(() => {
+		expect(result.current.error).toBeTruthy();
+	});
+
+	expect(result.current.error).toBe(UNKNOWN_ERROR_MESSAGE);
+}
+
+async function handlesNumberErrorValues(): Promise<void> {
+	httpAdapter.mockResponse(USERS_ENDPOINT, 'GET', () => {
+		throwTestError(404);
+	});
+
+	const { result } = renderHook(() => useFetch<TestApiResponse>(USERS_ENDPOINT), {
+		wrapper,
+	});
+
+	await runFetch(result);
+
+	await waitFor(() => {
+		expect(result.current.error).toBeTruthy();
+	});
+
+	expect(result.current.error).toBe(UNKNOWN_ERROR_MESSAGE);
 }

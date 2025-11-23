@@ -30,7 +30,8 @@
 		"requestFailed": "فشل الطلب",
 		"rootElementNotFound": "العنصر الجذري #root غير موجود",
 		"unableToLoadDemoContent": "تعذر تحميل محتوى العرض التوضيحي.",
-		"failedToLoadGoogleMaps": "فشل تحميل خرائط Google"
+		"failedToLoadGoogleMaps": "فشل تحميل خرائط Google",
+		"failedToLoadMap": "خطأ في تحميل الخريطة"
 	},
 	"a11y": {
 		"mainNavigation": "التنقل الرئيسي",
@@ -44,7 +45,7 @@
 		"currentThemeDescription": "المظهر الحالي: {theme}. انقر للتبديل.",
 		"required": "مطلوب",
 		"imageGallery": "معرض الصور",
-		"uploadProgress": "تقدم التحميل: {progress}%",
+		"uploadProgress": "تقدم التحميل: {{progress}}%",
 		"chooseLanguage": "اختر لغتك",
 		"addNewItem": "إضافة عنصر جديد",
 		"createNewPost": "إنشاء منشور جديد",
@@ -129,6 +130,7 @@
 	"deselectAll": "إلغاء تحديد الكل",
 	"selectAllRows": "تحديد جميع الصفوف",
 	"noDataAvailable": "لا توجد بيانات متاحة",
+	"noItemsAvailable": "لا توجد عناصر متاحة",
 	"search": "بحث...",
 	"searchPlaceholder": "بحث...",
 	"noActionsAvailable": "لا توجد إجراءات متاحة",

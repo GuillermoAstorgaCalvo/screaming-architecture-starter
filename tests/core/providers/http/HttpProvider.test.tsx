@@ -92,3 +92,105 @@ describe('HttpProvider', () => {
 		);
 	});
 });
+
+describe('HttpProvider lifecycle', () => {
+	it('maintains context value on unmount and remount', () => {
+		const http = createHttpPortMock();
+		const { result, unmount } = renderHook(() => useHttp(), {
+			wrapper: createWrapper(http),
+		});
+
+		const initialValue = result.current;
+		unmount();
+
+		const { result: newResult } = renderHook(() => useHttp(), {
+			wrapper: createWrapper(http),
+		});
+
+		expect(newResult.current).toBe(http);
+		expect(newResult.current).toBe(initialValue);
+	});
+});
+
+describe('HttpProvider context memoization', () => {
+	it('memoizes context value when http instance is stable', () => {
+		const http = createHttpPortMock();
+		const { result, rerender } = renderHook(() => useContext(HttpContext), {
+			wrapper: createWrapper(http),
+		});
+
+		const firstValue = result.current;
+		rerender();
+
+		expect(result.current).toBe(firstValue);
+		expect(result.current?.http).toBe(http);
+	});
+
+	it('updates context value when http instance changes', () => {
+		const firstHttp = createHttpPortMock();
+		const secondHttp = createHttpPortMock();
+		const onHttp = vi.fn();
+
+		const { rerender } = render(
+			<HttpProvider http={firstHttp}>
+				<HttpConsumer notify={onHttp} />
+			</HttpProvider>
+		);
+
+		expect(onHttp).toHaveBeenLastCalledWith(firstHttp);
+
+		rerender(
+			<HttpProvider http={secondHttp}>
+				<HttpConsumer notify={onHttp} />
+			</HttpProvider>
+		);
+
+		expect(onHttp).toHaveBeenLastCalledWith(secondHttp);
+		expect(secondHttp).not.toBe(firstHttp);
+	});
+});
+
+describe('HttpProvider composition', () => {
+	it('works correctly when nested with other providers', () => {
+		const http = createHttpPortMock();
+
+		const NestedWrapper = ({ children }: { children: ReactNode }) => (
+			<HttpProvider http={http}>
+				<div data-testid="nested">{children}</div>
+			</HttpProvider>
+		);
+
+		const { result } = renderHook(() => useHttp(), {
+			wrapper: NestedWrapper,
+		});
+
+		expect(result.current).toBe(http);
+	});
+});
+
+describe('HttpProvider HTTP methods', () => {
+	it('delegates all HTTP methods to the provided port', async () => {
+		const http = createHttpPortMock();
+		const { result } = renderHook(() => useHttp(), {
+			wrapper: createWrapper(http),
+		});
+
+		await result.current.get('/get');
+		await result.current.post('/post', { data: 'test' });
+		await result.current.put('/put', { data: 'test' });
+		await result.current.patch('/patch', { data: 'test' });
+		await result.current.delete('/delete');
+		await result.current.head('/head');
+		await result.current.options('/options');
+		await result.current.request('/request', { method: 'GET' });
+
+		expect(http.get).toHaveBeenCalledWith('/get');
+		expect(http.post).toHaveBeenCalledWith('/post', { data: 'test' });
+		expect(http.put).toHaveBeenCalledWith('/put', { data: 'test' });
+		expect(http.patch).toHaveBeenCalledWith('/patch', { data: 'test' });
+		expect(http.delete).toHaveBeenCalledWith('/delete');
+		expect(http.head).toHaveBeenCalledWith('/head');
+		expect(http.options).toHaveBeenCalledWith('/options');
+		expect(http.request).toHaveBeenCalledWith('/request', { method: 'GET' });
+	});
+});

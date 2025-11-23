@@ -27,12 +27,14 @@ export function LineChartContent({
 	lineProps,
 }: LineChartContentProps) {
 	return (
-		<ResponsiveContainer width={width as number | `${number}%`} height={height}>
-			<RechartsLineChart data={data} margin={CHART_MARGIN}>
-				<ChartAxes showGrid={showGrid} isHorizontal={false} />
-				<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
-				<Line {...lineProps} />
-			</RechartsLineChart>
-		</ResponsiveContainer>
+		<div data-testid="line-chart-responsive-container">
+			<ResponsiveContainer width={width as number | `${number}%`} height={height}>
+				<RechartsLineChart data={data} margin={CHART_MARGIN}>
+					<ChartAxes showGrid={showGrid} isHorizontal={false} />
+					<ChartTooltipAndLegend showTooltip={showTooltip} showLegend={showLegend} />
+					<Line {...lineProps} />
+				</RechartsLineChart>
+			</ResponsiveContainer>
+		</div>
 	);
 }

@@ -19,7 +19,8 @@ export type SwitchInputProps = Omit<
 	| 'defaultChecked'
 >;
 
-export interface SwitchWrapperProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {
+export interface SwitchWrapperProps
+	extends Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'fullWidth'> {
 	readonly fullWidth: boolean;
 	readonly children: ReactNode;
 	readonly className?: string | undefined;

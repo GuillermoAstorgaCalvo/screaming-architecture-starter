@@ -15,6 +15,7 @@ function CheckboxFieldWithLabel(props: Readonly<CheckboxFieldWithLabelProps>) {
 		checkboxId,
 		checkboxClasses,
 		ariaDescribedBy,
+		hasError,
 		label,
 		required,
 		disabled,
@@ -28,6 +29,7 @@ function CheckboxFieldWithLabel(props: Readonly<CheckboxFieldWithLabelProps>) {
 				id={checkboxId}
 				className={checkboxClasses}
 				ariaDescribedBy={ariaDescribedBy}
+				hasError={hasError}
 				disabled={disabled}
 				required={required}
 				checked={checked}
@@ -42,10 +44,10 @@ function CheckboxFieldWithLabel(props: Readonly<CheckboxFieldWithLabelProps>) {
 }
 
 export function CheckboxContent(props: Readonly<CheckboxContentProps>) {
-	const { checkboxId, error, helperText, fullWidth } = props;
+	const { checkboxId, error, helperText, fullWidth, ...fieldWithLabelProps } = props;
 	return (
 		<CheckboxWrapper fullWidth={fullWidth}>
-			<CheckboxFieldWithLabel {...props} />
+			<CheckboxFieldWithLabel checkboxId={checkboxId} {...fieldWithLabelProps} />
 			{checkboxId ? (
 				<CheckboxMessages checkboxId={checkboxId} error={error} helperText={helperText} />
 			) : null}

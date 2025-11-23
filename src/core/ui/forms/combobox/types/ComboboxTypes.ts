@@ -24,6 +24,8 @@ export interface ComboboxFieldProps {
 	readonly ariaDescribedBy: string | undefined;
 	readonly disabled?: boolean | undefined;
 	readonly required?: boolean | undefined;
+	readonly isOpen: boolean;
+	readonly ariaControls: string;
 	readonly props: Readonly<
 		Omit<
 			InputHTMLAttributes<HTMLInputElement>,
@@ -34,6 +36,8 @@ export interface ComboboxFieldProps {
 			| 'required'
 			| 'aria-invalid'
 			| 'aria-describedby'
+			| 'aria-expanded'
+			| 'aria-controls'
 			| 'value'
 			| 'defaultValue'
 			| 'onChange'

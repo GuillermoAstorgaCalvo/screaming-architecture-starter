@@ -21,9 +21,13 @@ export function useWizardStateWithSync<T extends FieldValues>(
 	state: FormWizardState<T>,
 	currentActiveStep: number
 ): FormWizardState<T> {
-	return useMemo(() => {
-		return { ...state, activeStep: currentActiveStep };
-	}, [state, currentActiveStep]);
+	return {
+		activeStep: currentActiveStep,
+		completedSteps: state.completedSteps,
+		errorSteps: state.errorSteps,
+		formData: state.formData,
+		isSubmitting: state.isSubmitting,
+	};
 }
 
 /**

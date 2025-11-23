@@ -126,3 +126,159 @@ describe('useSnackbar hook integration', () => {
 		);
 	});
 });
+
+describe('SnackbarProvider lifecycle', () => {
+	it('clears snackbars on unmount', () => {
+		const { result, unmount } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper(),
+		});
+
+		act(() => {
+			result.current?.addSnackbar({ intent: 'info', message: 'Test' });
+		});
+
+		expect(result.current?.snackbars).toHaveLength(1);
+
+		unmount();
+
+		// Re-render to verify state is reset
+		const { result: newResult } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper(),
+		});
+		expect(newResult.current?.snackbars).toHaveLength(0);
+	});
+});
+
+describe('SnackbarProvider error handling', () => {
+	it('handles removeSnackbar with invalid ID gracefully', () => {
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper(),
+		});
+
+		act(() => {
+			result.current?.removeSnackbar('nonexistent-id');
+		});
+
+		// Should not throw
+		expect(result.current?.snackbars).toHaveLength(0);
+	});
+
+	it('handles clearAll when no snackbars exist', () => {
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper(),
+		});
+
+		expect(result.current?.snackbars).toHaveLength(0);
+
+		act(() => {
+			result.current?.clearAll();
+		});
+
+		expect(result.current?.snackbars).toHaveLength(0);
+	});
+});
+
+describe('SnackbarProvider context memoization', () => {
+	it('memoizes context value when state is stable', () => {
+		const { result, rerender } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper(),
+		});
+
+		const firstValue = result.current;
+		rerender();
+
+		// Context value should be memoized when state doesn't change
+		expect(result.current?.snackbars).toBe(firstValue?.snackbars);
+		expect(result.current?.addSnackbar).toBe(firstValue?.addSnackbar);
+		expect(result.current?.removeSnackbar).toBe(firstValue?.removeSnackbar);
+		expect(result.current?.clearAll).toBe(firstValue?.clearAll);
+	});
+});
+
+describe('SnackbarProvider composition', () => {
+	it('works correctly when nested with other providers', () => {
+		const NestedWrapper = ({ children }: { children: ReactNode }) => (
+			<SnackbarProvider>
+				<div data-testid="nested">{children}</div>
+			</SnackbarProvider>
+		);
+
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: NestedWrapper,
+		});
+
+		act(() => {
+			result.current?.addSnackbar({ intent: 'success', message: 'Nested snackbar' });
+		});
+
+		expect(result.current?.snackbars).toHaveLength(1);
+	});
+});
+
+describe('SnackbarProvider edge cases', () => {
+	it('handles snackbar with custom dismissAfter', () => {
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper({ defaultDismissAfter: 5000 }),
+		});
+
+		act(() => {
+			result.current?.addSnackbar({
+				intent: 'info',
+				message: 'Custom timeout',
+				dismissAfter: 10000,
+			});
+		});
+
+		const snackbar = result.current?.snackbars[0];
+		expect(snackbar?.dismissAfter).toBe(10000);
+	});
+
+	it('handles snackbar with autoDismiss disabled', () => {
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper({ defaultAutoDismiss: false }),
+		});
+
+		act(() => {
+			result.current?.addSnackbar({ intent: 'warning', message: 'Manual dismiss' });
+		});
+
+		const snackbar = result.current?.snackbars[0];
+		expect(snackbar?.autoDismiss).toBe(false);
+	});
+
+	it('handles snackbar with action', () => {
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper(),
+		});
+
+		const action = { label: 'Undo', onClick: () => {} };
+
+		act(() => {
+			result.current?.addSnackbar({ intent: 'info', message: 'With action', action });
+		});
+
+		const snackbar = result.current?.snackbars[0];
+		expect(snackbar?.action).toBe(action);
+	});
+
+	it('handles multiple snackbars with different intents', () => {
+		const { result } = renderHook(() => useContext(SnackbarContext), {
+			wrapper: createWrapper({ maxSnackbars: 5 }),
+		});
+
+		act(() => {
+			result.current?.addSnackbar({ intent: 'success', message: 'Success' });
+			result.current?.addSnackbar({ intent: 'error', message: 'Error' });
+			result.current?.addSnackbar({ intent: 'warning', message: 'Warning' });
+			result.current?.addSnackbar({ intent: 'info', message: 'Info' });
+		});
+
+		expect(result.current?.snackbars).toHaveLength(4);
+		expect(result.current?.snackbars.map(s => s.intent)).toEqual([
+			'success',
+			'error',
+			'warning',
+			'info',
+		]);
+	});
+});

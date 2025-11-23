@@ -9,7 +9,7 @@ import type {
 	UseSelectStateReturn,
 } from '@core/ui/forms/select/types/SelectTypes';
 import type { SelectProps } from '@src-types/ui/forms';
-import { type ReactNode, type SelectHTMLAttributes, useId } from 'react';
+import { type ChangeEvent, type ReactNode, type SelectHTMLAttributes, useId } from 'react';
 
 export interface UseSelectPropsOptions {
 	readonly props: Readonly<SelectProps>;
@@ -66,6 +66,15 @@ interface BuildFieldPropsOptions {
 }
 
 function buildFieldProps(options: Readonly<BuildFieldPropsOptions>): Readonly<SelectFieldProps> {
+	const { onChange, ...restProps } = options.rest;
+	const wrappedOnChange = onChange
+		? (e: ChangeEvent<HTMLSelectElement>) => {
+				if (!options.disabled) {
+					onChange(e);
+				}
+			}
+		: undefined;
+
 	return {
 		id: options.state.finalId,
 		className: options.state.selectClasses,
@@ -74,7 +83,7 @@ function buildFieldProps(options: Readonly<BuildFieldPropsOptions>): Readonly<Se
 		disabled: options.disabled,
 		required: options.required,
 		children: options.children,
-		props: options.rest,
+		props: { ...restProps, onChange: wrappedOnChange },
 	};
 }
 

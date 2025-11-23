@@ -72,78 +72,86 @@ beforeEach(() => {
 	vi.clearAllMocks();
 });
 
-describe('errorAdapter.handlers - getErrorMessage', () => {
-	describe('message priority', () => {
-		it('returns custom message when provided', () => {
-			const error = new Error(TEST_MESSAGES.ORIGINAL_ERROR) as HttpClientError;
-			error.status = 404;
+describe('errorAdapter.handlers - getErrorMessage - message priority', () => {
+	it('returns custom message when provided', () => {
+		const error = new Error(TEST_MESSAGES.ORIGINAL_ERROR) as HttpClientError;
+		error.status = 404;
 
-			const message = getErrorMessage(error, undefined, TEST_MESSAGES.CUSTOM_ERROR_MESSAGE);
+		const message = getErrorMessage(error, undefined, TEST_MESSAGES.CUSTOM_ERROR_MESSAGE);
 
-			expect(message).toBe(TEST_MESSAGES.CUSTOM_ERROR_MESSAGE);
-		});
-
-		it('returns API error message when available', () => {
-			const error = new Error(TEST_MESSAGES.HTTP_ERROR) as HttpClientError;
-			error.status = 400;
-			const apiError: ApiErrorResponse = { message: TEST_MESSAGES.API_ERROR_MESSAGE };
-
-			const message = getErrorMessage(error, apiError);
-
-			expect(message).toBe(TEST_MESSAGES.API_ERROR_MESSAGE);
-		});
-
-		it('prioritizes custom message over API error message', () => {
-			const error = new Error(TEST_MESSAGES.HTTP_ERROR) as HttpClientError;
-			error.status = 400;
-			const apiError: ApiErrorResponse = { message: TEST_MESSAGES.API_ERROR_MESSAGE };
-
-			const message = getErrorMessage(error, apiError, TEST_MESSAGES.CUSTOM_MESSAGE);
-
-			expect(message).toBe(TEST_MESSAGES.CUSTOM_MESSAGE);
-		});
+		expect(message).toBe(TEST_MESSAGES.CUSTOM_ERROR_MESSAGE);
 	});
 
-	describe('fallback messages', () => {
-		it('returns error message when no API error', () => {
-			const error = new Error(TEST_MESSAGES.ORIGINAL_ERROR_MESSAGE) as HttpClientError;
-			error.status = 404;
+	it('returns API error message when available', () => {
+		const error = new Error(TEST_MESSAGES.HTTP_ERROR) as HttpClientError;
+		error.status = 400;
+		const apiError: ApiErrorResponse = { message: TEST_MESSAGES.API_ERROR_MESSAGE };
 
-			const message = getErrorMessage(error, undefined);
+		const message = getErrorMessage(error, apiError);
 
-			expect(message).toBe(TEST_MESSAGES.ORIGINAL_ERROR_MESSAGE);
+		expect(message).toBe(TEST_MESSAGES.API_ERROR_MESSAGE);
+	});
+
+	it('prioritizes custom message over API error message', () => {
+		const error = new Error(TEST_MESSAGES.HTTP_ERROR) as HttpClientError;
+		error.status = 400;
+		const apiError: ApiErrorResponse = { message: TEST_MESSAGES.API_ERROR_MESSAGE };
+
+		const message = getErrorMessage(error, apiError, TEST_MESSAGES.CUSTOM_MESSAGE);
+
+		expect(message).toBe(TEST_MESSAGES.CUSTOM_MESSAGE);
+	});
+});
+
+describe('errorAdapter.handlers - getErrorMessage - fallback messages', () => {
+	it('returns error message when no API error', () => {
+		const error = new Error(TEST_MESSAGES.ORIGINAL_ERROR_MESSAGE) as HttpClientError;
+		error.status = 404;
+
+		const message = getErrorMessage(error, undefined);
+
+		expect(message).toBe(TEST_MESSAGES.ORIGINAL_ERROR_MESSAGE);
+	});
+
+	it('returns formatted status message when error has status but no message', () => {
+		const error = new Error(TEST_MESSAGES.HTTP_ERROR) as HttpClientError;
+		error.status = 404;
+		error.response = new Response(TEST_MESSAGES.NOT_FOUND_STATUS_TEXT, {
+			status: 404,
+			statusText: TEST_MESSAGES.NOT_FOUND_STATUS_TEXT,
 		});
 
-		it('returns formatted status message when error has status but no message', () => {
-			const error = new Error(TEST_MESSAGES.HTTP_ERROR) as HttpClientError;
-			error.status = 404;
-			error.response = new Response(TEST_MESSAGES.NOT_FOUND_STATUS_TEXT, {
-				status: 404,
-				statusText: TEST_MESSAGES.NOT_FOUND_STATUS_TEXT,
-			});
+		const message = getErrorMessage(error, undefined);
 
-			const message = getErrorMessage(error, undefined);
+		expect(message).toBe(TEST_MESSAGES.HTTP_ERROR);
+	});
 
-			expect(message).toBe(TEST_MESSAGES.HTTP_ERROR);
-		});
+	it('returns translated default message when status text not available', () => {
+		const error = { status: 500 } as HttpClientError;
+		Object.setPrototypeOf(error, Error.prototype);
 
-		it('returns translated default message when status text not available', () => {
-			const error = { status: 500 } as HttpClientError;
-			Object.setPrototypeOf(error, Error.prototype);
+		const message = getErrorMessage(error, undefined);
 
-			const message = getErrorMessage(error, undefined);
+		expect(message).toBe(`HTTP 500: ${TRANSLATIONS.REQUEST_FAILED}`);
+		expect(i18n.t).toHaveBeenCalledWith(ERROR_KEYS.REQUEST_FAILED, { ns: 'common' });
+	});
 
-			expect(message).toBe(`HTTP 500: ${TRANSLATIONS.REQUEST_FAILED}`);
-			expect(i18n.t).toHaveBeenCalledWith(ERROR_KEYS.REQUEST_FAILED, { ns: 'common' });
-		});
+	it('returns unknown error message when no information available', () => {
+		const error = new Error(TRANSLATIONS.UNKNOWN_ERROR) as HttpClientError;
 
-		it('returns unknown error message when no information available', () => {
-			const error = new Error(TRANSLATIONS.UNKNOWN_ERROR) as HttpClientError;
+		const message = getErrorMessage(error, undefined);
 
-			const message = getErrorMessage(error, undefined);
+		expect(message).toBe(TRANSLATIONS.UNKNOWN_ERROR);
+	});
 
-			expect(message).toBe(TRANSLATIONS.UNKNOWN_ERROR);
-		});
+	it('returns ERROR_MESSAGES.UNKNOWN when error has no message and no status', () => {
+		const error = {} as HttpClientError;
+		Object.setPrototypeOf(error, Error.prototype);
+
+		const message = getErrorMessage(error, undefined);
+
+		expect(message).toBe(TRANSLATIONS.UNKNOWN_ERROR);
+		expect(i18n.t).toHaveBeenCalledWith(ERROR_KEYS.UNKNOWN_ERROR, { ns: 'common' });
 	});
 });
 
@@ -283,7 +291,9 @@ describe('errorAdapter.handlers - handleHttpError - basic error handling', () =>
 		expect(result.type).toBe('clientError');
 		expect(result.message).toBe(TEST_MESSAGES.CUSTOM_ERROR_MESSAGE);
 	});
+});
 
+describe('errorAdapter.handlers - handleHttpError - network and original error handling', () => {
 	it('handles status 0 as network error', () => {
 		const error = new Error(TRANSLATIONS.NETWORK_ERROR) as HttpClientError;
 		error.status = 0;
@@ -381,76 +391,74 @@ describe('errorAdapter.handlers - handleHttpError - edge cases', () => {
 	});
 });
 
-describe('errorAdapter.handlers - handleGenericError', () => {
-	describe('Error instances', () => {
-		it('handles Error instance', () => {
-			const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
+describe('errorAdapter.handlers - handleGenericError - Error instances', () => {
+	it('handles Error instance', () => {
+		const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
 
-			const result = handleGenericError(error);
+		const result = handleGenericError(error);
 
-			expect(result.type).toBe('unknown');
-			expect(result.message).toBe(TEST_MESSAGES.GENERIC_ERROR);
-			expect(result.originalError).toBe(error);
-		});
-
-		it('handles Error instance with custom message', () => {
-			const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
-
-			const result = handleGenericError(error, TEST_MESSAGES.CUSTOM_MESSAGE);
-
-			expect(result.type).toBe('unknown');
-			expect(result.message).toBe(TEST_MESSAGES.CUSTOM_MESSAGE);
-		});
-
-		it('uses default message when error has no message', () => {
-			const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
-
-			const result = handleGenericError(error);
-
-			expect(result.message).toBe(TEST_MESSAGES.GENERIC_ERROR);
-		});
-
-		it(TEST_DESCRIPTIONS.EXCLUDES_ORIGINAL_ERROR, () => {
-			const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
-
-			const result = handleGenericError(error, undefined, false);
-
-			expect(result.type).toBe('unknown');
-			expect(result.originalError).toBeUndefined();
-		});
+		expect(result.type).toBe('unknown');
+		expect(result.message).toBe(TEST_MESSAGES.GENERIC_ERROR);
+		expect(result.originalError).toBe(error);
 	});
 
-	describe('non-Error values', () => {
-		it('handles non-Error values by converting to Error', () => {
-			const result = handleGenericError(TEST_MESSAGES.STRING_ERROR);
+	it('handles Error instance with custom message', () => {
+		const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
 
-			expect(result.type).toBe('unknown');
-			expect(result.message).toBe(TEST_MESSAGES.STRING_ERROR);
-			expect(result.originalError).toBeDefined();
-		});
+		const result = handleGenericError(error, TEST_MESSAGES.CUSTOM_MESSAGE);
 
-		it('handles null by converting to Error', () => {
-			const result = handleGenericError(null);
+		expect(result.type).toBe('unknown');
+		expect(result.message).toBe(TEST_MESSAGES.CUSTOM_MESSAGE);
+	});
 
-			expect(result.type).toBe('unknown');
-			expect(result.message).toBe('null');
-			expect(result.originalError).toBeDefined();
-		});
+	it('uses default message when error has no message', () => {
+		const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
 
-		it('handles undefined by converting to Error', () => {
-			const result = handleGenericError(undefined);
+		const result = handleGenericError(error);
 
-			expect(result.type).toBe('unknown');
-			expect(result.message).toBe('undefined');
-			expect(result.originalError).toBeDefined();
-		});
+		expect(result.message).toBe(TEST_MESSAGES.GENERIC_ERROR);
+	});
 
-		it('handles number by converting to Error', () => {
-			const result = handleGenericError(123);
+	it(TEST_DESCRIPTIONS.EXCLUDES_ORIGINAL_ERROR, () => {
+		const error = new Error(TEST_MESSAGES.GENERIC_ERROR);
 
-			expect(result.type).toBe('unknown');
-			expect(result.message).toBe('123');
-			expect(result.originalError).toBeDefined();
-		});
+		const result = handleGenericError(error, undefined, false);
+
+		expect(result.type).toBe('unknown');
+		expect(result.originalError).toBeUndefined();
+	});
+});
+
+describe('errorAdapter.handlers - handleGenericError - non-Error values', () => {
+	it('handles non-Error values by converting to Error', () => {
+		const result = handleGenericError(TEST_MESSAGES.STRING_ERROR);
+
+		expect(result.type).toBe('unknown');
+		expect(result.message).toBe(TEST_MESSAGES.STRING_ERROR);
+		expect(result.originalError).toBeDefined();
+	});
+
+	it('handles null by converting to Error', () => {
+		const result = handleGenericError(null);
+
+		expect(result.type).toBe('unknown');
+		expect(result.message).toBe('null');
+		expect(result.originalError).toBeDefined();
+	});
+
+	it('handles undefined by converting to Error', () => {
+		const result = handleGenericError(undefined);
+
+		expect(result.type).toBe('unknown');
+		expect(result.message).toBe('undefined');
+		expect(result.originalError).toBeDefined();
+	});
+
+	it('handles number by converting to Error', () => {
+		const result = handleGenericError(123);
+
+		expect(result.type).toBe('unknown');
+		expect(result.message).toBe('123');
+		expect(result.originalError).toBeDefined();
 	});
 });

@@ -18,6 +18,7 @@ The i18n system is designed to be scalable and maintainable:
 - `useRtl.ts` - Hook to check if current language is RTL (Right-to-Left)
 - `resourceLoader.ts` - Dynamic resource loading system (main export, imports from sub-modules)
 - `resourceLoader/` - Resource loading sub-modules:
+  - `backend.ts` - i18next backend adapter for resource loading (ResourceLoaderBackend)
   - `cache.ts` - Resource caching utilities (clearResourceCacheFor, isResourceCached, isResourceLoading)
   - `i18n.ts` - i18next integration functions (addResourceToI18n, loadAndAddResource)
   - `load.ts` - Resource loading functions (loadResource)
@@ -43,7 +44,9 @@ Domain-specific translations are co-located with each domain:
 - `domains/<domain>/i18n/<locale>.json` - Translation files
 - `domains/<domain>/i18n/index.ts` - Registration file
 
-Example: `domains/landing/i18n/en.json`, `domains/landing/i18n/es.json`, `domains/landing/i18n/index.ts`
+Example: `domains/my-domain/i18n/en.json`, `domains/my-domain/i18n/es.json`, `domains/my-domain/i18n/index.ts`
+
+**Note**: The `landing` domain uses common translations from `@core/i18n/locales/` instead of domain-specific translations, so it does not have an `i18n/` folder.
 
 ### Registering Domain Translations
 

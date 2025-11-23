@@ -228,4 +228,70 @@ describe('createRequestTimeout', () => {
 		expect(createTimeoutController).toHaveBeenCalledWith(5000);
 		expect(result).toBe(timeoutController);
 	});
+
+	it('handles timeout value of 0', () => {
+		vi.mocked(createTimeoutController).mockReturnValue(null);
+
+		const result = createRequestTimeout(0, undefined);
+
+		expect(createTimeoutController).toHaveBeenCalledWith(0);
+		expect(result).toBeNull();
+	});
+});
+
+describe('prepareFetchConfig - additional edge cases', () => {
+	it('handles request config with all fetch options', () => {
+		const requestConfig: HttpClientConfig & { url: string } = {
+			url: TEST_URL,
+			method: 'POST',
+			body: { key: 'value' },
+			headers: { 'Content-Type': 'application/json' },
+			credentials: 'include',
+			cache: 'no-cache',
+			mode: 'cors',
+			redirect: 'follow',
+			referrer: 'https://example.com',
+			referrerPolicy: 'strict-origin-when-cross-origin',
+		};
+
+		mockBasicPrepareRequestBody();
+
+		const result = prepareFetchConfig(requestConfig, null);
+
+		expect(result.finalFetchConfig.credentials).toBe('include');
+		expect(result.finalFetchConfig.cache).toBe('no-cache');
+		expect(result.finalFetchConfig.mode).toBe('cors');
+		expect(result.finalFetchConfig.redirect).toBe('follow');
+		expect(result.finalFetchConfig.referrer).toBe('https://example.com');
+		expect(result.finalFetchConfig.referrerPolicy).toBe('strict-origin-when-cross-origin');
+	});
+
+	it('handles request config with signal from timeout controller', () => {
+		const requestConfig = createBasicRequestConfig();
+		const controller = new AbortController();
+		const timeoutController = { controller, timeoutId: setTimeout(() => {}, 1000) };
+
+		mockBasicPrepareRequestBody();
+
+		const result = prepareFetchConfig(requestConfig, timeoutController);
+
+		expect(result.finalFetchConfig.signal).toBe(controller.signal);
+	});
+
+	it('handles request config without body', () => {
+		const requestConfig: HttpClientConfig & { url: string } = {
+			url: TEST_URL,
+			method: 'GET',
+			headers: {},
+		};
+
+		vi.mocked(mergeHeaders).mockReturnValue(new Headers());
+		vi.mocked(prepareRequestBody).mockReturnValue({
+			headers: new Headers(),
+		});
+
+		const result = prepareFetchConfig(requestConfig, null);
+
+		expect(result.finalFetchConfig.body).toBeNull();
+	});
 });

@@ -26,49 +26,103 @@ import {
 	VALIDATION_MESSAGE_VALUE_REQUIRED,
 } from './formAdapter.helpers';
 
+function registerBasicInitializationTests() {
+	it('should initialize with default values', () => {
+		const { result } = createSimpleForm();
+
+		expect(result.current).toBeDefined();
+		assertFormControls(result);
+	});
+
+	it('should initialize with default form state', () => {
+		const { result } = createSimpleForm();
+
+		// isValid defaults to false in react-hook-form until validation runs
+		assertFormState(result);
+	});
+
+	it('should initialize without options', () => {
+		const { result } = renderHook(() => useFormAdapter<TestFormData>());
+
+		expect(result.current).toBeDefined();
+		assertFormControls(result);
+	});
+}
+
+function registerOptionsInitializationTests() {
+	it('should accept initial default values', () => {
+		const defaultValues: TestFormData = {
+			...DEFAULT_TEST_FORM_DATA,
+			age: 30,
+		};
+
+		const { result } = renderHook(() => useFormAdapter<TestFormData>({ defaultValues }));
+
+		const values = result.current.getValues();
+		expect(values.name).toBe('John');
+		expect(values.email).toBe('john@example.com');
+		expect(values.age).toBe(30);
+	});
+
+	it('should accept validation rules', () => {
+		const options: UseFormAdapterOptions<TestFormData> = {
+			defaultValues: {
+				name: '',
+				email: '',
+			},
+			mode: 'onChange',
+		};
+
+		const { result } = renderHook(() => useFormAdapter<TestFormData>(options));
+
+		expect(result.current.formState).toBeDefined();
+	});
+
+	it('should initialize useForm with provided options', () => {
+		const options: UseFormAdapterOptions<TestFormData> = {
+			defaultValues: DEFAULT_TEST_FORM_DATA,
+			mode: 'onBlur',
+			reValidateMode: 'onChange',
+		};
+
+		const { result } = renderHook(() => useFormAdapter<TestFormData>(options));
+
+		// Verify form was initialized with options
+		expect(result.current.formState).toBeDefined();
+		expect(result.current.getValues()).toEqual(DEFAULT_TEST_FORM_DATA);
+	});
+}
+
+function registerFormControlsTests() {
+	it('should return all required form controls', () => {
+		const { result } = createSimpleForm();
+
+		// Verify all controls are returned from useFormAdapter
+		const controls = result.current;
+		expect(controls.register).toBeDefined();
+		expect(controls.handleSubmit).toBeDefined();
+		expect(controls.reset).toBeDefined();
+		expect(controls.setValue).toBeDefined();
+		expect(controls.getValues).toBeDefined();
+		expect(controls.trigger).toBeDefined();
+		expect(controls.watch).toBeDefined();
+		expect(controls.setError).toBeDefined();
+		expect(controls.clearErrors).toBeDefined();
+		expect(controls.unregister).toBeDefined();
+		expect(controls.setFocus).toBeDefined();
+		expect(controls.getFieldState).toBeDefined();
+		expect(controls.control).toBeDefined();
+		expect(typeof controls.isValid).toBe('boolean');
+		expect(typeof controls.isSubmitting).toBe('boolean');
+		expect(typeof controls.isDirty).toBe('boolean');
+	});
+}
+
 function registerInitializationTests() {
 	describe('initialization', () => {
-		it('should initialize with default values', () => {
-			const { result } = createSimpleForm();
-
-			expect(result.current).toBeDefined();
-			assertFormControls(result);
-		});
-
-		it('should initialize with default form state', () => {
-			const { result } = createSimpleForm();
-
-			// isValid defaults to false in react-hook-form until validation runs
-			assertFormState(result);
-		});
-
-		it('should accept initial default values', () => {
-			const defaultValues: TestFormData = {
-				...DEFAULT_TEST_FORM_DATA,
-				age: 30,
-			};
-
-			const { result } = renderHook(() => useFormAdapter<TestFormData>({ defaultValues }));
-
-			const values = result.current.getValues();
-			expect(values.name).toBe('John');
-			expect(values.email).toBe('john@example.com');
-			expect(values.age).toBe(30);
-		});
-
-		it('should accept validation rules', () => {
-			const options: UseFormAdapterOptions<TestFormData> = {
-				defaultValues: {
-					name: '',
-					email: '',
-				},
-				mode: 'onChange',
-			};
-
-			const { result } = renderHook(() => useFormAdapter<TestFormData>(options));
-
-			expect(result.current.formState).toBeDefined();
-		});
+		registerBasicInitializationTests();
+		registerOptionsInitializationTests();
+		registerFormControlsTests();
 	});
 }
 

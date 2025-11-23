@@ -1,6 +1,7 @@
 import IconButton from '@core/ui/icon-button/IconButton';
 import CloseIcon from '@core/ui/icons/close-icon/CloseIcon';
 import type { AdvancedFilter } from '@src-types/ui/advancedFilter';
+import type React from 'react';
 
 interface FilterListItemProps {
 	readonly filter: AdvancedFilter;
@@ -9,6 +10,13 @@ interface FilterListItemProps {
 }
 
 export function FilterListItem({ filter, onRemove, disabled }: FilterListItemProps) {
+	const handleRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
+		if (disabled || event.currentTarget.disabled) {
+			return;
+		}
+		onRemove(filter.id);
+	};
+
 	return (
 		<div className="flex items-center justify-between rounded-md border border-border bg-muted px-3 py-2 dark:border-border dark:bg-muted">
 			<div className="flex items-center gap-2">
@@ -20,7 +28,7 @@ export function FilterListItem({ filter, onRemove, disabled }: FilterListItemPro
 			<IconButton
 				icon={<CloseIcon />}
 				aria-label={`Remove ${filter.label} filter`}
-				onClick={() => onRemove(filter.id)}
+				onClick={handleRemove}
 				variant="ghost"
 				size="sm"
 				disabled={disabled}

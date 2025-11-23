@@ -67,8 +67,10 @@ export function calculateIncrementDecrementCapability({
 }: Readonly<CalculateIncrementDecrementCapabilityOptions>): IncrementDecrementCapability {
 	const hasMax = max !== undefined;
 	const hasMin = min !== undefined;
-	const canIncrement = !hasMax || (currentValue !== undefined && currentValue < max);
-	const canDecrement = !hasMin || (currentValue !== undefined && currentValue > min);
+	// When currentValue is undefined, allow increment/decrement if there's no constraint
+	// Otherwise, check if the value is within bounds
+	const canIncrement = !hasMax || currentValue === undefined || currentValue < max;
+	const canDecrement = !hasMin || currentValue === undefined || currentValue > min;
 	return { canIncrement, canDecrement };
 }
 

@@ -8,16 +8,27 @@ alwaysApply: false
 
 ### Unit Tests
 
-- Runner: **Vitest** (v4.0.6)
-- Location: `tests/*`
+- Runner: **Vitest** (v4.0.10)
+- Location: `tests/*` (1000+ test files with comprehensive coverage)
 - **Important**: On Windows, run tests with Docker (`pnpm run docker:test`) to avoid fork runner timeout issues
 - Test utilities: `tests/utils/testUtils.tsx` (includes `renderWithProviders` function)
 - Test providers: `tests/utils/TestProviders.tsx` (composes all providers for testing)
-- Mock adapters: `tests/utils/mocks/` (MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter)
+- Mock adapters: `tests/utils/mocks/` (MockStorageAdapter, MockLoggerAdapter, MockHttpAdapter, MockAuthAdapter, MockAnalyticsAdapter)
 - Factories: `tests/factories/` (apiFactories.ts, userFactories.ts)
 - MSW mocks: `tests/mocks/` (handlers.ts, payloads.ts, server.ts)
 - Setup: `tests/setupTests.ts` (Vitest setup with MSW server, i18n initialization, DOM mocks)
-- Accessibility: **Axe** via `jest-axe`/`vitest-axe` (optional, to be added)
+- Accessibility: **Axe** via `vitest-axe` (integrated in `tests/utils/a11y.ts`)
+
+### Test Coverage
+
+The project includes comprehensive test coverage across all modules:
+
+- **App-level tests** (18 files): App composition, components (AppLayout, PageWrapper, ProtectedRoute, RightsLoader, SpeedInsightsLoader), pages (Error404, Error500), providers, router
+- **Core module tests**: Extensive coverage for a11y (17 files), api (15+ files), auth, config, constants (20+ files), forms (15+ files), hooks (50+ files), http, i18n (21 files), lib (26 files), perf (4 files), providers (7 files), router (7 files), security (16 files), ui (700+ files), utils (18 files)
+- **Domain tests**: Landing domain and shared domain components (14 files)
+- **Infrastructure tests** (32 files): Analytics (6 files), auth (4 files), logging (5 files), maps (4 files), storage (13 files)
+- **Type tests** (19 files): Comprehensive type definition tests
+- **UI component tests** (700+ files): All UI components with functionality, interactions, accessibility, and edge cases
 
 ### Running Tests
 
