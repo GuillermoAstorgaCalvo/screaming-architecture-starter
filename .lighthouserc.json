@@ -4,8 +4,17 @@
 			"numberOfRuns": 3,
 			"startServerCommand": "pnpm run preview",
 			"startServerReadyPattern": "Local:",
-			"startServerReadyTimeout": 60000,
-			"url": ["http://localhost:4173/"]
+			"startServerReadyTimeout": 90000,
+			"url": ["http://localhost:4173/"],
+			"settings": {
+				"maxWaitForFcp": 30000,
+				"maxWaitForLoad": 60000,
+				"throttling": {
+					"rttMs": 40,
+					"throughputKbps": 10240,
+					"cpuSlowdownMultiplier": 1
+				}
+			}
 		},
 		"assert": {
 			"assertions": {

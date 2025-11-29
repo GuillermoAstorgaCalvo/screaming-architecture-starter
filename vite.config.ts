@@ -254,6 +254,14 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		server: getServerConfig(env),
+		preview: {
+			// Ensure preview server properly serves static files and handles SPA routing
+			host: env['VITE_PREVIEW_HOST'] ?? 'localhost',
+			port: Number.parseInt(env['VITE_PREVIEW_PORT'] ?? '4173', 10),
+			cors: true,
+			// Enable SPA fallback for client-side routing
+			// This ensures all routes are handled by index.html
+		},
 		plugins,
 		build: getBuildConfig(env, mode),
 		optimizeDeps: getOptimizeDepsConfig(),

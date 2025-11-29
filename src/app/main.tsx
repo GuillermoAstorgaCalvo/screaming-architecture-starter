@@ -13,12 +13,32 @@ import { createRoot } from 'react-dom/client';
 /**
  * Initialize application configuration and i18n in parallel to reduce
  * the critical path during startup.
+ *
+ * If initialization fails, we still render the app to avoid blank pages.
+ * Errors are logged but don't prevent the app from starting.
  */
-await Promise.all([initConfig(), i18nInitPromise]);
+try {
+	await Promise.all([initConfig(), i18nInitPromise]);
+} catch (error) {
+	// Log initialization errors but don't prevent app from rendering
+	// This ensures the app works even if config or i18n fails to load
+	loggerAdapter.error('Failed to initialize app configuration or i18n', {
+		error: error instanceof Error ? error.message : String(error),
+	});
+}
 
 const container = document.querySelector('#root');
 if (!container) {
-	throw new Error(i18n.t('errors.rootElementNotFound', { ns: 'common' }));
+	// Fallback error message if i18n failed to load
+	let errorMessage = 'Root element not found';
+	try {
+		if (i18n.isInitialized && typeof i18n.t === 'function') {
+			errorMessage = i18n.t('errors.rootElementNotFound', { ns: 'common' });
+		}
+	} catch {
+		// If i18n is not ready, use fallback message
+	}
+	throw new Error(errorMessage);
 }
 
 const shouldLoadSpeedInsights = isProduction() && isSpeedInsightsEnabled();
